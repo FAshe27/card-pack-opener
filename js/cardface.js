@@ -91,10 +91,8 @@
   function silhouette(set, card) {
     var r = R.RARITIES[R.INDEX[card.rarity]];
     return '<div class="card missing r-' + card.rarity + '" data-set="' + esc(set.id) + '" data-card="' + esc(card.id) + '" style="' + themeStyle(set) + '">' +
-      '<div class="card-inner"><div class="face sil' + (card.logo ? ' sil-has-logo' : '') + '"><div class="sil-q">?</div>' +
-      '<div class="sil-num">#' + U.pad(card.num, set.numWidth) + '</div><div class="sil-r">' + r.label + '</div>' +
-      (card.logo ? '<div class="sil-logo"><img src="' + esc(card.logo) + '" alt="" loading="lazy" draggable="false"></div>' : '') +
-      '</div></div></div>';
+      '<div class="card-inner"><div class="face sil"><div class="sil-q">?</div>' +
+      '<div class="sil-num">#' + U.pad(card.num, set.numWidth) + '</div><div class="sil-r">' + r.label + '</div></div></div></div>';
   }
 
   /* Pack wrapper art */

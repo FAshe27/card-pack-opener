@@ -1147,7 +1147,7 @@
     document.addEventListener('error', function (e) {
       var img = e.target;
       if (!img || img.tagName !== 'IMG') return;
-      var lg = img.closest('.cf-logo, .sil-logo');
+      var lg = img.closest('.cf-logo');
       if (lg) { lg.classList.add('broken'); return; } // missing logo file: just hide it
       if (!img.closest('.cf-art')) return;
       var el = img.closest('.card'), set = window.CardSets.get(el.dataset.set), c = set && set.byId.get(el.dataset.card);

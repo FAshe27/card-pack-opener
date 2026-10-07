@@ -57,7 +57,7 @@ Header used by the tools: `name,rarity,subtitle,details,image,logo`. Without a h
 - **Logo, no details:** the logo is shown centered on a light plate where the details box would be, and the art area grows to fill the extra space. Good for item cards (a product photo plus the brand logo).
 - **Details and logo:** a small logo chip sits beside the details text.
 - **Details only (or nothing):** unchanged.
-- Cards you haven't collected yet show the logo as a hint in the silhouette, but never the art.
+- Cards you haven't collected yet stay a plain `?` silhouette (number and rarity only): no logo, no art.
 - A logo file that fails to load is simply hidden.
 
 The same layout is used in the pack reveal, the zoom view and the collection.
