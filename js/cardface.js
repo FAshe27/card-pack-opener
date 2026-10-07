@@ -44,13 +44,23 @@
     return art(set, card);
   }
 
+  /* Details box: text, a brand logo, or both (small logo beside the text). */
+  function detailsBox(card) {
+    var text = String(card.details || '').trim();
+    if (!card.logo) return '<div class="cf-details">' + esc(card.details) + '</div>';
+    var img = '<img src="' + esc(card.logo) + '" alt="" loading="lazy" draggable="false">';
+    if (!text) return '<div class="cf-details cf-logo-strip"><div class="cf-logo">' + img + '</div></div>';
+    return '<div class="cf-details cf-with-logo"><span class="cf-logo cf-logo-sm">' + img + '</span>' + esc(card.details) + '</div>';
+  }
+
   function front(set, card, holo) {
     var r = R.RARITIES[R.INDEX[card.rarity]];
-    return '<div class="face front"><div class="cf">' +
+    var layout = card.logo ? (String(card.details || '').trim() ? ' cf-has-logo' : ' cf-logo-only') : '';
+    return '<div class="face front"><div class="cf' + layout + '">' +
       '<div class="cf-top"><span class="cf-name">' + esc(card.name) + '</span><span class="cf-gem" title="' + r.label + '"></span></div>' +
       '<div class="cf-art">' + artOrImage(set, card) + '</div>' +
       '<div class="cf-type"><span class="cf-sub">' + esc(card.subtitle) + '</span><span class="cf-rar">' + r.label + '</span></div>' +
-      '<div class="cf-details">' + esc(card.details) + '</div>' +
+      detailsBox(card) +
       '<div class="cf-foot"><span>' + esc(set.code) + '</span>' + (holo ? '<span class="foil">HOLO</span>' : '') +
       '<span>' + U.pad(card.num, set.numWidth) + '/' + U.pad(set.cards.length, set.numWidth) + '</span></div>' +
       '</div></div>';
@@ -81,8 +91,10 @@
   function silhouette(set, card) {
     var r = R.RARITIES[R.INDEX[card.rarity]];
     return '<div class="card missing r-' + card.rarity + '" data-set="' + esc(set.id) + '" data-card="' + esc(card.id) + '" style="' + themeStyle(set) + '">' +
-      '<div class="card-inner"><div class="face sil"><div class="sil-q">?</div>' +
-      '<div class="sil-num">#' + U.pad(card.num, set.numWidth) + '</div><div class="sil-r">' + r.label + '</div></div></div></div>';
+      '<div class="card-inner"><div class="face sil' + (card.logo ? ' sil-has-logo' : '') + '"><div class="sil-q">?</div>' +
+      '<div class="sil-num">#' + U.pad(card.num, set.numWidth) + '</div><div class="sil-r">' + r.label + '</div>' +
+      (card.logo ? '<div class="sil-logo"><img src="' + esc(card.logo) + '" alt="" loading="lazy" draggable="false"></div>' : '') +
+      '</div></div></div>';
   }
 
   /* Pack wrapper art */

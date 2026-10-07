@@ -57,7 +57,8 @@
         rarity: rarity,
         subtitle: c.subtitle ? String(c.subtitle) : '',
         details: c.details != null ? String(c.details) : '',
-        image: c.image ? String(c.image) : ''
+        image: c.image ? String(c.image) : '',
+        logo: c.logo ? String(c.logo) : ''
       };
     });
     var pools = {};

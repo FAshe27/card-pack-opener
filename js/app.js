@@ -269,7 +269,7 @@
     $('#stageIdle').innerHTML = '<div class="idle-pack">' + CPS.cards.pack(set, 'float') + '</div>' +
       '<div class="idle-msg">' + (st.packs
         ? '<b>' + st.packs + ' pack' + (st.packs === 1 ? '' : 's') + ' ready.</b> Hit <kbd>Open a pack</kbd> or press <kbd>Space</kbd>.'
-        : '<b>Out of packs!</b> Win some at game night and redeem the prize code on the left.') + '</div>';
+        : '<b>Out of packs!</b> Win, earn, or beg for packs and redeem them on the left!') + '</div>';
     $('#stageIdle').classList.remove('hidden');
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
@@ -281,7 +281,7 @@
     if ((S.opening && !S.opening.finished) || S.busy) return;
     if (isLocked()) { showGate({}); return; }
     var set = S.set, st = ps();
-    if (st.packs <= 0) { toast('No packs left. Redeem a prize code to get more.', 'warn'); audio.error(); return; }
+    if (st.packs <= 0) { toast('Out of packs! Win, earn, or beg for packs and redeem them on the left!', 'warn'); audio.error(); return; }
     var pulls, seen = {}, now = Date.now(), server = null;
     if (isCloud()) {
       if (S.onlineSets.indexOf(set.id) < 0) { toast("This set isn't on the server yet. An admin can upload it from the Admin tab.", 'warn', 5000); return; }
@@ -339,7 +339,7 @@
     if (S.busy) return;
     if (o && !o.finished) { if (!o.torn) tear(); return; } // a pack is already out: tear it
     if (isLocked()) { showGate({}); return; }
-    if (ps().packs <= 0) { toast("You're out of packs. Redeem a prize code to get more!", '', 3500); return; }
+    if (ps().packs <= 0) { toast('Out of packs! Win, earn, or beg for packs and redeem them on the left!', '', 3500); return; }
     if (await startOpen()) { await U.sleep(320); if (S.opening && !S.opening.torn) tear(); }
   }
 
@@ -668,6 +668,10 @@
       var existing = window.CardSets.get(res.set.id);
       if (existing && existing.source !== 'imported') res.set.id += '-custom';
       try { res.preview = window.CardSets.validate(res.set); } catch (e) { res.errors.push(e.message); res.preview = null; }
+      // a browser can't read files off your disk: point out paths that look local
+      var local = /^(\/|[A-Za-z]:[\\/]|file:|~)/, bad = 0;
+      res.set.cards.forEach(function (c) { ['image', 'logo'].forEach(function (k) { if (c[k] && local.test(c[k])) bad++; }); });
+      if (bad) res.errors.push(bad + ' image/logo path' + (bad === 1 ? ' looks' : 's look') + ' like a file on your computer, which a website can\'t load. Use web addresses or paths inside the site, or convert the CSV with tools/csv-to-set.js, which copies those files into the site for you.');
     }
     return res;
   }
@@ -1142,7 +1146,10 @@
     // broken image path -> fall back to placeholder art
     document.addEventListener('error', function (e) {
       var img = e.target;
-      if (!img || img.tagName !== 'IMG' || !img.closest('.cf-art')) return;
+      if (!img || img.tagName !== 'IMG') return;
+      var lg = img.closest('.cf-logo, .sil-logo');
+      if (lg) { lg.classList.add('broken'); return; } // missing logo file: just hide it
+      if (!img.closest('.cf-art')) return;
       var el = img.closest('.card'), set = window.CardSets.get(el.dataset.set), c = set && set.byId.get(el.dataset.card);
       if (c) img.outerHTML = CPS.cards.art(set, c);
     }, true);

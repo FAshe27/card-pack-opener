@@ -187,8 +187,7 @@ CardSets.register({
       "name": "Mini 30",
       "rarity": "legendary",
       "subtitle": "Demo",
-      "details": "This mini set has no Chase cards",
-      "image": "so chase odds fall back to Legendary."
+      "details": "This mini set has no Chase cards, so chase odds fall back to Legendary."
     }
   ]
 });

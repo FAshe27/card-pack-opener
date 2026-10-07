@@ -47,9 +47,34 @@ That writes `sets/birds.js` and adds it to the manifest. Columns (header row, an
 | `subtitle` | no | Short line under the name (species, team, category…) |
 | `details` | no | Free-form text box on the card face — stats, fun facts, flavor text, anything |
 | `image` | no | Path or URL to art; leave blank for procedural placeholder art |
+| `logo` | no | Path or URL to a logo (PNG/SVG/JPG; transparent PNG or SVG looks best) |
 | `id` | no | Stable id (defaults to 001, 002, …) |
 
-You can also paste a CSV in the app under **Admin → Sets & settings → Import a set from CSV**. That stores the set in this browser only; use **Download set file (.js)** and drop it into `sets/` to share it with everyone.
+Header used by the tools: `name,rarity,subtitle,details,image,logo`. Without a header row the columns are read in that order.
+
+**Logos change the card layout:**
+
+- **Logo, no details:** the logo is shown centered on a light plate where the details box would be, and the art area grows to fill the extra space. Good for item cards (a product photo plus the brand logo).
+- **Details and logo:** a small logo chip sits beside the details text.
+- **Details only (or nothing):** unchanged.
+- Cards you haven't collected yet show the logo as a hint in the silhouette, but never the art.
+- A logo file that fails to load is simply hidden.
+
+The same layout is used in the pack reveal, the zoom view and the collection.
+
+**Image and logo files.** `csv-to-set.js` copies local files into the site so the set works when published:
+
+- Absolute paths (`/home/me/logos/taco.png`), `file://` URLs and paths relative to the CSV are copied to `assets/sets/<set-id>/logos/` or `assets/sets/<set-id>/images/`, and rewritten to those site-relative URLs in the set file.
+- Identical files are stored once, even if several cards (or two differently named copies) use them. Re-running the tool doesn't create extra copies.
+- Missing files are reported (`! Card: logo file not found: …`) and left out; that card falls back to the normal layout or placeholder art.
+- `http(s)://` URLs and paths already inside the site (e.g. `assets/…`, `sets/images/…`) are kept as they are.
+- `--site-root <dir>` writes the set, manifest entry and assets into a different copy of the site (handy for trying a set out without touching the real one).
+
+Commit the `assets/sets/<set-id>/` folder together with `sets/<set-id>.js`.
+
+Logos and images live only in the set file. The server stores just each card's id, number, name and rarity, so adding or changing logos needs **no database change** and no re-sync (re-sync only if you add, remove or rename cards).
+
+You can also paste a CSV in the app under **Admin → Sets & settings → Import a set from CSV**. That stores the set in this browser only; use **Download set file (.js)** and drop it into `sets/` to share it with everyone. The in-app importer can't copy files from your computer, so `image`/`logo` there must be URLs or paths already in the site (it warns if a value looks like a local file); use `csv-to-set.js` for local files.
 
 Aliases for the details column: `flavor`, `text`, `description`.
 
@@ -152,7 +177,7 @@ Admin tab → Create account → tick "Make this an admin account". For an exist
 
 ## Features
 
-- Procedural SVG placeholder art (seeded per card); real images when a card has an `image` path
+- Procedural SVG placeholder art (seeded per card); real images when a card has an `image` path; optional per-card `logo`
 - Rarity tiers Common → Chase, holo foils, glow / confetti for big pulls
 - Pack tear animation, click-to-flip or Reveal all, WebAudio sounds (no audio files)
 - Collection with owned / missing / dupe / holo filters, completion % by rarity
@@ -169,6 +194,7 @@ css/style.css
 js/           util, rarities, registry, csv, codes, storage, cardface, packs, audio, fx, devlock,
               config (Supabase URL + publishable key), cloud (API client), app
 sets/         manifest.js + one .js file per set (+ optional images/)
+assets/       sets/<set-id>/images|logos/ copied in by csv-to-set.js
 supabase/     migrations/001_core.sql, setup.sql (migrations + bundled sets; paste into SQL Editor)
 tools/        make-placeholder-set.js, csv-to-set.js, make-codes.js, example.csv,
               build-setup-sql.js, sync-set.js, make-admin.js (npm install in tools/ for the pg driver)

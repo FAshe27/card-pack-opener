@@ -1,7 +1,8 @@
 /* CSV -> card set converter (UMD: used by the in-browser importer and tools/csv-to-set.js).
    Columns (header row recommended, any order, case-insensitive):
-     name (required), rarity (required), subtitle, details, image, id
-   Without a header row the columns are assumed to be: name, rarity, subtitle, details, image */
+     name (required), rarity (required), subtitle, details, image, logo, id
+   Without a header row the columns are assumed to be: name, rarity, subtitle, details, image, logo
+   "logo" is an optional brand/logo picture shown in the details box (or beside the details text). */
 (function (root, factory) {
   var R = (typeof module === 'object' && module.exports) ? require('./rarities.js') : root.CPSRarities;
   var api = factory(R);
@@ -40,11 +41,11 @@
     var cols;
     if (head.indexOf('name') >= 0 && head.indexOf('rarity') >= 0) {
       cols = {};
-      ['id', 'name', 'rarity', 'subtitle', 'details', 'image'].forEach(function (k) { cols[k] = head.indexOf(k); });
+      ['id', 'name', 'rarity', 'subtitle', 'details', 'image', 'logo'].forEach(function (k) { cols[k] = head.indexOf(k); });
       ['flavor', 'text', 'description'].forEach(function (k) { if (cols.details < 0 && head.indexOf(k) >= 0) cols.details = head.indexOf(k); });
       rows = rows.slice(1);
     } else {
-      cols = { id: -1, name: 0, rarity: 1, subtitle: 2, details: 3, image: 4 };
+      cols = { id: -1, name: 0, rarity: 1, subtitle: 2, details: 3, image: 4, logo: 5 };
     }
     var counts = {};
     rows.forEach(function (r, idx) {
@@ -58,6 +59,7 @@
       if (get('subtitle')) card.subtitle = get('subtitle');
       if (get('details')) card.details = get('details');
       if (get('image')) card.image = get('image');
+      if (get('logo')) card.logo = get('logo');
       counts[rarity] = (counts[rarity] || 0) + 1;
       cards.push(card);
     });
