@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card Pack Simulator</title>
+  <meta name="description" content="Open card packs, build your collection, chase the rarest cards.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='3' width='20' height='26' rx='3' fill='%236d5dfc'/%3E%3Cpath d='M16 9l2 5 5 .4-3.8 3.3 1.2 5-4.4-2.7-4.4 2.7 1.2-5L9 14.4l5-.4z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">✦</span><span class="brand-text">Pack<b>Rip</b></span></div>
+    <label class="set-picker" title="Choose a card set">
+      <span>Set</span>
+      <select id="setSelect" aria-label="Card set"></select>
+    </label>
+    <nav class="tabs" role="tablist">
+      <button data-view="packs" class="tab active">Open Packs</button>
+      <button data-view="collection" class="tab">Collection</button>
+      <button data-view="stats" class="tab">Stats</button>
+      <button data-view="odds" class="tab">Odds</button>
+      <button data-view="sets" class="tab">Sets &amp; Settings</button>
+    </nav>
+    <div class="top-actions">
+      <button id="soundBtn" class="icon-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+      <button id="playerBtn" class="player-chip" title="Switch player"><span class="avatar" id="playerAvatar">P</span><span id="playerName">Player</span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ OPEN PACKS ============ -->
+    <section id="view-packs" class="view active">
+      <div class="packs-layout">
+        <aside class="panel inventory">
+          <h2>Your packs</h2>
+          <div class="inv-pack" id="invPack"></div>
+          <div class="inv-count"><span id="packCount">0</span> <span id="packCountLabel">unopened packs</span></div>
+          <button id="openBtn" class="btn primary big">Open a pack</button>
+
+          <form id="redeemForm" class="redeem" autocomplete="off">
+            <label for="codeInput">Have a prize code?</label>
+            <div class="row">
+              <input id="codeInput" placeholder="PACK-3-XXXXX-XXXXX" spellcheck="false">
+              <button class="btn" type="submit">Redeem</button>
+            </div>
+          </form>
+
+          <div class="dev-only dev-box">
+            <div class="dev-title">Dev tools</div>
+            <div class="row">
+              <button id="freePackBtn" class="btn small">+1 free pack</button>
+              <button id="free10Btn" class="btn small">+10</button>
+            </div>
+          </div>
+
+          <div class="mini-stats" id="miniStats"></div>
+        </aside>
+
+        <section class="panel stage" id="stage">
+          <div class="stage-idle" id="stageIdle"></div>
+          <div class="stage-pack hidden" id="stagePack"></div>
+          <div class="reveal-grid hidden" id="revealGrid" aria-live="polite"></div>
+          <div class="stage-controls hidden" id="stageControls">
+            <div class="stage-summary" id="stageSummary"></div>
+            <div class="row">
+              <button id="revealAllBtn" class="btn">Reveal all</button>
+              <button id="nextPackBtn" class="btn primary hidden">Open next pack</button>
+              <button id="doneBtn" class="btn ghost hidden">Done</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============ COLLECTION ============ -->
+    <section id="view-collection" class="view">
+      <div class="panel coll-head">
+        <div class="completion">
+          <div class="ring" id="compRing"><span id="compPct">0%</span></div>
+          <div>
+            <div class="comp-title" id="compTitle">Collection</div>
+            <div class="comp-sub" id="compSub">0 / 0 unique cards</div>
+          </div>
+        </div>
+        <div class="rarity-progress" id="rarityProgress"></div>
+      </div>
+      <div class="panel filters">
+        <input id="collSearch" type="search" placeholder="Search name, number, details…">
+        <select id="collRarity"><option value="">All rarities</option></select>
+        <div class="seg" id="collOwn">
+          <button data-own="all" class="active">All</button>
+          <button data-own="owned">Owned</button>
+          <button data-own="missing">Missing</button>
+          <button data-own="dupes">Duplicates</button>
+          <button data-own="holo">Holo</button>
+        </div>
+        <select id="collSort">
+          <option value="num">Sort: Number</option>
+          <option value="rarity">Sort: Rarity</option>
+          <option value="count">Sort: Most copies</option>
+          <option value="name">Sort: Name</option>
+        </select>
+        <span class="filter-count" id="collCount"></span>
+      </div>
+      <div class="coll-grid" id="collGrid"></div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section id="view-stats" class="view">
+      <div class="stats-layout">
+        <div class="panel"><h2>Stats <small id="statsSetName"></small></h2><div class="tiles" id="statTiles"></div>
+          <h3>Pulls by rarity</h3><div id="rarityBars" class="bars"></div></div>
+        <div class="panel best"><h2>Best pull</h2><div id="bestPull" class="best-pull"></div></div>
+        <div class="panel wide"><h2>Recent pulls</h2><div id="recentPulls" class="recent"></div></div>
+      </div>
+    </section>
+
+    <!-- ============ ODDS ============ -->
+    <section id="view-odds" class="view">
+      <div class="panel">
+        <h2>Odds &amp; pack contents <small id="oddsSetName"></small></h2>
+        <p class="muted" id="oddsIntro"></p>
+        <div class="table-wrap"><table class="odds-table" id="oddsTable"></table></div>
+        <h3>Pack slots</h3>
+        <div id="slotList" class="slot-list"></div>
+        <p class="muted small">Odds are per pack. “Specific card” is the chance a pack contains one particular card of that rarity. Holo chance applies to each card pulled. Pulls use your browser's secure random number generator.</p>
+      </div>
+    </section>
+
+    <!-- ============ SETS & SETTINGS ============ -->
+    <section id="view-sets" class="view">
+      <div class="sets-layout">
+        <div class="panel">
+          <h2>Card sets</h2>
+          <div id="setList" class="set-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Import a set from CSV</h2>
+          <p class="muted small">One row per card. Columns: <code>name, rarity, subtitle, details, image</code> (header row recommended; only name and rarity are required). Rarity can be common, uncommon, rare, epic, legendary, chase (or C/U/R/E/L/X). The <code>details</code> column is the free-text box at the bottom of the card: stats, fun facts, flavor text, anything.</p>
+          <div class="form-grid">
+            <label>Set name <input id="impName" placeholder="e.g. Backyard Birds"></label>
+            <label>Short code <input id="impCode" placeholder="BRD" maxlength="4"></label>
+            <label>Pack color 1 <input id="impC1" type="color" value="#ff7a59"></label>
+            <label>Pack color 2 <input id="impC2" type="color" value="#7b2ff7"></label>
+          </div>
+          <label class="file-label">CSV file <input id="impFile" type="file" accept=".csv,text/csv,text/plain"></label>
+          <textarea id="impText" rows="7" placeholder="name,rarity,subtitle,details&#10;Northern Cardinal,common,Songbird,Males are bright red; females are tan.&#10;Bald Eagle,legendary,Raptor,Wingspan up to 7.5 feet."></textarea>
+          <div class="row">
+            <button id="impPreview" class="btn">Preview</button>
+            <button id="impAdd" class="btn primary">Add to this browser</button>
+            <button id="impDownload" class="btn ghost">Download set file (.js)</button>
+          </div>
+          <div id="impResult" class="imp-result"></div>
+        </div>
+        <div class="panel">
+          <h2>Settings</h2>
+          <label class="toggle"><input type="checkbox" id="soundToggle"> Sound effects</label>
+          <label class="toggle"><input type="checkbox" id="devToggle"> Dev mode (free packs, code generator)</label>
+          <div class="row wrap">
+            <button id="exportBtn" class="btn">Export my data</button>
+            <label class="btn file-btn">Import data<input id="importDataFile" type="file" accept=".json,application/json"></label>
+          </div>
+          <p class="muted small">Your collection is saved in this browser only. Export it to back it up or move it to another device.</p>
+          <div class="dev-only dev-box">
+            <div class="dev-title">Prize code generator</div>
+            <p class="muted small">Codes work for the selected set. They're checked in the browser, so anyone savvy could make their own; real prizes need a server (see README).</p>
+            <div class="row wrap">
+              <label class="inline">Packs per code <input id="genPacks" type="number" min="1" max="99" value="3"></label>
+              <label class="inline">How many <input id="genCount" type="number" min="1" max="100" value="5"></label>
+              <button id="genBtn" class="btn small">Generate</button>
+            </div>
+            <textarea id="genOut" rows="5" readonly></textarea>
+            <button id="resetSetBtn" class="btn small danger">Reset my progress in this set</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="modal" role="dialog" aria-modal="true">
+    <div class="modal-box" id="modalBox"></div>
+  </div>
+  <div class="toast-wrap" id="toasts"></div>
+
+  <!-- core -->
+  <script src="js/util.js"></script>
+  <script src="js/rarities.js"></script>
+  <script src="js/registry.js"></script>
+  <script src="js/csv.js"></script>
+  <script src="js/codes.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/cardface.js"></script>
+  <script src="js/packs.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/fx.js"></script>
+  <!-- list of set files to load (edit this to add sets) -->
+  <script src="sets/manifest.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
