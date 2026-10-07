@@ -58,7 +58,8 @@
       $('main').innerHTML = '<div class="panel"><h2>No card sets found</h2><p>Add a set file to <code>sets/</code> and list it in <code>sets/manifest.js</code>.</p></div>';
       return;
     }
-    S.dev = Store.getPref('dev', false) || /[?&]dev\b/.test(location.search);
+    S.dev = Store.getPref('dev', false) === true;
+    var wantDev = /[?&]dev\b/.test(location.search);
     audio.enabled = Store.getPref('sound', true);
 
     await ensurePlayer();
@@ -72,6 +73,7 @@
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
+    if (wantDev && !S.dev) requestDevUnlock();
   }
 
   async function ensurePlayer() {
@@ -320,8 +322,10 @@
     await save();
     input.value = '';
     audio.coin();
-    toast('+' + res.packs + ' ' + set.name + ' pack' + (res.packs === 1 ? '' : 's') + '!', 'good');
-    if (set.id !== S.set.id && !(S.opening && !S.opening.finished)) selectSet(set.id);
+    var other = set.id !== S.set.id, busy = S.opening && !S.opening.finished;
+    toast('+' + res.packs + ' pack' + (res.packs === 1 ? '' : 's') + ' added to ' + set.name + '!' +
+      (other ? (busy ? ' Switch sets to open them.' : ' Switched to that set.') : ''), 'good', 4500);
+    if (other && !busy) selectSet(set.id);
     renderPacksSide();
     if (!S.opening) resetStage();
     var c = fx.center($('#invPack'));
@@ -456,7 +460,16 @@
   }
 
   /* ---------------------------------------------------------- sets & settings */
+  function fillGenSet() {
+    var sel = $('#genSet'), keep = sel.value;
+    sel.innerHTML = window.CardSets.all().map(function (s) {
+      return '<option value="' + esc(s.id) + '">' + esc(s.name) + (s.source === 'imported' ? ' (imported)' : '') + '</option>';
+    }).join('');
+    sel.value = window.CardSets.get(keep) && S.genSetTouched ? keep : S.set.id;
+  }
+
   function renderSets() {
+    fillGenSet();
     $('#setList').innerHTML = window.CardSets.all().map(function (s) {
       var st = S.player.sets[s.id], owned = st ? ownedCount(s, st) : 0;
       return '<div class="set-item' + (s.id === S.set.id ? ' current' : '') + '">' +
@@ -544,6 +557,29 @@
       } catch (e) { toast('Import failed: ' + e.message, 'error'); }
     };
     fr.readAsText(file);
+  }
+
+  /* ---------------------------------------------------------- dev mode lock */
+  function requestDevUnlock() {
+    var html = '<button class="modal-x" data-close aria-label="Close">×</button><h2>🔒 Unlock dev mode</h2>' +
+      '<p class="muted small">Dev mode adds free packs and the prize code generator. Enter the password to turn it on in this browser.</p>' +
+      '<form class="row" id="devForm" autocomplete="off"><input id="devPass" type="password" placeholder="Password" aria-label="Dev mode password">' +
+      '<button class="btn primary small" type="submit">Unlock</button></form>';
+    openModal(html, function (box) {
+      var input = $('#devPass', box);
+      setTimeout(function () { input.focus(); }, 30);
+      $('#devForm', box).addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var ok = await CPS.devlock.check(input.value);
+        if (ok) {
+          S.dev = true; Store.setPref('dev', true); applyPrefsUI(); closeModal();
+          audio.coin(); toast('Dev mode unlocked.', 'good');
+        } else {
+          input.value = ''; input.classList.add('bad'); setTimeout(function () { input.classList.remove('bad'); }, 500);
+          audio.error(); toast("That's not the password. Dev mode stays off.", 'warn');
+        }
+      });
+    });
   }
 
   /* ---------------------------------------------------------- modal */
@@ -642,18 +678,23 @@
     });
     $('#soundToggle').addEventListener('change', function (e) { audio.enabled = e.target.checked; Store.setPref('sound', audio.enabled); applyPrefsUI(); });
     $('#soundBtn').addEventListener('click', function () { audio.enabled = !audio.enabled; Store.setPref('sound', audio.enabled); applyPrefsUI(); if (audio.enabled) audio.click(); });
-    $('#devToggle').addEventListener('change', function (e) { S.dev = e.target.checked; Store.setPref('dev', S.dev); applyPrefsUI(); });
+    $('#devToggle').addEventListener('change', function (e) {
+      if (e.target.checked) { e.target.checked = S.dev; if (!S.dev) requestDevUnlock(); return; }
+      S.dev = false; Store.setPref('dev', false); applyPrefsUI(); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
+    });
     $('#exportBtn').addEventListener('click', exportData);
     $('#importDataFile').addEventListener('change', function (e) { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
     $('#genBtn').addEventListener('click', function () {
       var n = Math.min(100, Math.max(1, +$('#genCount').value || 1)), packs = Math.min(99, Math.max(1, +$('#genPacks').value || 1)), out = [];
-      for (var i = 0; i < n; i++) out.push(window.CPSCodes.make(S.set.id, packs));
-      $('#genOut').value = out.join('\n');
+      var gset = window.CardSets.get($('#genSet').value) || S.set;
+      for (var i = 0; i < n; i++) out.push(window.CPSCodes.make(gset.id, packs));
+      $('#genOut').value = '# ' + n + ' code' + (n === 1 ? '' : 's') + ' for ' + gset.name + ' (' + packs + ' pack' + (packs === 1 ? '' : 's') + ' each)\n' + out.join('\n');
     });
     $('#resetSetBtn').addEventListener('click', function () {
       if (!confirm('Reset all your packs, cards and stats in "' + S.set.name + '"?')) return;
       delete S.player.sets[S.set.id]; save(); resetStage(); renderView(); toast('Progress reset.', 'warn');
     });
+    $('#genSet').addEventListener('change', function () { S.genSetTouched = true; });
     $('#playerBtn').addEventListener('click', openPlayerModal);
 
     // modal

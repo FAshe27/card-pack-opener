@@ -9,7 +9,7 @@ Cards are for collecting and trading only. Each card has a free-form **details**
 - **Local:** open `index.html` in a browser, or `python3 -m http.server 8000` from this folder and visit http://localhost:8000
 - **Host:** push this folder to GitHub Pages / Netlify / any static host. Point the site root at this directory.
 
-First visit gives you 3 starter packs. Toggle **Dev mode** under Sets & Settings for free packs and a prize-code generator while testing.
+First visit gives you 3 starter packs. **Dev mode** (Sets & Settings, or add `?dev` to the URL) adds free packs and a prize-code generator. It's password protected: only a SHA-256 hash of the password is stored (`DEV_HASH` in `js/devlock.js`). Once unlocked it stays on in that browser; switching it off means the password is needed again. To change the password, run `printf 'new-password' | sha256sum` and paste the hex into `DEV_HASH`.
 
 ## Placeholder set (~250 cards)
 
@@ -91,8 +91,11 @@ Regenerate the numbered placeholder set with `node tools/make-placeholder-set.js
 
 Format: `PACK-<packs>-<nonce>-<check>` (e.g. `PACK-3-K7QZ2-9XH4M`).
 
-- In the app: turn on Dev mode → Sets & Settings → Prize code generator.
-- From the CLI: `node tools/make-codes.js --set placeholder --packs 3 --count 10`
+Each code grants packs of one specific set. The set id is baked into the code's checksum, so a code made for the Demo Mini Set only ever credits Demo Mini packs; the app tells the player which set the packs went to and switches to it.
+
+- In the app: turn on Dev mode → Sets & Settings → Prize code generator, pick the set from the dropdown.
+- From the CLI: `node tools/make-codes.js --set placeholder --packs 3 --count 10` (`--list` shows set ids). Both use the same `js/codes.js`, so codes are interchangeable.
+- Codes for a set imported in one browser (CSV import) only work in browsers that have that set. Put the set file in `sets/` to make its codes work everywhere.
 
 **Client-side only.** Anyone who reads `js/codes.js` can mint codes. Change the `SECRET` string before sharing the site. Real prize codes (unforgeable, one redeem per friend) need a server that issues codes and marks them used.
 
@@ -116,7 +119,7 @@ To add real accounts or trading later, replace `js/storage.js` with a version th
 ```
 index.html
 css/style.css
-js/           util, rarities, registry, csv, codes, storage, cardface, packs, audio, fx, app
+js/           util, rarities, registry, csv, codes, storage, cardface, packs, audio, fx, devlock, app
 sets/         manifest.js + one .js file per set (+ optional images/)
 tools/        make-placeholder-set.js, csv-to-set.js, make-codes.js, example.csv
 ```
@@ -124,6 +127,7 @@ tools/        make-placeholder-set.js, csv-to-set.js, make-codes.js, example.csv
 ## Known limitations
 
 - Prize codes are forgeable without a server (see above).
+- The dev-mode password is a client-side gate only: someone determined could flip the saved setting in their browser's storage. Fine for friends, not real security.
 - Collection is local to the browser; clear site data and it's gone (export first).
 - No trading or accounts yet — storage module is ready to be swapped.
 - Holo / foil is CSS-only (no WebGL). Reduced-motion preference turns particle FX off.

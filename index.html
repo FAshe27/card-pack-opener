@@ -156,7 +156,7 @@
         <div class="panel">
           <h2>Settings</h2>
           <label class="toggle"><input type="checkbox" id="soundToggle"> Sound effects</label>
-          <label class="toggle"><input type="checkbox" id="devToggle"> Dev mode (free packs, code generator)</label>
+          <label class="toggle"><input type="checkbox" id="devToggle"> Dev mode (free packs, code generator) <span class="lock" aria-hidden="true">🔒</span></label>
           <div class="row wrap">
             <button id="exportBtn" class="btn">Export my data</button>
             <label class="btn file-btn">Import data<input id="importDataFile" type="file" accept=".json,application/json"></label>
@@ -164,8 +164,9 @@
           <p class="muted small">Your collection is saved in this browser only. Export it to back it up or move it to another device.</p>
           <div class="dev-only dev-box">
             <div class="dev-title">Prize code generator</div>
-            <p class="muted small">Codes work for the selected set. They're checked in the browser, so anyone savvy could make their own; real prizes need a server (see README).</p>
+            <p class="muted small">Each code grants packs of the set you pick here. They're checked in the browser, so anyone savvy could make their own; real prizes need a server (see README).</p>
             <div class="row wrap">
+              <label class="inline">Set <select id="genSet" aria-label="Set the codes are for"></select></label>
               <label class="inline">Packs per code <input id="genPacks" type="number" min="1" max="99" value="3"></label>
               <label class="inline">How many <input id="genCount" type="number" min="1" max="100" value="5"></label>
               <button id="genBtn" class="btn small">Generate</button>
@@ -194,6 +195,7 @@
   <script src="js/packs.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/fx.js"></script>
+  <script src="js/devlock.js"></script>
   <!-- list of set files to load (edit this to add sets) -->
   <script src="sets/manifest.js"></script>
   <script src="js/app.js"></script>
