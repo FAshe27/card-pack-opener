@@ -31,7 +31,7 @@ insert into cps.app_config (key, value) values
   ('session_days', '365'),                -- how long "remember me" tokens last
   ('login_max_failures', '8'),            -- failed logins allowed per IP per window
   ('login_window_minutes', '15'),
-  ('allow_guest_import', 'true'),         -- one-time upload of a guest (offline) collection
+  ('allow_guest_import', 'false'),        -- legacy: one-time upload of a local collection (the site is accounts-only now)
   ('guest_import_max_packs', '10')        -- cap on unopened packs carried over per set
 on conflict (key) do nothing;
 

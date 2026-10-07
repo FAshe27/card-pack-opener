@@ -12,7 +12,7 @@
     player: null, set: null, view: 'packs', opening: null, dev: false,
     coll: { own: 'all', rarity: '', q: '', sort: 'num' },
     loadWarnings: [],
-    mode: 'guest',          // 'guest' (this browser only) or 'cloud' (online account)
+    mode: 'locked',         // 'cloud' (logged in), 'locked' (login screen) or 'guest' (only when online play is off in js/config.js)
     account: null,          // cloud: {id, display_name, is_admin}
     onlineSets: [],         // cloud: set ids that exist on the server
     guestImported: false,
@@ -26,12 +26,16 @@
     return Store.savePlayer(S.player).catch(function (e) { console.warn(e); });
   }
   function isCloud() { return S.mode === 'cloud'; }
+  function isLocked() { return S.mode === 'locked'; }
+  /* Admin area: admin accounts (server-checked); "Sets & Settings" for everyone when online play is off. */
+  function canAdminArea() { return isAdmin() || S.mode === 'guest'; }
+  function devOn() { return !!S.dev && canAdminArea(); } // Dev tools only ever show for admins (or offline mode)
   function isAdmin() { return isCloud() && S.account && S.account.is_admin; }
   function ps(set) {
     set = set || S.set;
     var p = S.player, st = p.sets[set.id];
     if (!st) {
-      st = p.sets[set.id] = { packs: isCloud() ? 0 : CONFIG.starterPacks, cards: {}, recent: [], created: Date.now(),
+      st = p.sets[set.id] = { packs: S.mode === 'guest' ? CONFIG.starterPacks : 0, cards: {}, recent: [], created: Date.now(),
         stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
       save();
     }
@@ -79,28 +83,31 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'collection', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs');
+    showView(['packs', 'collection', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
-    if (wantDev && !S.dev) requestDevUnlock();
-    else if (S.askLogin) openPlayerModal();
+    if (isLocked()) showGate(S.gate || {});
+    else if (wantDev && !S.dev && canAdminArea()) requestDevUnlock();
   }
 
   /* ---------------------------------------------------------- online accounts */
   async function initAccount() {
-    if (CPS.cloud.enabled && CPS.cloud.hasToken()) {
-      try {
-        enterCloud(await CPS.cloud.call('get_state'));
-        return;
-      } catch (e) {
-        if (e.kind === 'auth') { CPS.cloud.clearToken(); S.loadWarnings.push('Your session ended. Please log in again.'); S.askLogin = true; }
-        else S.loadWarnings.push((e.kind === 'network' ? "Couldn't reach the server" : e.message) + ' Playing offline as a guest for now.');
-      }
+    if (!CPS.cloud.enabled) { await ensurePlayer(); S.mode = 'guest'; return; } // online play turned off in js/config.js
+    setLocked();
+    if (!CPS.cloud.hasToken()) { S.gate = {}; return; }
+    try {
+      enterCloud(await CPS.cloud.call('get_state'));
+    } catch (e) {
+      if (e.kind === 'auth') { CPS.cloud.clearToken(); S.gate = { msg: 'Your session ended. Please log in again.' }; }
+      else S.gate = { msg: e.message, retry: e.kind === 'network' };
     }
-    await ensurePlayer();
-    S.mode = 'guest';
-    if (CPS.cloud.enabled && !CPS.cloud.hasToken() && !Store.getPref('guestChosen', false)) S.askLogin = true;
+  }
+
+  /* Not logged in: an empty, never-saved placeholder profile behind the login screen. */
+  function setLocked() {
+    S.mode = 'locked'; S.account = null; S.onlineSets = [];
+    S.player = { id: '', name: 'Log in', sets: {} };
   }
 
   /* Turn the server snapshot into the same shape the guest profile uses. */
@@ -132,60 +139,32 @@
   }
 
   function cloudError(e) {
-    if (e && e.kind === 'auth') {
-      toast(e.message || 'Please log in again.', 'warn', 5000);
-      goGuest(true);
-      return;
-    }
+    if (e && e.kind === 'auth') { lockOut(e.message || 'Please log in again.'); return; }
     toast((e && e.message) || 'Something went wrong.', e && e.kind === 'network' ? 'warn' : 'error', 5000);
     audio.error();
   }
 
-  async function goGuest(openLogin) {
+  /* Back to the login screen (session ended or logged out). */
+  function lockOut(msg) {
     CPS.cloud.clearToken();
-    S.mode = 'guest'; S.account = null; S.onlineSets = [];
-    await ensurePlayer();
-    applyPrefsUI(); resetStage(); renderView();
+    S.opening = null;
+    setLocked();
     if (S.view === 'admin') showView('packs');
-    if (openLogin) openPlayerModal();
+    applyPrefsUI(); resetStage(); renderView();
+    showGate({ msg: msg });
   }
 
-  async function doLogin(username, remember) {
-    var r = await CPS.cloud.login(username, remember);
+  async function doLogin(username, pin, remember) {
+    var r = await CPS.cloud.login(username, pin, remember);
     if (!r || !r.ok) return r;
-    var guestP = S.mode === 'guest' ? S.player : null;
     enterCloud(await CPS.cloud.call('get_state'));
-    applyPrefsUI(); fillSetSelect(); resetStage(); renderView();
+    afterEnter();
     toast('Welcome, ' + S.account.display_name + '!', 'good');
-    if (guestP && !S.guestImported && guestHasData(guestP)) {
-      setTimeout(function () { toast('Tip: you can upload your guest collection once from the account menu.', '', 6000); }, 1200);
-    }
     return r;
   }
 
-  function guestHasData(p) {
-    return !!p && Object.keys(p.sets || {}).some(function (k) { var st = p.sets[k]; return st && Object.keys(st.cards || {}).length; });
-  }
-
-  async function guestPlayerForUpload() {
-    var id = Store.getActivePlayerId(), p = id ? await Store.loadPlayer(id) : null;
-    return p && guestHasData(p) ? p : null;
-  }
-
-  async function uploadGuest() {
-    var p = await guestPlayerForUpload();
-    if (!p) { toast('No guest collection on this device to upload.', 'warn'); return; }
-    var data = {}, cards = 0;
-    Object.keys(p.sets).forEach(function (sid) {
-      var st = p.sets[sid]; data[sid] = { packs: st.packs || 0, cards: st.cards || {} };
-      Object.keys(st.cards || {}).forEach(function (c) { cards += st.cards[c].n || 0; });
-    });
-    if (!confirm('Upload "' + p.name + '" (' + cards + ' cards) from this device into your account?\n\nThis can only be done once per account. Only sets that are on the server are included, and leftover unopened packs are capped.')) return;
-    try {
-      var r = await CPS.cloud.call('import_guest', { p_data: data });
-      toast('Uploaded ' + r.cards + ' cards and ' + r.packs + ' packs.', 'good', 5000);
-      closeModal(); await refreshCloud();
-    } catch (e) { cloudError(e); }
+  function afterEnter() {
+    applyPrefsUI(); fillSetSelect(); renderPacksSide(); resetStage(); renderView();
   }
 
   /* What the server needs to know about a set: cards + the resolved pack odds. */
@@ -210,19 +189,21 @@
   }
 
   function applyPrefsUI() {
-    document.body.classList.toggle('dev', S.dev);
+    document.body.classList.toggle('dev', devOn());
+    $('#adminTabBtn').textContent = S.mode === 'guest' ? 'Sets & Settings' : 'Admin';
     $('#devToggle').checked = S.dev;
     $('#soundToggle').checked = audio.enabled;
     $('#soundBtn').textContent = audio.enabled ? '🔊' : '🔇';
     $('#playerName').textContent = S.player.name;
     $('#playerAvatar').textContent = (S.player.name.trim()[0] || 'P').toUpperCase();
     document.body.classList.toggle('cloud', isCloud());
-    document.body.classList.toggle('guest', !isCloud());
+    document.body.classList.toggle('guest', S.mode === 'guest');
+    document.body.classList.toggle('locked', isLocked());
     document.body.classList.toggle('online-enabled', CPS.cloud.enabled);
     document.body.classList.toggle('admin', !!isAdmin());
     $('#playerBtn').classList.toggle('online', isCloud());
-    $('#playerBtn').title = isCloud() ? 'Your account' : (CPS.cloud.enabled ? 'Log in / switch player' : 'Switch player');
-    $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : 'guest';
+    $('#playerBtn').title = isCloud() ? 'Your account' : isLocked() ? 'Log in' : 'Switch player';
+    $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : isLocked() ? '' : 'local';
   }
 
   function fillSetSelect() {
@@ -241,28 +222,34 @@
   }
 
   /* ---------------------------------------------------------- views */
-  function showView(name) {
-    if (name === 'admin' && !(isAdmin() && S.dev)) name = 'packs';
+  function showView(name, quiet) {
+    if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
+    if (name === 'admin' && !canAdminArea()) name = 'packs';
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
     if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
     window.scrollTo(0, 0);
     renderView();
+    if (name === 'admin' && !quiet && isAdmin() && !S.dev) requestDevUnlock();
   }
   function renderView() {
     if (S.view === 'collection') renderCollection();
     else if (S.view === 'stats') renderStats();
     else if (S.view === 'odds') renderOdds();
-    else if (S.view === 'sets') renderSets();
-    else if (S.view === 'admin') renderAdmin();
+    else if (S.view === 'admin') renderAdminArea();
     else renderPacksSide();
   }
 
   /* ---------------------------------------------------------- packs view */
   function renderPacksSide() {
     var set = S.set, st = ps();
-    $('#invPack').innerHTML = CPS.cards.pack(set, 'mini') + (st.packs ? '<span class="inv-badge">' + st.packs + '</span>' : '');
+    var ip = $('#invPack');
+    ip.innerHTML = CPS.cards.pack(set, 'mini') + (st.packs ? '<span class="inv-badge">' + st.packs + '</span>' : '');
+    ip.classList.toggle('clickable', st.packs > 0); ip.classList.toggle('empty', !st.packs);
+    ip.setAttribute('role', 'button'); ip.tabIndex = 0;
+    ip.title = st.packs ? 'Click to open and tear a pack' : 'No packs left';
+    ip.setAttribute('aria-label', st.packs ? 'Open a ' + set.name + ' pack' : 'No packs left');
     $('#packCount').textContent = st.packs;
     $('#packCountLabel').textContent = st.packs === 1 ? 'unopened pack' : 'unopened packs';
     var busy = (S.opening && !S.opening.finished) || S.busy;
@@ -292,6 +279,7 @@
 
   async function startOpen() {
     if ((S.opening && !S.opening.finished) || S.busy) return;
+    if (isLocked()) { showGate({}); return; }
     var set = S.set, st = ps();
     if (st.packs <= 0) { toast('No packs left. Redeem a prize code to get more.', 'warn'); audio.error(); return; }
     var pulls, seen = {}, now = Date.now(), server = null;
@@ -342,6 +330,17 @@
     renderPacksSide();
     var sr = $('#stage').getBoundingClientRect();
     if (sr.top > innerHeight * 0.5 || sr.top < 0) $('#stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return true;
+  }
+
+  /* Click the pack in "Your packs": open it and tear it in one go. */
+  async function openFromPack() {
+    var o = S.opening;
+    if (S.busy) return;
+    if (o && !o.finished) { if (!o.torn) tear(); return; } // a pack is already out: tear it
+    if (isLocked()) { showGate({}); return; }
+    if (ps().packs <= 0) { toast("You're out of packs. Redeem a prize code to get more!", '', 3500); return; }
+    if (await startOpen()) { await U.sleep(320); if (S.opening && !S.opening.torn) tear(); }
   }
 
   async function tear() {
@@ -457,6 +456,7 @@
     e.preventDefault();
     var input = $('#codeInput'), raw = input.value.trim();
     if (!raw) return;
+    if (isLocked()) { showGate({}); return; }
     if (isCloud()) {
       var btn = $('#redeemForm button'); btn.disabled = true;
       try {
@@ -501,6 +501,7 @@
   }
 
   async function addFree(n) {
+    if (isLocked()) { showGate({}); return; }
     if (isCloud()) {
       if (!isAdmin()) { toast('Free packs need an admin account.', 'warn'); return; }
       if (S.onlineSets.indexOf(S.set.id) < 0) { toast("This set isn't on the server yet. Upload it from the Admin tab first.", 'warn', 5000); return; }
@@ -686,33 +687,23 @@
 
   function openPlayerModal() {
     if (isCloud()) return openAccountModal();
+    if (isLocked()) return showGate({});
     Store.listPlayers().then(function (list) {
-      var login = CPS.cloud.enabled
-        ? '<div class="login-box"><h2>Log in</h2>' +
-          '<p class="muted small">Use the username your host gave you. Keep it private: it works like a password.</p>' +
-          '<form id="loginForm" class="login-form" autocomplete="on">' +
-          '<input id="loginUser" type="password" autocomplete="current-password" placeholder="Your username" aria-label="Username" maxlength="64">' +
-          '<div class="row wrap"><label class="inline"><input type="checkbox" id="loginShow"> Show</label>' +
-          '<label class="inline"><input type="checkbox" id="loginRemember" checked> Remember me</label>' +
-          '<button class="btn primary" id="loginBtn" type="submit">Log in</button></div></form>' +
-          '<div id="loginMsg" class="login-msg"></div>' +
-          '<button class="btn ghost small" id="playGuest" type="button">Play as guest instead (saved on this device only)</button></div>'
-        : '';
-      var html = '<button class="modal-x" data-close aria-label="Close">×</button>' + login +
-        '<h2 class="' + (login ? 'guest-head' : '') + '">' + (login ? 'Guest players on this device' : 'Players on this device') + '</h2>' +
-        '<p class="muted small">Guest collections stay in this browser. Each guest has their own packs and cards.</p>' +
+      var html = '<button class="modal-x" data-close aria-label="Close">×</button>' +
+        '<h2>Players on this device</h2>' +
+        '<p class="muted small">Online play is turned off, so collections stay in this browser. Each player has their own packs and cards.</p>' +
         '<div class="player-list">' + list.map(function (p) {
           var cur = p.id === S.player.id;
           return '<div class="player-row' + (cur ? ' current' : '') + '"><span class="avatar">' + esc((p.name[0] || 'P').toUpperCase()) + '</span><b>' + esc(p.name) + '</b>' +
             (cur ? '<span class="pill">Playing</span>' : '<button class="btn small" data-switch="' + esc(p.id) + '">Switch</button><button class="btn small ghost" data-del="' + esc(p.id) + '">Delete</button>') + '</div>';
         }).join('') + '</div>' +
         '<form class="row" id="renameForm"><input id="renameInput" value="' + esc(S.player.name) + '" maxlength="24" aria-label="Your name"><button class="btn small">Rename me</button></form>' +
-        '<form class="row" id="newPlayerForm"><input id="newPlayerInput" placeholder="New guest name" maxlength="24"><button class="btn small">Add guest</button></form>';
+        '<form class="row" id="newPlayerForm"><input id="newPlayerInput" placeholder="New player name" maxlength="24"><button class="btn small">Add player</button></form>';
       openModal(html, function (box) {
         box.addEventListener('click', async function (e) {
           var sw = e.target.closest('[data-switch]'), del = e.target.closest('[data-del]');
           if (sw) { await switchPlayer(sw.dataset.switch); closeModal(); }
-          if (del && confirm('Delete this guest and their collection?')) { await Store.deletePlayer(del.dataset.del); openPlayerModal(); }
+          if (del && confirm('Delete this player and their collection?')) { await Store.deletePlayer(del.dataset.del); openPlayerModal(); }
         });
         $('#renameForm', box).addEventListener('submit', async function (e) {
           e.preventDefault(); var v = $('#renameInput', box).value.trim(); if (!v) return;
@@ -722,26 +713,56 @@
           e.preventDefault(); var v = $('#newPlayerInput', box).value.trim(); if (!v) return;
           var p = await Store.createPlayer(v); await switchPlayer(p.id); closeModal(); toast('Welcome, ' + v + '!', 'good');
         });
-        if (!login) return;
-        var u = $('#loginUser', box);
-        setTimeout(function () { u.focus(); }, 30);
-        $('#loginShow', box).addEventListener('change', function (e) { u.type = e.target.checked ? 'text' : 'password'; });
-        $('#playGuest', box).addEventListener('click', function () { Store.setPref('guestChosen', true); closeModal(); });
-        $('#loginForm', box).addEventListener('submit', async function (e) {
-          e.preventDefault();
-          var name = u.value.trim(), msg = $('#loginMsg', box), btn = $('#loginBtn', box);
-          if (!name) { u.focus(); return; }
-          btn.disabled = true; btn.textContent = 'Logging in…'; msg.textContent = ''; msg.className = 'login-msg';
-          try {
-            var r = await doLogin(name, $('#loginRemember', box).checked);
-            if (r && r.ok) { closeModal(); return; }
-            msg.textContent = (r && r.error) || 'Login failed.';
-            if (r && r.remaining != null && r.remaining <= 3) msg.textContent += ' ' + r.remaining + ' tries left before a short lockout.';
-            msg.classList.add('bad'); u.select(); audio.error();
-          } catch (err) {
-            msg.textContent = err.message; msg.classList.add('bad'); audio.error();
-          } finally { btn.disabled = false; btn.textContent = 'Log in'; }
-        });
+      });
+    });
+  }
+
+  /* The login screen. It can't be dismissed: the site is accounts-only. */
+  function showGate(opts) {
+    opts = opts || {};
+    var html = '<div class="login-box gate">' +
+      '<h2>Log in</h2>' +
+      '<p class="muted small">Use the username and 4-digit PIN the site owner gave you.</p>' +
+      '<form id="loginForm" class="login-form" autocomplete="on">' +
+      '<label class="field">Username <input id="loginUser" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Username" maxlength="32"></label>' +
+      '<label class="field">PIN <input id="loginPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="current-password" placeholder="••••"></label>' +
+      '<div class="row wrap"><label class="inline"><input type="checkbox" id="loginShow"> Show PIN</label>' +
+      '<label class="inline"><input type="checkbox" id="loginRemember" checked> Remember me</label>' +
+      '<button class="btn primary" id="loginBtn" type="submit">Log in</button></div></form>' +
+      '<div id="loginMsg" class="login-msg' + (opts.msg ? ' bad' : '') + '">' + esc(opts.msg || '') + '</div>' +
+      (opts.retry ? '<button class="btn small" id="gateRetry" type="button">Try again</button>' : '') +
+      '<p class="muted small">No username yet? Ask the site owner to make you an account.</p></div>';
+    openModal(html, function (box) {
+      S.gateOpen = true;
+      var u = $('#loginUser', box), pin = $('#loginPin', box), msg = $('#loginMsg', box);
+      var lastUser = Store.getPref('lastUser', '');
+      if (lastUser) u.value = lastUser;
+      setTimeout(function () { (lastUser ? pin : u).focus(); }, 30);
+      $('#loginShow', box).addEventListener('change', function (e) { pin.type = e.target.checked ? 'text' : 'password'; });
+      pin.addEventListener('input', function () { pin.value = pin.value.replace(/[^0-9]/g, '').slice(0, 4); });
+      function fail(text) { msg.textContent = text; msg.className = 'login-msg bad'; audio.error(); }
+      if (opts.retry) $('#gateRetry', box).addEventListener('click', async function (e) {
+        var b = e.target; b.disabled = true; b.textContent = 'Trying…'; msg.textContent = ''; msg.className = 'login-msg';
+        try { enterCloud(await CPS.cloud.call('get_state')); closeModal(true); afterEnter(); toast('Welcome back, ' + S.account.display_name + '!', 'good'); }
+        catch (err) {
+          if (err.kind === 'auth') { CPS.cloud.clearToken(); b.remove(); fail('Your session ended. Please log in again.'); }
+          else { fail(err.message); b.disabled = false; b.textContent = 'Try again'; }
+        }
+      });
+      $('#loginForm', box).addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var name = u.value.trim(), code = pin.value.trim(), btn = $('#loginBtn', box);
+        if (!name) { u.focus(); return; }
+        if (!validPin(code)) { fail('Enter your 4-digit PIN.'); pin.focus(); return; }
+        btn.disabled = true; btn.textContent = 'Logging in…'; msg.textContent = ''; msg.className = 'login-msg';
+        try {
+          var r = await doLogin(name, code, $('#loginRemember', box).checked);
+          if (r && r.ok) { Store.setPref('lastUser', name); closeModal(true); return; }
+          var t = (r && r.error) || 'Login failed.';
+          if (r && !r.locked && r.remaining != null && r.remaining <= 3) t += ' ' + r.remaining + (r.remaining === 1 ? ' try' : ' tries') + ' left before a lockout.';
+          fail(t); pin.value = ''; pin.focus();
+        } catch (err) { fail(err.message); }
+        finally { btn.disabled = false; btn.textContent = 'Log in'; }
       });
     });
   }
@@ -754,23 +775,16 @@
       (a.is_admin ? '<span class="pill r-legendary">Admin</span>' : '') + '<span class="pill r-uncommon">Online</span></div>' +
       '<p class="muted small">Your packs, cards and stats are saved on the server, so they follow you to any device where you log in with your username.</p>' +
       '<form class="row" id="dnForm"><input id="dnInput" value="' + esc(a.display_name) + '" maxlength="32" aria-label="Display name"><button class="btn small">Change display name</button></form>' +
-      '<div id="guestUp"></div>' +
-      '<div class="row wrap acct-actions"><button class="btn" id="logoutBtn">Log out</button></div>';
+      '<div class="row wrap acct-actions"><button class="btn" id="logoutBtn">Log out</button><button class="btn ghost" id="acctExport" type="button">Export my collection</button></div>';
     openModal(html, function (box) {
       $('#dnForm', box).addEventListener('submit', async function (e) {
         e.preventDefault(); var v = $('#dnInput', box).value.trim(); if (!v) return;
         try { var r = await CPS.cloud.call('set_display_name', { p_name: v }); S.account.display_name = r.display_name; S.player.name = r.display_name; applyPrefsUI(); toast('Name updated.', 'good'); openAccountModal(); }
         catch (err) { cloudError(err); }
       });
+      $('#acctExport', box).addEventListener('click', exportData);
       $('#logoutBtn', box).addEventListener('click', async function () {
-        await CPS.cloud.logout(); closeModal(); toast('Logged out.', ''); Store.setPref('guestChosen', true); goGuest(false);
-      });
-      if (!S.guestImported) guestPlayerForUpload().then(function (p) {
-        if (!p) return;
-        $('#guestUp', box).innerHTML = '<div class="dev-box upload-box"><div class="dev-title">Guest collection found</div>' +
-          '<p class="muted small">This device has a guest collection ("' + esc(p.name) + '"). You can copy it into your account once.</p>' +
-          '<button class="btn small" id="uploadGuestBtn">Upload guest collection</button></div>';
-        $('#uploadGuestBtn', box).addEventListener('click', uploadGuest);
+        await CPS.cloud.logout(); closeModal(true); lockOut('You are logged out.');
       });
     });
   }
@@ -787,15 +801,27 @@
     } catch (e) { cloudError(e); }
   }
 
-  var ALPH = '23456789abcdefghjkmnpqrstuvwxyz';
+  /* Usernames aren't secret any more: suggest one from the display name. */
   function suggestUsername(name) {
-    var base = String(name || 'player').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 12) || 'player';
-    var b = new Uint32Array(7); crypto.getRandomValues(b);
-    return base + '-' + Array.prototype.map.call(b, function (x) { return ALPH[x % ALPH.length]; }).join('');
+    return String(name || '').replace(/[^A-Za-z0-9_.-]+/g, '').slice(0, 32) || 'Player' + (1 + Math.floor(Math.random() * 99));
+  }
+  function randomPin() {
+    var b = new Uint32Array(1); crypto.getRandomValues(b);
+    return String(b[0] % 10000).padStart(4, '0');
+  }
+  function validPin(p) { return /^[0-9]{4}$/.test(p); }
+
+  function renderAdminArea() {
+    var guest = S.mode === 'guest', unlocked = isAdmin() && !!S.dev;
+    $('#adminGate').classList.toggle('hidden', guest || unlocked || !isAdmin());
+    $('#adminBody').classList.toggle('hidden', !unlocked);
+    $('#setsArea').classList.toggle('hidden', !(guest || unlocked));
+    if (unlocked) renderAdmin();
+    if (guest || unlocked) renderSets();
   }
 
   async function renderAdmin() {
-    if (!isAdmin() || !S.dev) { $('#adminBody').innerHTML = '<div class="panel"><p>Log in with an admin account and unlock Dev mode to see this page.</p></div>'; return; }
+    if (!isAdmin() || !S.dev) return;
     var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
       .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('');
     $('#naSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
@@ -814,13 +840,16 @@
         var packs = Object.keys(x.packs || {}).map(function (k) { var st = window.CardSets.get(k); return (st ? st.code : k) + ' ' + x.packs[k]; }).join(', ') || '0';
         return '<div class="acct-row' + (x.disabled ? ' disabled' : '') + '" data-acct="' + esc(x.id) + '" data-name="' + esc(x.display_name) + '">' +
           '<div class="acct-main"><span class="avatar">' + esc((x.display_name[0] || 'P').toUpperCase()) + '</span><div><b>' + esc(x.display_name) + '</b>' +
-          (x.is_admin ? ' <span class="pill r-legendary">Admin</span>' : '') + (x.disabled ? ' <span class="pill r-chase">Disabled</span>' : '') + (x.is_me ? ' <span class="pill">You</span>' : '') +
-          '<div class="muted small">username ' + esc(x.hint) + ' · packs ' + esc(packs) + ' · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
+          (x.is_admin ? ' <span class="pill r-legendary">Admin</span>' : '') + (x.disabled ? ' <span class="pill r-chase">Disabled</span>' : '') +
+          (x.locked ? ' <span class="pill r-epic" title="Too many wrong PINs. Reset the PIN to unlock now.">Locked</span>' : '') +
+          (x.has_pin === false ? ' <span class="pill r-chase">No PIN</span>' : '') + (x.is_me ? ' <span class="pill">You</span>' : '') +
+          '<div class="muted small">username <b class="acct-user">' + esc(x.username || x.hint) + '</b> · packs ' + esc(packs) + ' · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
           (x.last_login_at ? new Date(x.last_login_at).toLocaleDateString() : 'never') + '</div></div></div>' +
           '<div class="acct-actions row wrap"><select class="ga-set">' + setOpts + '</select><input class="ga-n" type="number" value="3" min="-99" max="999" aria-label="Packs">' +
           '<button class="btn small" data-act="grant">Give packs</button>' +
           '<button class="btn small ghost" data-act="rename">Rename</button>' +
-          '<button class="btn small ghost" data-act="reuser">New username</button>' +
+          '<button class="btn small ghost" data-act="reuser">Change username</button>' +
+          '<button class="btn small ghost" data-act="pin">Reset PIN</button>' +
           (x.is_me ? '' : '<button class="btn small ghost" data-act="' + (x.disabled ? 'enable' : 'disable') + '">' + (x.disabled ? 'Enable' : 'Disable') + '</button>' +
             '<button class="btn small ghost danger-text" data-act="delete">Delete</button>') + '</div></div>';
       }).join('') || '<div class="empty">No accounts yet.</div>';
@@ -848,10 +877,17 @@
         await CPS.cloud.call('admin_update_account', { p_account: id, p_display_name: nn.trim() });
         if (id === S.account.id) { S.account.display_name = nn.trim(); S.player.name = nn.trim(); applyPrefsUI(); }
       } else if (act === 'reuser') {
-        var nu = prompt('New secret username for ' + name + ' (at least 6 characters). Their other devices will be logged out.', suggestUsername(name));
+        var nu = prompt('New username for ' + name + ' (2–32 characters, not case-sensitive). Their PIN stays the same.', $('.acct-user', row).textContent);
         if (!nu || !nu.trim()) return;
         await CPS.cloud.call('admin_update_account', { p_account: id, p_new_username: nu.trim() });
-        showCreated(name, nu.trim(), 'Username changed');
+        if (id === S.account.id) S.account.username = nu.trim();
+        toast(name + "'s username is now " + nu.trim() + '.', 'good');
+      } else if (act === 'pin') {
+        var np = prompt('New 4-digit PIN for ' + name + '. This also unlocks the account and logs out their other devices.', randomPin());
+        if (np === null) return; np = np.trim();
+        if (!validPin(np)) { toast('A PIN is exactly 4 digits.', 'warn'); return; }
+        await CPS.cloud.call('admin_update_account', { p_account: id, p_pin: np });
+        showCreated(name, $('.acct-user', row).textContent, np, 'PIN reset');
       } else if (act === 'disable' || act === 'enable') {
         if (act === 'disable' && !confirm('Disable ' + name + '? They will be logged out and can\'t log in until you enable them.')) return;
         await CPS.cloud.call('admin_update_account', { p_account: id, p_disabled: act === 'disable' });
@@ -864,27 +900,31 @@
     } catch (err) { cloudError(err); }
   }
 
-  function showCreated(display, username, title) {
+  function showCreated(display, username, pin, title) {
+    var text = 'Username: ' + username + '\nPIN: ' + pin + '\nSite: ' + (CPS.cloud.config.siteUrl || location.href);
     $('#naResult').innerHTML = '<div class="created-box"><div class="dev-title">' + esc(title || 'Account created') + '</div>' +
-      '<p>Send <b>' + esc(display) + '</b> this username privately. It\'s their login (like a password) and won\'t be shown again:</p>' +
-      '<div class="row"><code class="big-code" id="createdUser">' + esc(username) + '</code><button class="btn small" id="copyUser" type="button">Copy</button></div>' +
-      '<p class="muted small">They log in at ' + esc((CPS.cloud.config.siteUrl || location.href)) + ' via the player button (top right).</p></div>';
+      '<p>Send <b>' + esc(display) + '</b> their login. Keep the PIN private: it won\'t be shown again (you can reset it any time).</p>' +
+      '<div class="login-pair"><span>Username</span><code class="big-code" id="createdUser">' + esc(username) + '</code>' +
+      '<span>PIN</span><code class="big-code" id="createdPin">' + esc(pin) + '</code></div>' +
+      '<div class="row"><button class="btn small" id="copyUser" type="button">Copy both</button></div>' +
+      '<p class="muted small">They log in at ' + esc((CPS.cloud.config.siteUrl || location.href)) + '.</p></div>';
     $('#copyUser').addEventListener('click', function () {
-      (navigator.clipboard ? navigator.clipboard.writeText(username) : Promise.reject()).then(function () { toast('Copied.', 'good', 1200); }, function () { toast('Select and copy it manually.', 'warn'); });
+      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { toast('Copied.', 'good', 1200); }, function () { toast('Select and copy it manually.', 'warn'); });
     });
   }
 
   async function createAccount(e) {
     e.preventDefault();
-    var display = $('#naName').value.trim(), user = $('#naUser').value.trim(), btn = $('#newAcctForm button[type=submit]');
-    if (!display || user.length < 6) { toast('Enter a display name and a username of at least 6 characters.', 'warn'); return; }
+    var display = $('#naName').value.trim(), user = $('#naUser').value.trim(), pin = $('#naPin').value.trim(), btn = $('#newAcctForm button[type=submit]');
+    if (!display || user.length < 2) { toast('Enter a display name and a username (2+ characters).', 'warn'); return; }
+    if (!validPin(pin)) { toast('Enter a 4-digit PIN (or press Random).', 'warn'); $('#naPin').focus(); return; }
     btn.disabled = true;
     try {
-      var r = await CPS.cloud.call('admin_create_account', { p_username: user, p_display_name: display,
+      var r = await CPS.cloud.call('admin_create_account', { p_username: user, p_display_name: display, p_pin: pin,
         p_start_packs: Math.max(0, parseInt($('#naPacks').value, 10) || 0), p_set: $('#naSet').value || null, p_is_admin: $('#naAdmin').checked });
-      showCreated(r.display_name, user);
+      showCreated(r.display_name, r.username || user, pin);
       toast('Created ' + r.display_name + ' with ' + r.packs + ' pack' + (r.packs === 1 ? '' : 's') + '.', 'good');
-      $('#naName').value = ''; $('#naUser').value = ''; $('#naAdmin').checked = false;
+      $('#naName').value = ''; $('#naUser').value = ''; $('#naPin').value = ''; $('#naAdmin').checked = false;
       renderAdmin();
     } catch (err) { cloudError(err); }
     finally { btn.disabled = false; }
@@ -901,7 +941,7 @@
     U.download('collection-' + S.player.name.replace(/\W+/g, '_') + '.json', JSON.stringify(data, null, 2), 'application/json');
   }
   function importData(file) {
-    if (isCloud()) { toast('Log out to import a guest backup. Online accounts can upload a guest collection from the account menu.', 'warn', 5000); return; }
+    if (S.mode !== 'guest') { toast('Importing a backup only works when online play is turned off.', 'warn', 5000); return; }
     var fr = new FileReader();
     fr.onload = async function () {
       try {
@@ -928,7 +968,7 @@
         e.preventDefault();
         var ok = await CPS.devlock.check(input.value);
         if (ok) {
-          S.dev = true; Store.setPref('dev', true); applyPrefsUI(); closeModal();
+          S.dev = true; Store.setPref('dev', true); applyPrefsUI(); closeModal(); if (S.view === 'admin') renderView();
           audio.coin(); toast('Dev mode unlocked.', 'good');
         } else {
           input.value = ''; input.classList.add('bad'); setTimeout(function () { input.classList.remove('bad'); }, 500);
@@ -940,12 +980,17 @@
 
   /* ---------------------------------------------------------- modal */
   function openModal(html, after) {
+    S.gateOpen = false;
     var m = $('#modal'), box = $('#modalBox');
     var fresh = box.cloneNode(false); box.replaceWith(fresh); // drop old listeners
     fresh.innerHTML = html; m.classList.remove('hidden');
     if (after) after(fresh);
   }
-  function closeModal() { $('#modal').classList.add('hidden'); $('#modalBox').innerHTML = ''; }
+  function closeModal(force) {
+    if (S.gateOpen && !force) return; // the login screen stays until you log in
+    S.gateOpen = false;
+    $('#modal').classList.add('hidden'); $('#modalBox').innerHTML = '';
+  }
 
   /* ---------------------------------------------------------- tilt */
   var tiltEl = null;
@@ -977,6 +1022,9 @@
     });
     $('#redeemForm').addEventListener('submit', redeem);
     $('#freePackBtn').addEventListener('click', function () { addFree(1); });
+    $('#adminUnlockBtn').addEventListener('click', requestDevUnlock);
+    $('#invPack').addEventListener('click', openFromPack);
+    $('#invPack').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); openFromPack(); } });
     $('#free10Btn').addEventListener('click', function () { addFree(10); });
 
     // collection
@@ -1036,7 +1084,7 @@
     $('#soundBtn').addEventListener('click', function () { audio.enabled = !audio.enabled; Store.setPref('sound', audio.enabled); applyPrefsUI(); if (audio.enabled) audio.click(); });
     $('#devToggle').addEventListener('change', function (e) {
       if (e.target.checked) { e.target.checked = S.dev; if (!S.dev) requestDevUnlock(); return; }
-      S.dev = false; Store.setPref('dev', false); applyPrefsUI(); if (S.view === 'admin') showView('packs'); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
+      S.dev = false; Store.setPref('dev', false); applyPrefsUI(); if (S.view === 'admin') renderView(); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
     });
     $('#exportBtn').addEventListener('click', exportData);
     $('#importDataFile').addEventListener('change', function (e) { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
@@ -1056,6 +1104,7 @@
     $('#playerBtn').addEventListener('click', openPlayerModal);
     $('#newAcctForm').addEventListener('submit', createAccount);
     $('#naSuggest').addEventListener('click', function () { $('#naUser').value = suggestUsername($('#naName').value); });
+    $('#naPinRandom').addEventListener('click', function () { $('#naPin').value = randomPin(); });
     $('#acctList').addEventListener('click', adminAction);
     $('#adminRefresh').addEventListener('click', function () { refreshCloud().then(renderAdmin); });
     $('#serverSets').addEventListener('click', async function (e) {

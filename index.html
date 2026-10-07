@@ -20,12 +20,11 @@
       <button data-view="collection" class="tab">Collection</button>
       <button data-view="stats" class="tab">Stats</button>
       <button data-view="odds" class="tab">Odds</button>
-      <button data-view="sets" class="tab">Sets &amp; Settings</button>
-      <button data-view="admin" class="tab admin-tab">Admin</button>
+      <button data-view="admin" class="tab admin-tab" id="adminTabBtn">Admin</button>
     </nav>
     <div class="top-actions">
       <button id="soundBtn" class="icon-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
-      <button id="playerBtn" class="player-chip" title="Switch player"><span class="avatar" id="playerAvatar">P</span><span id="playerName">Player</span><span class="mode-tag" id="modeTag">guest</span></button>
+      <button id="playerBtn" class="player-chip" title="Log in"><span class="avatar" id="playerAvatar">L</span><span id="playerName">Log in</span><span class="mode-tag" id="modeTag"></span></button>
     </div>
   </header>
 
@@ -129,8 +128,45 @@
       </div>
     </section>
 
-    <!-- ============ SETS & SETTINGS ============ -->
-    <section id="view-sets" class="view">
+    <!-- ============ ADMIN (admin accounts; also "Sets & Settings" when online play is off) ============ -->
+    <section id="view-admin" class="view">
+      <div id="adminGate" class="panel admin-gate hidden">
+        <h2>🔒 Admin tools are locked</h2>
+        <p class="muted small">Your account is an admin. Enter the Dev password to show the admin tools in this browser.</p>
+        <button class="btn primary" id="adminUnlockBtn" type="button">Unlock</button>
+      </div>
+      <div id="adminBody" class="admin-layout">
+        <div class="panel">
+          <h2>Create a friend's account</h2>
+          <p class="muted small">There's no public sign-up: you create each account here. Friends log in with their <b>username</b> and a <b>4-digit PIN</b>. The PIN is shown once after you create the account (you can reset it any time).</p>
+          <form id="newAcctForm" class="form-grid" autocomplete="off">
+            <label>Display name <input id="naName" maxlength="32" placeholder="e.g. Jamie"></label>
+            <label>Username <span class="row"><input id="naUser" maxlength="32" placeholder="2+ characters" spellcheck="false" autocapitalize="none"><button type="button" class="btn small" id="naSuggest">From name</button></span></label>
+            <label>PIN (4 digits) <span class="row"><input id="naPin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="1234" autocomplete="off"><button type="button" class="btn small" id="naPinRandom">Random</button></span></label>
+            <label>Starting packs <input id="naPacks" type="number" min="0" max="999" value="3"></label>
+            <label>For set <select id="naSet"></select></label>
+            <label class="toggle span2"><input type="checkbox" id="naAdmin"> Make this an admin account</label>
+            <button class="btn primary span2" type="submit">Create account</button>
+          </form>
+          <div id="naResult"></div>
+        </div>
+        <div class="panel">
+          <h2>Sets on the server</h2>
+          <p class="muted small">Packs are opened on the server, so each set file must be uploaded there too. Re-sync after editing a set.</p>
+          <div id="serverSets" class="set-list"></div>
+        </div>
+        <div class="panel wide">
+          <h2>Accounts <button class="btn small ghost" id="adminRefresh" type="button">Refresh</button></h2>
+          <div id="acctList" class="acct-list"></div>
+        </div>
+        <div class="panel wide">
+          <h2>Prize codes</h2>
+          <p class="muted small">Make new codes with the Prize code generator under Sets &amp; settings below.</p>
+          <div id="codeList"></div>
+        </div>
+      </div>
+      <div id="setsArea">
+        <h2 class="area-title">Sets &amp; settings</h2>
       <div class="sets-layout">
         <div class="panel">
           <h2>Card sets</h2>
@@ -157,12 +193,12 @@
         <div class="panel">
           <h2>Settings</h2>
           <label class="toggle"><input type="checkbox" id="soundToggle"> Sound effects</label>
-          <label class="toggle"><input type="checkbox" id="devToggle"> Dev mode (free packs, code generator) <span class="lock" aria-hidden="true">🔒</span></label>
+          <label class="toggle"><input type="checkbox" id="devToggle"> <span class="cloud-only">Admin tools unlocked (Dev mode)</span><span class="guest-only">Dev mode (free packs, code generator)</span> <span class="lock" aria-hidden="true">🔒</span></label>
           <div class="row wrap">
             <button id="exportBtn" class="btn">Export my data</button>
             <label class="btn file-btn guest-only">Import data<input id="importDataFile" type="file" accept=".json,application/json"></label>
           </div>
-          <p class="muted small guest-only">Guest collections are saved in this browser only. Export to back up, or log in to an online account to keep cards on the server.</p>
+          <p class="muted small guest-only">Online play is turned off (js/config.js), so collections are saved in this browser only. Export to back up.</p>
           <p class="muted small cloud-only">You're logged in: your collection is saved online and follows you to any device.</p>
           <div class="dev-only dev-box">
             <div class="dev-title">Prize code generator</div>
@@ -181,38 +217,6 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- ============ ADMIN (online admin + Dev mode) ============ -->
-    <section id="view-admin" class="view">
-      <div id="adminBody" class="admin-layout">
-        <div class="panel">
-          <h2>Create a friend's account</h2>
-          <p class="muted small">There's no public sign-up: you create each account here. The username <b>is</b> the login and works like a password, so make it hard to guess and send it privately. It's shown only once.</p>
-          <form id="newAcctForm" class="form-grid" autocomplete="off">
-            <label>Display name <input id="naName" maxlength="32" placeholder="e.g. Jamie"></label>
-            <label>Secret username <span class="row"><input id="naUser" maxlength="64" placeholder="6+ characters" spellcheck="false"><button type="button" class="btn small" id="naSuggest">Suggest</button></span></label>
-            <label>Starting packs <input id="naPacks" type="number" min="0" max="999" value="3"></label>
-            <label>For set <select id="naSet"></select></label>
-            <label class="toggle span2"><input type="checkbox" id="naAdmin"> Make this an admin account</label>
-            <button class="btn primary span2" type="submit">Create account</button>
-          </form>
-          <div id="naResult"></div>
-        </div>
-        <div class="panel">
-          <h2>Sets on the server</h2>
-          <p class="muted small">Packs are opened on the server, so each set file must be uploaded there too. Re-sync after editing a set.</p>
-          <div id="serverSets" class="set-list"></div>
-        </div>
-        <div class="panel wide">
-          <h2>Accounts <button class="btn small ghost" id="adminRefresh" type="button">Refresh</button></h2>
-          <div id="acctList" class="acct-list"></div>
-        </div>
-        <div class="panel wide">
-          <h2>Prize codes</h2>
-          <p class="muted small">Generate codes under Sets &amp; Settings → Prize code generator.</p>
-          <div id="codeList"></div>
-        </div>
       </div>
     </section>
   </main>

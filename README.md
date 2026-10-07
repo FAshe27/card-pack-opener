@@ -9,7 +9,9 @@ Cards are for collecting and trading only. Each card has a free-form **details**
 - **Local:** open `index.html` in a browser, or `python3 -m http.server 8000` from this folder and visit http://localhost:8000
 - **Host:** push this folder to GitHub Pages / Netlify / any static host. Point the site root at this directory.
 
-First visit gives you 3 starter packs. **Dev mode** (Sets & Settings, or add `?dev` to the URL) adds free packs and a prize-code generator. It's password protected: only a SHA-256 hash of the password is stored (`DEV_HASH` in `js/devlock.js`). Once unlocked it stays on in that browser; switching it off means the password is needed again. To change the password, run `printf 'new-password' | sha256sum` and paste the hex into `DEV_HASH`.
+The site is **accounts-only**: everyone logs in with a username + 4-digit PIN that the site owner creates (see [Online accounts](#online-accounts-supabase)). To open a pack, click the pack in **Your packs** (it opens and tears in one go), or use the **Open a pack** button / Space.
+
+**Admin tab** (admin accounts only) holds the account tools plus everything that used to be under Sets & Settings (card sets, CSV import, prize code generator, Dev tools). It's guarded twice: the server checks the account is an admin, and the browser asks for the **Dev password** before showing the tools. Only a SHA-256 hash of that password is stored (`DEV_HASH` in `js/devlock.js`). Once unlocked it stays on in that browser; untick "Admin tools unlocked" to lock it again. To change the password, run `printf 'new-password' | sha256sum` and paste the hex into `DEV_HASH`. Regular players only see Open Packs, Collection, Stats and Odds, plus the sound button and their account menu (log out, export).
 
 ## Placeholder set (~250 cards)
 
@@ -47,7 +49,7 @@ That writes `sets/birds.js` and adds it to the manifest. Columns (header row, an
 | `image` | no | Path or URL to art; leave blank for procedural placeholder art |
 | `id` | no | Stable id (defaults to 001, 002, …) |
 
-You can also paste a CSV in the app under **Sets & Settings → Import a set from CSV**. That stores the set in this browser only; use **Download set file (.js)** and drop it into `sets/` to share it with everyone.
+You can also paste a CSV in the app under **Admin → Sets & settings → Import a set from CSV**. That stores the set in this browser only; use **Download set file (.js)** and drop it into `sets/` to share it with everyone.
 
 Aliases for the details column: `flavor`, `text`, `description`.
 
@@ -91,51 +93,54 @@ Regenerate the numbered placeholder set with `node tools/make-placeholder-set.js
 
 Format: `PACK-<packs>-<nonce>-<check>` (e.g. `PACK-3-K7QZ2-9XH4M`). Each code grants packs of one specific set; the app tells the player which set got the packs and switches to it.
 
-**Online (logged in):** codes live in the database. An admin makes them in Dev mode → Sets & Settings → Prize code generator (pick the set, packs per code, how many codes, **max uses**, optional note). A code with max uses 1 works once; with max uses 5, five different players can redeem it once each. The Admin tab lists recent codes and who redeemed them. Server codes can't be forged.
+Codes live in the database. An admin makes them under Admin → Sets & settings → Prize code generator (pick the set, packs per code, how many codes, **max uses**, optional note). A code with max uses 1 works once; with max uses 5, five different players can redeem it once each. The Admin tab lists recent codes and who redeemed them. Server codes can't be forged.
 
-**Guest / offline:** codes are checked in the browser with `js/codes.js` (same generator in guest mode, or `node tools/make-codes.js --set placeholder --packs 3 --count 10`, `--list` shows set ids). Anyone who reads `js/codes.js` can mint these, so change `SECRET` before sharing. Guest codes don't work for online accounts and vice versa.
+*Offline mode only* (`onlineEnabled: false` in `js/config.js`): codes are checked in the browser with `js/codes.js` (`node tools/make-codes.js --set placeholder --packs 3 --count 10`). Anyone who reads `js/codes.js` can mint those, so they're for local testing only and don't work on the live site.
 
 ## Online accounts (Supabase)
 
 ### How it works
 
-- **Login is a username only.** No password, no email, no public sign-up. The site owner (admin) creates each account and gives the friend their username privately. The username *is* the secret, so make it long and random (the Admin tab's **Suggest** button makes ones like `alex-k3m9q2x`).
-- Logging in calls `cps_login`, which returns a random 256-bit session token. Only its SHA-256 hash is stored server-side. Usernames are also stored only as hashes (plus a short hint like `al…(12)` for the admin list). With **Remember me** the token sits in `localStorage` (valid 365 days); without it, in `sessionStorage` (gone when the tab closes). **Log out** revokes it on the server.
-- Failed logins are rate-limited per IP: each miss waits about 0.4 s, and 8 misses in 15 minutes locks that IP out for the rest of the window.
-- **All data lives in a private `cps` schema** that the API doesn't expose. Every table has row-level security on with no policies, and the `anon`/`authenticated` roles have no privileges on it. The browser can only call `public.cps_*` functions (`SECURITY DEFINER`), which check the token first. Nobody can list accounts or read usernames, and only admin tokens pass the `cps_admin_*` functions.
+- **Login = username + 4-digit PIN.** No email, no public sign-up: the site owner (admin) creates each account in the Admin tab and gives the friend their username and PIN. Usernames are 2–32 characters, not case-sensitive (`Alex` = `alex`), and aren't secret. PINs are stored only as **bcrypt hashes** (pgcrypto `crypt()` with a per-row salt).
+- **Brute-force protection:** each failed login waits ~0.4 s+ and counts against the caller's IP (8 failures in 15 min locks that IP out for the rest of the window). Each account also locks after **5 wrong PINs in 15 minutes**: 15 minutes the first time, doubling on repeat locks up to 2 hours. A correct login or an admin **Reset PIN** clears it. Errors don't say whether the username or the PIN was wrong. All limits are in `cps.app_config` (`pin_max_failures`, `pin_window_minutes`, `pin_lock_minutes`, `pin_lock_max_minutes`, `login_max_failures`, `login_window_minutes`).
+- Logging in returns a random 256-bit session token; only its SHA-256 hash is stored server-side. With **Remember me** the token sits in `localStorage` (valid 365 days); without it, in `sessionStorage`. **Log out** revokes it on the server. A PIN reset logs that account out everywhere else.
+- **All data lives in a private `cps` schema** that the API doesn't expose. Every table has row-level security on with no policies, and the `anon`/`authenticated` roles have no privileges on it. The browser can only call `public.cps_*` functions (`SECURITY DEFINER`), which check the token first. Players can't list accounts; only admin tokens pass the `cps_admin_*` functions.
 - **Packs are opened on the server** (`cps_open_pack`): it spends a pack, rolls the cards with the set's odds, and saves the collection and stats, so results can't be faked from the browser. The browser only animates what the server rolled.
-- **Guest mode still works:** "Play as guest instead" (or `file://` with no network, or if the server can't be reached) uses the old local storage. Once logged in, an account can upload its guest collection **once** (Your account → Upload guest collection). The upload is validated against the server's card list and capped at 10 packs' worth by default (`guest_import_max_packs`).
+- **Accounts-only:** nothing is playable without logging in, and the login screen can't be dismissed. If the server can't be reached, the site says "Can't reach the server right now. Please try again later." with a **Try again** button (it doesn't fall back to a local mode).
 - **Trading groundwork:** `cps.card_transfers` and `cps.transfer_card()` move copies between accounts with an audit row. There's no trading UI or public RPC yet.
 
 ### Config file
 
-`js/config.js` holds the project URL and the **publishable** key (safe to be public; it only allows calling the `cps_*` functions). Set `onlineEnabled: false` to turn accounts off entirely (pure guest mode). Never put the database URL, the service-role key, or any username in this repo.
+`js/config.js` holds the project URL and the **publishable** key (safe to be public; it only allows calling the `cps_*` functions). `onlineEnabled: false` is a developer/offline mode (no server; collections live in the browser and the Admin tab becomes "Sets & Settings"); the automated UI tests use it. Never put the database URL, the service-role key, or any PIN in this repo.
 
 ### One-time setup (Supabase dashboard)
 
 1. Supabase Dashboard → your project → **SQL Editor** → **New query**.
-2. Paste the whole of `supabase/setup.sql` → **Run**. It's safe to run again later; it creates the schema, functions and the two bundled sets.
-3. In a new query, create your admin account with a long, private username (don't reuse a public handle):
+2. Paste the whole of `supabase/setup.sql` → **Run**. It's safe to run again; it creates the schema, functions (all migrations in `supabase/migrations/`) and the two bundled sets.
+3. In a new query, create your admin account with your username and a 4-digit PIN:
    ```sql
-   select cps.bootstrap_admin('your-secret-username', 'Your Name');
+   select cps.bootstrap_admin('YourName', 'Display Name', '1234');
    ```
-   Or, from a machine that can reach the database: `cd tools && npm install && SUPABASE_DB_URL=... node make-admin.js --generate --name "Your Name"`.
-4. Open the site → **Log in** with that username → Sets & Settings → turn on **Dev mode** (password) → the **Admin** tab appears.
+   (Running it again for an existing username makes it admin and resets the PIN, which is also the way back in if you ever lock yourself out.) From a machine that can reach the database you can instead run `cd tools && npm install && SUPABASE_DB_URL=... node make-admin.js --username YourName --name "Display Name"` (it prints a random PIN once).
+4. Open the site → log in → **Admin** tab → enter the Dev password.
 
-No Auth settings, email provider, or API settings need changing. Settings live in the `cps.app_config` table (welcome packs, default set, session length, login limits, guest uploads), and you can edit them in the Table Editor.
+**Upgrading an existing install** to PIN logins: run `supabase/migrations/002_pin.sql` in the SQL Editor (or re-run `setup.sql`), then set PINs: `select cps.bootstrap_admin('YourName', 'Display Name', '1234');` for yourself, and Admin → Reset PIN for everyone else. Accounts without a PIN can't log in until one is set.
 
-### Admin tab (admin login + Dev mode)
+No Auth settings, email provider, or API settings need changing. Settings live in the `cps.app_config` table (welcome packs, default set, session length, login limits), and you can edit them in the Table Editor.
 
-- **Create account:** display name, secret username (or Suggest), starting packs (default 3) and which set they're for, optional admin flag. The username is shown **once** with a Copy button, so send it to your friend privately.
-- **Accounts list:** give or take packs for any set, rename, issue a new username (which logs them out everywhere), disable/enable, delete.
+### Admin tab (admin login + Dev password)
+
+- **Create account:** display name, username ("From name" fills it in), **PIN** (type one or press **Random**), starting packs (default 3) and which set they're for, optional admin flag. Username + PIN are shown once with a **Copy both** button.
+- **Accounts list:** shows each username, packs, Locked / No PIN status. Give or take packs, rename, change username (PIN and sessions stay), **Reset PIN** (also unlocks and logs them out elsewhere), disable/enable, delete.
 - **Sets on the server:** Upload / Re-sync any set the site has loaded (including a CSV import), so packs for it can be opened and codes made for it.
 - **Prize codes:** recent codes with uses and who redeemed them.
+- **Sets & settings:** card sets, CSV import, prize code generator, sound, export, Dev tools (free pack button).
 
 ### Adding a set to the online version
 
 Add the set to `sets/` as usual (above) and push. Then get it into the database with any one of these:
 - Admin tab → **Sets on the server** → Upload.
-- `cd tools && CPS_ADMIN_USERNAME=... node sync-set.js birds` (uses the HTTPS API with your admin login; `--all` for every set).
+- `cd tools && CPS_ADMIN_USERNAME=... CPS_ADMIN_PIN=... node sync-set.js birds` (uses the HTTPS API with your admin login; `--all` for every set).
 - `node tools/sync-set.js birds --sql`, then paste the printed SQL into the SQL Editor.
 - `node tools/build-setup-sql.js` regenerates `supabase/setup.sql` with every set in the manifest.
 
@@ -151,8 +156,9 @@ Admin tab → Create account → tick "Make this an admin account". For an exist
 - Rarity tiers Common → Chase, holo foils, glow / confetti for big pulls
 - Pack tear animation, click-to-flip or Reveal all, WebAudio sounds (no audio files)
 - Collection with owned / missing / dupe / holo filters, completion % by rarity
-- Stats, odds panel, set picker, CSV importer, prize codes, multi-player profiles (guest)
-- Optional online accounts with server-side pack opening (Supabase)
+- Stats, odds panel, set picker, CSV importer, prize codes
+- Online accounts (username + PIN) with server-side pack opening (Supabase)
+- Click the pack to open + tear it in one go
 - Works from `file://` (sets are `.js` modules, not JSON fetches)
 
 ## Project layout
@@ -170,11 +176,9 @@ tools/        make-placeholder-set.js, csv-to-set.js, make-codes.js, example.csv
 
 ## Known limitations
 
-- The username is the only secret. Anyone who learns it can use that account, so treat it like a password. If one leaks, Admin tab → New username.
-- Guest-mode prize codes are forgeable (see above); online codes are not.
-- The dev-mode password is a client-side gate only. Real admin powers come from the admin account (checked on the server); Dev mode just shows the tools.
-- A guest collection upload can't be verified (it came from the browser), so it's capped and allowed once per account.
-- Guest collections are local to the browser; clear site data and they're gone (export first or upload to an account).
+- A 4-digit PIN only has 10,000 combinations. The per-IP limit and per-account lockout make guessing slow (with the defaults, a few dozen guesses a day per account), but it's game-night security, not bank security.
+- The lockout can be abused: someone who knows a username can type wrong PINs to lock that account for up to 2 hours. An admin can unlock any account with Reset PIN, and the owner can always reset their own PIN in the SQL Editor (`select cps.bootstrap_admin(...)`).
+- The Dev password is a client-side gate only. Real admin powers come from the admin account (checked on the server); the password just hides the tools in the browser.
 - No trading UI yet (database groundwork only).
-- Supabase's free tier pauses a project after a week without activity; un-pause it in the dashboard. While it's unreachable the site falls back to guest mode.
+- Supabase's free tier pauses a project after a week without activity; un-pause it in the dashboard. While it's unreachable the site shows a "can't reach the server" message.
 - Holo / foil is CSS-only (no WebGL). Reduced-motion preference turns particle FX off.

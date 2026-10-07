@@ -396,7 +396,11 @@ body.cloud .cloud-only { display: inline-flex !important; }
 body.cloud p.cloud-only { display: block !important; }
 body.cloud .guest-only { display: none !important; }
 .tab.admin-tab { display: none; color: var(--warn); }
-body.admin.dev .tab.admin-tab { display: inline-block; }
+body.admin .tab.admin-tab, body.guest .tab.admin-tab { display: inline-block; }
+body.guest .tab.admin-tab { color: inherit; }
+.area-title { margin: 28px 0 14px; font-size: 1.1rem; }
+body.guest .area-title { display: none; }
+.admin-gate { max-width: 520px; }
 .mode-tag { font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; padding: 2px 7px; border-radius: 99px; background: rgba(255,255,255,.08); color: var(--muted); font-weight: 800; }
 .player-chip.online .mode-tag { background: rgba(56,201,127,.18); color: #7ef0b4; }
 body.admin .player-chip .mode-tag { background: rgba(255,178,30,.18); color: #ffd98a; }
@@ -404,10 +408,7 @@ body.admin .player-chip .mode-tag { background: rgba(255,178,30,.18); color: #ff
 .login-box h2 { margin: 0; }
 .login-form { display: flex; flex-direction: column; gap: 10px; }
 .login-form input#loginUser { font-size: 1.05rem; padding: 12px 14px; }
-.login-form .row { justify-content: space-between; }
 .login-msg { min-height: 1.2em; font-size: .9rem; } .login-msg.bad { color: #ff9cad; }
-#playGuest { align-self: flex-start; }
-.guest-head { font-size: 1rem; color: var(--muted); }
 .acct-actions { margin-top: 14px; }
 .upload-box { margin: 12px 0; }
 .admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; align-items: start; }
@@ -429,3 +430,26 @@ body.admin .player-chip .mode-tag { background: rgba(255,178,30,.18); color: #ff
 .big-code { font-size: 1.1rem; padding: 6px 10px; user-select: all; }
 .codes-table td, .codes-table th { padding: 8px 10px; font-size: .85rem; }
 .codes-table td:first-child { color: var(--text); font-weight: 500; }
+
+/* accounts-only: nothing but the login screen until you log in */
+body.locked main, body.locked .tabs, body.locked .set-picker, body.locked #setSelect, body.locked #playerBtn .mode-tag { visibility: hidden; }
+.login-box.gate { padding: 4px 0 0; margin: 0; border-bottom: 0; }
+label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: none; }
+.login-form .row { align-items: center; gap: 14px; }
+.login-form .row #loginBtn { margin-left: auto; }
+.login-box.gate h2 { margin-top: 0; }
+#gateRetry { align-self: flex-start; margin-bottom: 8px; }
+
+/* click the pack in "Your packs" to open + tear it */
+.inv-pack.clickable { cursor: pointer; }
+.inv-pack.clickable .pack { transition: transform .18s ease, filter .18s ease; }
+.inv-pack.clickable:hover .pack, .inv-pack.clickable:focus-visible .pack { transform: translateY(-4px) rotate(-2deg) scale(1.04); filter: drop-shadow(0 10px 22px rgba(123,47,247,.45)) brightness(1.08); }
+.inv-pack.clickable:active .pack { transform: scale(.97); }
+.inv-pack:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 12px; }
+.inv-pack.empty { cursor: pointer; opacity: .7; }
+.inv-hint { font-size: .75rem; color: var(--muted); text-align: center; margin-top: 2px; }
+
+.login-form .field { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--muted); }
+.login-form #loginPin { font-size: 1.3rem; letter-spacing: .4em; padding: 10px 14px; max-width: 160px; }
+.login-pair { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: center; margin: 8px 0; }
+.login-pair span { color: var(--muted); font-size: .85rem; }

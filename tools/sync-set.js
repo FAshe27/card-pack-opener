@@ -4,7 +4,7 @@
 
    Options:
      node sync-set.js placeholder birds         # via the API, logs in as admin
-         -> needs env CPS_ADMIN_USERNAME (your secret admin username)
+         -> needs env CPS_ADMIN_USERNAME and CPS_ADMIN_PIN (your admin login)
      node sync-set.js --all                     # every set in sets/manifest.js
      node sync-set.js birds --sql > birds.sql   # print SQL to paste into the Supabase SQL Editor
      node sync-set.js birds --db                # write directly using SUPABASE_DB_URL
@@ -39,7 +39,8 @@ if (flags.has('--sql')) { process.stdout.write(sets.map(seedSql).join('\n') + "\
   vm.runInContext(fs.readFileSync(path.join(ROOT, 'js/config.js'), 'utf8'), ctx);
   const cfg = Object.assign({}, ctx.window.CPS_CONFIG, process.env.CPS_SUPABASE_URL ? { supabaseUrl: process.env.CPS_SUPABASE_URL, supabaseKey: process.env.CPS_SUPABASE_KEY } : {});
   const user = process.env.CPS_ADMIN_USERNAME;
-  if (!user) { console.error('Set CPS_ADMIN_USERNAME to your admin username (or use --sql / --db).'); process.exit(1); }
+  const pin = process.env.CPS_ADMIN_PIN;
+  if (!user || !pin) { console.error('Set CPS_ADMIN_USERNAME and CPS_ADMIN_PIN to your admin login (or use --sql / --db).'); process.exit(1); }
   const rpc = async (fn, body) => {
     const r = await fetch(cfg.supabaseUrl.replace(/\/+$/, '') + '/rest/v1/rpc/' + fn, {
       method: 'POST', headers: { apikey: cfg.supabaseKey, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -47,7 +48,7 @@ if (flags.has('--sql')) { process.stdout.write(sets.map(seedSql).join('\n') + "\
     if (!r.ok) throw new Error((j && j.message) || r.status);
     return j;
   };
-  const login = await rpc('cps_login', { p_username: user, p_user_agent: 'tools/sync-set.js' });
+  const login = await rpc('cps_login', { p_username: user, p_pin: pin, p_user_agent: 'tools/sync-set.js' });
   if (!login.ok) { console.error('Login failed:', login.error); process.exit(1); }
   try {
     for (const s of sets) {
