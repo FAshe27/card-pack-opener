@@ -11,17 +11,27 @@
   var S = {
     player: null, set: null, view: 'packs', opening: null, dev: false,
     coll: { own: 'all', rarity: '', q: '', sort: 'num' },
-    loadWarnings: []
+    loadWarnings: [],
+    mode: 'guest',          // 'guest' (this browser only) or 'cloud' (online account)
+    account: null,          // cloud: {id, display_name, is_admin}
+    onlineSets: [],         // cloud: set ids that exist on the server
+    guestImported: false,
+    busy: false
   };
 
   /* ---------------------------------------------------------- helpers */
   function rarityOf(key) { return R.RARITIES[R.INDEX[key]]; }
-  function save() { return Store.savePlayer(S.player).catch(function (e) { console.warn(e); }); }
+  function save() {
+    if (S.mode === 'cloud') return Promise.resolve(); // the server is the source of truth
+    return Store.savePlayer(S.player).catch(function (e) { console.warn(e); });
+  }
+  function isCloud() { return S.mode === 'cloud'; }
+  function isAdmin() { return isCloud() && S.account && S.account.is_admin; }
   function ps(set) {
     set = set || S.set;
     var p = S.player, st = p.sets[set.id];
     if (!st) {
-      st = p.sets[set.id] = { packs: CONFIG.starterPacks, cards: {}, recent: [], created: Date.now(),
+      st = p.sets[set.id] = { packs: isCloud() ? 0 : CONFIG.starterPacks, cards: {}, recent: [], created: Date.now(),
         stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
       save();
     }
@@ -62,18 +72,130 @@
     var wantDev = /[?&]dev\b/.test(location.search);
     audio.enabled = Store.getPref('sound', true);
 
-    await ensurePlayer();
+    await initAccount();
     var last = Store.getPref('set', null);
     S.set = window.CardSets.get(last) || window.CardSets.all()[0];
     bind();
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'collection', 'stats', 'odds', 'sets'].indexOf(v) >= 0 ? v : 'packs');
+    showView(['packs', 'collection', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs');
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
     if (wantDev && !S.dev) requestDevUnlock();
+    else if (S.askLogin) openPlayerModal();
+  }
+
+  /* ---------------------------------------------------------- online accounts */
+  async function initAccount() {
+    if (CPS.cloud.enabled && CPS.cloud.hasToken()) {
+      try {
+        enterCloud(await CPS.cloud.call('get_state'));
+        return;
+      } catch (e) {
+        if (e.kind === 'auth') { CPS.cloud.clearToken(); S.loadWarnings.push('Your session ended. Please log in again.'); S.askLogin = true; }
+        else S.loadWarnings.push((e.kind === 'network' ? "Couldn't reach the server" : e.message) + ' Playing offline as a guest for now.');
+      }
+    }
+    await ensurePlayer();
+    S.mode = 'guest';
+    if (CPS.cloud.enabled && !CPS.cloud.hasToken() && !Store.getPref('guestChosen', false)) S.askLogin = true;
+  }
+
+  /* Turn the server snapshot into the same shape the guest profile uses. */
+  function enterCloud(state) {
+    var sets = {};
+    function get(id) {
+      return sets[id] || (sets[id] = { packs: 0, cards: {}, recent: [], stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } });
+    }
+    Object.keys(state.inventory || {}).forEach(function (id) { get(id).packs = state.inventory[id]; });
+    (state.collection || []).forEach(function (r) { get(r[0]).cards[r[1]] = { n: r[2], h: r[3] }; });
+    Object.keys(state.stats || {}).forEach(function (id) {
+      var x = state.stats[id], st = get(id).stats;
+      st.opened = x.opened; st.pulled = x.pulled; st.holos = x.holos; st.byRarity = x.by_rarity || {};
+      st.best = x.best ? { id: x.best.id, holo: !!x.best.holo, at: Date.parse(x.best.at) || Date.now() } : null;
+    });
+    Object.keys(state.recent || {}).forEach(function (id) {
+      get(id).recent = state.recent[id].map(function (c) { return { id: c.id, holo: !!c.holo }; });
+    });
+    S.mode = 'cloud';
+    S.account = state.account;
+    S.onlineSets = state.online_sets || [];
+    S.guestImported = !!state.guest_imported;
+    S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
+  }
+
+  async function refreshCloud() {
+    try { enterCloud(await CPS.cloud.call('get_state')); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); }
+    catch (e) { cloudError(e); }
+  }
+
+  function cloudError(e) {
+    if (e && e.kind === 'auth') {
+      toast(e.message || 'Please log in again.', 'warn', 5000);
+      goGuest(true);
+      return;
+    }
+    toast((e && e.message) || 'Something went wrong.', e && e.kind === 'network' ? 'warn' : 'error', 5000);
+    audio.error();
+  }
+
+  async function goGuest(openLogin) {
+    CPS.cloud.clearToken();
+    S.mode = 'guest'; S.account = null; S.onlineSets = [];
+    await ensurePlayer();
+    applyPrefsUI(); resetStage(); renderView();
+    if (S.view === 'admin') showView('packs');
+    if (openLogin) openPlayerModal();
+  }
+
+  async function doLogin(username, remember) {
+    var r = await CPS.cloud.login(username, remember);
+    if (!r || !r.ok) return r;
+    var guestP = S.mode === 'guest' ? S.player : null;
+    enterCloud(await CPS.cloud.call('get_state'));
+    applyPrefsUI(); fillSetSelect(); resetStage(); renderView();
+    toast('Welcome, ' + S.account.display_name + '!', 'good');
+    if (guestP && !S.guestImported && guestHasData(guestP)) {
+      setTimeout(function () { toast('Tip: you can upload your guest collection once from the account menu.', '', 6000); }, 1200);
+    }
+    return r;
+  }
+
+  function guestHasData(p) {
+    return !!p && Object.keys(p.sets || {}).some(function (k) { var st = p.sets[k]; return st && Object.keys(st.cards || {}).length; });
+  }
+
+  async function guestPlayerForUpload() {
+    var id = Store.getActivePlayerId(), p = id ? await Store.loadPlayer(id) : null;
+    return p && guestHasData(p) ? p : null;
+  }
+
+  async function uploadGuest() {
+    var p = await guestPlayerForUpload();
+    if (!p) { toast('No guest collection on this device to upload.', 'warn'); return; }
+    var data = {}, cards = 0;
+    Object.keys(p.sets).forEach(function (sid) {
+      var st = p.sets[sid]; data[sid] = { packs: st.packs || 0, cards: st.cards || {} };
+      Object.keys(st.cards || {}).forEach(function (c) { cards += st.cards[c].n || 0; });
+    });
+    if (!confirm('Upload "' + p.name + '" (' + cards + ' cards) from this device into your account?\n\nThis can only be done once per account. Only sets that are on the server are included, and leftover unopened packs are capped.')) return;
+    try {
+      var r = await CPS.cloud.call('import_guest', { p_data: data });
+      toast('Uploaded ' + r.cards + ' cards and ' + r.packs + ' packs.', 'good', 5000);
+      closeModal(); await refreshCloud();
+    } catch (e) { cloudError(e); }
+  }
+
+  /* What the server needs to know about a set: cards + the resolved pack odds. */
+  function setPayload(set) {
+    return {
+      id: set.id, name: set.name, code: set.code,
+      pack: { name: set.pack.name, holo: set.pack.holo,
+              slots: set.pack.slots.map(function (s) { return { count: s.count, label: s.label, odds: s.odds }; }) },
+      cards: set.cards.map(function (c) { return { id: c.id, num: typeof c.num === 'number' ? c.num : parseInt(c.num, 10) || null, name: c.name, rarity: c.rarity }; })
+    };
   }
 
   async function ensurePlayer() {
@@ -94,6 +216,13 @@
     $('#soundBtn').textContent = audio.enabled ? '🔊' : '🔇';
     $('#playerName').textContent = S.player.name;
     $('#playerAvatar').textContent = (S.player.name.trim()[0] || 'P').toUpperCase();
+    document.body.classList.toggle('cloud', isCloud());
+    document.body.classList.toggle('guest', !isCloud());
+    document.body.classList.toggle('online-enabled', CPS.cloud.enabled);
+    document.body.classList.toggle('admin', !!isAdmin());
+    $('#playerBtn').classList.toggle('online', isCloud());
+    $('#playerBtn').title = isCloud() ? 'Your account' : (CPS.cloud.enabled ? 'Log in / switch player' : 'Switch player');
+    $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : 'guest';
   }
 
   function fillSetSelect() {
@@ -113,6 +242,7 @@
 
   /* ---------------------------------------------------------- views */
   function showView(name) {
+    if (name === 'admin' && !(isAdmin() && S.dev)) name = 'packs';
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
@@ -125,6 +255,7 @@
     else if (S.view === 'stats') renderStats();
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'sets') renderSets();
+    else if (S.view === 'admin') renderAdmin();
     else renderPacksSide();
   }
 
@@ -134,7 +265,7 @@
     $('#invPack').innerHTML = CPS.cards.pack(set, 'mini') + (st.packs ? '<span class="inv-badge">' + st.packs + '</span>' : '');
     $('#packCount').textContent = st.packs;
     $('#packCountLabel').textContent = st.packs === 1 ? 'unopened pack' : 'unopened packs';
-    var busy = S.opening && !S.opening.finished;
+    var busy = (S.opening && !S.opening.finished) || S.busy;
     $('#openBtn').disabled = !st.packs || busy;
     $('#openBtn').textContent = st.packs ? 'Open a pack' : 'No packs left';
     var owned = ownedCount(set, st), best = st.stats.best && set.byId.get(st.stats.best.id);
@@ -159,17 +290,30 @@
     renderPacksSide();
   }
 
-  function startOpen() {
-    if (S.opening && !S.opening.finished) return;
+  async function startOpen() {
+    if ((S.opening && !S.opening.finished) || S.busy) return;
     var set = S.set, st = ps();
     if (st.packs <= 0) { toast('No packs left. Redeem a prize code to get more.', 'warn'); audio.error(); return; }
-    var pulls = CPS.packs.open(set), seen = {}, now = Date.now();
+    var pulls, seen = {}, now = Date.now(), server = null;
+    if (isCloud()) {
+      if (S.onlineSets.indexOf(set.id) < 0) { toast("This set isn't on the server yet. An admin can upload it from the Admin tab.", 'warn', 5000); return; }
+      S.busy = true; $('#openBtn').disabled = true; $('#openBtn').textContent = 'Opening…';
+      try { server = await CPS.cloud.call('open_pack', { p_set: set.id }); }
+      catch (e) { S.busy = false; renderPacksSide(); cloudError(e); return; }
+      S.busy = false;
+      pulls = server.cards.map(function (c) {
+        var card = set.byId.get(c.id) || { id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '', details: '(This card is newer than your copy of the set file. Refresh the page.)', image: '' };
+        return { card: card, holo: !!c.holo, serverNew: !!c.new };
+      });
+    } else {
+      pulls = CPS.packs.open(set);
+    }
     var bc = st.stats.best && set.byId.get(st.stats.best.id);
     var curBest = bc ? CPS.packs.score(bc, st.stats.best.holo) : -1, prevBest = curBest, bestPull = null;
     st.packs--;
     pulls.forEach(function (p) {
       var id = p.card.id, e = st.cards[id];
-      p.isNew = !(e && e.n) && !seen[id]; seen[id] = 1;
+      p.isNew = server ? p.serverNew : (!(e && e.n) && !seen[id]); seen[id] = 1;
       e = st.cards[id] = e || { n: 0, h: 0 };
       e.n++; if (p.holo) e.h++;
       st.stats.pulled++; if (p.holo) st.stats.holos++;
@@ -181,6 +325,10 @@
     if (bestPull && prevBest >= 0) bestPull.newBest = true;
     st.recent = st.recent.slice(0, CONFIG.recentMax);
     st.stats.opened++;
+    if (server) {
+      st.packs = server.packs_left;
+      if (server.best) st.stats.best = { id: server.best.id, holo: !!server.best.holo, at: Date.parse(server.best.at) || now };
+    }
     save();
 
     S.opening = { set: set, pulls: pulls, torn: false, revealed: pulls.map(function () { return false; }), finished: false, auto: false };
@@ -309,6 +457,26 @@
     e.preventDefault();
     var input = $('#codeInput'), raw = input.value.trim();
     if (!raw) return;
+    if (isCloud()) {
+      var btn = $('#redeemForm button'); btn.disabled = true;
+      try {
+        var r = await CPS.cloud.call('redeem_code', { p_code: raw });
+        var rs = window.CardSets.get(r.set_id);
+        if (rs) ps(rs).packs = r.packs_now;
+        input.value = ''; audio.coin();
+        var otherSet = r.set_id !== S.set.id, busyOpen = S.opening && !S.opening.finished;
+        toast('+' + r.packs + ' pack' + (r.packs === 1 ? '' : 's') + ' added to ' + (r.set_name || r.set_id) + '!' +
+          (otherSet && rs ? (busyOpen ? ' Switch sets to open them.' : ' Switched to that set.') : ''), 'good', 4500);
+        if (otherSet && rs && !busyOpen) selectSet(r.set_id);
+        renderPacksSide(); if (!S.opening) resetStage();
+        var cc = fx.center($('#invPack'));
+        fx.burst(cc.x, cc.y, { count: 40, colors: ['#ffe08a', '#fff'], speed: 6, shape: 'star', size: 2 });
+      } catch (err) {
+        input.classList.add('bad'); setTimeout(function () { input.classList.remove('bad'); }, 500);
+        cloudError(err);
+      } finally { btn.disabled = false; }
+      return;
+    }
     var res = window.CPSCodes.validate(raw, window.CardSets.ids());
     if (!res) {
       toast("That code isn't valid. Check for typos.", 'error'); audio.error();
@@ -332,7 +500,16 @@
     fx.burst(c.x, c.y, { count: 40, colors: ['#ffe08a', '#fff', set.theme.primary], speed: 6, shape: 'star', size: 2 });
   }
 
-  function addFree(n) {
+  async function addFree(n) {
+    if (isCloud()) {
+      if (!isAdmin()) { toast('Free packs need an admin account.', 'warn'); return; }
+      if (S.onlineSets.indexOf(S.set.id) < 0) { toast("This set isn't on the server yet. Upload it from the Admin tab first.", 'warn', 5000); return; }
+      try { var r = await CPS.cloud.call('admin_grant_packs', { p_set: S.set.id, p_packs: n }); ps().packs = r.packs_now; }
+      catch (e) { cloudError(e); return; }
+      audio.coin(); toast('+' + n + ' pack' + (n === 1 ? '' : 's') + ' (admin)', 'good', 1500);
+      renderPacksSide(); if (!S.opening) resetStage();
+      return;
+    }
     ps().packs += n; save(); audio.coin();
     toast('+' + n + ' free pack' + (n === 1 ? '' : 's') + ' (dev)', 'good', 1500);
     renderPacksSide();
@@ -508,21 +685,34 @@
   }
 
   function openPlayerModal() {
+    if (isCloud()) return openAccountModal();
     Store.listPlayers().then(function (list) {
-      var html = '<button class="modal-x" data-close aria-label="Close">×</button><h2>Players on this device</h2>' +
-        '<p class="muted small">Each player has their own packs and collection. Handy for sharing one computer at game night.</p>' +
+      var login = CPS.cloud.enabled
+        ? '<div class="login-box"><h2>Log in</h2>' +
+          '<p class="muted small">Use the username your host gave you. Keep it private: it works like a password.</p>' +
+          '<form id="loginForm" class="login-form" autocomplete="on">' +
+          '<input id="loginUser" type="password" autocomplete="current-password" placeholder="Your username" aria-label="Username" maxlength="64">' +
+          '<div class="row wrap"><label class="inline"><input type="checkbox" id="loginShow"> Show</label>' +
+          '<label class="inline"><input type="checkbox" id="loginRemember" checked> Remember me</label>' +
+          '<button class="btn primary" id="loginBtn" type="submit">Log in</button></div></form>' +
+          '<div id="loginMsg" class="login-msg"></div>' +
+          '<button class="btn ghost small" id="playGuest" type="button">Play as guest instead (saved on this device only)</button></div>'
+        : '';
+      var html = '<button class="modal-x" data-close aria-label="Close">×</button>' + login +
+        '<h2 class="' + (login ? 'guest-head' : '') + '">' + (login ? 'Guest players on this device' : 'Players on this device') + '</h2>' +
+        '<p class="muted small">Guest collections stay in this browser. Each guest has their own packs and cards.</p>' +
         '<div class="player-list">' + list.map(function (p) {
           var cur = p.id === S.player.id;
           return '<div class="player-row' + (cur ? ' current' : '') + '"><span class="avatar">' + esc((p.name[0] || 'P').toUpperCase()) + '</span><b>' + esc(p.name) + '</b>' +
             (cur ? '<span class="pill">Playing</span>' : '<button class="btn small" data-switch="' + esc(p.id) + '">Switch</button><button class="btn small ghost" data-del="' + esc(p.id) + '">Delete</button>') + '</div>';
         }).join('') + '</div>' +
         '<form class="row" id="renameForm"><input id="renameInput" value="' + esc(S.player.name) + '" maxlength="24" aria-label="Your name"><button class="btn small">Rename me</button></form>' +
-        '<form class="row" id="newPlayerForm"><input id="newPlayerInput" placeholder="New player name" maxlength="24"><button class="btn small primary">Add player</button></form>';
+        '<form class="row" id="newPlayerForm"><input id="newPlayerInput" placeholder="New guest name" maxlength="24"><button class="btn small">Add guest</button></form>';
       openModal(html, function (box) {
         box.addEventListener('click', async function (e) {
           var sw = e.target.closest('[data-switch]'), del = e.target.closest('[data-del]');
           if (sw) { await switchPlayer(sw.dataset.switch); closeModal(); }
-          if (del && confirm('Delete this player and their collection?')) { await Store.deletePlayer(del.dataset.del); openPlayerModal(); }
+          if (del && confirm('Delete this guest and their collection?')) { await Store.deletePlayer(del.dataset.del); openPlayerModal(); }
         });
         $('#renameForm', box).addEventListener('submit', async function (e) {
           e.preventDefault(); var v = $('#renameInput', box).value.trim(); if (!v) return;
@@ -532,9 +722,174 @@
           e.preventDefault(); var v = $('#newPlayerInput', box).value.trim(); if (!v) return;
           var p = await Store.createPlayer(v); await switchPlayer(p.id); closeModal(); toast('Welcome, ' + v + '!', 'good');
         });
+        if (!login) return;
+        var u = $('#loginUser', box);
+        setTimeout(function () { u.focus(); }, 30);
+        $('#loginShow', box).addEventListener('change', function (e) { u.type = e.target.checked ? 'text' : 'password'; });
+        $('#playGuest', box).addEventListener('click', function () { Store.setPref('guestChosen', true); closeModal(); });
+        $('#loginForm', box).addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var name = u.value.trim(), msg = $('#loginMsg', box), btn = $('#loginBtn', box);
+          if (!name) { u.focus(); return; }
+          btn.disabled = true; btn.textContent = 'Logging in…'; msg.textContent = ''; msg.className = 'login-msg';
+          try {
+            var r = await doLogin(name, $('#loginRemember', box).checked);
+            if (r && r.ok) { closeModal(); return; }
+            msg.textContent = (r && r.error) || 'Login failed.';
+            if (r && r.remaining != null && r.remaining <= 3) msg.textContent += ' ' + r.remaining + ' tries left before a short lockout.';
+            msg.classList.add('bad'); u.select(); audio.error();
+          } catch (err) {
+            msg.textContent = err.message; msg.classList.add('bad'); audio.error();
+          } finally { btn.disabled = false; btn.textContent = 'Log in'; }
+        });
       });
     });
   }
+
+  function openAccountModal() {
+    var a = S.account;
+    var html = '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h2>Your account</h2>' +
+      '<div class="player-row current"><span class="avatar">' + esc((a.display_name[0] || 'P').toUpperCase()) + '</span><b>' + esc(a.display_name) + '</b>' +
+      (a.is_admin ? '<span class="pill r-legendary">Admin</span>' : '') + '<span class="pill r-uncommon">Online</span></div>' +
+      '<p class="muted small">Your packs, cards and stats are saved on the server, so they follow you to any device where you log in with your username.</p>' +
+      '<form class="row" id="dnForm"><input id="dnInput" value="' + esc(a.display_name) + '" maxlength="32" aria-label="Display name"><button class="btn small">Change display name</button></form>' +
+      '<div id="guestUp"></div>' +
+      '<div class="row wrap acct-actions"><button class="btn" id="logoutBtn">Log out</button></div>';
+    openModal(html, function (box) {
+      $('#dnForm', box).addEventListener('submit', async function (e) {
+        e.preventDefault(); var v = $('#dnInput', box).value.trim(); if (!v) return;
+        try { var r = await CPS.cloud.call('set_display_name', { p_name: v }); S.account.display_name = r.display_name; S.player.name = r.display_name; applyPrefsUI(); toast('Name updated.', 'good'); openAccountModal(); }
+        catch (err) { cloudError(err); }
+      });
+      $('#logoutBtn', box).addEventListener('click', async function () {
+        await CPS.cloud.logout(); closeModal(); toast('Logged out.', ''); Store.setPref('guestChosen', true); goGuest(false);
+      });
+      if (!S.guestImported) guestPlayerForUpload().then(function (p) {
+        if (!p) return;
+        $('#guestUp', box).innerHTML = '<div class="dev-box upload-box"><div class="dev-title">Guest collection found</div>' +
+          '<p class="muted small">This device has a guest collection ("' + esc(p.name) + '"). You can copy it into your account once.</p>' +
+          '<button class="btn small" id="uploadGuestBtn">Upload guest collection</button></div>';
+        $('#uploadGuestBtn', box).addEventListener('click', uploadGuest);
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------- admin (online) */
+  async function generateServerCodes(gset, packs, n, uses) {
+    if (!isAdmin()) { toast('Prize codes for online accounts need an admin login.', 'warn'); return; }
+    if (S.onlineSets.indexOf(gset.id) < 0) { toast('"' + gset.name + '" isn\'t on the server yet. Upload it from the Admin tab first.', 'warn', 5000); return; }
+    try {
+      var codes = await CPS.cloud.call('admin_generate_codes', { p_set: gset.id, p_packs: packs, p_count: n, p_max_uses: uses, p_note: $('#genNote').value.trim() || null });
+      $('#genOut').value = '# ' + codes.length + ' server code' + (codes.length === 1 ? '' : 's') + ' for ' + gset.name + ' (' + packs + ' pack' + (packs === 1 ? '' : 's') + ' each, ' +
+        (uses === 1 ? 'single use' : 'up to ' + uses + ' players') + ')\n' + codes.join('\n');
+      toast('Generated ' + codes.length + ' code' + (codes.length === 1 ? '' : 's') + '.', 'good');
+    } catch (e) { cloudError(e); }
+  }
+
+  var ALPH = '23456789abcdefghjkmnpqrstuvwxyz';
+  function suggestUsername(name) {
+    var base = String(name || 'player').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 12) || 'player';
+    var b = new Uint32Array(7); crypto.getRandomValues(b);
+    return base + '-' + Array.prototype.map.call(b, function (x) { return ALPH[x % ALPH.length]; }).join('');
+  }
+
+  async function renderAdmin() {
+    if (!isAdmin() || !S.dev) { $('#adminBody').innerHTML = '<div class="panel"><p>Log in with an admin account and unlock Dev mode to see this page.</p></div>'; return; }
+    var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
+      .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('');
+    $('#naSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
+    $('#serverSets').innerHTML = window.CardSets.all().map(function (x) {
+      var on = S.onlineSets.indexOf(x.id) >= 0;
+      return '<div class="set-item"><div class="swatch" style="' + CPS.cards.themeStyle(x) + '">' + esc(x.code) + '</div>' +
+        '<div class="set-meta"><b>' + esc(x.name) + '</b><span>' + x.cards.length + ' cards · ' + (on ? 'on the server' : 'not on the server yet') + '</span></div>' +
+        '<div class="set-actions"><button class="btn small' + (on ? ' ghost' : ' primary') + '" data-sync="' + esc(x.id) + '">' + (on ? 'Re-sync' : 'Upload') + '</button></div></div>';
+    }).join('');
+    $('#acctList').innerHTML = '<div class="muted small">Loading…</div>';
+    $('#codeList').innerHTML = '<div class="muted small">Loading…</div>';
+    try {
+      var res = await Promise.all([CPS.cloud.call('admin_list_accounts'), CPS.cloud.call('admin_list_codes', { p_limit: 60 })]);
+      var accts = res[0], codes = res[1];
+      $('#acctList').innerHTML = accts.map(function (x) {
+        var packs = Object.keys(x.packs || {}).map(function (k) { var st = window.CardSets.get(k); return (st ? st.code : k) + ' ' + x.packs[k]; }).join(', ') || '0';
+        return '<div class="acct-row' + (x.disabled ? ' disabled' : '') + '" data-acct="' + esc(x.id) + '" data-name="' + esc(x.display_name) + '">' +
+          '<div class="acct-main"><span class="avatar">' + esc((x.display_name[0] || 'P').toUpperCase()) + '</span><div><b>' + esc(x.display_name) + '</b>' +
+          (x.is_admin ? ' <span class="pill r-legendary">Admin</span>' : '') + (x.disabled ? ' <span class="pill r-chase">Disabled</span>' : '') + (x.is_me ? ' <span class="pill">You</span>' : '') +
+          '<div class="muted small">username ' + esc(x.hint) + ' · packs ' + esc(packs) + ' · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
+          (x.last_login_at ? new Date(x.last_login_at).toLocaleDateString() : 'never') + '</div></div></div>' +
+          '<div class="acct-actions row wrap"><select class="ga-set">' + setOpts + '</select><input class="ga-n" type="number" value="3" min="-99" max="999" aria-label="Packs">' +
+          '<button class="btn small" data-act="grant">Give packs</button>' +
+          '<button class="btn small ghost" data-act="rename">Rename</button>' +
+          '<button class="btn small ghost" data-act="reuser">New username</button>' +
+          (x.is_me ? '' : '<button class="btn small ghost" data-act="' + (x.disabled ? 'enable' : 'disable') + '">' + (x.disabled ? 'Enable' : 'Disable') + '</button>' +
+            '<button class="btn small ghost danger-text" data-act="delete">Delete</button>') + '</div></div>';
+      }).join('') || '<div class="empty">No accounts yet.</div>';
+      $('#codeList').innerHTML = codes.length ? '<div class="table-wrap"><table class="odds-table codes-table"><thead><tr><th>Code</th><th>Set</th><th>Packs</th><th>Used</th><th>Redeemed by</th><th>Note</th><th>Created</th></tr></thead><tbody>' +
+        codes.map(function (c) {
+          var st = window.CardSets.get(c.set_id);
+          return '<tr><td><code>' + esc(c.code) + '</code></td><td>' + esc(st ? st.name : c.set_id) + '</td><td>' + c.packs + '</td><td>' + c.uses + ' / ' + c.max_uses + '</td><td>' +
+            esc((c.redeemed_by || []).join(', ') || '—') + '</td><td>' + esc(c.note || '') + '</td><td>' + new Date(c.created_at).toLocaleDateString() + '</td></tr>';
+        }).join('') + '</tbody></table></div>' : '<div class="empty">No codes yet. Make some in Sets &amp; Settings → Prize code generator.</div>';
+    } catch (e) { cloudError(e); }
+  }
+
+  async function adminAction(e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    var row = b.closest('[data-acct]'), id = row.dataset.acct, name = row.dataset.name, act = b.dataset.act, r;
+    try {
+      if (act === 'grant') {
+        var sid = $('.ga-set', row).value, n = parseInt($('.ga-n', row).value, 10);
+        if (!sid || !n) { toast('Pick a set and a number of packs.', 'warn'); return; }
+        r = await CPS.cloud.call('admin_grant_packs', { p_set: sid, p_packs: n, p_account: id });
+        toast((n > 0 ? 'Gave ' : 'Removed ') + Math.abs(n) + ' pack' + (Math.abs(n) === 1 ? '' : 's') + (n > 0 ? ' to ' : ' from ') + name + ' (now ' + r.packs_now + ').', 'good');
+        if (id === S.account.id) { var st = window.CardSets.get(sid); if (st) ps(st).packs = r.packs_now; renderPacksSide(); }
+      } else if (act === 'rename') {
+        var nn = prompt('New display name for ' + name + ':', name); if (!nn || !nn.trim()) return;
+        await CPS.cloud.call('admin_update_account', { p_account: id, p_display_name: nn.trim() });
+        if (id === S.account.id) { S.account.display_name = nn.trim(); S.player.name = nn.trim(); applyPrefsUI(); }
+      } else if (act === 'reuser') {
+        var nu = prompt('New secret username for ' + name + ' (at least 6 characters). Their other devices will be logged out.', suggestUsername(name));
+        if (!nu || !nu.trim()) return;
+        await CPS.cloud.call('admin_update_account', { p_account: id, p_new_username: nu.trim() });
+        showCreated(name, nu.trim(), 'Username changed');
+      } else if (act === 'disable' || act === 'enable') {
+        if (act === 'disable' && !confirm('Disable ' + name + '? They will be logged out and can\'t log in until you enable them.')) return;
+        await CPS.cloud.call('admin_update_account', { p_account: id, p_disabled: act === 'disable' });
+      } else if (act === 'delete') {
+        if (!confirm('Delete ' + name + ' and ALL their cards, packs and stats? This cannot be undone.')) return;
+        await CPS.cloud.call('admin_delete_account', { p_account: id });
+        toast('Deleted ' + name + '.', 'warn');
+      }
+      renderAdmin();
+    } catch (err) { cloudError(err); }
+  }
+
+  function showCreated(display, username, title) {
+    $('#naResult').innerHTML = '<div class="created-box"><div class="dev-title">' + esc(title || 'Account created') + '</div>' +
+      '<p>Send <b>' + esc(display) + '</b> this username privately. It\'s their login (like a password) and won\'t be shown again:</p>' +
+      '<div class="row"><code class="big-code" id="createdUser">' + esc(username) + '</code><button class="btn small" id="copyUser" type="button">Copy</button></div>' +
+      '<p class="muted small">They log in at ' + esc((CPS.cloud.config.siteUrl || location.href)) + ' via the player button (top right).</p></div>';
+    $('#copyUser').addEventListener('click', function () {
+      (navigator.clipboard ? navigator.clipboard.writeText(username) : Promise.reject()).then(function () { toast('Copied.', 'good', 1200); }, function () { toast('Select and copy it manually.', 'warn'); });
+    });
+  }
+
+  async function createAccount(e) {
+    e.preventDefault();
+    var display = $('#naName').value.trim(), user = $('#naUser').value.trim(), btn = $('#newAcctForm button[type=submit]');
+    if (!display || user.length < 6) { toast('Enter a display name and a username of at least 6 characters.', 'warn'); return; }
+    btn.disabled = true;
+    try {
+      var r = await CPS.cloud.call('admin_create_account', { p_username: user, p_display_name: display,
+        p_start_packs: Math.max(0, parseInt($('#naPacks').value, 10) || 0), p_set: $('#naSet').value || null, p_is_admin: $('#naAdmin').checked });
+      showCreated(r.display_name, user);
+      toast('Created ' + r.display_name + ' with ' + r.packs + ' pack' + (r.packs === 1 ? '' : 's') + '.', 'good');
+      $('#naName').value = ''; $('#naUser').value = ''; $('#naAdmin').checked = false;
+      renderAdmin();
+    } catch (err) { cloudError(err); }
+    finally { btn.disabled = false; }
+  }
+
   async function switchPlayer(id) {
     var p = await Store.loadPlayer(id); if (!p) return;
     p.sets = p.sets || {};
@@ -546,6 +901,7 @@
     U.download('collection-' + S.player.name.replace(/\W+/g, '_') + '.json', JSON.stringify(data, null, 2), 'application/json');
   }
   function importData(file) {
+    if (isCloud()) { toast('Log out to import a guest backup. Online accounts can upload a guest collection from the account menu.', 'warn', 5000); return; }
     var fr = new FileReader();
     fr.onload = async function () {
       try {
@@ -680,22 +1036,39 @@
     $('#soundBtn').addEventListener('click', function () { audio.enabled = !audio.enabled; Store.setPref('sound', audio.enabled); applyPrefsUI(); if (audio.enabled) audio.click(); });
     $('#devToggle').addEventListener('change', function (e) {
       if (e.target.checked) { e.target.checked = S.dev; if (!S.dev) requestDevUnlock(); return; }
-      S.dev = false; Store.setPref('dev', false); applyPrefsUI(); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
+      S.dev = false; Store.setPref('dev', false); applyPrefsUI(); if (S.view === 'admin') showView('packs'); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
     });
     $('#exportBtn').addEventListener('click', exportData);
     $('#importDataFile').addEventListener('change', function (e) { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
     $('#genBtn').addEventListener('click', function () {
       var n = Math.min(100, Math.max(1, +$('#genCount').value || 1)), packs = Math.min(99, Math.max(1, +$('#genPacks').value || 1)), out = [];
       var gset = window.CardSets.get($('#genSet').value) || S.set;
+      if (isCloud()) { generateServerCodes(gset, packs, n, Math.max(1, +$('#genUses').value || 1)); return; }
       for (var i = 0; i < n; i++) out.push(window.CPSCodes.make(gset.id, packs));
       $('#genOut').value = '# ' + n + ' code' + (n === 1 ? '' : 's') + ' for ' + gset.name + ' (' + packs + ' pack' + (packs === 1 ? '' : 's') + ' each)\n' + out.join('\n');
     });
     $('#resetSetBtn').addEventListener('click', function () {
+      if (isCloud()) { toast('Online progress can\'t be reset from here.', 'warn'); return; }
       if (!confirm('Reset all your packs, cards and stats in "' + S.set.name + '"?')) return;
       delete S.player.sets[S.set.id]; save(); resetStage(); renderView(); toast('Progress reset.', 'warn');
     });
     $('#genSet').addEventListener('change', function () { S.genSetTouched = true; });
     $('#playerBtn').addEventListener('click', openPlayerModal);
+    $('#newAcctForm').addEventListener('submit', createAccount);
+    $('#naSuggest').addEventListener('click', function () { $('#naUser').value = suggestUsername($('#naName').value); });
+    $('#acctList').addEventListener('click', adminAction);
+    $('#adminRefresh').addEventListener('click', function () { refreshCloud().then(renderAdmin); });
+    $('#serverSets').addEventListener('click', async function (e) {
+      var b = e.target.closest('[data-sync]'); if (!b) return;
+      var set = window.CardSets.get(b.dataset.sync); if (!set) return;
+      b.disabled = true; b.textContent = 'Uploading…';
+      try {
+        var r = await CPS.cloud.call('admin_upsert_set', { p_set: setPayload(set) });
+        if (S.onlineSets.indexOf(set.id) < 0) S.onlineSets.push(set.id);
+        toast('"' + set.name + '" is on the server (' + r.cards + ' cards).', 'good');
+        renderAdmin();
+      } catch (err) { cloudError(err); b.disabled = false; b.textContent = 'Retry'; }
+    });
 
     // modal
     $('#modal').addEventListener('click', function (e) { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });

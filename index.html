@@ -21,10 +21,11 @@
       <button data-view="stats" class="tab">Stats</button>
       <button data-view="odds" class="tab">Odds</button>
       <button data-view="sets" class="tab">Sets &amp; Settings</button>
+      <button data-view="admin" class="tab admin-tab">Admin</button>
     </nav>
     <div class="top-actions">
       <button id="soundBtn" class="icon-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
-      <button id="playerBtn" class="player-chip" title="Switch player"><span class="avatar" id="playerAvatar">P</span><span id="playerName">Player</span></button>
+      <button id="playerBtn" class="player-chip" title="Switch player"><span class="avatar" id="playerAvatar">P</span><span id="playerName">Player</span><span class="mode-tag" id="modeTag">guest</span></button>
     </div>
   </header>
 
@@ -159,21 +160,58 @@
           <label class="toggle"><input type="checkbox" id="devToggle"> Dev mode (free packs, code generator) <span class="lock" aria-hidden="true">🔒</span></label>
           <div class="row wrap">
             <button id="exportBtn" class="btn">Export my data</button>
-            <label class="btn file-btn">Import data<input id="importDataFile" type="file" accept=".json,application/json"></label>
+            <label class="btn file-btn guest-only">Import data<input id="importDataFile" type="file" accept=".json,application/json"></label>
           </div>
-          <p class="muted small">Your collection is saved in this browser only. Export it to back it up or move it to another device.</p>
+          <p class="muted small guest-only">Guest collections are saved in this browser only. Export to back up, or log in to an online account to keep cards on the server.</p>
+          <p class="muted small cloud-only">You're logged in: your collection is saved online and follows you to any device.</p>
           <div class="dev-only dev-box">
             <div class="dev-title">Prize code generator</div>
-            <p class="muted small">Each code grants packs of the set you pick here. They're checked in the browser, so anyone savvy could make their own; real prizes need a server (see README).</p>
+            <p class="muted small cloud-only">Logged in as admin: codes are stored on the server and can only be redeemed the number of times you allow (one redemption per player).</p>
+            <p class="muted small guest-only">Each code grants packs of the set you pick here. They're checked in the browser, so anyone savvy could make their own; real prizes need a server (see README).</p>
             <div class="row wrap">
               <label class="inline">Set <select id="genSet" aria-label="Set the codes are for"></select></label>
+              <label class="inline cloud-only">Max uses <input id="genUses" type="number" min="1" max="1000" value="1" title="How many different players can redeem each code"></label>
+              <label class="inline cloud-only">Note <input id="genNote" maxlength="60" placeholder="e.g. Oct game night"></label>
               <label class="inline">Packs per code <input id="genPacks" type="number" min="1" max="99" value="3"></label>
               <label class="inline">How many <input id="genCount" type="number" min="1" max="100" value="5"></label>
               <button id="genBtn" class="btn small">Generate</button>
             </div>
             <textarea id="genOut" rows="5" readonly></textarea>
-            <button id="resetSetBtn" class="btn small danger">Reset my progress in this set</button>
+            <button id="resetSetBtn" class="btn small danger guest-only">Reset my progress in this set</button>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ADMIN (online admin + Dev mode) ============ -->
+    <section id="view-admin" class="view">
+      <div id="adminBody" class="admin-layout">
+        <div class="panel">
+          <h2>Create a friend's account</h2>
+          <p class="muted small">There's no public sign-up: you create each account here. The username <b>is</b> the login and works like a password, so make it hard to guess and send it privately. It's shown only once.</p>
+          <form id="newAcctForm" class="form-grid" autocomplete="off">
+            <label>Display name <input id="naName" maxlength="32" placeholder="e.g. Jamie"></label>
+            <label>Secret username <span class="row"><input id="naUser" maxlength="64" placeholder="6+ characters" spellcheck="false"><button type="button" class="btn small" id="naSuggest">Suggest</button></span></label>
+            <label>Starting packs <input id="naPacks" type="number" min="0" max="999" value="3"></label>
+            <label>For set <select id="naSet"></select></label>
+            <label class="toggle span2"><input type="checkbox" id="naAdmin"> Make this an admin account</label>
+            <button class="btn primary span2" type="submit">Create account</button>
+          </form>
+          <div id="naResult"></div>
+        </div>
+        <div class="panel">
+          <h2>Sets on the server</h2>
+          <p class="muted small">Packs are opened on the server, so each set file must be uploaded there too. Re-sync after editing a set.</p>
+          <div id="serverSets" class="set-list"></div>
+        </div>
+        <div class="panel wide">
+          <h2>Accounts <button class="btn small ghost" id="adminRefresh" type="button">Refresh</button></h2>
+          <div id="acctList" class="acct-list"></div>
+        </div>
+        <div class="panel wide">
+          <h2>Prize codes</h2>
+          <p class="muted small">Generate codes under Sets &amp; Settings → Prize code generator.</p>
+          <div id="codeList"></div>
         </div>
       </div>
     </section>
@@ -196,6 +234,8 @@
   <script src="js/audio.js"></script>
   <script src="js/fx.js"></script>
   <script src="js/devlock.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cloud.js"></script>
   <!-- list of set files to load (edit this to add sets) -->
   <script src="sets/manifest.js"></script>
   <script src="js/app.js"></script>

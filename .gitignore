@@ -2,3 +2,5 @@ screenshots/
 .DS_Store
 *.log
 Thumbs.db
+tools/node_modules/
+*PRIVATE*

@@ -89,21 +89,61 @@ Regenerate the numbered placeholder set with `node tools/make-placeholder-set.js
 
 ## Prize codes
 
-Format: `PACK-<packs>-<nonce>-<check>` (e.g. `PACK-3-K7QZ2-9XH4M`).
+Format: `PACK-<packs>-<nonce>-<check>` (e.g. `PACK-3-K7QZ2-9XH4M`). Each code grants packs of one specific set; the app tells the player which set got the packs and switches to it.
 
-Each code grants packs of one specific set. The set id is baked into the code's checksum, so a code made for the Demo Mini Set only ever credits Demo Mini packs; the app tells the player which set the packs went to and switches to it.
+**Online (logged in):** codes live in the database. An admin makes them in Dev mode → Sets & Settings → Prize code generator (pick the set, packs per code, how many codes, **max uses**, optional note). A code with max uses 1 works once; with max uses 5, five different players can redeem it once each. The Admin tab lists recent codes and who redeemed them. Server codes can't be forged.
 
-- In the app: turn on Dev mode → Sets & Settings → Prize code generator, pick the set from the dropdown.
-- From the CLI: `node tools/make-codes.js --set placeholder --packs 3 --count 10` (`--list` shows set ids). Both use the same `js/codes.js`, so codes are interchangeable.
-- Codes for a set imported in one browser (CSV import) only work in browsers that have that set. Put the set file in `sets/` to make its codes work everywhere.
+**Guest / offline:** codes are checked in the browser with `js/codes.js` (same generator in guest mode, or `node tools/make-codes.js --set placeholder --packs 3 --count 10`, `--list` shows set ids). Anyone who reads `js/codes.js` can mint these, so change `SECRET` before sharing. Guest codes don't work for online accounts and vice versa.
 
-**Client-side only.** Anyone who reads `js/codes.js` can mint codes. Change the `SECRET` string before sharing the site. Real prize codes (unforgeable, one redeem per friend) need a server that issues codes and marks them used.
+## Online accounts (Supabase)
 
-## Accounts, trading, and swapping storage later
+### How it works
 
-Everything is saved per player in `localStorage` through `js/storage.js` (`CPS.Store`). Multiple players on one device are supported (handy for game night). Export / import your collection as JSON under Sets & Settings.
+- **Login is a username only.** No password, no email, no public sign-up. The site owner (admin) creates each account and gives the friend their username privately. The username *is* the secret, so make it long and random (the Admin tab's **Suggest** button makes ones like `alex-k3m9q2x`).
+- Logging in calls `cps_login`, which returns a random 256-bit session token. Only its SHA-256 hash is stored server-side. Usernames are also stored only as hashes (plus a short hint like `al…(12)` for the admin list). With **Remember me** the token sits in `localStorage` (valid 365 days); without it, in `sessionStorage` (gone when the tab closes). **Log out** revokes it on the server.
+- Failed logins are rate-limited per IP: each miss waits about 0.4 s, and 8 misses in 15 minutes locks that IP out for the rest of the window.
+- **All data lives in a private `cps` schema** that the API doesn't expose. Every table has row-level security on with no policies, and the `anon`/`authenticated` roles have no privileges on it. The browser can only call `public.cps_*` functions (`SECURITY DEFINER`), which check the token first. Nobody can list accounts or read usernames, and only admin tokens pass the `cps_admin_*` functions.
+- **Packs are opened on the server** (`cps_open_pack`): it spends a pack, rolls the cards with the set's odds, and saves the collection and stats, so results can't be faked from the browser. The browser only animates what the server rolled.
+- **Guest mode still works:** "Play as guest instead" (or `file://` with no network, or if the server can't be reached) uses the old local storage. Once logged in, an account can upload its guest collection **once** (Your account → Upload guest collection). The upload is validated against the server's card list and capped at 10 packs' worth by default (`guest_import_max_packs`).
+- **Trading groundwork:** `cps.card_transfers` and `cps.transfer_card()` move copies between accounts with an audit row. There's no trading UI or public RPC yet.
 
-To add real accounts or trading later, replace `js/storage.js` with a version that talks to a server API but keeps the same method names (`listPlayers`, `loadPlayer`, `savePlayer`, `isCodeRedeemed`, `markCodeRedeemed`, `listCustomSets`, …). The rest of the app does not need to change.
+### Config file
+
+`js/config.js` holds the project URL and the **publishable** key (safe to be public; it only allows calling the `cps_*` functions). Set `onlineEnabled: false` to turn accounts off entirely (pure guest mode). Never put the database URL, the service-role key, or any username in this repo.
+
+### One-time setup (Supabase dashboard)
+
+1. Supabase Dashboard → your project → **SQL Editor** → **New query**.
+2. Paste the whole of `supabase/setup.sql` → **Run**. It's safe to run again later; it creates the schema, functions and the two bundled sets.
+3. In a new query, create your admin account with a long, private username (don't reuse a public handle):
+   ```sql
+   select cps.bootstrap_admin('your-secret-username', 'Your Name');
+   ```
+   Or, from a machine that can reach the database: `cd tools && npm install && SUPABASE_DB_URL=... node make-admin.js --generate --name "Your Name"`.
+4. Open the site → **Log in** with that username → Sets & Settings → turn on **Dev mode** (password) → the **Admin** tab appears.
+
+No Auth settings, email provider, or API settings need changing. Settings live in the `cps.app_config` table (welcome packs, default set, session length, login limits, guest uploads), and you can edit them in the Table Editor.
+
+### Admin tab (admin login + Dev mode)
+
+- **Create account:** display name, secret username (or Suggest), starting packs (default 3) and which set they're for, optional admin flag. The username is shown **once** with a Copy button, so send it to your friend privately.
+- **Accounts list:** give or take packs for any set, rename, issue a new username (which logs them out everywhere), disable/enable, delete.
+- **Sets on the server:** Upload / Re-sync any set the site has loaded (including a CSV import), so packs for it can be opened and codes made for it.
+- **Prize codes:** recent codes with uses and who redeemed them.
+
+### Adding a set to the online version
+
+Add the set to `sets/` as usual (above) and push. Then get it into the database with any one of these:
+- Admin tab → **Sets on the server** → Upload.
+- `cd tools && CPS_ADMIN_USERNAME=... node sync-set.js birds` (uses the HTTPS API with your admin login; `--all` for every set).
+- `node tools/sync-set.js birds --sql`, then paste the printed SQL into the SQL Editor.
+- `node tools/build-setup-sql.js` regenerates `supabase/setup.sql` with every set in the manifest.
+
+Card ids are stable: re-syncing updates names, rarities, odds and details without touching anyone's collection.
+
+### Making someone else an admin
+
+Admin tab → Create account → tick "Make this an admin account". For an existing account, run in the SQL Editor: `update cps.accounts set is_admin = true where display_name = 'Their Name';`.
 
 ## Features
 
@@ -111,7 +151,8 @@ To add real accounts or trading later, replace `js/storage.js` with a version th
 - Rarity tiers Common → Chase, holo foils, glow / confetti for big pulls
 - Pack tear animation, click-to-flip or Reveal all, WebAudio sounds (no audio files)
 - Collection with owned / missing / dupe / holo filters, completion % by rarity
-- Stats, odds panel, set picker, CSV importer, prize codes, multi-player profiles
+- Stats, odds panel, set picker, CSV importer, prize codes, multi-player profiles (guest)
+- Optional online accounts with server-side pack opening (Supabase)
 - Works from `file://` (sets are `.js` modules, not JSON fetches)
 
 ## Project layout
@@ -119,15 +160,21 @@ To add real accounts or trading later, replace `js/storage.js` with a version th
 ```
 index.html
 css/style.css
-js/           util, rarities, registry, csv, codes, storage, cardface, packs, audio, fx, devlock, app
+js/           util, rarities, registry, csv, codes, storage, cardface, packs, audio, fx, devlock,
+              config (Supabase URL + publishable key), cloud (API client), app
 sets/         manifest.js + one .js file per set (+ optional images/)
-tools/        make-placeholder-set.js, csv-to-set.js, make-codes.js, example.csv
+supabase/     migrations/001_core.sql, setup.sql (migrations + bundled sets; paste into SQL Editor)
+tools/        make-placeholder-set.js, csv-to-set.js, make-codes.js, example.csv,
+              build-setup-sql.js, sync-set.js, make-admin.js (npm install in tools/ for the pg driver)
 ```
 
 ## Known limitations
 
-- Prize codes are forgeable without a server (see above).
-- The dev-mode password is a client-side gate only: someone determined could flip the saved setting in their browser's storage. Fine for friends, not real security.
-- Collection is local to the browser; clear site data and it's gone (export first).
-- No trading or accounts yet — storage module is ready to be swapped.
+- The username is the only secret. Anyone who learns it can use that account, so treat it like a password. If one leaks, Admin tab → New username.
+- Guest-mode prize codes are forgeable (see above); online codes are not.
+- The dev-mode password is a client-side gate only. Real admin powers come from the admin account (checked on the server); Dev mode just shows the tools.
+- A guest collection upload can't be verified (it came from the browser), so it's capped and allowed once per account.
+- Guest collections are local to the browser; clear site data and they're gone (export first or upload to an account).
+- No trading UI yet (database groundwork only).
+- Supabase's free tier pauses a project after a week without activity; un-pause it in the dashboard. While it's unreachable the site falls back to guest mode.
 - Holo / foil is CSS-only (no WebGL). Reduced-motion preference turns particle FX off.

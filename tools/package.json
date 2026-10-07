@@ -1,0 +1,8 @@
+{
+  "name": "card-pack-sim-tools",
+  "private": true,
+  "description": "Node scripts for managing sets, codes and the Supabase database",
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}
