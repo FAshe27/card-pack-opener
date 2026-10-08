@@ -266,9 +266,11 @@
   function resetStage() {
     S.opening = null;
     var set = S.set, st = ps();
-    $('#stageIdle').innerHTML = '<div class="idle-pack">' + CPS.cards.pack(set, 'float') + '</div>' +
+    // the big pack in the middle is clickable too: one click opens + tears it (same as the sidebar pack)
+    $('#stageIdle').innerHTML = '<div class="idle-pack' + (st.packs ? ' clickable' : ' empty') + '" role="button" tabindex="0" title="' +
+        (st.packs ? 'Click to open and tear a pack' : 'No packs left') + '">' + CPS.cards.pack(set, 'float') + '</div>' +
       '<div class="idle-msg">' + (st.packs
-        ? '<b>' + st.packs + ' pack' + (st.packs === 1 ? '' : 's') + ' ready.</b> Hit <kbd>Open a pack</kbd> or press <kbd>Space</kbd>.'
+        ? '<b>' + st.packs + ' pack' + (st.packs === 1 ? '' : 's') + ' ready.</b> Click the pack (or press <kbd>Space</kbd>) to open.'
         : '<b>Out of packs!</b> Win, earn, or beg for packs and redeem them on the left!') + '</div>';
     $('#stageIdle').classList.remove('hidden');
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
@@ -333,7 +335,7 @@
     return true;
   }
 
-  /* Click the pack in "Your packs": open it and tear it in one go. */
+  /* Click a pack (the big one in the middle or the one in "Your packs"): open it and tear it in one go. */
   async function openFromPack() {
     var o = S.opening;
     if (S.busy) return;
@@ -563,8 +565,7 @@
     $('#collCount').textContent = list.length + ' shown';
     $('#collGrid').innerHTML = list.length ? list.map(function (c) {
       var e = st.cards[c.id];
-      if (!e || !e.n) return CPS.cards.silhouette(set, c);
-      return CPS.cards.render(set, c, { holo: e.h > 0, count: e.n, holoCount: e.h });
+      return CPS.cards.collected(set, c, e ? e.n : 0, e ? e.h : 0);   // card + count pills below it
     }).join('') : '<div class="empty">No cards match these filters.</div>';
   }
 
@@ -1012,6 +1013,9 @@
   /* ---------------------------------------------------------- events */
   function bind() {
     $$('.tab').forEach(function (t) { t.addEventListener('click', function () { showView(t.dataset.view); }); });
+    // logo = "Open Packs" tab. Only switches the view: a pack being opened/revealed stays exactly as it was
+    // (its cards are already saved), so coming back mid-reveal is safe.
+    $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
     $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
     $('#openBtn').addEventListener('click', startOpen);
@@ -1019,6 +1023,10 @@
     $('#doneBtn').addEventListener('click', resetStage);
     $('#revealAllBtn').addEventListener('click', revealAll);
     $('#stagePack').addEventListener('click', function (e) { if (e.target.closest('.pack')) tear(); });
+    $('#stageIdle').addEventListener('click', function (e) { if (e.target.closest('.idle-pack')) openFromPack(); });
+    $('#stageIdle').addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.idle-pack')) { e.preventDefault(); e.stopPropagation(); openFromPack(); }
+    });
     $('#revealGrid').addEventListener('click', function (e) {
       var c = e.target.closest('.card'); if (!c) return;
       if (!c.classList.contains('flipped')) reveal(+c.dataset.i);
@@ -1047,7 +1055,8 @@
     });
     ['#collGrid', '#recentPulls', '#bestPull'].forEach(function (sel) {
       $(sel).addEventListener('click', function (e) {
-        var c = e.target.closest('.card'); if (c) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
+        var it = e.target.closest('.coll-item'), c = e.target.closest('.card') || (it && it.querySelector('.card'));
+        if (c) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
       });
     });
 

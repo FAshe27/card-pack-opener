@@ -148,6 +148,16 @@
       '<div class="sil-num">#' + U.pad(card.num, set.numWidth) + '</div><div class="sil-r">' + r.label + '</div></div></div></div>';
   }
 
+  /* Collection grid cell: the card (or silhouette) plus a row of count pills UNDER it ("×3", holo "✦2").
+     The pills live outside the card box, so they are never clipped (the grid cell uses content-visibility,
+     which clips to its box) and never cover the card name or the rarity gem in the top-right corner. */
+  function collected(set, card, n, h) {
+    var meta = (n > 1 ? '<span class="badge-count" title="You have ' + n + ' copies">×' + n + '</span>' : '') +
+      (h > 0 ? '<span class="badge-holo" title="' + h + ' holo">✦' + (h > 1 ? h : '') + '</span>' : '');
+    return '<div class="coll-item">' + (n ? render(set, card, { holo: h > 0 }) : silhouette(set, card)) +
+      '<div class="coll-meta">' + meta + '</div></div>';
+  }
+
   /* Pack wrapper art */
   function pack(set, extraCls) {
     var skin = set.pack.skin ? ' pack-skin-' + set.pack.skin : '';   // optional look, e.g. pack: { skin: 'space' }
@@ -161,5 +171,5 @@
       '<div class="crimp bottom"></div></div></div>';
   }
 
-  CPS.cards = { codeCls: codeCls, swatch: swatch, nameFit: nameFit, render: render, silhouette: silhouette, pack: pack, art: art, themeStyle: themeStyle };
+  CPS.cards = { codeCls: codeCls, swatch: swatch, nameFit: nameFit, render: render, silhouette: silhouette, collected: collected, pack: pack, art: art, themeStyle: themeStyle };
 })(window.CPS);

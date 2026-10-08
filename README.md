@@ -1,4 +1,4 @@
-# PackRip — Card Pack Opener Simulator
+# YayPelleds — Card Pack Opener
 
 A browser-based trading card pack opener. Open packs, build a collection, chase ultra-rare cards, and redeem prize codes. Vanilla HTML / CSS / JS — no build step. Works from `file://` or any static host (GitHub Pages, Netlify, etc.).
 
@@ -9,28 +9,21 @@ Cards are for collecting and trading only. Each card has a free-form **details**
 - **Local:** open `index.html` in a browser, or `python3 -m http.server 8000` from this folder and visit http://localhost:8000
 - **Host:** push this folder to GitHub Pages / Netlify / any static host. Point the site root at this directory.
 
-The site is **accounts-only**: everyone logs in with a username + 4-digit PIN that the site owner creates (see [Online accounts](#online-accounts-supabase)). To open a pack, click the pack in **Your packs** (it opens and tears in one go), or use the **Open a pack** button / Space.
+The site is **accounts-only**: everyone logs in with a username + 4-digit PIN that the site owner creates (see [Online accounts](#online-accounts-supabase)). To open a pack, click the big pack in the middle or the one in **Your packs** (it opens and tears in one go), or use the **Open a pack** button / Space. The **YayPelleds** logo always takes you back to Open Packs.
 
 **Admin tab** (admin accounts only) holds the account tools plus everything that used to be under Sets & Settings (card sets, CSV import, prize code generator, Dev tools). It's guarded twice: the server checks the account is an admin, and the browser asks for the **Dev password** before showing the tools. Only a SHA-256 hash of that password is stored (`DEV_HASH` in `js/devlock.js`). Once unlocked it stays on in that browser; untick "Admin tools unlocked" to lock it again. To change the password, run `printf 'new-password' | sha256sum` and paste the hex into `DEV_HASH`. Regular players only see Open Packs, Collection, Stats and Odds, plus the sound button and their account menu (log out, export).
 
-## Placeholder set (~250 cards)
+## Card sets on the site
 
-| Rarity | Cards in set | Chance of ≥1 per pack | Specific card |
-|--------|-------------:|----------------------:|--------------:|
-| Common | 120 | every pack | ~1 in 22 packs |
-| Uncommon | 70 | every pack | ~1 in 31 packs |
-| Rare | 35 | ~84% | ~1 in 37 packs |
-| Epic | 15 | ~17% | ~1 in 88 packs |
-| Legendary | 6 | ~4% (1 in 25) | ~1 in 150 packs |
-| Chase | 4 | ~0.2% (1 in 500) | ~1 in 2,000 packs |
+The set picker lists **Fast Food Collection** (the default) and **Space Collection**, in the order of `sets/manifest.js`.
 
-Each pack has **9 cards**: 5 Common + 2 Uncommon + 1 wild (mostly Common/Uncommon, sometimes Rare/Epic) + **1 guaranteed Rare or better**. Holo foil chance grows with rarity (2% Common → 25% Chase).
+Each pack has **9 cards**: 5 Common + 2 Uncommon + 1 wild (mostly Common/Uncommon, sometimes Rare/Epic) + **1 guaranteed Rare or better**. Holo foil chance grows with rarity (2% Common → 25% Chase). The **Odds** tab shows exact numbers for each set.
 
 **Space Collection** (332 cards, code SPACE) has real space photos on a black art panel, each card with a fun fact: 6 Chase (top: The Observable Universe), 10 Legendary, 19 Epic, 46 Rare, 93 Uncommon, 158 Common, in a deep-space "Deep Space Pack".
 
 **Fast Food Collection** (249 cards, code FF) uses real product photos and brand logos: 10 Chase, 14 Legendary, 24 Epic, 39 Rare, 66 Uncommon, 96 Common, in a red/yellow "Value Meal Pack".
 
-There's also a tiny **Demo Mini Set** (30 cards) that shows CSV import and a real `image` path.
+`sets/unlisted/` keeps **Placeholder Series 1** (250 numbered cards) and the tiny **Demo Mini Set**. They aren't listed on the site; the tests use them. To show one again, add e.g. `'unlisted/placeholder.js'` to `sets/manifest.js` (and sync it to the server).
 
 ## Adding a new set
 
@@ -122,7 +115,7 @@ pack: {
 
 If a slot asks for a rarity your set doesn't have, its weight moves to the nearest rarity you do have.
 
-Regenerate the numbered placeholder set with `node tools/make-placeholder-set.js`.
+Regenerate the numbered placeholder set (in `sets/unlisted/`) with `node tools/make-placeholder-set.js`.
 
 ## Prize codes
 
@@ -130,7 +123,7 @@ Format: `PACK-<packs>-<nonce>-<check>` (e.g. `PACK-3-K7QZ2-9XH4M`). Each code gr
 
 Codes live in the database. An admin makes them under Admin → Sets & settings → Prize code generator (pick the set, packs per code, how many codes, **max uses**, optional note). A code with max uses 1 works once; with max uses 5, five different players can redeem it once each. The Admin tab lists recent codes and who redeemed them. Server codes can't be forged.
 
-*Offline mode only* (`onlineEnabled: false` in `js/config.js`): codes are checked in the browser with `js/codes.js` (`node tools/make-codes.js --set placeholder --packs 3 --count 10`). Anyone who reads `js/codes.js` can mint those, so they're for local testing only and don't work on the live site.
+*Offline mode only* (`onlineEnabled: false` in `js/config.js`): codes are checked in the browser with `js/codes.js` (`node tools/make-codes.js --set fast-food --packs 3 --count 10`). Anyone who reads `js/codes.js` can mint those, so they're for local testing only and don't work on the live site.
 
 ## Online accounts (Supabase)
 

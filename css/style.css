@@ -66,7 +66,8 @@ input.bad { animation: shakeX .4s; border-color: var(--bad); }
   position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 18px; padding: 12px 22px;
   background: rgba(11,14,23,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 8px; font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; }
+.brand { display: flex; align-items: center; gap: 8px; font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; color: inherit; text-decoration: none; cursor: pointer; border-radius: 10px; }
+.brand:hover .logo { filter: brightness(1.15); } .brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .brand b { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .logo { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 4px 16px rgba(124,108,255,.45); font-size: 1.05rem; }
 .set-picker { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .85rem; }
@@ -279,8 +280,14 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .seg button { background: none; border: 0; padding: 6px 11px; border-radius: 8px; cursor: pointer; color: var(--muted); font-weight: 600; font-size: .88rem; }
 .seg button.active { background: var(--panel2); color: var(--text); }
 .filter-count { color: var(--muted); font-size: .85rem; margin-left: auto; }
-.coll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 16px; }
-.coll-grid .card, .recent .card { cursor: pointer; content-visibility: auto; contain-intrinsic-size: 150px 210px; }
+.coll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 16px; }
+.coll-grid .card, .recent .card { cursor: pointer; }
+.recent .card { content-visibility: auto; contain-intrinsic-size: 150px 210px; }
+/* collection cell: content-visibility clips to the cell box, so the cell gets 10px of room (padding, cancelled by the
+   negative margin) for the hover lift, and the count pills sit in their own row under the card instead of on it */
+.coll-item { content-visibility: auto; contain-intrinsic-size: auto 170px auto 264px; padding: 10px; margin: -10px; min-width: 0; cursor: pointer; }
+.coll-meta { display: flex; justify-content: flex-end; align-items: center; gap: 5px; height: 18px; margin-top: 5px; }
+.coll-meta .badge-count, .coll-meta .badge-holo { position: static; box-shadow: none; padding: 1px 8px; line-height: 16px; font-size: 11px; pointer-events: auto; }
 .coll-grid .card:hover, .recent .card:hover { transform: translateY(-4px) scale(1.03); z-index: 2; }
 .empty { color: var(--muted); padding: 40px; text-align: center; grid-column: 1/-1; }
 
@@ -413,7 +420,8 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   .brand-text { display: none; }
   .set-picker span { display: none; } .set-picker select { max-width: 170px; }
   .reveal-grid { gap: 10px; } .reveal-grid .card { width: calc(33.3% - 8px); }
-  .coll-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px 10px; }
+  .coll-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 4px 10px; }
+  .coll-meta { height: 15px; margin-top: 4px; gap: 4px; } .coll-meta .badge-count, .coll-meta .badge-holo { font-size: 9.5px; padding: 0 6px; line-height: 15px; }
   .badge-new, .badge-count, .badge-holo { font-size: 9px; padding: 2px 6px; }
   .barrow { grid-template-columns: 74px 1fr 80px; }
   .form-grid { grid-template-columns: 1fr; }
@@ -480,6 +488,14 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .inv-pack.clickable:active .pack { transform: scale(.97); }
 .inv-pack:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 12px; }
 .inv-pack.empty { cursor: pointer; opacity: .7; }
+/* big idle pack in the stage: clickable like the sidebar pack. The pack itself has a float
+   animation (transform), so the hover lift goes on the wrapper to avoid fighting it. */
+.idle-pack { border-radius: 14px; transition: transform .18s ease, filter .18s ease; }
+.idle-pack.clickable, .idle-pack.empty { cursor: pointer; }
+.idle-pack.clickable:hover, .idle-pack.clickable:focus-visible { transform: translateY(-6px) scale(1.04); filter: drop-shadow(0 14px 28px rgba(123,47,247,.45)) brightness(1.08); }
+.idle-pack.clickable:active { transform: scale(.97); }
+.idle-pack:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+.idle-pack.empty { opacity: .75; }
 .inv-hint { font-size: .75rem; color: var(--muted); text-align: center; margin-top: 2px; }
 
 .login-form .field { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--muted); }

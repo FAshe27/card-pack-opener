@@ -32,7 +32,7 @@ if (args.includes('--list')) {
   Object.entries(known).forEach(([id, name]) => console.log(`${id}\t${name}`));
   process.exit(0);
 }
-const set = String(opt('set', 'placeholder')).trim().toLowerCase();
+const set = String(opt('set', 'fast-food')).trim().toLowerCase();
 const packs = Math.max(1, Math.min(99, +opt('packs', 3) || 1));
 const count = Math.max(1, +opt('count', 5) || 1);
 if (!known[set]) {

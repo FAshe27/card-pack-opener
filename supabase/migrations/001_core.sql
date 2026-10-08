@@ -27,7 +27,7 @@ create table if not exists cps.app_config (
 );
 insert into cps.app_config (key, value) values
   ('welcome_packs', '3'),                 -- default starting packs in the admin "create account" form
-  ('default_set', '"placeholder"'),       -- set used for welcome packs
+  ('default_set', '"fast-food"'),         -- set used for welcome packs
   ('session_days', '365'),                -- how long "remember me" tokens last
   ('login_max_failures', '8'),            -- failed logins allowed per IP per window
   ('login_window_minutes', '15'),
