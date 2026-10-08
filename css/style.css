@@ -144,6 +144,41 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(170,190,255,.65); box-shadow: 0 0 28px rgba(100,130,255,.55), inset 0 0 18px rgba(150,170,255,.35); text-shadow: 0 0 16px rgba(150,180,255,.9); }
 .pack-skin-space .pack-name { color: #f2f5ff; text-shadow: 0 0 14px rgba(110,140,255,.75), 0 2px 8px rgba(0,0,0,.6); }
 .pack-skin-space .pack-sub { color: #b9c6ff; }
+/* pack skin "sea": deep blue foil, a dive from the sunlit reef (top) down to the midnight zone (bottom):
+   light rays fading with depth, rising bubbles, a few bioluminescent specks in the dark (no image files) */
+.pack-skin-sea .pack-top {
+  background: repeating-linear-gradient(115deg, rgba(255,255,255,.07) 0 2px, transparent 2px 7px), linear-gradient(180deg, #8beaf5 0%, #3cc6e6 100%);
+}
+.pack-skin-sea .pack-body {
+  background:
+    radial-gradient(circle at 22% 30%, rgba(255,255,255,.75) 0 1.6px, rgba(200,245,255,.25) 2.4px, transparent 3.4px),
+    radial-gradient(circle at 26% 37%, rgba(255,255,255,.6) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 81% 21%, rgba(255,255,255,.7) 0 2.2px, rgba(200,245,255,.22) 3px, transparent 4.2px),
+    radial-gradient(circle at 76% 31%, rgba(255,255,255,.55) 0 1.2px, transparent 2.6px),
+    radial-gradient(circle at 86% 52%, rgba(220,250,255,.45) 0 1.4px, transparent 2.8px),
+    radial-gradient(circle at 15% 58%, rgba(220,250,255,.35) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 18% 84%, #8ffcff 0 1.1px, rgba(80,255,230,.45) 2.2px, transparent 5px),
+    radial-gradient(circle at 70% 91%, #b4ffda 0 1px, rgba(90,255,190,.4) 2px, transparent 4.6px),
+    radial-gradient(circle at 88% 79%, #9fe8ff 0 .9px, rgba(90,200,255,.4) 1.8px, transparent 4px),
+    radial-gradient(circle at 40% 95%, #8ffcff 0 .8px, transparent 3.4px),
+    repeating-linear-gradient(115deg, rgba(255,255,255,.045) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, #3cc6e6 0%, #1592cf 16%, #0b62ad 36%, #0a3f86 56%, #071f55 76%, #030a22 92%, #01040f 100%);
+}
+.pack-skin-sea .pack-body::before {
+  background:
+    conic-gradient(from 168deg at 48% -14%, transparent 0deg, rgba(255,255,255,.20) 3deg, transparent 7deg, transparent 12deg, rgba(255,255,255,.14) 15deg, transparent 19deg,
+      transparent 23deg, rgba(255,255,255,.18) 25deg, transparent 29deg, transparent 33deg, rgba(255,255,255,.10) 36deg, transparent 40deg),
+    radial-gradient(ellipse 70% 30% at 50% 0%, rgba(230,255,255,.35), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.55) 30%, transparent 58%); mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.55) 30%, transparent 58%);
+}
+.pack-skin-sea .crimp { background: repeating-linear-gradient(90deg, rgba(0,40,80,.28) 0 3px, rgba(255,255,255,.22) 3px 6px); }
+.pack-skin-sea .crimp.bottom { background: repeating-linear-gradient(90deg, rgba(0,0,0,.45) 0 3px, rgba(110,200,255,.16) 3px 6px); }
+.pack-skin-sea .pack-top::after { border-bottom-color: rgba(255,255,255,.6); }
+.pack-skin-sea .pack-code { color: #f2fdff; opacity: .95; text-shadow: 0 1px 0 rgba(0,60,110,.6), 0 0 10px rgba(0,110,180,.65); }
+.pack-skin-sea .pack-emblem { background: radial-gradient(circle at 35% 28%, rgba(160,235,255,.45), rgba(6,40,95,.78) 70%);
+  border-color: rgba(170,235,255,.75); box-shadow: 0 0 26px rgba(60,190,255,.55), inset 0 0 18px rgba(170,240,255,.35); text-shadow: 0 0 14px rgba(140,230,255,.9); }
+.pack-skin-sea .pack-name { color: #f3fbff; text-shadow: 0 0 14px rgba(60,170,255,.7), 0 2px 8px rgba(0,0,0,.7); }
+.pack-skin-sea .pack-sub { color: #a9dcff; }
 .pack.float { --pw: 220px; animation: float 4s ease-in-out infinite; }
 .pack.ready { --pw: 250px; cursor: pointer; animation: dropIn .5s cubic-bezier(.2,1.4,.4,1), wiggle 2.4s 0.6s ease-in-out infinite; }
 .pack.ready:hover { animation: shakeSmall .35s ease-in-out infinite; }

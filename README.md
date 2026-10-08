@@ -15,11 +15,13 @@ The site is **accounts-only**: everyone logs in with a username + 4-digit PIN th
 
 ## Card sets on the site
 
-The set picker lists **Fast Food Collection** (the default) and **Space Collection**, in the order of `sets/manifest.js`.
+The set picker lists **Fast Food Collection** (the default), **Space Collection** and **Sea Creatures**, in the order of `sets/manifest.js`.
 
 Each pack has **9 cards**: 5 Common + 2 Uncommon + 1 wild (mostly Common/Uncommon, sometimes Rare/Epic) + **1 guaranteed Rare or better**. Holo foil chance grows with rarity (2% Common → 25% Chase). The **Odds** tab shows exact numbers for each set.
 
 **Space Collection** (332 cards, code SPACE) has real space photos on a black art panel, each card with a fun fact: 6 Chase (top: The Observable Universe), 10 Legendary, 19 Epic, 46 Rare, 93 Uncommon, 158 Common, in a deep-space "Deep Space Pack".
+
+**Sea Creatures** (330 cards, code SEA) has real photos of sharks, whales, octopuses, reef fish and deep-sea oddities on a navy art panel, each with a fun fact: 6 Chase, 12 Legendary, 20 Epic, 46 Rare, 92 Uncommon, 154 Common, in a "Deep Dive Pack" (deep blue foil, sunlit reef down to the midnight zone).
 
 **Fast Food Collection** (249 cards, code FF) uses real product photos and brand logos: 10 Chase, 14 Legendary, 24 Epic, 39 Rare, 66 Uncommon, 96 Common, in a red/yellow "Value Meal Pack".
 
@@ -89,7 +91,8 @@ CardSets.register({
   // theme: { ..., artBackground: "#ffffff", artFit: "contain" }  // optional: photos on a plain panel, never cropped
   //                                                               // ("#000000" for photos on black, e.g. space shots)
   // pack: { name: "Value Meal Pack", emblem: "🍔" }              // optional: wrapper name + icon (default ✦)
-  // pack: { ..., skin: "space" }                                 // optional: built-in wrapper look (starfield + nebula)
+  // pack: { ..., skin: "space" }                                 // optional: built-in wrapper look: "space" (starfield + nebula)
+  //                                                               // or "sea" (sunlit reef fading to the midnight zone)
   // pack: { slots: [...] }  // optional — falls back to the default 9-card layout
   cards: [
     { name: "Northern Cardinal", rarity: "common",  subtitle: "Songbird", details: "Males are bright red; females are tan." },

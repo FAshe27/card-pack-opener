@@ -4,5 +4,6 @@
    (Placeholder Series 1, Demo Mini Set). */
 CardSets.manifest = [
   'fast-food.js',
-  'space.js'
+  'space.js',
+  'sea.js'
 ];

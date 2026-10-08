@@ -91,7 +91,7 @@ const setsDir = path.join(siteRoot, 'sets');
 const outFile = res.set.id + '.js';
 
 // ---- re-importing over an existing set file keeps its hand-edited settings
-// (description, pack name/emblem/odds, theme extras); --description/--primary/--secondary still win.
+// (description, pack name/emblem/odds/skin, theme extras); --description/--primary/--secondary still win.
 if (fs.existsSync(path.join(setsDir, outFile))) {
   let old = null;
   try {
