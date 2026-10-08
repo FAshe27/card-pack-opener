@@ -170,6 +170,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .cf { position: relative; height: 100%; display: flex; flex-direction: column; gap: 2cqw; padding: 2.6cqw; background-color: #12172a; background-image: linear-gradient(180deg, #151a2b, #0f1322); border-radius: 3.4cqw; }
 .cf-top { display: flex; align-items: center; justify-content: space-between; gap: 2cqw; }
 .cf-name { font-weight: 800; font-size: 7.2cqw; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cf-name-wrap { white-space: normal; overflow-wrap: break-word; line-height: 1.08; min-width: 0;   /* 2 lines at the 70% size; */
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }       /* ellipsis only past 2 lines */
 .cf-gem { flex: none; width: 4.6cqw; height: 4.6cqw; transform: rotate(45deg); background: var(--rc); box-shadow: 0 0 2.5cqw var(--rc); border-radius: 1cqw; }
 .r-chase .cf-gem { background: conic-gradient(#ff4fa3, #ffb21e, #38c97f, #3f8cff, #b35cff, #ff4fa3); }
 .cf-art { position: relative; aspect-ratio: 100/72; border-radius: 2.4cqw; overflow: hidden; border: .9cqw solid rgba(255,255,255,.16); flex: none; background: #000; }

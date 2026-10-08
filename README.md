@@ -42,7 +42,7 @@ That writes `sets/birds.js` and adds it to the manifest. Columns (header row, an
 
 | Column | Required | Notes |
 |--------|----------|-------|
-| `name` | yes | Card title |
+| `name` | yes | Card title. Long names shrink to fit the header (down to 70%), then wrap to two lines; nothing is cut off unless a name is longer than two lines can hold |
 | `rarity` | yes | `common` / `uncommon` / `rare` / `epic` / `legendary` / `chase` (or C/U/R/E/L/X) |
 | `subtitle` | no | Short line under the name (species, team, category…) |
 | `details` | no | Free-form text box on the card face — stats, fun facts, flavor text, anything |

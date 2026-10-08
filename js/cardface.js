@@ -53,11 +53,44 @@
     return '<div class="cf-details cf-with-logo"><span class="cf-logo cf-logo-sm">' + img + '</span>' + esc(card.details) + '</div>';
   }
 
+  /* Header name fit. Every card measurement is in cqw (a % of the card's width), so how much
+     room a name needs relative to the card is the same at every card size. We measure the name
+     once with canvas (no DOM layout, no reflow) and bake a cqw font-size into the markup:
+       1) fits at the normal size            -> unchanged
+       2) shrink to fit one line, down to 70% of normal
+       3) still too long                     -> two lines at the 70% size
+       4) longer than two lines can hold     -> CSS line-clamp adds an ellipsis (only then) */
+  var NAME_PX = 7.2, NAME_MIN = 7.2 * 0.7, NAME_ROOM = 80;   // room: 88cqw inner width - 4.6cqw gem - 2cqw gap, minus a small safety margin
+  var fitCache = {}, measureCtx = null;
+  function nameWidth(name) {                      // width in cqw at font-size 1cqw
+    if (typeof document === 'undefined') return 0;
+    if (!measureCtx) {
+      measureCtx = document.createElement('canvas').getContext('2d');
+      var fam = (window.getComputedStyle && getComputedStyle(document.body || document.documentElement).fontFamily) ||
+        'system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      measureCtx.font = '800 100px ' + fam;
+    }
+    return measureCtx ? measureCtx.measureText(name).width / 100 : 0;
+  }
+  function nameFit(name) {
+    name = String(name || '');
+    if (fitCache[name]) return fitCache[name];
+    var w = nameWidth(name), res;
+    if (!w || w * NAME_PX <= NAME_ROOM) res = { cls: '', size: 0 };
+    else if (w * NAME_MIN <= NAME_ROOM) res = { cls: ' cf-name-fit', size: Math.floor(NAME_ROOM / w * 100) / 100 };
+    else res = { cls: ' cf-name-wrap', size: Math.round(NAME_MIN * 100) / 100 };
+    return (fitCache[name] = res);
+  }
+  function nameHtml(name) {
+    var f = nameFit(name);
+    return '<span class="cf-name' + f.cls + '"' + (f.size ? ' style="font-size:' + f.size + 'cqw"' : '') + '>' + esc(name) + '</span>';
+  }
+
   function front(set, card, holo) {
     var r = R.RARITIES[R.INDEX[card.rarity]];
     var layout = card.logo ? (String(card.details || '').trim() ? ' cf-has-logo' : ' cf-logo-only') : '';
     return '<div class="face front"><div class="cf' + layout + '">' +
-      '<div class="cf-top"><span class="cf-name">' + esc(card.name) + '</span><span class="cf-gem" title="' + r.label + '"></span></div>' +
+      '<div class="cf-top">' + nameHtml(card.name) + '<span class="cf-gem" title="' + r.label + '"></span></div>' +
       '<div class="cf-art">' + artOrImage(set, card) + '</div>' +
       '<div class="cf-type"><span class="cf-sub">' + esc(card.subtitle) + '</span><span class="cf-rar">' + r.label + '</span></div>' +
       detailsBox(card) +
@@ -107,5 +140,5 @@
       '<div class="crimp bottom"></div></div></div>';
   }
 
-  CPS.cards = { render: render, silhouette: silhouette, pack: pack, art: art, themeStyle: themeStyle };
+  CPS.cards = { nameFit: nameFit, render: render, silhouette: silhouette, pack: pack, art: art, themeStyle: themeStyle };
 })(window.CPS);
