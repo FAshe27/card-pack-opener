@@ -742,7 +742,7 @@ CardSets.register({
       "id": "f-a-18c-hornet",
       "subtitle": "Carrier Fighter",
       "details": "Legacy Hornet; Marines still fly them.",
-      "image": "assets/sets/aircraft/images/f-a-18-hornet.webp"
+      "image": "assets/sets/aircraft/images/f-a-18c-hornet.webp"
     },
     {
       "name": "F/A-18E Super Hornet",
