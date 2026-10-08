@@ -208,6 +208,36 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(170,235,255,.75); box-shadow: 0 0 26px rgba(60,190,255,.55), inset 0 0 18px rgba(170,240,255,.35); text-shadow: 0 0 14px rgba(140,230,255,.9); }
 .pack-skin-sea .pack-name { color: #f3fbff; text-shadow: 0 0 14px rgba(60,170,255,.7), 0 2px 8px rgba(0,0,0,.7); }
 .pack-skin-sea .pack-sub { color: #a9dcff; }
+/* pack skin "nfl": night game under the lights — floodlit field-turf foil, faint yard lines, championship-gold glow (no image files) */
+.pack-skin-nfl .pack-top {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.40) 0%, rgba(0,0,0,0) 32%, rgba(2,12,6,.88) 72%, #020805 100%),
+    conic-gradient(from 180deg at 50% -22%, transparent 0deg, rgba(255,252,230,.12) 4deg, transparent 9deg, transparent 15deg, rgba(255,252,230,.08) 19deg, transparent 24deg),
+    radial-gradient(ellipse 78% 36% at 50% -4%, rgba(255,250,220,.30), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 2px, transparent 2px 46px),
+    linear-gradient(180deg, #0f4a26 0%, #07220f 100%);
+}
+.pack-skin-nfl .pack-body {
+  background:
+    radial-gradient(ellipse 60% 22% at 50% 108%, rgba(212,175,55,.22), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 2px, transparent 2px 46px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.14) 0 3px, transparent 3px 9px),
+    linear-gradient(180deg, #0a3520 0%, #04150b 62%, #020a05 100%);
+}
+.pack-skin-nfl .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 34% at 50% -8%, rgba(255,252,235,.30), transparent 70%),
+    conic-gradient(from 180deg at 50% -24%, transparent 0deg, rgba(255,255,255,.10) 4deg, transparent 9deg, transparent 15deg, rgba(255,255,255,.06) 19deg, transparent 24deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 60%); mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
+}
+.pack-skin-nfl .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(212,175,55,.34) 4px 6px, rgba(255,255,255,.12) 6px 9px); }
+.pack-skin-nfl .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(120,90,20,.45) 4px 6px, rgba(255,255,255,.07) 6px 9px); }
+.pack-skin-nfl .pack-top::after { border-bottom-color: rgba(255,255,255,.55); }
+.pack-skin-nfl .pack-code { color: #ffffff; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(212,175,55,.85); }
+.pack-skin-nfl .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,225,130,.40), rgba(20,14,4,.82) 72%);
+  border-color: rgba(255,215,120,.7); box-shadow: 0 0 28px rgba(212,175,55,.6), inset 0 0 18px rgba(255,215,120,.32); text-shadow: 0 0 16px rgba(255,220,130,.9); }
+.pack-skin-nfl .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(212,175,55,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-nfl .pack-sub { color: #e8d9a8; }
 /* pack skin "air": gunmetal + woodland-camo foil, brushed-metal crimp, contrails and a green HUD scope around the jet emblem (no image files) */
 .pack-skin-air .pack-top {
   background: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 3px), linear-gradient(180deg, #a3adb6 0%, #6c7680 55%, #4a535c 100%);
