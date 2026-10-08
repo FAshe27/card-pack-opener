@@ -191,7 +191,7 @@
       var e = 1 - Math.pow(1 - p, 3); /* easeOutCubic */
       draw(canvas, wheel, fromRot + (finalRot - fromRot) * e);
       if (p < 1) requestAnimationFrame(frame);
-      else if (done) done();
+      else { canvas._rot = ((finalRot % TAU) + TAU) % TAU; if (done) done(); }
     }
     requestAnimationFrame(frame);
   }
