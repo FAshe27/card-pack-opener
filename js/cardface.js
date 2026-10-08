@@ -150,7 +150,8 @@
 
   /* Pack wrapper art */
   function pack(set, extraCls) {
-    return '<div class="pack ' + (extraCls || '') + '" style="' + themeStyle(set) + '">' +
+    var skin = set.pack.skin ? ' pack-skin-' + set.pack.skin : '';   // optional look, e.g. pack: { skin: 'space' }
+    return '<div class="pack ' + (extraCls || '') + skin + '" style="' + themeStyle(set) + '">' +
       '<div class="pack-top"><div class="crimp"></div></div>' +
       '<div class="pack-body"><div class="pack-shine"></div>' +
       '<div class="pack-code' + codeCls(set) + '">' + esc(set.code) + '</div>' +

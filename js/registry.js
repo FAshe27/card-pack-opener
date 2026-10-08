@@ -83,7 +83,7 @@
       byId: new Map(cards.map(function (c) { return [c.id, c]; })),
       pools: pools,
       numWidth: width,
-      pack: { name: p.name || DEFAULT_PACK.name, emblem: p.emblem ? String(p.emblem).slice(0, 8) : '', slots: slots, holo: holo,
+      pack: { name: p.name || DEFAULT_PACK.name, emblem: p.emblem ? String(p.emblem).slice(0, 8) : '', skin: p.skin ? String(p.skin).toLowerCase().replace(/[^a-z0-9_-]+/g, '').slice(0, 24) : '', slots: slots, holo: holo,
               size: slots.reduce(function (a, s) { return a + s.count; }, 0) },
       source: source || 'file',
       raw: raw

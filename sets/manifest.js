@@ -3,5 +3,6 @@
 CardSets.manifest = [
   'placeholder.js',
   'fast-food.js',
-  'demo-mini.js'
+  'demo-mini.js',
+  'space.js'
 ];
