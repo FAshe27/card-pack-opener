@@ -1,7 +1,7 @@
 /* Card set: Space Collection (generated from CSV by tools/csv-to-set.js; re-running it keeps the description/theme/pack). */
 CardSets.register({
   "id": "space",
-  "name": "Space Collection",
+  "name": "Space",
   "code": "SPACE",
   "description": "Planets, moons, stars, galaxies, spacecraft and the people who flew them. Real photos, each with a fun fact.",
   "theme": {
