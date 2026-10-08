@@ -269,6 +269,41 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(255,140,140,.7); box-shadow: 0 0 28px rgba(217,4,41,.65), inset 0 0 18px rgba(255,140,140,.32); text-shadow: 0 0 16px rgba(255,150,150,.9); }
 .pack-skin-f1 .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(217,4,41,.9), 0 2px 8px rgba(0,0,0,.65); }
 .pack-skin-f1 .pack-sub { color: #f3c9c9; }
+/* pack skin "tech": midnight circuit board — deep navy PCB, glowing cyan traces, gold pin accents (no image files) */
+.pack-skin-tech .pack-top {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 32%, rgba(4,8,20,.92) 72%, #05070f 100%),
+    radial-gradient(ellipse 85% 45% at 50% -8%, rgba(0,229,255,.32), transparent 70%),
+    radial-gradient(circle at 82% 18%, rgba(0,229,255,.85) 0 3px, rgba(0,229,255,.25) 3px 7px, transparent 8px),
+    radial-gradient(circle at 14% 34%, rgba(255,183,0,.9) 0 3px, rgba(255,183,0,.25) 3px 7px, transparent 8px),
+    radial-gradient(circle at 68% 52%, rgba(0,229,255,.7) 0 2px, rgba(0,229,255,.2) 2px 6px, transparent 7px),
+    repeating-linear-gradient(45deg, transparent 0 30px, rgba(0,229,255,.09) 30px 32px, transparent 32px 62px),
+    repeating-linear-gradient(0deg, rgba(0,229,255,.07) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, rgba(0,229,255,.07) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, #ffb700 0 12px, #0a0f1e 12px 26px) 0 100% / 100% 8px no-repeat,
+    linear-gradient(180deg, #0d1526 0%, #070b16 100%);
+}
+.pack-skin-tech .pack-body {
+  background:
+    radial-gradient(ellipse 65% 26% at 50% 108%, rgba(255,183,0,.20), transparent 70%),
+    linear-gradient(115deg, transparent 42%, rgba(0,229,255,.20) 47%, transparent 52%, transparent 70%, rgba(255,255,255,.08) 75%, transparent 80%),
+    repeating-linear-gradient(0deg, rgba(0,229,255,.05) 0 1px, transparent 1px 34px),
+    repeating-linear-gradient(90deg, rgba(0,229,255,.05) 0 1px, transparent 1px 34px),
+    linear-gradient(180deg, #0b1222 0%, #070b16 55%, #04060d 100%);
+}
+.pack-skin-tech .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 34% at 50% -8%, rgba(0,229,255,.28), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 60%); mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
+}
+.pack-skin-tech .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(0,229,255,.5) 4px 6px, rgba(255,183,0,.4) 6px 8px, rgba(255,255,255,.10) 8px 11px); }
+.pack-skin-tech .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(0,160,180,.45) 4px 6px, rgba(180,120,0,.4) 6px 8px, rgba(255,255,255,.06) 8px 11px); }
+.pack-skin-tech .pack-top::after { border-bottom-color: rgba(0,229,255,.6); }
+.pack-skin-tech .pack-code { color: #ffffff; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(0,229,255,.9); }
+.pack-skin-tech .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(0,229,255,.35), rgba(4,10,22,.88) 72%);
+  border-color: rgba(0,229,255,.7); box-shadow: 0 0 28px rgba(0,229,255,.55), inset 0 0 18px rgba(0,229,255,.28); text-shadow: 0 0 16px rgba(0,229,255,.9); }
+.pack-skin-tech .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(0,229,255,.9), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-tech .pack-sub { color: #bfefff; }
 /* pack skin "sea": deep blue foil, a dive from the sunlit reef (top) down to the midnight zone (bottom):
    light rays fading with depth, rising bubbles, a few bioluminescent specks in the dark (no image files) */
 .pack-skin-sea .pack-top {
