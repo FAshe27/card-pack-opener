@@ -17,6 +17,7 @@
     </label>
     <nav class="tabs" role="tablist">
       <button data-view="packs" class="tab active">Open Packs</button>
+      <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel</button>
       <button data-view="collection" class="tab">Collection</button>
       <button data-view="stats" class="tab">Stats</button>
       <button data-view="odds" class="tab">Odds</button>
@@ -125,6 +126,21 @@
         <h3>Pack slots</h3>
         <div id="slotList" class="slot-list"></div>
         <p class="muted small">Odds are per pack. “Specific card” is the chance a pack contains one particular card of that rarity. Holo chance applies to each card pulled. Pulls use your browser's secure random number generator.</p>
+      </div>
+    </section>
+
+    <!-- ============ PRIZE WHEEL ============ -->
+    <section id="view-wheel" class="view">
+      <div class="wheel-wrap">
+        <h2 class="wheel-title" id="wheelName">Prize Wheel</h2>
+        <div class="wheel-balance">🎟️ <b id="wheelSpins">0</b> <span id="wheelSpinsLabel">spins</span></div>
+        <div class="wheel-stage">
+          <canvas id="wheelCanvas" width="520" height="520"></canvas>
+          <div class="wheel-pointer" aria-hidden="true"></div>
+        </div>
+        <div id="wheelResult" class="wheel-result hidden"></div>
+        <button id="spinBtn" class="btn big">SPIN</button>
+        <p class="muted small wheel-hint">Everyone gets a free spin every day at midnight. Admins can gift extra spins. Wheel hops are free — a spin only ends when you win packs.</p>
       </div>
     </section>
 
@@ -242,6 +258,7 @@
   <script src="js/cloud.js"></script>
   <!-- list of set files to load (edit this to add sets) -->
   <script src="sets/manifest.js"></script>
+  <script src="js/wheel.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
