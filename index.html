@@ -156,7 +156,7 @@
         <button class="btn primary" id="adminUnlockBtn" type="button">Unlock</button>
       </div>
       <div id="adminBody" class="admin-layout">
-        <div class="panel">
+        <div class="panel collapsible" id="panelCreate">
           <h2>Create a friend's account</h2>
           <p class="muted small">There's no public sign-up: you create each account here. Friends log in with their <b>username</b> and a <b>4-digit PIN</b>. The PIN is shown once after you create the account (you can reset it any time).</p>
           <form id="newAcctForm" class="form-grid" autocomplete="off">
@@ -170,16 +170,16 @@
           </form>
           <div id="naResult"></div>
         </div>
-        <div class="panel">
+        <div class="panel collapsible" id="panelServerSets">
           <h2>Sets on the server</h2>
           <p class="muted small">Packs are opened on the server, so each set file must be uploaded there too. Re-sync after editing a set.</p>
           <div id="serverSets" class="set-list"></div>
         </div>
-        <div class="panel wide">
+        <div class="panel wide collapsible" id="panelAccounts">
           <h2>Accounts <button class="btn small ghost" id="adminRefresh" type="button">Refresh</button></h2>
           <div id="acctList" class="acct-list"></div>
         </div>
-        <div class="panel wide">
+        <div class="panel wide collapsible" id="panelCodes">
           <h2>Prize codes</h2>
           <p class="muted small">Make new codes with the Prize code generator under Sets &amp; settings below.</p>
           <div id="codeList"></div>
@@ -188,11 +188,11 @@
       <div id="setsArea">
         <h2 class="area-title">Sets &amp; settings</h2>
       <div class="sets-layout">
-        <div class="panel">
+        <div class="panel collapsible" id="panelCardSets">
           <h2>Card sets</h2>
           <div id="setList" class="set-list"></div>
         </div>
-        <div class="panel">
+        <div class="panel collapsible" id="panelImport">
           <h2>Import a set from CSV</h2>
           <p class="muted small">One row per card. Columns: <code>name, rarity, subtitle, details, image</code> (header row recommended; only name and rarity are required). Rarity can be common, uncommon, rare, epic, legendary, chase (or C/U/R/E/L/X). The <code>details</code> column is the free-text box at the bottom of the card: stats, fun facts, flavor text, anything.</p>
           <div class="form-grid">
@@ -210,7 +210,7 @@
           </div>
           <div id="impResult" class="imp-result"></div>
         </div>
-        <div class="panel">
+        <div class="panel collapsible" id="panelSettings">
           <h2>Settings</h2>
           <label class="toggle"><input type="checkbox" id="soundToggle"> Sound effects</label>
           <label class="toggle"><input type="checkbox" id="devToggle"> <span class="cloud-only">Admin tools unlocked (Dev mode)</span><span class="guest-only">Dev mode (free packs, code generator)</span> <span class="lock" aria-hidden="true">🔒</span></label>
