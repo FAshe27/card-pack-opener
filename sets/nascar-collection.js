@@ -1261,7 +1261,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "grant-enfinger",
       "subtitle": "Driver",
-      "details": "Veteran winner; 2026 Chase driver.",
+      "details": "Veteran winner; 2026 Chase driver. Franklin does his shirts, but you knew that.",
       "image": "assets/sets/NASCAR-images/grant-enfinger.webp"
     },
     {
