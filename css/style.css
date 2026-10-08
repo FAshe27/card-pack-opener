@@ -144,38 +144,6 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(170,190,255,.65); box-shadow: 0 0 28px rgba(100,130,255,.55), inset 0 0 18px rgba(150,170,255,.35); text-shadow: 0 0 16px rgba(150,180,255,.9); }
 .pack-skin-space .pack-name { color: #f2f5ff; text-shadow: 0 0 14px rgba(110,140,255,.75), 0 2px 8px rgba(0,0,0,.6); }
 .pack-skin-space .pack-sub { color: #b9c6ff; }
-/* pack skin "birds": dawn chorus — first light over the treeline, iridescent starling-feather sheen (no image files) */
-.pack-skin-birds .pack-top {
-  background:
-    linear-gradient(180deg, rgba(6,8,20,.55) 0%, rgba(6,8,20,0) 34%, rgba(20,16,40,.5) 62%, rgba(10,8,18,.92) 100%),
-    conic-gradient(from 180deg at 50% 108%, transparent 0deg, rgba(255,220,160,.10) 6deg, transparent 12deg, transparent 24deg, rgba(255,220,160,.07) 30deg, transparent 36deg),
-    radial-gradient(ellipse 90% 55% at 50% 108%, rgba(255,196,110,.55), rgba(255,150,80,.18) 55%, transparent 75%),
-    radial-gradient(ellipse 34% 20% at 50% 96%, rgba(255,236,190,.85), transparent 70%),
-    linear-gradient(180deg, #0b1030 0%, #2b3a6e 38%, #7a5a8c 62%, #e8935a 82%, #f7c873 100%);
-}
-.pack-skin-birds .pack-body {
-  background:
-    linear-gradient(115deg, transparent 38%, rgba(120,220,190,.14) 46%, rgba(190,130,255,.12) 52%, transparent 60%),
-    linear-gradient(65deg, transparent 55%, rgba(255,200,120,.10) 68%, transparent 80%),
-    radial-gradient(ellipse 70% 30% at 50% 0%, rgba(64,160,150,.25), transparent 70%),
-    repeating-linear-gradient(173deg, rgba(255,255,255,.045) 0 1px, transparent 1px 5px),
-    repeating-linear-gradient(173deg, rgba(0,0,0,.28) 0 2px, transparent 2px 9px),
-    linear-gradient(180deg, #123b3c 0%, #0b2426 45%, #060f10 100%);
-}
-.pack-skin-birds .pack-body::before {
-  background:
-    radial-gradient(ellipse 85% 34% at 50% -8%, rgba(255,214,150,.28), transparent 70%),
-    conic-gradient(from 180deg at 50% -24%, transparent 0deg, rgba(255,255,255,.10) 4deg, transparent 9deg, transparent 15deg, rgba(255,255,255,.06) 19deg, transparent 24deg);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 60%); mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
-}
-.pack-skin-birds .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(232,147,90,.5) 4px 6px, rgba(255,255,255,.12) 6px 9px); }
-.pack-skin-birds .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(140,80,30,.55) 4px 6px, rgba(255,255,255,.07) 6px 9px); }
-.pack-skin-birds .pack-top::after { border-bottom-color: rgba(255,220,170,.6); }
-.pack-skin-birds .pack-code { color: #ffe9c4; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(232,147,90,.9); }
-.pack-skin-birds .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,210,140,.45), rgba(30,18,8,.85) 72%);
-  border-color: rgba(255,200,130,.7); box-shadow: 0 0 28px rgba(232,147,90,.65), inset 0 0 18px rgba(255,200,130,.32); text-shadow: 0 0 16px rgba(255,210,140,.9); }
-.pack-skin-birds .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(232,147,90,.9), 0 2px 8px rgba(0,0,0,.65); }
-.pack-skin-birds .pack-sub { color: #f7ddba; }
 /* pack skin "nascar": checkered-flag foil over night asphalt, red speed streaks, stadium-light glow (no image files) */ 
 .pack-skin-nascar .pack-top {
   background:
@@ -838,8 +806,10 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 
 /* ---------- dupe trade-in ---------- */
 .tradein { margin-top: 12px; }
-.tradein-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.tradein-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .tradein-head h3 { margin: 0; font-size: 1rem; }
-.tradein-rows { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-.tradein-row { display: flex; align-items: center; gap: 10px; background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 0.92rem; }
-.tradein-row .btn { margin-left: auto; white-space: nowrap; }
+.tradein-rows { display: grid; gap: 8px; }
+@media (min-width: 720px) { .tradein-rows { grid-template-columns: 1fr 1fr; } }
+.tradein-row { display: flex; align-items: center; gap: 12px; background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+.tradein-mid { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.tradein-row .btn { margin-left: auto; }
