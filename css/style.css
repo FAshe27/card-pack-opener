@@ -101,7 +101,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .dev-title { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--warn); font-weight: 700; margin-bottom: 8px; }
 .mini-stats { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-size: .9rem; }
 .mini-stats div { display: flex; justify-content: space-between; gap: 10px; }
-.mini-stats span { color: var(--muted); } .mini-stats b { text-align: right; } .mini-stats em { font-style: normal; font-weight: 500; opacity: .75; font-size: .8em; }
+.mini-stats span { color: var(--muted); } .mini-stats b { text-align: right; }
 
 /* ===================================================== pack art */
 .pack { --pw: 200px; position: relative; width: var(--pw); aspect-ratio: 5/8; user-select: none; filter: drop-shadow(0 18px 30px rgba(0,0,0,.5)); }

@@ -255,12 +255,10 @@
     var busy = (S.opening && !S.opening.finished) || S.busy;
     $('#openBtn').disabled = !st.packs || busy;
     $('#openBtn').textContent = st.packs ? 'Open a pack' : 'No packs left';
-    var owned = ownedCount(set, st), best = st.stats.best && set.byId.get(st.stats.best.id);
+    var owned = ownedCount(set, st);
     $('#miniStats').innerHTML =
       '<div><span>Packs opened</span><b>' + st.stats.opened + '</b></div>' +
-      '<div><span>Collected</span><b>' + owned + ' / ' + set.cards.length + '</b></div>' +
-      '<div><span>Best pull</span><b class="' + (best ? 'rt-' + best.rarity : '') + '">' +
-      (best ? esc(best.name) + (st.stats.best.holo ? ' ✦' : '') + ' <em>' + rarityOf(best.rarity).label + '</em>' : '—') + '</b></div>';
+      '<div><span>Collected</span><b>' + owned + ' / ' + set.cards.length + '</b></div>';
   }
 
   function resetStage() {
