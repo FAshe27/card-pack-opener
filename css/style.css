@@ -144,7 +144,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(170,190,255,.65); box-shadow: 0 0 28px rgba(100,130,255,.55), inset 0 0 18px rgba(150,170,255,.35); text-shadow: 0 0 16px rgba(150,180,255,.9); }
 .pack-skin-space .pack-name { color: #f2f5ff; text-shadow: 0 0 14px rgba(110,140,255,.75), 0 2px 8px rgba(0,0,0,.6); }
 .pack-skin-space .pack-sub { color: #b9c6ff; }
-/* pack skin "nascar": checkered-flag foil over night asphalt, red speed streaks, stadium-light glow (no image files) */
+/* pack skin "nascar": checkered-flag foil over night asphalt, red speed streaks, stadium-light glow (no image files) */ 
 .pack-skin-nascar .pack-top {
   background:
     linear-gradient(180deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 30%, rgba(12,12,14,.88) 70%, #0b0b0d 100%),
