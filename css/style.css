@@ -280,15 +280,20 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .seg button { background: none; border: 0; padding: 6px 11px; border-radius: 8px; cursor: pointer; color: var(--muted); font-weight: 600; font-size: .88rem; }
 .seg button.active { background: var(--panel2); color: var(--text); }
 .filter-count { color: var(--muted); font-size: .85rem; margin-left: auto; }
-.coll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 16px; }
+.coll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 22px 18px; padding: 14px 12px 0 0; }
 .coll-grid .card, .recent .card { cursor: pointer; }
 .recent .card { content-visibility: auto; contain-intrinsic-size: 150px 210px; }
-/* collection cell: content-visibility clips to the cell box, so the cell gets 10px of room (padding, cancelled by the
-   negative margin) for the hover lift, and the count pills sit in their own row under the card instead of on it */
-.coll-item { content-visibility: auto; contain-intrinsic-size: auto 170px auto 264px; padding: 10px; margin: -10px; min-width: 0; cursor: pointer; }
-.coll-meta { display: flex; justify-content: flex-end; align-items: center; gap: 5px; height: 18px; margin-top: 5px; }
-.coll-meta .badge-count, .coll-meta .badge-holo { position: static; box-shadow: none; padding: 1px 8px; line-height: 16px; font-size: 11px; pointer-events: auto; }
-.coll-grid .card:hover, .recent .card:hover { transform: translateY(-4px) scale(1.03); z-index: 2; }
+/* collection cell: content-visibility clips to the cell box, so the cell gets room (padding, cancelled by the negative
+   margin) for the corner badges + hover lift; the padding is click-through so it never steals clicks from neighbours */
+.coll-item { content-visibility: auto; contain-intrinsic-size: auto 186px auto 240px; padding: 26px 16px 6px 6px; margin: -26px -16px -6px -6px; min-width: 0; pointer-events: none; }
+.coll-card { position: relative; pointer-events: auto; cursor: pointer; transition: transform .25s ease-out; }
+.coll-item:hover .coll-card { transform: translateY(-4px) scale(1.03); }
+/* notification-style badges on the card's top-right corner: they straddle the top edge (2px overlap) and stick out
+   past the right edge, so the rarity gem / name stay uncovered; holo ✦n sits left of the ×n count */
+.coll-badges { position: absolute; z-index: 2; top: -16px; right: -9px; display: flex; gap: 3px; pointer-events: none; }
+.coll-badges .badge-count, .coll-badges .badge-holo { position: static; pointer-events: auto; padding: 0 7px; height: 18px; line-height: 18px; font-size: 11px; white-space: nowrap;
+  box-shadow: 0 0 0 2px #0b0f1a, 0 3px 8px rgba(0,0,0,.55); }
+.recent .card:hover { transform: translateY(-4px) scale(1.03); z-index: 2; }
 .empty { color: var(--muted); padding: 40px; text-align: center; grid-column: 1/-1; }
 
 /* ===================================================== stats */
@@ -420,8 +425,8 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   .brand-text { display: none; }
   .set-picker span { display: none; } .set-picker select { max-width: 170px; }
   .reveal-grid { gap: 10px; } .reveal-grid .card { width: calc(33.3% - 8px); }
-  .coll-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 4px 10px; }
-  .coll-meta { height: 15px; margin-top: 4px; gap: 4px; } .coll-meta .badge-count, .coll-meta .badge-holo { font-size: 9.5px; padding: 0 6px; line-height: 15px; }
+  .coll-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px 14px; padding: 13px 9px 0 0; }
+  .coll-badges { top: -13px; right: -7px; gap: 2px; } .coll-badges .badge-count, .coll-badges .badge-holo { font-size: 9.5px; padding: 0 5px; height: 15px; line-height: 15px; }
   .badge-new, .badge-count, .badge-holo { font-size: 9px; padding: 2px 6px; }
   .barrow { grid-template-columns: 74px 1fr 80px; }
   .form-grid { grid-template-columns: 1fr; }

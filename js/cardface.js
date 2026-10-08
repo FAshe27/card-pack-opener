@@ -148,14 +148,15 @@
       '<div class="sil-num">#' + U.pad(card.num, set.numWidth) + '</div><div class="sil-r">' + r.label + '</div></div></div></div>';
   }
 
-  /* Collection grid cell: the card (or silhouette) plus a row of count pills UNDER it ("×3", holo "✦2").
-     The pills live outside the card box, so they are never clipped (the grid cell uses content-visibility,
-     which clips to its box) and never cover the card name or the rarity gem in the top-right corner. */
+  /* Collection grid cell: the card (or silhouette) with its holo "✦n" and duplicate "×n" badges pinned to the
+     card's top-right corner like a notification badge. The badges sit in .coll-card (a plain, non-clipping wrapper
+     around the card) rather than inside the card faces (overflow: hidden), sit just above the top edge so they
+     never cover the rarity gem or the name, and the cell has room (padding) so its containment never clips them. */
   function collected(set, card, n, h) {
-    var meta = (n > 1 ? '<span class="badge-count" title="You have ' + n + ' copies">×' + n + '</span>' : '') +
-      (h > 0 ? '<span class="badge-holo" title="' + h + ' holo">✦' + (h > 1 ? h : '') + '</span>' : '');
-    return '<div class="coll-item">' + (n ? render(set, card, { holo: h > 0 }) : silhouette(set, card)) +
-      '<div class="coll-meta">' + meta + '</div></div>';
+    var b = (h > 0 ? '<span class="badge-holo" title="' + h + ' holo">✦' + (h > 1 ? h : '') + '</span>' : '') +
+      (n > 1 ? '<span class="badge-count" title="You have ' + n + ' copies">×' + n + '</span>' : '');
+    return '<div class="coll-item"><div class="coll-card">' + (n ? render(set, card, { holo: h > 0 }) : silhouette(set, card)) +
+      (b ? '<div class="coll-badges">' + b + '</div>' : '') + '</div></div>';
   }
 
   /* Pack wrapper art */
