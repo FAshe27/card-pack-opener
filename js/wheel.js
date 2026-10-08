@@ -115,7 +115,7 @@
     return { a0: 0, a1: TAU };
   }
 
-  function draw(canvas, wheel, rotation) {
+  function draw(canvas, wheel, rotation, highlightKey) {
     var ctx = canvas.getContext('2d');
     var W = canvas.width, H = canvas.height, cx = W / 2, cy = H / 2;
     var R = Math.min(W, H) / 2 - 10;
@@ -159,6 +159,20 @@
     ctx.font = '700 22px system-ui, sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('★', cx, cy + 1);
+    if (highlightKey) {
+      var sp = segSpan(wheel, highlightKey);
+      var ha0 = rotation + sp.a0 - Math.PI / 2, ha1 = rotation + sp.a1 - Math.PI / 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, R, ha0, ha1);
+      ctx.closePath();
+      ctx.shadowColor = '#ffb21e';
+      ctx.shadowBlur = 14;
+      ctx.strokeStyle = '#ffe08a';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
   }
 
   /* Animate the wheel to land on the segment with `key`. rotation 0 = pointer at top. */
@@ -187,9 +201,9 @@
     return new Promise(function (resolve) {
       var byId = {};
       cfg.wheels.forEach(function (w) { byId[w.id] = w; });
-      var i = 0;
+      var i = 0, last = null;
       function next() {
-        if (i >= hops.length) { resolve(); return; }
+        if (i >= hops.length) { resolve(last); return; }
         var hop = hops[i++];
         var wheel = byId[hop.wheel] || cfg.wheels[0];
         var nameEl = document.getElementById('wheelName');
@@ -197,6 +211,7 @@
         draw(canvas, wheel, 0);
         setTimeout(function () {
           spinTo(canvas, wheel, hop.key, 0, 3600, function () {
+            last = { wheelId: wheel.id, key: hop.key, rotation: canvas._rot || 0 };
             setTimeout(next, 1100);
           });
         }, 400);
