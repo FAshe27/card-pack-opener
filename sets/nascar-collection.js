@@ -1,7 +1,7 @@
 /* Card set: NASCAR Collection (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "nascar-collection",
-  "name": "NASCAR Collection",
+  "name": "NASCAR",
   "code": "NASCAR",
   "description": "NASCAR considered to be one of the top-ranked motorsports organizations in the world and is one of the largest spectator sports leagues in America.",
   "theme": {
