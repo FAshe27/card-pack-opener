@@ -3,10 +3,17 @@ CardSets.register({
   "id": "technology-collection",
   "name": "Technology Collection",
   "code": "TECH",
-  "description": "",
+  "description": "buy it, use it, break it, fix it, etc etc",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#000080",
+    "secondary": "#240238",
+    "artBackground": "#d3d3d3",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Technology Pack",
+    "emblem": "💾",
+    "skin": "tech"
   },
   "cards": [
     {
