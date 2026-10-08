@@ -4,11 +4,11 @@
    (Placeholder Series 1, Demo Mini Set). */
 CardSets.manifest = [
   'fast-food.js',
-  'space.js',
-  'sea.js',
-  'aircraft.js',
-  'nascar-collection.js',
-  'nfl-collection.js',
   'formula-1-collection.js',
-  'nba-collection.js'
+  'nascar-collection.js',
+  'nba-collection.js',
+  'nfl-collection.js',
+  'aircraft.js',
+  'sea.js',
+  'space.js'
 ];
