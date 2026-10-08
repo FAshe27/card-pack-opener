@@ -3,10 +3,17 @@ CardSets.register({
   "id": "formula-1-collection",
   "name": "Formula 1 Collection",
   "code": "F1",
-  "description": "",
+  "description": "Formula 1 is the highest class of international open-wheel, single-seater automobile racing.",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#780606",
+    "secondary": "#530616",
+    "artBackground": "#222222",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Formula 1 Pack",
+    "emblem": "🏎️",
+    "skin": "f1"
   },
   "cards": [
     {
