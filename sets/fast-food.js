@@ -12,7 +12,8 @@ CardSets.register({
   },
   "pack": {
     "name": "Value Meal Pack",
-    "emblem": "🍔"
+    "emblem": "🍔",
+    "skin": "fastfood"
   },
   "cards": [
     {
