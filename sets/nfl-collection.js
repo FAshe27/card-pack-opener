@@ -1,7 +1,7 @@
 /* Card set: NFL Collection (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "nfl-collection",
-  "name": "NFL Collection",
+  "name": "NFL",
   "code": "NFL",
   "description": "ARE YOU READY FOR FOOBAW???",
   "theme": {
