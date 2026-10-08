@@ -887,3 +887,10 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .collapse-btn:hover { color: var(--text); background: var(--panel2); }
 .panel.collapsed > :not(h2) { display: none; }
 .panel.collapsed .collapse-btn { transform: rotate(-90deg); }
+
+/* ---------- trade-in: mobile wrap ---------- */
+@media (max-width: 560px) {
+  .tradein-row { flex-wrap: wrap; row-gap: 10px; }
+  .tradein-mid { font-size: 0.92rem; }
+  .tradein-head h3 { font-size: 0.95rem; }
+}
