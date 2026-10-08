@@ -1,7 +1,7 @@
 /* Card set: Fast Food Collection (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "fast-food",
-  "name": "Fast Food Collection",
+  "name": "Fast Food",
   "code": "FF",
   "description": "Burgers, fries, tacos, chicken and more from America's favorite fast-food chains. Photos on white, with brand logos.",
   "theme": {
