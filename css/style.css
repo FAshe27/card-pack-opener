@@ -173,6 +173,70 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(255,130,130,.7); box-shadow: 0 0 28px rgba(200,16,46,.6), inset 0 0 18px rgba(255,130,130,.32); text-shadow: 0 0 16px rgba(255,150,150,.9); }
 .pack-skin-nascar .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(200,16,46,.85), 0 2px 8px rgba(0,0,0,.65); }
 .pack-skin-nascar .pack-sub { color: #f0c4c4; }
+/* pack skin "nba": center court under the lights — polished maple hardwood, painted key, white court lines, warm arena glow (no image files) */
+.pack-skin-nba .pack-top {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 32%, rgba(10,8,4,.9) 72%, #050403 100%),
+    conic-gradient(from 180deg at 50% -22%, transparent 0deg, rgba(255,236,200,.13) 4deg, transparent 9deg, transparent 15deg, rgba(255,236,200,.08) 19deg, transparent 24deg),
+    radial-gradient(ellipse 78% 36% at 50% -4%, rgba(255,228,170,.30), transparent 70%),
+    radial-gradient(ellipse 44% 60% at 50% 118%, rgba(232,114,42,.22), transparent 70%),
+    linear-gradient(180deg, #191410 0%, #0d0a07 100%);
+}
+.pack-skin-nba .pack-body {
+  background:
+    linear-gradient(180deg, rgba(255,240,210,.16) 0%, rgba(255,240,210,0) 34%, rgba(0,0,0,.38) 100%),
+    linear-gradient(115deg, transparent 30%, rgba(255,255,255,.08) 45%, transparent 60%),
+    linear-gradient(rgba(255,255,255,.65), rgba(255,255,255,.65)) 0 26% / 100% 3px no-repeat,
+    radial-gradient(circle at 50% 26%, transparent 40px, rgba(255,255,255,.7) 40px, rgba(255,255,255,.7) 43px, transparent 43px),
+    radial-gradient(circle at 50% 175%, transparent 404px, rgba(255,255,255,.55) 404px, rgba(255,255,255,.55) 407px, transparent 407px),
+    radial-gradient(circle at 50% calc(100% - 148px), transparent 54px, rgba(255,255,255,.7) 54px, rgba(255,255,255,.7) 57px, transparent 57px),
+    linear-gradient(rgba(255,255,255,.7), rgba(255,255,255,.7)) 50% 100% / 122px 154px no-repeat,
+    linear-gradient(rgba(24,52,130,.88), rgba(24,52,130,.88)) 50% 100% / 116px 148px no-repeat,
+    repeating-linear-gradient(0deg, rgba(60,30,5,.16) 0 2px, transparent 2px 16px),
+    repeating-linear-gradient(90deg, rgba(255,235,200,.05) 0 3px, transparent 3px 60px),
+    linear-gradient(180deg, #d29a4e 0%, #c08438 45%, #a06c2a 100%);
+}
+.pack-skin-nba .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 34% at 50% -8%, rgba(255,240,210,.30), transparent 70%),
+    conic-gradient(from 180deg at 50% -24%, transparent 0deg, rgba(255,255,255,.10) 4deg, transparent 9deg, transparent 15deg, rgba(255,255,255,.06) 19deg, transparent 24deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 60%); mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
+}
+.pack-skin-nba .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(232,114,42,.45) 4px 6px, rgba(255,255,255,.12) 6px 9px); }
+.pack-skin-nba .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(140,62,18,.5) 4px 6px, rgba(255,255,255,.07) 6px 9px); }
+.pack-skin-nba .pack-top::after { border-bottom-color: rgba(255,255,255,.55); }
+.pack-skin-nba .pack-code { color: #ffffff; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(232,114,42,.9); }
+.pack-skin-nba .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,180,110,.45), rgba(30,14,4,.85) 72%);
+  border-color: rgba(255,170,100,.7); box-shadow: 0 0 28px rgba(232,114,42,.65), inset 0 0 18px rgba(255,170,100,.32); text-shadow: 0 0 16px rgba(255,180,110,.9); }
+.pack-skin-nba .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(232,114,42,.9), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-nba .pack-sub { color: #f5d9bd; }
+/* pack skin "fastfood": checkered diner tablecloth — classic red-and-white checks with a warm neon-diner glow (no image files) */
+.pack-skin-fastfood .pack-top {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.34) 0%, rgba(0,0,0,0) 34%, rgba(30,6,3,.88) 74%, #160403 100%),
+    radial-gradient(ellipse 75% 38% at 50% -6%, rgba(255,190,90,.30), transparent 70%),
+    repeating-conic-gradient(#b3231b 0% 25%, #f3ead8 0% 50%) 50% 0 / 36px 36px;
+}
+.pack-skin-fastfood .pack-body {
+  background:
+    radial-gradient(ellipse 62% 24% at 50% 108%, rgba(255,170,60,.24), transparent 70%),
+    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(20,4,2,.55) 60%, rgba(12,2,1,.88) 100%),
+    repeating-conic-gradient(#a11f17 0% 25%, #e9dfc8 0% 50%) 50% 0 / 44px 44px;
+}
+.pack-skin-fastfood .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,200,110,.32), transparent 70%),
+    conic-gradient(from 180deg at 50% -24%, transparent 0deg, rgba(255,220,150,.10) 4deg, transparent 9deg, transparent 15deg, rgba(255,220,150,.06) 19deg, transparent 24deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-fastfood .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(255,190,80,.36) 4px 6px, rgba(255,255,255,.14) 6px 9px); }
+.pack-skin-fastfood .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(140,70,20,.5) 4px 6px, rgba(255,255,255,.08) 6px 9px); }
+.pack-skin-fastfood .pack-top::after { border-bottom-color: rgba(255,220,160,.6); }
+.pack-skin-fastfood .pack-code { color: #fff7e8; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(255,150,50,.9); }
+.pack-skin-fastfood .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,200,110,.42), rgba(40,12,4,.82) 72%);
+  border-color: rgba(255,200,110,.75); box-shadow: 0 0 28px rgba(255,150,50,.6), inset 0 0 18px rgba(255,190,100,.35); text-shadow: 0 0 16px rgba(255,180,90,.9); }
+.pack-skin-fastfood .pack-name { color: #fff8ea; text-shadow: 0 0 14px rgba(255,150,50,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-fastfood .pack-sub { color: #f5cf9a; }
 /* pack skin "f1": night Grand Prix — carbon-fiber foil, red/white curb stripes, neon speed streaks, podium-gold glow (no image files) */
 .pack-skin-f1 .pack-top {
   background:
