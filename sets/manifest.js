@@ -7,5 +7,6 @@ CardSets.manifest = [
   'space.js',
   'sea.js',
   'aircraft.js',
-  'nascar-collection.js'
+  'nascar-collection.js',
+  'nfl-collection.js'
 ];
