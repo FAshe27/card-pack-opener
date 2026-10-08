@@ -3,10 +3,17 @@ CardSets.register({
   "id": "nfl-collection",
   "name": "NFL Collection",
   "code": "NFL",
-  "description": "",
+  "description": "ARE YOU READY FOR FOOBAW???",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#636B2F",
+    "secondary": "#193315",
+    "artBackground": "#222222",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "NFL Pack",
+    "emblem": "🏈",
+    "skin": "nfl"
   },
   "cards": [
     {
