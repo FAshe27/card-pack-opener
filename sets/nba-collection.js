@@ -3,10 +3,17 @@ CardSets.register({
   "id": "nba-collection",
   "name": "NBA Collection",
   "code": "NBA",
-  "description": "",
+  "description": "The National Basketball Association (NBA) is the top professional men's basketball league in North America and the world.",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#573013",
+    "secondary": "#9e6900",
+    "artBackground": "#d3d3d3",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "NBA Pack",
+    "emblem": "🏀",
+    "skin": "nba"
   },
   "cards": [
     {
