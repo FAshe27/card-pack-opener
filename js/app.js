@@ -83,7 +83,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'collection', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -93,7 +93,7 @@
 
   /* ---------------------------------------------------------- online accounts */
   async function initAccount() {
-    if (!CPS.cloud.enabled) { await ensurePlayer(); S.mode = 'guest'; return; } // online play turned off in js/config.js
+    if (!CPS.cloud.enabled) { await ensurePlayer(); S.mode = 'guest'; grantGuestDailySpin(); return; } // online play turned off in js/config.js
     setLocked();
     if (!CPS.cloud.hasToken()) { S.gate = {}; return; }
     try {
@@ -129,6 +129,8 @@
     S.mode = 'cloud';
     S.account = state.account;
     S.onlineSets = state.online_sets || [];
+    S.spins = state.spins || 0;
+    S.wheelCfg = state.wheel || null;
     S.guestImported = !!state.guest_imported;
     S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
   }
@@ -204,6 +206,7 @@
     $('#playerBtn').classList.toggle('online', isCloud());
     $('#playerBtn').title = isCloud() ? 'Your account' : isLocked() ? 'Log in' : 'Switch player';
     $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : isLocked() ? '' : 'local';
+    updateWheelGlow();
   }
 
   /* Packs the player currently holds for a set. Side-effect-free (unlike ps()). */
@@ -246,6 +249,7 @@
     else if (S.view === 'stats') renderStats();
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
+    else if (S.view === 'wheel') renderWheel();
     else renderPacksSide();
   }
 
@@ -857,10 +861,12 @@
           (x.is_admin ? ' <span class="pill r-legendary">Admin</span>' : '') + (x.disabled ? ' <span class="pill r-chase">Disabled</span>' : '') +
           (x.locked ? ' <span class="pill r-epic" title="Too many wrong PINs. Reset the PIN to unlock now.">Locked</span>' : '') +
           (x.has_pin === false ? ' <span class="pill r-chase">No PIN</span>' : '') + (x.is_me ? ' <span class="pill">You</span>' : '') +
-          '<div class="muted small">username <b class="acct-user">' + esc(x.username || x.hint) + '</b> · packs ' + esc(packs) + ' · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
+          '<div class="muted small">username <b class="acct-user">' + esc(x.username || x.hint) + '</b> · packs ' + esc(packs) + ' · ' + (x.spins || 0) + ' spins · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
           (x.last_login_at ? new Date(x.last_login_at).toLocaleDateString() : 'never') + '</div></div></div>' +
           '<div class="acct-actions row wrap"><select class="ga-set">' + setOpts + '</select><input class="ga-n" type="number" value="3" min="-99" max="999" aria-label="Packs">' +
           '<button class="btn small" data-act="grant">Give packs</button>' +
+          '<input class="ga-sp" type="number" value="1" min="-99" max="999" aria-label="Spins">' +
+          '<button class="btn small" data-act="grantspins">Give spins</button>' +
           '<button class="btn small ghost" data-act="rename">Rename</button>' +
           '<button class="btn small ghost" data-act="reuser">Change username</button>' +
           '<button class="btn small ghost" data-act="pin">Reset PIN</button>' +
@@ -886,6 +892,13 @@
         r = await CPS.cloud.call('admin_grant_packs', { p_set: sid, p_packs: n, p_account: id });
         toast((n > 0 ? 'Gave ' : 'Removed ') + Math.abs(n) + ' pack' + (Math.abs(n) === 1 ? '' : 's') + (n > 0 ? ' to ' : ' from ') + name + ' (now ' + r.packs_now + ').', 'good');
         if (id === S.account.id) { var st = window.CardSets.get(sid); if (st) ps(st).packs = r.packs_now; renderPacksSide(); }
+      } else if (act === 'grantspins') {
+        var sn = parseInt($('.ga-sp', row).value, 10);
+        if (!sn) { toast('Enter a number of spins.', 'warn'); return; }
+        r = await CPS.cloud.call('admin_grant_spins', { p_account: id, p_spins: sn });
+        toast((sn > 0 ? 'Gave ' : 'Removed ') + Math.abs(sn) + ' spin' + (Math.abs(sn) === 1 ? '' : 's') + (sn > 0 ? ' to ' : ' from ') + name + ' (now ' + r.spins_now + ').', 'good');
+        if (id === S.account.id) { S.spins = r.spins_now; updateWheelGlow(); if (S.view === 'wheel') renderWheel(); }
+        renderAdmin();
       } else if (act === 'rename') {
         var nn = prompt('New display name for ' + name + ':', name); if (!nn || !nn.trim()) return;
         await CPS.cloud.call('admin_update_account', { p_account: id, p_display_name: nn.trim() });
@@ -1019,6 +1032,106 @@
     el.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
   }
 
+
+  /* ---------------------------------------------------------- prize wheel */
+  function chicagoToday() {
+    try { return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); }
+    catch (e) { return new Date().toDateString(); }
+  }
+  /* Guest mode: one free spin per America/Chicago day, stored on the player. */
+  function grantGuestDailySpin() {
+    var p = S.player;
+    if (!p) return;
+    var today = chicagoToday();
+    if (p.lastDailySpin !== today) {
+      p.lastDailySpin = today;
+      p.spins = (p.spins || 0) + 1;
+      save();
+    }
+  }
+  function spinCount() {
+    return isCloud() ? (S.spins || 0) : ((S.player && S.player.spins) || 0);
+  }
+  /* The wheel tab lights up while the player holds at least one spin. */
+  function updateWheelGlow() {
+    var b = $('#wheelTabBtn');
+    if (b) b.classList.toggle('has-spins', !isLocked() && spinCount() > 0);
+  }
+  function wheelConfig() {
+    if (isCloud()) return S.wheelCfg ? CPS.wheel.enrich(S.wheelCfg) : null;
+    return CPS.wheel.localConfig();
+  }
+  function renderWheel() {
+    var cfg = wheelConfig();
+    var btn = $('#spinBtn'), res = $('#wheelResult');
+    if (!cfg || !cfg.wheels.length) {
+      $('#wheelName').textContent = 'Prize Wheel';
+      $('#wheelSpins').textContent = '0';
+      $('#wheelSpinsLabel').textContent = 'spins';
+      btn.disabled = true;
+      btn.textContent = 'Unavailable';
+      res.classList.remove('hidden');
+      res.innerHTML = 'The wheel isn\'t ready yet — the server needs an update. Check back soon.';
+      updateWheelGlow();
+      return;
+    }
+    var w = cfg.wheels[0];
+    $('#wheelName').textContent = w.name;
+    var n = spinCount();
+    $('#wheelSpins').textContent = n;
+    $('#wheelSpinsLabel').textContent = n === 1 ? 'spin' : 'spins';
+    res.classList.add('hidden');
+    res.innerHTML = '';
+    if (!S.spinning) CPS.wheel.draw($('#wheelCanvas'), w, 0);
+    S._wheelCfg = cfg;
+    btn.disabled = S.spinning || isLocked() || n < 1;
+    btn.textContent = isLocked() ? 'Log in to spin' : (n < 1 ? 'No spins left' : 'SPIN');
+    updateWheelGlow();
+  }
+  async function startWheelSpin() {
+    if (S.spinning || isLocked()) return;
+    if (spinCount() < 1) { toast('No spins left. Come back tomorrow for your daily spin!', 'warn'); audio.error(); return; }
+    var cfg = S._wheelCfg || wheelConfig();
+    if (!cfg || !cfg.wheels.length) { toast('The wheel isn\'t ready yet.', 'warn'); return; }
+    S.spinning = true;
+    renderWheel();
+    var canvas = $('#wheelCanvas'), res = $('#wheelResult'), out = null;
+    try {
+      if (isCloud()) {
+        out = await CPS.cloud.call('spin_wheel', {});
+        S.spins = out.spins_left;
+      } else {
+        out = CPS.wheel.rollLocal(cfg);
+        S.player.spins = Math.max(0, (S.player.spins || 1) - 1);
+        var gset = out.prize && window.CardSets.get(out.prize.set_id);
+        if (gset) { ps(gset).packs += out.prize.packs; out.packs_now = ps(gset).packs; }
+        await save();
+      }
+    } catch (e) {
+      S.spinning = false;
+      renderWheel();
+      cloudError(e);
+      return;
+    }
+    /* The outcome was rolled above; the animation below is just theater. */
+    await CPS.wheel.playHops(canvas, cfg, out.hops || []);
+    var pset = out.prize && window.CardSets.get(out.prize.set_id);
+    if (isCloud() && pset) ps(pset).packs = out.packs_now;
+    if (!isCloud()) renderPacksSide();
+    var pname = pset ? pset.name : (out.prize ? out.prize.set_id : 'packs');
+    var pwon = out.prize ? out.prize.packs : 0;
+    res.classList.remove('hidden');
+    res.innerHTML = '🎉 You won <b>' + pwon + ' ' + esc(pname) + ' pack' + (pwon === 1 ? '' : 's') + '</b>!';
+    try {
+      var c = fx.center(canvas);
+      fx.burst(c.x, c.y, { count: 60, colors: ['#ffe08a', '#ffffff', '#ffb21e'], speed: 7, shape: 'star', size: 2 });
+    } catch (e2) {}
+    audio.coin();
+    S.spinning = false;
+    renderWheel();
+    renderPacksSide();
+  }
+
   /* ---------------------------------------------------------- events */
   function bind() {
     $$('.tab').forEach(function (t) { t.addEventListener('click', function () { showView(t.dataset.view); }); });
@@ -1028,6 +1141,7 @@
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
     $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
     $('#openBtn').addEventListener('click', startOpen);
+    $('#spinBtn').addEventListener('click', startWheelSpin);
     $('#nextPackBtn').addEventListener('click', startOpen);
     $('#doneBtn').addEventListener('click', resetStage);
     $('#revealAllBtn').addEventListener('click', revealAll);
