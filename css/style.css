@@ -144,6 +144,35 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(170,190,255,.65); box-shadow: 0 0 28px rgba(100,130,255,.55), inset 0 0 18px rgba(150,170,255,.35); text-shadow: 0 0 16px rgba(150,180,255,.9); }
 .pack-skin-space .pack-name { color: #f2f5ff; text-shadow: 0 0 14px rgba(110,140,255,.75), 0 2px 8px rgba(0,0,0,.6); }
 .pack-skin-space .pack-sub { color: #b9c6ff; }
+/* pack skin "nascar": checkered-flag foil over night asphalt, red speed streaks, stadium-light glow (no image files) */
+.pack-skin-nascar .pack-top {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 30%, rgba(12,12,14,.88) 70%, #0b0b0d 100%),
+    repeating-conic-gradient(#0d0d0f 0% 25%, #ececec 0% 50%) 50% 0 / 30px 30px,
+    linear-gradient(90deg, transparent 0%, rgba(200,16,46,.55) 50%, transparent 100%) 0 100% / 100% 5px no-repeat,
+    linear-gradient(180deg, #232327 0%, #0e0e10 100%);
+}
+.pack-skin-nascar .pack-body {
+  background:
+    radial-gradient(ellipse 62% 24% at 50% 108%, rgba(200,16,46,.30), transparent 70%),
+    repeating-linear-gradient(100deg, rgba(255,255,255,.028) 0 2px, transparent 2px 9px),
+    repeating-conic-gradient(rgba(255,255,255,.045) 0% 25%, transparent 0% 50%) 50% 100% / 46px 46px,
+    linear-gradient(180deg, #17171a 0%, #0b0b0d 60%, #060607 100%);
+}
+.pack-skin-nascar .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,244,220,.32), transparent 70%),
+    conic-gradient(from 180deg at 50% -24%, transparent 0deg, rgba(255,255,255,.10) 4deg, transparent 9deg, transparent 15deg, rgba(255,255,255,.07) 19deg, transparent 24deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-nascar .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(200,16,46,.38) 4px 6px, rgba(255,255,255,.12) 6px 9px); }
+.pack-skin-nascar .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(120,8,26,.5) 4px 6px, rgba(255,255,255,.07) 6px 9px); }
+.pack-skin-nascar .pack-top::after { border-bottom-color: rgba(255,255,255,.55); }
+.pack-skin-nascar .pack-code { color: #ffffff; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(200,16,46,.9); }
+.pack-skin-nascar .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,110,110,.38), rgba(24,8,10,.82) 72%);
+  border-color: rgba(255,130,130,.7); box-shadow: 0 0 28px rgba(200,16,46,.6), inset 0 0 18px rgba(255,130,130,.32); text-shadow: 0 0 16px rgba(255,150,150,.9); }
+.pack-skin-nascar .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(200,16,46,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-nascar .pack-sub { color: #f0c4c4; }
 /* pack skin "sea": deep blue foil, a dive from the sunlit reef (top) down to the midnight zone (bottom):
    light rays fading with depth, rising bubbles, a few bioluminescent specks in the dark (no image files) */
 .pack-skin-sea .pack-top {
