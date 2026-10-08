@@ -610,7 +610,7 @@
       var n = counts[t.tier], trades = Math.floor(n / t.rate);
       return '<div class="tradein-row">' +
         '<span class="pill r-' + (t.tier === 'epic' ? 'epic' : t.tier) + '">' + t.label + '</span>' +
-        '<span class="tradein-mid"><b>' + n + '</b> dupes <span class="muted">&rarr;</span> <b>' + trades + '</b> pack' + (trades === 1 ? '' : 's') + '</span>' +
+        '<span class="tradein-mid"><b>' + n + '</b><span class="muted">/' + t.rate + '</span> dupes <span class="muted">&rarr;</span> <b>' + trades + '</b> pack' + (trades === 1 ? '' : 's') + '</span>' +
         '<button class="btn small" data-trade="' + t.tier + '"' + (trades < 1 ? ' disabled' : '') + '>Trade</button>' +
         '</div>';
     }).join('');
@@ -653,6 +653,23 @@
     msg(trades * t.rate, trades);
     renderCollection();
     renderPacksSide();
+  }
+
+  /* ---------------------------------------------------- collapsible panels */
+  var COLLAPSE_KEY = 'cps_collapsed_panels';
+  function collapsedPanels() {
+    try { return JSON.parse(localStorage.getItem(COLLAPSE_KEY) || '{}'); } catch (e) { return {}; }
+  }
+  function saveCollapsed(s) { try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify(s)); } catch (e) {} }
+  function initCollapsible() {
+    var saved = collapsedPanels();
+    $$('.panel.collapsible').forEach(function (p) {
+      if (!p.id) return;
+      var h = p.querySelector('h2'); if (!h) return;
+      if (h.querySelector('.collapse-btn')) return;
+      h.appendChild(U.h('<button class="collapse-btn" type="button" aria-label="Collapse panel">\u25BE</button>'));
+      if (saved[p.id]) p.classList.add('collapsed');
+    });
   }
 
   function openCardModal(setId, cardId, forceHolo) {
@@ -1338,6 +1355,14 @@
     $('#naPinRandom').addEventListener('click', function () { $('#naPin').value = randomPin(); });
     $('#acctList').addEventListener('click', adminAction);
     $('#adminRefresh').addEventListener('click', function () { refreshCloud().then(renderAdmin); });
+    initCollapsible();
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.collapse-btn'); if (!b) return;
+      var p = b.closest('.panel'); if (!p || !p.id) return;
+      p.classList.toggle('collapsed');
+      var s = collapsedPanels(); s[p.id] = p.classList.contains('collapsed'); saveCollapsed(s);
+      e.stopPropagation();
+    });
     $('#serverSets').addEventListener('click', async function (e) {
       var b = e.target.closest('[data-sync]'); if (!b) return;
       var set = window.CardSets.get(b.dataset.sync); if (!set) return;
