@@ -12,7 +12,7 @@ CardSets.register({
   },
   "pack": {
     "name": "Pit Road Pack",
-    "emblem": "🛞"
+    "emblem": "🛞",
     "skin": "nascar"
   },
   "cards": [
