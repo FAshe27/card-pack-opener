@@ -104,7 +104,11 @@
       '<div class="cb-name">' + esc(set.name) + '</div></div></div>';
   }
 
-  function themeStyle(set) { return '--p1:' + set.theme.primary + ';--p2:' + set.theme.secondary + ';'; }
+  function themeStyle(set) {
+    var t = set.theme;
+    return '--p1:' + t.primary + ';--p2:' + t.secondary + ';' +
+      (t.artBackground ? '--art-bg:' + t.artBackground + ';' : '') + (t.artFit ? '--art-fit:' + t.artFit + ';' : '');
+  }
 
   /* opts: {holo, flippable, isNew, count, holoCount, cls} */
   function render(set, card, opts) {
@@ -134,7 +138,7 @@
       '<div class="pack-top"><div class="crimp"></div></div>' +
       '<div class="pack-body"><div class="pack-shine"></div>' +
       '<div class="pack-code">' + esc(set.code) + '</div>' +
-      '<div class="pack-emblem">✦</div>' +
+      '<div class="pack-emblem">' + esc(set.pack.emblem || '✦') + '</div>' +
       '<div class="pack-name">' + esc(set.name) + '</div>' +
       '<div class="pack-sub">' + esc(set.pack.name) + ' · ' + set.pack.size + ' cards</div>' +
       '<div class="crimp bottom"></div></div></div>';

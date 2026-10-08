@@ -174,8 +174,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }       /* ellipsis only past 2 lines */
 .cf-gem { flex: none; width: 4.6cqw; height: 4.6cqw; transform: rotate(45deg); background: var(--rc); box-shadow: 0 0 2.5cqw var(--rc); border-radius: 1cqw; }
 .r-chase .cf-gem { background: conic-gradient(#ff4fa3, #ffb21e, #38c97f, #3f8cff, #b35cff, #ff4fa3); }
-.cf-art { position: relative; aspect-ratio: 100/72; border-radius: 2.4cqw; overflow: hidden; border: .9cqw solid rgba(255,255,255,.16); flex: none; background: #000; }
-.cf-art svg, .cf-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cf-art { position: relative; aspect-ratio: 100/72; border-radius: 2.4cqw; overflow: hidden; border: .9cqw solid rgba(255,255,255,.16); flex: none; background: var(--art-bg, #000); }
+.cf-art svg, .cf-art img { display: block; width: 100%; height: 100%; object-fit: var(--art-fit, cover); }
 .cf-type { display: flex; justify-content: space-between; gap: 2cqw; font-size: 4.3cqw; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding-bottom: 1.4cqw; border-bottom: .4cqw solid rgba(255,255,255,.1); }
 .cf-sub { color: #b9c2d8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cf-rar { color: var(--rc); flex: none; }

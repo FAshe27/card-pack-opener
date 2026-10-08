@@ -26,6 +26,8 @@ The site is **accounts-only**: everyone logs in with a username + 4-digit PIN th
 
 Each pack has **9 cards**: 5 Common + 2 Uncommon + 1 wild (mostly Common/Uncommon, sometimes Rare/Epic) + **1 guaranteed Rare or better**. Holo foil chance grows with rarity (2% Common → 25% Chase).
 
+**Fast Food Collection** (249 cards, code FF) uses real product photos and brand logos: 10 Chase, 14 Legendary, 24 Epic, 39 Rare, 66 Uncommon, 96 Common, in a red/yellow "Value Meal Pack".
+
 There's also a tiny **Demo Mini Set** (30 cards) that shows CSV import and a real `image` path.
 
 ## Adding a new set
@@ -72,6 +74,8 @@ The same layout is used in the pack reveal, the zoom view and the collection.
 
 Commit the `assets/sets/<set-id>/` folder together with `sets/<set-id>.js`.
 
+Re-running `csv-to-set.js` for a set that already has a file keeps that file's `description`, `pack` and `theme` settings (unless you pass `--description` / `--primary` / `--secondary`), so you can hand-tune those and still re-import the cards. The tool copies files as they are, so shrink big photos first (about 600px wide is plenty).
+
 Logos and images live only in the set file. The server stores just each card's id, number, name and rarity, so adding or changing logos needs **no database change** and no re-sync (re-sync only if you add, remove or rename cards).
 
 You can also paste a CSV in the app under **Admin → Sets & settings → Import a set from CSV**. That stores the set in this browser only; use **Download set file (.js)** and drop it into `sets/` to share it with everyone. The in-app importer can't copy files from your computer, so `image`/`logo` there must be URLs or paths already in the site (it warns if a value looks like a local file); use `csv-to-set.js` for local files.
@@ -86,8 +90,10 @@ CardSets.register({
   name: "Backyard Birds",
   code: "BRD",
   description: "Optional blurb shown on the Odds page.",
-  theme: { primary: "#ff7a59", secondary: "#7b2ff7" },
-  // pack: { ... }  // optional — falls back to the default 9-card layout
+  theme: { primary: "#ff7a59", secondary: "#7b2ff7" },   // pack wrapper colors
+  // theme: { ..., artBackground: "#ffffff", artFit: "contain" }  // optional: photos on a white panel, never cropped
+  // pack: { name: "Value Meal Pack", emblem: "🍔" }              // optional: wrapper name + icon (default ✦)
+  // pack: { slots: [...] }  // optional — falls back to the default 9-card layout
   cards: [
     { name: "Northern Cardinal", rarity: "common",  subtitle: "Songbird", details: "Males are bright red; females are tan." },
     { name: "Bald Eagle",        rarity: "legendary", subtitle: "Raptor", details: "Wingspan up to 7.5 feet." }

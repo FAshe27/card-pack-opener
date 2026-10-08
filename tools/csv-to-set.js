@@ -89,6 +89,33 @@ if (stats.copied || stats.deduped || stats.missing) {
 
 const setsDir = path.join(siteRoot, 'sets');
 const outFile = res.set.id + '.js';
+
+// ---- re-importing over an existing set file keeps its hand-edited settings
+// (description, pack name/emblem/odds, theme extras); --description/--primary/--secondary still win.
+if (fs.existsSync(path.join(setsDir, outFile))) {
+  let old = null;
+  try {
+    const vm = require('vm'), ctx = { CardSets: { register: s => { old = s; } } };
+    vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.join(setsDir, outFile), 'utf8'), ctx);
+  } catch (e) { console.warn(`  ! could not read the existing sets/${outFile} (${e.message}); writing a fresh one`); }
+  if (old) {
+    const kept = [];
+    if (old.description && opt('description') == null) { res.set.description = old.description; kept.push('description'); }
+    if (old.pack) { res.set.pack = old.pack; kept.push('pack'); }
+    if (old.theme) {
+      const t = Object.assign({}, old.theme, res.set.theme || {});
+      if (opt('primary') == null && old.theme.primary) t.primary = old.theme.primary;
+      if (opt('secondary') == null && old.theme.secondary) t.secondary = old.theme.secondary;
+      res.set.theme = t; kept.push('theme');
+    }
+    if (kept.length) console.log(`Kept ${kept.join(', ')} from the existing sets/${outFile}`);
+  }
+}
+{ // settings first, the long card list last (easier to hand-edit)
+  const { cards, ...rest } = res.set, order = ['id', 'name', 'code', 'description', 'theme', 'pack'];
+  const tidy = {}; order.forEach(k => { if (k in rest) tidy[k] = rest[k]; }); Object.assign(tidy, rest, { cards });
+  res.set = tidy;
+}
 fs.writeFileSync(path.join(setsDir, outFile), csv.toJsFile(res.set));
 console.log(`Wrote sets/${outFile}: ${res.set.cards.length} cards`, res.counts);
 

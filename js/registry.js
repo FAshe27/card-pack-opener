@@ -75,12 +75,15 @@
       name: String(raw.name || id),
       code: String(raw.code || id.slice(0, 3)).toUpperCase().slice(0, 4),
       description: String(raw.description || ''),
-      theme: { primary: theme.primary || '#6d5dfc', secondary: theme.secondary || '#12c2e9' },
+      theme: { primary: theme.primary || '#6d5dfc', secondary: theme.secondary || '#12c2e9',
+               // optional: photo art on a plain panel, e.g. product shots on white -> { artBackground: '#fff', artFit: 'contain' }
+               artBackground: /^#[0-9a-f]{3,8}$/i.test(theme.artBackground || '') ? theme.artBackground : '',
+               artFit: theme.artFit === 'contain' ? 'contain' : '' },
       cards: cards,
       byId: new Map(cards.map(function (c) { return [c.id, c]; })),
       pools: pools,
       numWidth: width,
-      pack: { name: p.name || DEFAULT_PACK.name, slots: slots, holo: holo,
+      pack: { name: p.name || DEFAULT_PACK.name, emblem: p.emblem ? String(p.emblem).slice(0, 8) : '', slots: slots, holo: holo,
               size: slots.reduce(function (a, s) { return a + s.count; }, 0) },
       source: source || 'file',
       raw: raw
