@@ -7,7 +7,7 @@ CardSets.register({
   "theme": {
     "primary": "#780606",
     "secondary": "#530616",
-    "artBackground": "#222222",
+    "artBackground": "#000000",
     "artFit": "contain"
   },
   "pack": {
