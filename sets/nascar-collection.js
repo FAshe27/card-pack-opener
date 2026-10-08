@@ -3,10 +3,16 @@ CardSets.register({
   "id": "nascar-collection",
   "name": "NASCAR Collection",
   "code": "NASCAR",
-  "description": "",
+  "description": "NASCAR considered to be one of the top-ranked motorsports organizations in the world and is one of the largest spectator sports leagues in America.",
   "theme": {
-    "primary": "#d52f33",
-    "secondary": "#46090a"
+    "primary": "#FF000D",
+    "secondary": "#800000",
+    "artBackground": "#222222",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Pit Road Pack",
+    "emblem": "🛞"
   },
   "cards": [
     {
