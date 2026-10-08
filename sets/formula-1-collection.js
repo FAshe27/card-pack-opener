@@ -1,7 +1,7 @@
 /* Card set: Formula 1 Collection (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "formula-1-collection",
-  "name": "Formula 1 Collection",
+  "name": "Formula 1",
   "code": "F1",
   "description": "Formula 1 is the highest class of international open-wheel, single-seater automobile racing.",
   "theme": {
