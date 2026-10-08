@@ -862,7 +862,7 @@
           (x.is_admin ? ' <span class="pill r-legendary">Admin</span>' : '') + (x.disabled ? ' <span class="pill r-chase">Disabled</span>' : '') +
           (x.locked ? ' <span class="pill r-epic" title="Too many wrong PINs. Reset the PIN to unlock now.">Locked</span>' : '') +
           (x.has_pin === false ? ' <span class="pill r-chase">No PIN</span>' : '') + (x.is_me ? ' <span class="pill">You</span>' : '') +
-          '<div class="muted small">username <b class="acct-user">' + esc(x.username || x.hint) + '</b> · packs ' + esc(packs) + ' · ' + (x.spins || 0) + ' spins · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
+          '<div class="muted small">username <b class="acct-user">' + esc(x.username || x.hint) + '</b> · packs ' + esc(packs) + ' · ' + (x.spins || 0) + ' spins (' + (x.spins_done || 0) + ' used) · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
           (x.last_login_at ? new Date(x.last_login_at).toLocaleDateString() : 'never') + '</div></div></div>' +
           '<div class="acct-actions row wrap"><select class="ga-set">' + setOpts + '</select><input class="ga-n" type="number" value="3" min="-99" max="999" aria-label="Packs">' +
           '<button class="btn small" data-act="grant">Give packs</button>' +
