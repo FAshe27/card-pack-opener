@@ -166,6 +166,7 @@
   }
 
   function afterEnter() {
+    S._wheelEnd = null;
     applyPrefsUI(); fillSetSelect(); renderPacksSide(); resetStage(); renderView();
   }
 
@@ -1075,27 +1076,41 @@
       updateWheelGlow();
       return;
     }
-    var w = cfg.wheels[0];
-    $('#wheelName').textContent = w.name;
     var n = spinCount();
     $('#wheelSpins').textContent = n;
-    $('#wheelSpinsLabel').textContent = n === 1 ? 'spin' : 'spins';
-    res.classList.add('hidden');
-    res.innerHTML = '';
-    if (!S.spinning) CPS.wheel.draw($('#wheelCanvas'), w, 0);
+    $('#wheelSpinsLabel').textContent = n === 1 ? 'spin ticket' : 'spin tickets';
+    var end = S._wheelEnd;
+    if (end && !S.spinning) {
+      var w = null;
+      for (var i = 0; i < cfg.wheels.length; i++) if (cfg.wheels[i].id === end.wheelId) w = cfg.wheels[i];
+      w = w || cfg.wheels[0];
+      $('#wheelName').textContent = w.name;
+      CPS.wheel.draw($('#wheelCanvas'), w, end.rot, end.key);
+      res.classList.remove('hidden');
+      res.innerHTML = end.resultHtml;
+    } else {
+      var w0 = cfg.wheels[0];
+      $('#wheelName').textContent = w0.name;
+      res.classList.add('hidden');
+      res.innerHTML = '';
+      if (!S.spinning) CPS.wheel.draw($('#wheelCanvas'), w0, 0);
+    }
     S._wheelCfg = cfg;
     btn.disabled = S.spinning || isLocked() || n < 1;
-    btn.textContent = isLocked() ? 'Log in to spin' : (n < 1 ? 'No spins left' : 'SPIN');
+    btn.textContent = isLocked() ? 'Log in to spin' : (n < 1 ? 'No spin tickets left' : 'SPIN');
     updateWheelGlow();
   }
   async function startWheelSpin() {
     if (S.spinning || isLocked()) return;
-    if (spinCount() < 1) { toast('No spins left. Come back tomorrow for your daily spin!', 'warn'); audio.error(); return; }
+    if (spinCount() < 1) { toast('No spin tickets left. Come back tomorrow for your daily spin!', 'warn'); audio.error(); return; }
     var cfg = S._wheelCfg || wheelConfig();
     if (!cfg || !cfg.wheels.length) { toast('The wheel isn\'t ready yet.', 'warn'); return; }
     S.spinning = true;
+    S._wheelEnd = null;
+    CPS.wheel.draw($('#wheelCanvas'), cfg.wheels[0], 0);
+    $('#wheelName').textContent = cfg.wheels[0].name;
     renderWheel();
-    var canvas = $('#wheelCanvas'), res = $('#wheelResult'), out = null;
+    var canvas = $('#wheelCanvas'), out = null;
     try {
       if (isCloud()) {
         out = await CPS.cloud.call('spin_wheel', {});
@@ -1114,14 +1129,18 @@
       return;
     }
     /* The outcome was rolled above; the animation below is just theater. */
-    await CPS.wheel.playHops(canvas, cfg, out.hops || []);
+    var endState = await CPS.wheel.playHops(canvas, cfg, out.hops || []);
     var pset = out.prize && window.CardSets.get(out.prize.set_id);
     if (isCloud() && pset) ps(pset).packs = out.packs_now;
     if (!isCloud()) renderPacksSide();
     var pname = pset ? pset.name : (out.prize ? out.prize.set_id : 'packs');
     var pwon = out.prize ? out.prize.packs : 0;
-    res.classList.remove('hidden');
-    res.innerHTML = '🎉 You won <b>' + pwon + ' ' + esc(pname) + ' pack' + (pwon === 1 ? '' : 's') + '</b>!';
+    if (endState) {
+      S._wheelEnd = {
+        wheelId: endState.wheelId, key: endState.key, rot: endState.rotation,
+        resultHtml: '🎉 You won <b>' + pwon + ' ' + esc(pname) + ' pack' + (pwon === 1 ? '' : 's') + '</b>!'
+      };
+    }
     try {
       var c = fx.center(canvas);
       fx.burst(c.x, c.y, { count: 60, colors: ['#ffe08a', '#ffffff', '#ffb21e'], speed: 7, shape: 'star', size: 2 });
