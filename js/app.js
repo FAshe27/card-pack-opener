@@ -587,9 +587,9 @@
 
   /* ---------------------------------------------------- dupe trade-in */
   var DUPE_TIERS = [
-    { tier: 'common', rate: 25, label: 'Common' },
-    { tier: 'uncommon', rate: 15, label: 'Uncommon' },
-    { tier: 'rare', rate: 10, label: 'Rare' },
+    { tier: 'common', rate: 15, label: 'Common' },
+    { tier: 'uncommon', rate: 10, label: 'Uncommon' },
+    { tier: 'rare', rate: 5, label: 'Rare' },
     { tier: 'epic', rate: 3, label: 'Epic+' }
   ];
   var DUPE_RARS = { common: ['common'], uncommon: ['uncommon'], rare: ['rare'], epic: ['epic', 'legendary', 'chase'] };
