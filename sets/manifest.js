@@ -3,6 +3,7 @@
    sets/unlisted/ holds sets that are kept for tests/tools but not shown on the site
    (Placeholder Series 1, Demo Mini Set). */
 CardSets.manifest = [
+  'birdwatching.js',
   'fast-food.js',
   'formula-1-collection.js',
   'nascar-collection.js',
