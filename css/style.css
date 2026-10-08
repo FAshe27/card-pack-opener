@@ -715,7 +715,14 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 }
 .wheel-wrap { max-width: 640px; margin: 0 auto; text-align: center; padding: 12px 0 48px; }
 .wheel-title { margin: 6px 0 2px; }
-.wheel-balance { font-size: 1.05rem; margin-bottom: 10px; }
+.ticket-box {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin: 4px auto 14px; padding: 10px 22px;
+  border: 2px dashed #ffb21e; border-radius: 14px;
+  background: rgba(255,178,30,.08); font-size: 1.1rem;
+}
+.ticket-box .ticket-emoji { font-size: 1.6rem; }
+.ticket-box b { font-size: 1.35rem; color: #ffe08a; }
 .wheel-stage { position: relative; width: min(92vw, 520px); margin: 0 auto; }
 #wheelCanvas { width: 100%; height: auto; display: block; filter: drop-shadow(0 8px 24px rgba(0,0,0,.45)); }
 .wheel-pointer {
