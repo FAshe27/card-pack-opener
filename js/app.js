@@ -206,9 +206,17 @@
     $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : isLocked() ? '' : 'local';
   }
 
+  /* Packs the player currently holds for a set. Side-effect-free (unlike ps()). */
+  function packCount(set) {
+    var sets = (S.player && S.player.sets) || {};
+    var st = sets[set.id];
+    if (st) return st.packs;
+    return S.mode === 'guest' ? CONFIG.starterPacks : 0;
+  }
+
   function fillSetSelect() {
     $('#setSelect').innerHTML = window.CardSets.all().map(function (s) {
-      return '<option value="' + esc(s.id) + '"' + (s.id === S.set.id ? ' selected' : '') + '>' + esc(s.name) + ' (' + s.cards.length + ')</option>';
+      return '<option value="' + esc(s.id) + '"' + (s.id === S.set.id ? ' selected' : '') + '>' + esc(s.name) + ' (' + packCount(s) + ')</option>';
     }).join('');
   }
 
@@ -243,6 +251,7 @@
 
   /* ---------------------------------------------------------- packs view */
   function renderPacksSide() {
+    fillSetSelect(); // keep the set dropdown's pack counts live
     var set = S.set, st = ps();
     var ip = $('#invPack');
     ip.innerHTML = CPS.cards.pack(set, 'mini') + (st.packs ? '<span class="inv-badge">' + st.packs + '</span>' : '');
