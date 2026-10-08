@@ -3,10 +3,17 @@ CardSets.register({
   "id": "birdwatching",
   "name": "Birdwatching",
   "code": "BIRD",
-  "description": "",
+  "description": "bird bird bird bird bird bird bird bird bird bird bird bird bird bird bird bird bird bird",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#87CEEB",
+    "secondary": "#45b3e0",
+    "artBackground": "#222222",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Birdwatching Pack",
+    "emblem": "🐦",
+    "skin": "birds"
   },
   "cards": [
     {
