@@ -1,7 +1,7 @@
 /* Card set: NBA Collection (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "nba-collection",
-  "name": "NBA Collection",
+  "name": "NBA",
   "code": "NBA",
   "description": "The National Basketball Association (NBA) is the top professional men's basketball league in North America and the world.",
   "theme": {
