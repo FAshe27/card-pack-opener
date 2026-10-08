@@ -173,6 +173,38 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(255,130,130,.7); box-shadow: 0 0 28px rgba(200,16,46,.6), inset 0 0 18px rgba(255,130,130,.32); text-shadow: 0 0 16px rgba(255,150,150,.9); }
 .pack-skin-nascar .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(200,16,46,.85), 0 2px 8px rgba(0,0,0,.65); }
 .pack-skin-nascar .pack-sub { color: #f0c4c4; }
+/* pack skin "f1": night Grand Prix — carbon-fiber foil, red/white curb stripes, neon speed streaks, podium-gold glow (no image files) */
+.pack-skin-f1 .pack-top {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,0) 30%, rgba(8,8,10,.9) 70%, #060608 100%),
+    conic-gradient(from 180deg at 50% -22%, transparent 0deg, rgba(255,240,240,.14) 4deg, transparent 9deg, transparent 15deg, rgba(255,240,240,.09) 19deg, transparent 24deg),
+    radial-gradient(ellipse 80% 38% at 50% -4%, rgba(255,235,235,.28), transparent 70%),
+    repeating-linear-gradient(90deg, #d90429 0 16px, #f2f2f2 16px 32px) 0 100% / 100% 10px no-repeat,
+    repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, #1b1b1f 0%, #0c0c0e 100%);
+}
+.pack-skin-f1 .pack-body {
+  background:
+    radial-gradient(ellipse 62% 24% at 50% 108%, rgba(212,175,55,.20), transparent 70%),
+    linear-gradient(115deg, transparent 42%, rgba(217,4,41,.28) 46%, transparent 50%, transparent 72%, rgba(255,255,255,.10) 76%, transparent 80%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,.35) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg, #141416 0%, #0a0a0c 60%, #050506 100%);
+}
+.pack-skin-f1 .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 34% at 50% -8%, rgba(255,240,240,.30), transparent 70%),
+    conic-gradient(from 180deg at 50% -24%, transparent 0deg, rgba(255,255,255,.10) 4deg, transparent 9deg, transparent 15deg, rgba(255,255,255,.06) 19deg, transparent 24deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 60%); mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
+}
+.pack-skin-f1 .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(217,4,41,.42) 4px 6px, rgba(255,255,255,.12) 6px 9px); }
+.pack-skin-f1 .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(130,2,24,.5) 4px 6px, rgba(255,255,255,.07) 6px 9px); }
+.pack-skin-f1 .pack-top::after { border-bottom-color: rgba(255,255,255,.55); }
+.pack-skin-f1 .pack-code { color: #ffffff; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(217,4,41,.9); }
+.pack-skin-f1 .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,120,120,.40), rgba(26,6,8,.84) 72%);
+  border-color: rgba(255,140,140,.7); box-shadow: 0 0 28px rgba(217,4,41,.65), inset 0 0 18px rgba(255,140,140,.32); text-shadow: 0 0 16px rgba(255,150,150,.9); }
+.pack-skin-f1 .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(217,4,41,.9), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-f1 .pack-sub { color: #f3c9c9; }
 /* pack skin "sea": deep blue foil, a dive from the sunlit reef (top) down to the midnight zone (bottom):
    light rays fading with depth, rising bubbles, a few bioluminescent specks in the dark (no image files) */
 .pack-skin-sea .pack-top {
