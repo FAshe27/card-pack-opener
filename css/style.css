@@ -179,6 +179,48 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(170,235,255,.75); box-shadow: 0 0 26px rgba(60,190,255,.55), inset 0 0 18px rgba(170,240,255,.35); text-shadow: 0 0 14px rgba(140,230,255,.9); }
 .pack-skin-sea .pack-name { color: #f3fbff; text-shadow: 0 0 14px rgba(60,170,255,.7), 0 2px 8px rgba(0,0,0,.7); }
 .pack-skin-sea .pack-sub { color: #a9dcff; }
+/* pack skin "air": gunmetal + woodland-camo foil, brushed-metal crimp, contrails and a green HUD scope around the jet emblem (no image files) */
+.pack-skin-air .pack-top {
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 3px), linear-gradient(180deg, #a3adb6 0%, #6c7680 55%, #4a535c 100%);
+}
+.pack-skin-air .pack-body {
+  background:
+    linear-gradient(118deg, transparent 30%, rgba(255,255,255,.16) 41%, transparent 47%, transparent 62%, rgba(255,255,255,.07) 68%, transparent 73%),
+    linear-gradient(180deg, rgba(20,26,32,0) 55%, rgba(14,18,22,.65) 100%),
+    repeating-linear-gradient(0deg, transparent 0 23%, rgba(0,0,0,.28) 23% calc(23% + 1px), rgba(255,255,255,.08) calc(23% + 1px) calc(23% + 2px), transparent calc(23% + 2px) 25%),
+    radial-gradient(ellipse 22% 12% at 18% 14%, #2d3424 96%, transparent 100%),
+    radial-gradient(ellipse 30% 13% at 78% 24%, #8b8458 95%, transparent 100%),
+    radial-gradient(ellipse 18% 20% at 88% 58%, #2d3424 95%, transparent 100%),
+    radial-gradient(ellipse 34% 11% at 30% 66%, #2d3424 95%, transparent 100%),
+    radial-gradient(ellipse 26% 14% at 62% 84%, #8b8458 95%, transparent 100%),
+    radial-gradient(ellipse 20% 10% at 12% 90%, #8b8458 95%, transparent 100%),
+    radial-gradient(ellipse 28% 18% at 26% 36%, #3f4b2c 96%, transparent 100%),
+    radial-gradient(ellipse 30% 16% at 74% 46%, #56633a 96%, transparent 100%),
+    radial-gradient(ellipse 24% 15% at 50% 6%, #56633a 95%, transparent 100%),
+    radial-gradient(ellipse 30% 14% at 90% 92%, #3f4b2c 95%, transparent 100%),
+    linear-gradient(160deg, #6a7448 0%, #5b6540 50%, #4a5236 100%);
+}
+.pack-skin-air .pack-body::before {
+  background:
+    linear-gradient(152deg, transparent 0 18%, rgba(255,255,255,.55) 18.6%, rgba(255,255,255,.12) 19.6%, transparent 21%),
+    linear-gradient(152deg, transparent 0 23%, rgba(255,255,255,.35) 23.4%, rgba(255,255,255,.08) 24.3%, transparent 25.6%),
+    repeating-radial-gradient(circle at 50% 41%, transparent 0 23%, rgba(140,255,170,.32) 23% calc(23% + 1.5px), transparent calc(23% + 1.5px) 31%),
+    radial-gradient(circle at 50% 41%, rgba(120,255,160,.16), transparent 42%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0 70%, transparent 92%); mask-image: linear-gradient(180deg, #000 0 70%, transparent 92%);
+}
+.pack-skin-air .crimp { background: repeating-linear-gradient(90deg, rgba(0,0,0,.32) 0 3px, rgba(255,255,255,.22) 3px 6px); }
+.pack-skin-air .crimp.bottom { background: repeating-linear-gradient(90deg, rgba(0,0,0,.5) 0 3px, rgba(190,200,210,.22) 3px 6px); }
+.pack-skin-air .pack-top::after { border-bottom-color: rgba(230,236,240,.55); }
+.pack-skin-air .pack-code { color: #e9eedf; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.65), 0 0 8px rgba(0,0,0,.45); }
+.pack-skin-air .pack-emblem { background: radial-gradient(circle at 50% 45%, rgba(40,70,48,.55), rgba(10,18,14,.88) 72%);
+  border-color: rgba(150,255,180,.7); box-shadow: 0 0 0 3px rgba(40,46,52,.85), 0 0 22px rgba(110,255,150,.45), inset 0 0 18px rgba(120,255,160,.3); text-shadow: 0 0 12px rgba(150,255,180,.8); }
+/* the set's emoji emblem is swapped for a fighter-jet silhouette (inline SVG mask), glowing like a HUD */
+.pack-skin-air .pack-emblem { font-size: 0; }
+.pack-skin-air .pack-emblem::after { content: ''; position: absolute; inset: 15%; background: linear-gradient(180deg, #f2f7ee, #b9c8b2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 3 L53.5 15 L55 33 L90 58 L90 65 L56 57 L56.5 74 L69 84 L69 90 L52 85.5 L50 92 L48 85.5 L31 90 L31 84 L43.5 74 L44 57 L10 65 L10 58 L45 33 L46.5 15 Z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 3 L53.5 15 L55 33 L90 58 L90 65 L56 57 L56.5 74 L69 84 L69 90 L52 85.5 L50 92 L48 85.5 L31 90 L31 84 L43.5 74 L44 57 L10 65 L10 58 L45 33 L46.5 15 Z'/%3E%3C/svg%3E") center / contain no-repeat; filter: drop-shadow(0 0 6px rgba(140,255,170,.75)); }
+.pack-skin-air .pack-name { color: #f1f3ea; letter-spacing: .04em; text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 0 12px rgba(0,0,0,.6); }
+.pack-skin-air .pack-sub { color: #d9dfc6; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
+
 .pack.float { --pw: 220px; animation: float 4s ease-in-out infinite; }
 .pack.ready { --pw: 250px; cursor: pointer; animation: dropIn .5s cubic-bezier(.2,1.4,.4,1), wiggle 2.4s 0.6s ease-in-out infinite; }
 .pack.ready:hover { animation: shakeSmall .35s ease-in-out infinite; }
