@@ -669,3 +669,34 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .cf-logo-sm img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 .cf-logo.broken { display: none; }
 .cf-logo-strip:has(.broken) { background: rgba(255,255,255,.045); border-color: rgba(255,255,255,.07); }
+
+/* ===================================================== prize wheel */
+.tab.has-spins {
+  color: #1a1206;
+  background: linear-gradient(135deg, #ffe08a, #ffb21e);
+  animation: wheelPulse 1.6s ease-in-out infinite;
+}
+.tab.has-spins:hover { color: #1a1206; }
+@keyframes wheelPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255,178,30,.45); }
+  50% { box-shadow: 0 0 20px rgba(255,178,30,.9); }
+}
+.wheel-wrap { max-width: 640px; margin: 0 auto; text-align: center; padding: 12px 0 48px; }
+.wheel-title { margin: 6px 0 2px; }
+.wheel-balance { font-size: 1.05rem; margin-bottom: 10px; }
+.wheel-stage { position: relative; width: min(92vw, 520px); margin: 0 auto; }
+#wheelCanvas { width: 100%; height: auto; display: block; filter: drop-shadow(0 8px 24px rgba(0,0,0,.45)); }
+.wheel-pointer {
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 14px solid transparent; border-right: 14px solid transparent;
+  border-top: 24px solid #ffe08a;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
+}
+.wheel-result {
+  margin: 14px auto; font-size: 1.15rem;
+  background: var(--panel2); border: 1px solid var(--line);
+  padding: 12px 18px; border-radius: 12px; max-width: 480px;
+}
+#spinBtn { margin-top: 8px; }
+.wheel-hint { margin-top: 14px; }
