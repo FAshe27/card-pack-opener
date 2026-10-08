@@ -1,7 +1,7 @@
 /* Card set: Technology Collection (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "technology-collection",
-  "name": "Technology Collection",
+  "name": "Technology",
   "code": "TECH",
   "description": "buy it, use it, break it, fix it, etc etc",
   "theme": {
