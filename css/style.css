@@ -114,6 +114,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .pack-body::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 38%, rgba(255,255,255,.35), transparent 45%), repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 10px, transparent 10px 20px); }
 .pack-shine { position: absolute; inset: -50%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.45) 50%, transparent 60%); animation: shine 3.5s ease-in-out infinite; pointer-events: none; }
 .pack-code { position: relative; font-weight: 900; font-size: calc(var(--pw) * .07); letter-spacing: .3em; opacity: .8; }
+.pack-code.code-l5 { letter-spacing: .2em; }
+.pack-code.code-l6 { letter-spacing: .14em; font-size: calc(var(--pw) * .064); }
 .pack-emblem { position: relative; width: 46%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font-size: calc(var(--pw) * .2); background: rgba(0,0,0,.22); border: 3px solid rgba(255,255,255,.5); box-shadow: inset 0 0 20px rgba(255,255,255,.25), 0 0 30px rgba(255,255,255,.2); text-shadow: 0 0 18px #fff; }
 .pack-name { position: relative; font-weight: 900; font-size: calc(var(--pw) * .085); line-height: 1.1; text-shadow: 0 2px 8px rgba(0,0,0,.4); text-transform: uppercase; }
 .pack-sub { position: relative; font-size: calc(var(--pw) * .055); opacity: .85; font-weight: 600; }
@@ -183,6 +185,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .cf-details { flex: 1; min-height: 0; overflow: hidden; font-size: 4.6cqw; line-height: 1.32; color: #cfd6e6; background: rgba(255,255,255,.045); border: .4cqw solid rgba(255,255,255,.07); border-radius: 2.2cqw; padding: 2.2cqw 2.6cqw; font-style: italic;
   -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent); mask-image: linear-gradient(180deg, #000 78%, transparent); }
 .cf-foot { display: flex; justify-content: space-between; align-items: center; font-size: 3.8cqw; color: #8c96ad; font-weight: 700; letter-spacing: .08em; }
+.cf-foot .cf-code.code-l5, .cf-foot .cf-code.code-l6 { letter-spacing: .03em; }
 .foil { background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* holo */
@@ -204,6 +207,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 4cqw, transparent 4cqw 8cqw), repeating-linear-gradient(-45deg, rgba(0,0,0,.1) 0 4cqw, transparent 4cqw 8cqw); }
 .cb-emblem { width: 46cqw; aspect-ratio: 1; display: grid; place-items: center; transform: rotate(45deg); border-radius: 8cqw; background: rgba(0,0,0,.3); border: 1.4cqw solid rgba(255,255,255,.7); box-shadow: 0 0 6cqw rgba(255,255,255,.35); }
 .cb-emblem span { transform: rotate(-45deg); font-weight: 900; font-size: 10cqw; letter-spacing: .1em; }
+.cb-emblem span.code-l5 { font-size: 8.4cqw; letter-spacing: .04em; }
+.cb-emblem span.code-l6 { font-size: 7.2cqw; letter-spacing: .02em; }
 .cb-name { font-weight: 800; font-size: 6cqw; text-transform: uppercase; letter-spacing: .1em; text-align: center; padding: 0 6cqw; text-shadow: 0 2px 6px rgba(0,0,0,.4); }
 .card.tease .back { animation: tease 1.2s ease-in-out infinite; }
 .card.tease.r-legendary .back, .card.tease.r-chase .back { animation-duration: .7s; }
@@ -289,6 +294,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .set-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
 .set-item.current { border-color: var(--accent); }
 .swatch { width: 46px; height: 58px; border-radius: 8px; flex: none; display: grid; place-items: center; font-weight: 900; font-size: .75rem; background: linear-gradient(150deg, var(--p1), var(--p2)); }
+.swatch.code-l5 { font-size: .62rem; letter-spacing: -.01em; }
+.swatch.code-l6 { font-size: .54rem; letter-spacing: -.02em; }
 .set-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; } .set-meta span { color: var(--muted); font-size: .82rem; }
 .set-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }

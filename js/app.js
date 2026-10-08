@@ -651,7 +651,7 @@
     $('#setList').innerHTML = window.CardSets.all().map(function (s) {
       var st = S.player.sets[s.id], owned = st ? ownedCount(s, st) : 0;
       return '<div class="set-item' + (s.id === S.set.id ? ' current' : '') + '">' +
-        '<div class="swatch" style="' + CPS.cards.themeStyle(s) + '">' + esc(s.code) + '</div>' +
+        CPS.cards.swatch(s) +
         '<div class="set-meta"><b>' + esc(s.name) + '</b><span>' + s.cards.length + ' cards · ' + (s.source === 'imported' ? 'imported in this browser' : 'sets/ file') +
         ' · you have ' + owned + '</span></div>' +
         '<div class="set-actions">' + (s.id === S.set.id ? '<span class="pill">Selected</span>' : '<button class="btn small" data-use="' + esc(s.id) + '">Use</button>') +
@@ -831,7 +831,7 @@
     $('#naSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
     $('#serverSets').innerHTML = window.CardSets.all().map(function (x) {
       var on = S.onlineSets.indexOf(x.id) >= 0;
-      return '<div class="set-item"><div class="swatch" style="' + CPS.cards.themeStyle(x) + '">' + esc(x.code) + '</div>' +
+      return '<div class="set-item">' + CPS.cards.swatch(x) +
         '<div class="set-meta"><b>' + esc(x.name) + '</b><span>' + x.cards.length + ' cards · ' + (on ? 'on the server' : 'not on the server yet') + '</span></div>' +
         '<div class="set-actions"><button class="btn small' + (on ? ' ghost' : ' primary') + '" data-sync="' + esc(x.id) + '">' + (on ? 'Re-sync' : 'Upload') + '</button></div></div>';
     }).join('');

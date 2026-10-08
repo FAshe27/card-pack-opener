@@ -73,7 +73,7 @@
     return {
       id: id,
       name: String(raw.name || id),
-      code: String(raw.code || id.slice(0, 3)).toUpperCase().slice(0, 4),
+      code: String(raw.code || id.slice(0, 3)).toUpperCase().slice(0, 6),   // 1-6 chars, e.g. PH1, FF, SPACE
       description: String(raw.description || ''),
       theme: { primary: theme.primary || '#6d5dfc', secondary: theme.secondary || '#12c2e9',
                // optional: photo art on a plain panel, e.g. product shots on white -> { artBackground: '#fff', artFit: 'contain' }

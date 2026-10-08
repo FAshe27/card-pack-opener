@@ -88,10 +88,11 @@ Aliases for the details column: `flavor`, `text`, `description`.
 CardSets.register({
   id: "birds",
   name: "Backyard Birds",
-  code: "BRD",
+  code: "BRD",          // 1-6 letters/numbers (e.g. PH1, FF, SPACE); shown on the card footer, card back and pack
   description: "Optional blurb shown on the Odds page.",
   theme: { primary: "#ff7a59", secondary: "#7b2ff7" },   // pack wrapper colors
-  // theme: { ..., artBackground: "#ffffff", artFit: "contain" }  // optional: photos on a white panel, never cropped
+  // theme: { ..., artBackground: "#ffffff", artFit: "contain" }  // optional: photos on a plain panel, never cropped
+  //                                                               // ("#000000" for photos on black, e.g. space shots)
   // pack: { name: "Value Meal Pack", emblem: "🍔" }              // optional: wrapper name + icon (default ✦)
   // pack: { slots: [...] }  // optional — falls back to the default 9-card layout
   cards: [

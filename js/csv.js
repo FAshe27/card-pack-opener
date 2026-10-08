@@ -67,7 +67,7 @@
     var set = {
       id: slug(meta.id || name),
       name: name,
-      code: (meta.code || name.replace(/[^A-Za-z0-9]/g, '').slice(0, 3) || 'SET').toUpperCase().slice(0, 4),
+      code: (meta.code || name.replace(/[^A-Za-z0-9]/g, '').slice(0, 3) || 'SET').toUpperCase().slice(0, 6),
       description: meta.description || '',
       theme: { primary: meta.primary || '#ff7a59', secondary: meta.secondary || '#7b2ff7' },
       cards: cards

@@ -94,14 +94,30 @@
       '<div class="cf-art">' + artOrImage(set, card) + '</div>' +
       '<div class="cf-type"><span class="cf-sub">' + esc(card.subtitle) + '</span><span class="cf-rar">' + r.label + '</span></div>' +
       detailsBox(card) +
-      '<div class="cf-foot"><span>' + esc(set.code) + '</span>' + (holo ? '<span class="foil">HOLO</span>' : '') +
+      '<div class="cf-foot"><span' + (codeCls(set) ? ' class="cf-code' + codeCls(set) + '"' : '') + '>' + esc(set.code) + '</span>' + (holo ? '<span class="foil">HOLO</span>' : '') +
       '<span>' + U.pad(card.num, set.numWidth) + '/' + U.pad(set.cards.length, set.numWidth) + '</span></div>' +
       '</div></div>';
   }
 
   function back(set) {
-    return '<div class="face back"><div class="cb"><div class="cb-emblem"><span>' + esc(set.code) + '</span></div>' +
+    return '<div class="face back"><div class="cb"><div class="cb-emblem"><span' + (codeCls(set) ? ' class="' + codeCls(set).trim() + '"' : '') + '>' + esc(set.code) + '</span></div>' +
       '<div class="cb-name">' + esc(set.name) + '</div></div></div>';
+  }
+
+  /* Set codes are 1-6 chars. 5-6 char codes (e.g. SPACE) get a class that tightens the
+     letter-spacing/size wherever the code is printed; 1-4 char codes are untouched. */
+  function codeCls(set) { var n = String(set.code || '').length; return n >= 6 ? ' code-l6' : n === 5 ? ' code-l5' : ''; }
+
+  /* Set swatch (Sets lists). 5-6 char codes made of wide letters (e.g. WWWWWW) get a
+     measured font-size so they always fit the 46px tile; 1-4 char codes are untouched. */
+  function swatch(set) {
+    var code = String(set.code || ''), cls = codeCls(set), style = themeStyle(set);
+    if (cls && typeof document !== 'undefined') {
+      var base = cls === ' code-l6' ? 8.64 : 9.92,             // .54rem / .62rem from the CSS
+          w = (nameWidth(code) || 0) * 1.04;                    // text width per 1px of font (measured at weight 800; 900 is a bit wider)
+      if (w && w * base > 38) style += 'font-size:' + Math.max(6, Math.floor(38 / w * 10) / 10) + 'px;';
+    }
+    return '<div class="swatch' + cls + '" style="' + style + '">' + esc(code) + '</div>';
   }
 
   function themeStyle(set) {
@@ -137,12 +153,12 @@
     return '<div class="pack ' + (extraCls || '') + '" style="' + themeStyle(set) + '">' +
       '<div class="pack-top"><div class="crimp"></div></div>' +
       '<div class="pack-body"><div class="pack-shine"></div>' +
-      '<div class="pack-code">' + esc(set.code) + '</div>' +
+      '<div class="pack-code' + codeCls(set) + '">' + esc(set.code) + '</div>' +
       '<div class="pack-emblem">' + esc(set.pack.emblem || '✦') + '</div>' +
       '<div class="pack-name">' + esc(set.name) + '</div>' +
       '<div class="pack-sub">' + esc(set.pack.name) + ' · ' + set.pack.size + ' cards</div>' +
       '<div class="crimp bottom"></div></div></div>';
   }
 
-  CPS.cards = { nameFit: nameFit, render: render, silhouette: silhouette, pack: pack, art: art, themeStyle: themeStyle };
+  CPS.cards = { codeCls: codeCls, swatch: swatch, nameFit: nameFit, render: render, silhouette: silhouette, pack: pack, art: art, themeStyle: themeStyle };
 })(window.CPS);
