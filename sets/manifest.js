@@ -9,5 +9,6 @@ CardSets.manifest = [
   'aircraft.js',
   'nascar-collection.js',
   'nfl-collection.js',
-  'formula-1-collection.js'
+  'formula-1-collection.js',
+  'nba-collection.js'
 ];
