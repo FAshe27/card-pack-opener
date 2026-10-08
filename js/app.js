@@ -328,8 +328,10 @@
     sp.classList.remove('hidden');
     audio.click();
     renderPacksSide();
-    var sr = $('#stage').getBoundingClientRect();
-    if (sr.top > innerHeight * 0.5 || sr.top < 0) $('#stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // only scroll when the pack that just appeared is off screen (e.g. opened from the sidebar pack on a phone);
+    // tapping the big pack / "Open next pack" leaves the page where it is
+    var pr = $('#stagePack .pack').getBoundingClientRect();
+    if (pr.top < 0 || pr.bottom > innerHeight) $('#stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
     return true;
   }
 

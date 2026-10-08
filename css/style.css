@@ -469,7 +469,19 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
-.stage { scroll-margin-top: 84px; }
+.stage { scroll-margin-top: 84px; overflow-anchor: none; }   /* stage content is swapped wholesale: never use it as a scroll anchor */
+/* Phones/tablets: reserve the full 9-card reveal (+ its summary and buttons) on the stage from the start, so the page
+   height doesn't change between the idle pack, the tearing pack, the reveal and "Done", and the scroll position can't jump.
+   Stage inner width = 100vw - 28px (main padding) - 22px (stage padding + border). Desktop keeps its 620px stage. */
+@media (max-width: 900px) and (min-width: 654px) {   /* 5 cards per row -> 2 rows; summary up to 2 lines */
+  .stage { min-height: max(480px, calc(170px + 2.8 * clamp(108px, (100vw - 114px) / 5, 184px))); }
+}
+@media (max-width: 653px) and (min-width: 561px) {   /* 108px cards, only 4 fit per row -> 3 rows */
+  .stage { min-height: calc(186px + 4.2 * 108px); }
+}
+@media (max-width: 560px) {                          /* 3 cards per row -> 3 rows; summary up to 3 lines */
+  .stage { min-height: calc(196px + 4.2 * ((100vw - 50px) * .333 - 8px)); }
+}
 
 /* ===================================================== online accounts */
 .cloud-only { display: none !important; }
