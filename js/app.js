@@ -610,9 +610,8 @@
       var n = counts[t.tier], trades = Math.floor(n / t.rate);
       return '<div class="tradein-row">' +
         '<span class="pill r-' + (t.tier === 'epic' ? 'epic' : t.tier) + '">' + t.label + '</span>' +
-        '<span><b>' + n + '</b> dupes</span><span class="muted">&rarr;</span>' +
-        '<span><b>' + trades + '</b> pack' + (trades === 1 ? '' : 's') + '</span>' +
-        '<button class="btn small" data-trade="' + t.tier + '"' + (trades < 1 ? ' disabled' : '') + '>Trade ' + t.rate + ' &rarr; 1 pack</button>' +
+        '<span class="tradein-mid"><b>' + n + '</b> dupes <span class="muted">&rarr;</span> <b>' + trades + '</b> pack' + (trades === 1 ? '' : 's') + '</span>' +
+        '<button class="btn small" data-trade="' + t.tier + '"' + (trades < 1 ? ' disabled' : '') + '>Trade</button>' +
         '</div>';
     }).join('');
   }
