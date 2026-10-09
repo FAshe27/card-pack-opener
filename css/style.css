@@ -60,6 +60,19 @@ textarea { width: 100%; resize: vertical; font-family: ui-monospace, Menlo, Cons
 input[type=color] { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 10px; background: #0e1324; padding: 3px; }
 input.bad { animation: shakeX .4s; border-color: var(--bad); }
 .icon-btn { background: var(--panel2); border: 1px solid var(--line); width: 38px; height: 38px; border-radius: 11px; cursor: pointer; font-size: 1.05rem; }
+.icon-btn { position: relative; }
+body.cloud button#notifBtn { display: inline-block !important; }
+.notif-badge { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; line-height: 18px; padding: 0 5px; border-radius: 9px; background: #e5484d; color: #fff; font-size: 11px; font-weight: 700; text-align: center; }
+.notif-list { display: grid; gap: 8px; margin: 12px 0; max-height: 50vh; overflow-y: auto; }
+.notif { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); cursor: pointer; text-align: left; width: 100%; font: inherit; color: inherit; }
+.notif.unread { border-color: var(--accent); background: rgba(124,108,255,.08); }
+.notif-icon { font-size: 1.3rem; flex: none; }
+.notif-text { flex: 1; min-width: 0; }
+.notif-time { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
+.gift-modal label { display: block; margin: 10px 0; }
+.gift-modal select { width: 100%; margin-top: 4px; }
+.gift-modal .trade-card { max-width: 170px; margin: 4px 0 8px; }
+.gift-actions { display: flex; gap: 10px; margin-top: 14px; }
 
 /* ===================================================== top bar */
 .topbar {
