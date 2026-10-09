@@ -162,9 +162,11 @@
     if (highlightKey) {
       var sp = segSpan(wheel, highlightKey);
       var ha0 = rotation + sp.a0 - Math.PI / 2, ha1 = rotation + sp.a1 - Math.PI / 2;
+      var hubR = 34; /* must match the hub drawn above: stroke the wedge from the hub edge out */
       ctx.beginPath();
-      ctx.moveTo(cx, cy);
+      ctx.moveTo(cx + Math.cos(ha0) * hubR, cy + Math.sin(ha0) * hubR);
       ctx.arc(cx, cy, R, ha0, ha1);
+      ctx.lineTo(cx + Math.cos(ha1) * hubR, cy + Math.sin(ha1) * hubR);
       ctx.closePath();
       ctx.shadowColor = '#ffb21e';
       ctx.shadowBlur = 14;
