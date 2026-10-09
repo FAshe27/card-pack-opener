@@ -159,6 +159,41 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .pack-emblem { position: relative; width: 46%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font-size: calc(var(--pw) * .2); background: rgba(0,0,0,.22); border: 3px solid rgba(255,255,255,.5); box-shadow: inset 0 0 20px rgba(255,255,255,.25), 0 0 30px rgba(255,255,255,.2); text-shadow: 0 0 18px #fff; }
 .pack-name { position: relative; font-weight: 900; font-size: calc(var(--pw) * .085); line-height: 1.1; text-shadow: 0 2px 8px rgba(0,0,0,.4); text-transform: uppercase; }
 .pack-sub { position: relative; font-size: calc(var(--pw) * .055); opacity: .85; font-weight: 600; }
+/* pack skin "civ": night runway — dark asphalt, glowing centerline dashes, threshold piano keys, blue edge lights, touchdown zone bars (no image files) */
+.pack-skin-civ .pack-top {
+  background:
+    radial-gradient(ellipse 90% 30% at 50% -8%, rgba(255,240,200,.32), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(245,245,245,.9) 0 18px, transparent 18px 34px) 50% 26px / 72% 24px no-repeat,
+    repeating-linear-gradient(180deg, rgba(255,255,255,.92) 0 16px, transparent 16px 40px) 50% 0 / 7px 100% no-repeat,
+    repeating-linear-gradient(180deg, rgba(255,196,110,.30) 0 16px, transparent 16px 40px) 50% 0 / 18px 100% no-repeat,
+    radial-gradient(circle, rgba(160,200,255,.85) 0 2px, transparent 3px) 10px 0 / 20px 30px repeat-y,
+    radial-gradient(circle, rgba(160,200,255,.85) 0 2px, transparent 3px) right 10px top 0 / 20px 30px repeat-y,
+    repeating-linear-gradient(115deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px),
+    linear-gradient(180deg, #0a0e15 0%, #131924 55%, #0c1017 100%);
+}
+.pack-skin-civ .pack-body {
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 108%, rgba(255,196,110,.22), transparent 70%),
+    linear-gradient(90deg, transparent 0 calc(50% - 46px), rgba(255,255,255,.7) calc(50% - 46px) calc(50% - 14px), transparent calc(50% - 14px) calc(50% + 14px), rgba(255,255,255,.7) calc(50% + 14px) calc(50% + 46px), transparent calc(50% + 46px)) 50% 20% / 100% 10px no-repeat,
+    repeating-linear-gradient(180deg, rgba(255,255,255,.92) 0 16px, transparent 16px 40px) 50% 0 / 7px 100% no-repeat,
+    repeating-linear-gradient(180deg, rgba(255,196,110,.30) 0 16px, transparent 16px 40px) 50% 0 / 18px 100% no-repeat,
+    radial-gradient(circle, rgba(160,200,255,.85) 0 2px, transparent 3px) 10px 0 / 20px 30px repeat-y,
+    radial-gradient(circle, rgba(160,200,255,.85) 0 2px, transparent 3px) right 10px top 0 / 20px 30px repeat-y,
+    repeating-linear-gradient(115deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px),
+    linear-gradient(180deg, #0c1017 0%, #080b10 70%, #05070a 100%);
+}
+.pack-skin-civ .pack-body::before {
+  background: radial-gradient(ellipse 90% 30% at 50% 0%, rgba(255,240,200,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%); mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+}
+.pack-skin-civ .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(255,180,90,.28) 4px 6px, rgba(255,255,255,.08) 6px 9px); }
+.pack-skin-civ .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.68) 0 4px, rgba(200,120,40,.32) 4px 6px, rgba(255,255,255,.05) 6px 9px); }
+.pack-skin-civ .pack-top::after { border-bottom-color: rgba(255,200,120,.55); }
+.pack-skin-civ .pack-code { color: #ffe9c2; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(255,190,100,.9); }
+.pack-skin-civ .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,220,170,.35), rgba(20,14,8,.85) 72%);
+  border-color: rgba(255,210,150,.7); box-shadow: 0 0 28px rgba(255,180,90,.55), inset 0 0 18px rgba(255,210,150,.3); text-shadow: 0 0 16px rgba(255,200,140,.9); }
+.pack-skin-civ .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(255,190,100,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-civ .pack-sub { color: #e8d9b8; }
 /* pack skin "space": deep navy/violet with procedural stars + nebula (no image files) */
 .pack-skin-space .pack-top, .pack-skin-space .pack-body {
   background:
