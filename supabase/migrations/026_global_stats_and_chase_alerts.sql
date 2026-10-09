@@ -158,7 +158,7 @@ returns jsonb language sql security definer set search_path = cps, pg_temp as $$
     from cps.user_set_stats
   ), rar as (
     select v.key as rarity, sum((v.value)::int) as n
-    from cps.user_set_stats, jsonb_each(by_rarity) as v(key, value)
+    from cps.user_set_stats, jsonb_each_text(by_rarity) as v(key, value)
     group by v.key
   )
   select jsonb_build_object(
