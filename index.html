@@ -219,7 +219,7 @@
             <label>Username <span class="row"><input id="naUser" maxlength="32" placeholder="2+ characters" spellcheck="false" autocapitalize="none"><button type="button" class="btn small" id="naSuggest">From name</button></span></label>
             <label>PIN (4 digits) <span class="row"><input id="naPin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="1234" autocomplete="off"><button type="button" class="btn small" id="naPinRandom">Random</button></span></label>
             <label>Starting packs <input id="naPacks" type="number" min="0" max="999" value="3"></label>
-            <label>For set <select id="naSet"></select></label>
+            <div class="span2"><span class="fld-label">For sets <span class="muted">(that many packs of each checked set)</span></span><div id="naSets" class="check-list"></div></div>
             <label class="toggle span2"><input type="checkbox" id="naAdmin"> Make this an admin account</label>
             <button class="btn primary span2" type="submit">Create account</button>
           </form>
