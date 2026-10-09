@@ -1087,3 +1087,5 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .pill.st-declined { background: #4a2c2c; color: #e3bfbf; }
 .pill.st-cancelled { background: #3a3a3a; color: #bbb; }
 .pill.st-expired { background: #3a3a3a; color: #888; }
+.player-name-row { display: flex; align-items: center; gap: 8px; }
+.pill-you { font-size: .65rem; padding: 1px 8px; }
