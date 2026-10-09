@@ -5,8 +5,15 @@ CardSets.register({
   "code": "MOVIE",
   "description": "",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#DC143C",
+    "secondary": "#3e424b",
+    "artBackground": "#d3d3d3",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Movie Pack",
+    "emblem": "🎬",
+    "skin": "movies"
   },
   "cards": [
     {
