@@ -127,6 +127,30 @@
       </div>
     </section>
 
+    <!-- ============ TRADE BUILDER ============ -->
+    <section id="view-trade" class="view">
+      <div class="panel">
+        <div class="trade-top">
+          <button class="btn small" id="tradeBackBtn">&larr; Back</button>
+          <h2 id="tradeTitle">Propose a trade</h2>
+        </div>
+        <label class="trade-with">Trade with <select id="tradeWithSel"></select></label>
+        <div class="trade-steps" id="tradeSteps"></div>
+      </div>
+      <div class="panel filters" id="tradeFilters">
+        <input id="tradeSearch" type="search" placeholder="Search name or number&hellip;">
+        <select id="tradeSetSel"></select>
+        <select id="tradeRarity"><option value="">All rarities</option></select>
+        <span class="filter-count" id="tradeCount"></span>
+      </div>
+      <div class="coll-grid" id="tradeGrid"></div>
+      <div class="trade-dock hidden" id="tradeDock">
+        <span id="tradeDockLabel"></span>
+        <label class="inline hidden" id="tradeHoloWrap"><input type="checkbox" id="tradeHolo"> Holographic</label>
+        <button class="btn primary" id="tradeContinueBtn">Continue &rarr;</button>
+      </div>
+    </section>
+
     <!-- ============ STATS ============ -->
     <section id="view-stats" class="view">
       <div class="stats-layout">
