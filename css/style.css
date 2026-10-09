@@ -237,6 +237,89 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   border-color: rgba(255,200,110,.75); box-shadow: 0 0 28px rgba(255,150,50,.6), inset 0 0 18px rgba(255,190,100,.35); text-shadow: 0 0 16px rgba(255,180,90,.9); }
 .pack-skin-fastfood .pack-name { color: #fff8ea; text-shadow: 0 0 14px rgba(255,150,50,.85), 0 2px 8px rgba(0,0,0,.65); }
 .pack-skin-fastfood .pack-sub { color: #f5cf9a; }
+/* pack skin "movies": opening night — red velvet curtain, glowing marquee bulbs, film-strip crimps, gold spotlight glow (no image files) */
+.pack-skin-movies .pack-top {
+  background:
+    radial-gradient(circle, #fff7d6 0 5px, rgba(255,205,110,.5) 6px, rgba(255,205,110,0) 12px) 0 4px / 30px 22px repeat-x,
+    conic-gradient(from 180deg at 50% -30%, transparent 0deg, rgba(255,225,170,.20) 5deg, transparent 11deg, transparent 17deg, rgba(255,225,170,.12) 22deg, transparent 28deg),
+    radial-gradient(ellipse 70% 40% at 50% -6%, rgba(255,214,140,.30), transparent 70%),
+    repeating-linear-gradient(115deg, rgba(0,0,0,.18) 0 2px, transparent 2px 6px),
+    linear-gradient(180deg, #8a1420 0%, #5c0a13 45%, #38050a 100%);
+}
+.pack-skin-movies .pack-body {
+  background:
+    radial-gradient(ellipse 65% 26% at 50% 110%, rgba(212,175,55,.28), transparent 70%),
+    linear-gradient(115deg, transparent 44%, rgba(255,205,120,.10) 47%, transparent 50%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px),
+    linear-gradient(180deg, #1a0d0f 0%, #0d0608 60%, #070405 100%);
+}
+.pack-skin-movies .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,220,160,.22), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 60%); mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
+}
+.pack-skin-movies .crimp {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 9px, rgba(0,0,0,.75) 9px 21px, transparent 21px 33px),
+    linear-gradient(180deg, #3a3a40 0%, #232327 100%);
+}
+.pack-skin-movies .crimp.bottom {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 9px, rgba(0,0,0,.8) 9px 21px, transparent 21px 33px),
+    linear-gradient(180deg, #232327 0%, #121214 100%);
+}
+.pack-skin-movies .pack-top::after { border-bottom-color: rgba(255,214,140,.6); }
+.pack-skin-movies .pack-code { color: #ffe9b8; opacity: .95; letter-spacing: 6px; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(255,200,110,.8); }
+.pack-skin-movies .pack-emblem {
+  background: radial-gradient(circle at 35% 30%, rgba(255,225,170,.35), rgba(30,10,4,.88) 72%);
+  border-color: rgba(255,214,140,.75);
+  box-shadow: 0 0 28px rgba(255,190,100,.55), inset 0 0 18px rgba(255,200,110,.30);
+  text-shadow: 0 0 16px rgba(255,200,110,.9);
+}
+.pack-skin-movies .pack-name { color: #fff3d6; text-shadow: 0 0 14px rgba(255,180,90,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-movies .pack-sub { color: #e8c9a0; }
+/* pack skin "music": encore — a vinyl record under stage lights; groove rings, magenta/cyan light beams, gold label glow (no image files) */
+.pack-skin-music .pack-top {
+  background:
+    repeating-radial-gradient(circle at 50% 100%, rgba(255,255,255,.06) 0 2px, transparent 2px 7px),
+    conic-gradient(from 180deg at 50% -20%, transparent 0deg, rgba(255,80,200,.20) 6deg, transparent 12deg, transparent 20deg, rgba(80,200,255,.15) 26deg, transparent 32deg),
+    radial-gradient(ellipse 60% 35% at 50% 108%, rgba(255,200,90,.22), transparent 70%),
+    linear-gradient(180deg, #150a24 0%, #0d0618 60%, #080410 100%);
+}
+.pack-skin-music .pack-body {
+  background:
+    repeating-radial-gradient(circle at 50% -12%, rgba(255,255,255,.04) 0 2px, transparent 2px 7px),
+    radial-gradient(ellipse 70% 30% at 50% 0%, rgba(255,80,200,.12), transparent 70%),
+    linear-gradient(180deg, #0d0618 0%, #070310 100%);
+}
+.pack-skin-music .pack-body::before {
+  background:
+    radial-gradient(ellipse 85% 30% at 50% 0%, rgba(150,110,255,.20), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%); mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+}
+.pack-skin-music .crimp {
+  background:
+    radial-gradient(circle, #080410 3px, transparent 4px) 0 0 / 18px 16px repeat-x,
+    linear-gradient(180deg, #2a1545 0%, #1a0d2b 100%);
+}
+.pack-skin-music .crimp.bottom {
+  background:
+    radial-gradient(circle, #080410 3px, transparent 4px) 0 0 / 18px 16px repeat-x,
+    linear-gradient(180deg, #1a0d2b 0%, #0d0616 100%);
+}
+.pack-skin-music .pack-top::after { border-bottom-color: rgba(255,120,210,.55); }
+.pack-skin-music .pack-code { color: #ffd98a; opacity: .95; letter-spacing: 6px; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(255,190,90,.8); }
+.pack-skin-music .pack-emblem {
+  background:
+    radial-gradient(circle, #f0c75e 0 10px, #a87f2a 11px 13px, transparent 14px),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.07) 0 2px, transparent 2px 5px),
+    radial-gradient(circle at 50% 50%, #232327 0, #0a0a0c 70%);
+  border-color: rgba(212,164,55,.8);
+  box-shadow: 0 0 26px rgba(255,80,200,.5), inset 0 0 14px rgba(0,0,0,.8);
+  text-shadow: 0 0 16px rgba(255,200,110,.9);
+}
+.pack-skin-music .pack-name { color: #ffe9f6; text-shadow: 0 0 14px rgba(255,80,200,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-music .pack-sub { color: #c9a8e0; }
 /* pack skin "f1": night Grand Prix — carbon-fiber foil, red/white curb stripes, neon speed streaks, podium-gold glow (no image files) */
 .pack-skin-f1 .pack-top {
   background:
