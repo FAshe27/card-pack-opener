@@ -1,12 +1,19 @@
 /* Card set: Civilian Aircraft (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "civilian-aircraft",
-  "name": "Civilian Aircraft",
+  "name": "Civilian Aviation",
   "code": "CIV",
-  "description": "",
+  "description": "plane go nyoom",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#6F6F6E",
+    "secondary": "#96c1fa",
+    "artBackground": "#d3d3d3",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Civilian Aviation Pack",
+    "emblem": "✈️",
+    "skin": "civ"
   },
   "cards": [
     {
