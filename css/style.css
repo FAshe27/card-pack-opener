@@ -853,6 +853,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   .player-chip { padding: 4px; }
   .brand-text { display: none; }
   .set-picker span { display: none; } .set-picker select { max-width: 170px; }
+  .set-picker { order: 4; width: 100%; } .set-picker select { max-width: none; flex: 1; }
   .reveal-grid { gap: 10px; } .reveal-grid .card { width: calc(33.3% - 8px); }
   .coll-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px 14px; padding: 13px 9px 0 0; }
   .coll-badges { top: -13px; right: -7px; gap: 2px; } .coll-badges .badge-count, .coll-badges .badge-holo { font-size: 9.5px; padding: 0 5px; height: 15px; line-height: 15px; }
