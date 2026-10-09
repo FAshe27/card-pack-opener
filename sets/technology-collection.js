@@ -3023,6 +3023,14 @@ CardSets.register({
       "subtitle": "Storage",
       "details": "Smaller than a stamp.",
       "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/16_MB_SD_Card%2C_Toshiba-2724.jpg/1280px-16_MB_SD_Card%2C_Toshiba-2724.jpg"
+    },
+      {
+      "name": "Minolta SRT 201",
+      "rarity": "legendary",
+      "id": "minolta-srt-201",
+      "subtitle": "Camera",
+      "details": "Photography legend Sage began film photography with one of these.",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnc9shuaZ8lVf6LO_nFbxtAAkGwezscbJBUBHmSUunGA&s=10"
     }
-  ]
+]
 });
