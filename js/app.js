@@ -1336,20 +1336,38 @@
 
   /* ---------------------------------------------------------- stats */
   function renderStats() {
-    var set = S.set, st = ps(), s = st.stats, owned = ownedCount(set, st);
-    $('#statsSetName').textContent = '· ' + set.name;
-    var epicPlus = (s.byRarity.epic || 0) + (s.byRarity.legendary || 0) + (s.byRarity.chase || 0);
+    var set = S.set, st = ps();
+    // Aggregate across all sets
+    var agg = { opened: 0, pulled: 0, holos: 0, byRarity: {}, unique: 0, total: 0, packs: 0 };
+    var perSet = window.CardSets.all().map(function (sd) {
+      var pst = S.player.sets[sd.id], psd = pst ? pst.stats : null;
+      var o = pst ? ownedCount(sd, pst) : 0;
+      agg.opened += psd ? psd.opened || 0 : 0;
+      agg.pulled += psd ? psd.pulled || 0 : 0;
+      agg.holos += psd ? psd.holos || 0 : 0;
+      agg.unique += o; agg.total += sd.cards.length; agg.packs += pst ? pst.packs || 0 : 0;
+      R.RARITIES.forEach(function (r) { agg.byRarity[r.key] = (agg.byRarity[r.key] || 0) + (psd && psd.byRarity[r.key] || 0); });
+      return { set: sd, opened: psd ? psd.opened || 0 : 0, pulled: psd ? psd.pulled || 0 : 0,
+               holos: psd ? psd.holos || 0 : 0, owned: o };
+    }).filter(function (x) { return x.opened > 0 || x.owned > 0; });
+    var epicPlus = (agg.byRarity.epic || 0) + (agg.byRarity.legendary || 0) + (agg.byRarity.chase || 0);
     var tiles = [
-      ['Packs opened', s.opened], ['Cards pulled', s.pulled], ['Unique cards', owned + ' / ' + set.cards.length],
-      ['Completion', U.pct(owned / set.cards.length)], ['Holo pulls', s.holos], ['Epic or better', epicPlus],
-      ['Chase pulls', s.byRarity.chase || 0], ['Packs on hand', st.packs]
+      ['Packs opened', agg.opened], ['Cards pulled', agg.pulled], ['Unique cards', agg.unique + ' / ' + agg.total],
+      ['Completion', U.pct(agg.total ? agg.unique / agg.total : 0)], ['Holo pulls', agg.holos], ['Epic or better', epicPlus],
+      ['Chase pulls', agg.byRarity.chase || 0], ['Packs on hand', agg.packs]
     ];
     $('#statTiles').innerHTML = tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b></div>'; }).join('');
-    var max = Math.max.apply(null, R.RARITIES.map(function (r) { return s.byRarity[r.key] || 0; }).concat([1]));
-    $('#rarityBars').innerHTML = R.RARITIES.filter(function (r) { return set.pools[r.key].length; }).map(function (r) {
-      var n = s.byRarity[r.key] || 0;
-      return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + n + (s.pulled ? ' <em>' + U.pct(n / s.pulled) + '</em>' : '') + '</span></div>';
+    var max = Math.max.apply(null, R.RARITIES.map(function (r) { return agg.byRarity[r.key] || 0; }).concat([1]));
+    $('#rarityBars').innerHTML = R.RARITIES.map(function (r) {
+      var n = agg.byRarity[r.key] || 0;
+      return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + n + (agg.pulled ? ' <em>' + U.pct(n / agg.pulled) + '</em>' : '') + '</span></div>';
     }).join('');
+    $('#statsTable').innerHTML = '<thead><tr><th>Set</th><th>Packs</th><th>Cards</th><th>Unique</th><th>Done</th><th>Holos</th></tr></thead><tbody>' +
+      perSet.map(function (x) {
+        var pc = x.set.cards.length ? (x.owned / x.set.cards.length * 100) : 0;
+        return '<tr><td>' + esc(x.set.name) + '</td><td>' + x.opened + '</td><td>' + x.pulled + '</td>' +
+          '<td>' + x.owned + ' / ' + x.set.cards.length + '</td><td>' + pc.toFixed(1) + '%</td><td>' + x.holos + '</td></tr>';
+      }).join('') + '</tbody>';
     var best = s.best && set.byId.get(s.best.id);
     $('#bestPull').innerHTML = best
       ? CPS.cards.render(set, best, { holo: s.best.holo }) + '<div class="best-cap"><b class="rt-' + best.rarity + '">' + esc(best.name) + (s.best.holo ? ' (holo)' : '') + '</b><span>' + rarityOf(best.rarity).label + ' · ' + new Date(s.best.at).toLocaleDateString() + '</span></div>'
