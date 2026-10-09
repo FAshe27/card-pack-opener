@@ -178,6 +178,17 @@
   }
 
   /* Animate the wheel to land on the segment with `key`. rotation 0 = pointer at top. */
+  function segIndexAt(wheel, localAngle) {
+    var segs = wheel.segments;
+    var total = segs.reduce(function (a, s) { return a + s.weight; }, 0) || 1;
+    var acc = 0;
+    for (var i = 0; i < segs.length; i++) {
+      acc += segs[i].weight;
+      if (localAngle < (acc / total) * TAU) return i;
+    }
+    return segs.length - 1;
+  }
+
   function spinTo(canvas, wheel, key, fromRot, durationMs, done) {
     var sp = segSpan(wheel, key);
     var targetLocal = sp.a0 + (sp.a1 - sp.a0) * (0.2 + 0.6 * Math.random());
@@ -186,12 +197,17 @@
     var delta = (((want - cur) % TAU) + TAU) % TAU;
     var turns = 5 + Math.floor(Math.random() * 3);
     var finalRot = fromRot + turns * TAU + delta;
-    var t0 = null;
+    var t0 = null, lastIdx = -1;
     function frame(t) {
       if (t0 === null) t0 = t;
       var p = Math.min(1, (t - t0) / durationMs);
       var e = 1 - Math.pow(1 - p, 3); /* easeOutCubic */
-      draw(canvas, wheel, fromRot + (finalRot - fromRot) * e);
+      var rot = fromRot + (finalRot - fromRot) * e;
+      var ptrLocal = ((-rot % TAU) + TAU) % TAU; /* wheel-local angle under the pointer */
+      var idx = segIndexAt(wheel, ptrLocal);
+      if (lastIdx >= 0 && idx !== lastIdx && CPS.audio && CPS.audio.tick) CPS.audio.tick();
+      lastIdx = idx;
+      draw(canvas, wheel, rot);
       if (p < 1) requestAnimationFrame(frame);
       else { canvas._rot = ((finalRot % TAU) + TAU) % TAU; if (done) done(); }
     }
@@ -199,7 +215,8 @@
   }
 
   /* Play a server-rolled hop chain, one wheel at a time. Returns a promise. */
-  function playHops(canvas, cfg, hops) {
+  function playHops(canvas, cfg, hops, speed) {
+    speed = speed || 1;
     return new Promise(function (resolve) {
       var byId = {};
       cfg.wheels.forEach(function (w) { byId[w.id] = w; });
@@ -212,11 +229,11 @@
         if (nameEl) nameEl.textContent = wheel.name;
         draw(canvas, wheel, 0);
         setTimeout(function () {
-          spinTo(canvas, wheel, hop.key, 0, 3600, function () {
+          spinTo(canvas, wheel, hop.key, 0, 3600 / speed, function () {
             last = { wheelId: wheel.id, key: hop.key, rotation: canvas._rot || 0 };
-            setTimeout(next, 1100);
+            setTimeout(next, 1100 / speed);
           });
-        }, 400);
+        }, 400 / speed);
       }
       next();
     });
