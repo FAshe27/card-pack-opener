@@ -3,7 +3,7 @@ CardSets.register({
   "id": "movie-pack",
   "name": "Movie Pack",
   "code": "MOVIE",
-  "description": "",
+  "description": "It insists upon itself",
   "theme": {
     "primary": "#DC143C",
     "secondary": "#3e424b",
