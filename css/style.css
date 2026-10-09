@@ -902,6 +902,10 @@ body.admin .player-chip .mode-tag { background: rgba(255,178,30,.18); color: #ff
 .admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; align-items: start; }
 .admin-layout .wide { grid-column: 1 / -1; }
 .form-grid .span2 { grid-column: 1 / -1; }
+.fld-label { font-size: .82rem; color: var(--muted); display: block; margin-bottom: 2px; }
+.check-list { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.02); }
+.check-list .check { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; cursor: pointer; }
+.check-list .check input { width: auto; accent-color: var(--accent); }
 .form-grid label.toggle { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: auto; }
 .form-grid label.toggle input { width: 18px; height: 18px; flex: none; margin: 0; }
 .form-grid .row input { flex: 1; }
