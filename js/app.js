@@ -1400,22 +1400,7 @@
     $('#recentPulls').innerHTML = st.recent.length ? st.recent.map(function (x) {
       var c = set.byId.get(x.id); return c ? CPS.cards.render(set, c, { holo: x.holo }) : '';
     }).join('') : '<div class="empty">Nothing yet.</div>';
-    var gp = $('#globalStatsPanel');
-    if (isCloud() && gp) {
-      gp.style.display = '';
-      CPS.cloud.call('global_pull_stats', {}).then(function (g) {
-        if (S.view !== 'stats') return;
-        var br = g.by_rarity || {};
-        $('#globalTiles').innerHTML = [['Cards pulled', g.pulled], ['Holo pulls', g.holos]].map(function (t) {
-          return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b></div>';
-        }).join('');
-        var gmax = Math.max.apply(null, R.RARITIES.map(function (r) { return br[r.key] || 0; }).concat([1]));
-        $('#globalBars').innerHTML = R.RARITIES.map(function (r) {
-          var n = br[r.key] || 0;
-          return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / gmax * 100).toFixed(1) + '%"></i></span><span class="bn">' + n + (g.pulled ? ' <em>' + U.pct(n / g.pulled) + '</em>' : '') + '</span></div>';
-        }).join('');
-      }).catch(function () { if (gp) gp.style.display = 'none'; });
-    } else if (gp) { gp.style.display = 'none'; }
+    if (CPS.globalStats) CPS.globalStats.render();
   }
 
   /* ---------------------------------------------------------- odds */
@@ -2244,6 +2229,6 @@
     renderCollection: renderCollection, renderPacksSide: renderPacksSide,
     updateWheelGlow: updateWheelGlow, spinCount: spinCount, refreshQuests: refreshQuests,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
-    ensureVariants: ensureVariants };
+    ensureVariants: ensureVariants, rarityOf: rarityOf };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
