@@ -313,11 +313,8 @@ begin
     perform cps.transfer_card(a.id, tgt.id, p_set, p_card, coalesce(p_holo, false), 1, 'gift', false);
     update cps.variants set account_id = tgt.id where id = p_variant_id;
   else
-    -- the lowest serial travels with the gift automatically
-    select vv.tier, vv.serial into vtier, vserial from cps.variants vv
-      where vv.account_id = a.id and vv.set_id = p_set and vv.card_id = p_card
-      order by vv.serial limit 1;
-    perform cps.transfer_card(a.id, tgt.id, p_set, p_card, coalesce(p_holo, false), 1, 'gift');
+    -- a regular copy: variants stay put (the gift modal picks serials explicitly)
+    perform cps.transfer_card(a.id, tgt.id, p_set, p_card, coalesce(p_holo, false), 1, 'gift', false);
   end if;
   if vtier is not null then
     vlabel := ' ' || cps.variant_name(vtier) || ' #' || vserial || '/' || cps.variant_run(vtier);
