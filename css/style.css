@@ -1098,6 +1098,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 
 /* ---------- dupe trade-in ---------- */
 .tradein { margin-top: 12px; }
+.panel.tradein { margin-bottom: 16px; }
 .tradein-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 10px; font-size: 1rem; }
 .tradein-rows { display: grid; gap: 8px; }
 @media (min-width: 720px) { .tradein-rows { grid-template-columns: 1fr 1fr; } }
