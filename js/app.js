@@ -1799,7 +1799,7 @@
     var p = S.player;
     if (!p) return;
     var today = chicagoToday();
-    if (p.lastDailySpin !== today) {
+    if (p.lastDailySpin !== today && (p.spins || 0) < 10) {
       p.lastDailySpin = today;
       p.spins = (p.spins || 0) + 1;
       save();
