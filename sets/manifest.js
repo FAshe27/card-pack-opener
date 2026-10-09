@@ -10,6 +10,8 @@ CardSets.manifest = [
   'nba-collection.js',
   'nfl-collection.js',
   'aircraft.js',
+  'movie-pack.js',
+  'music-pack.js',
   'sea.js',
   'space.js',
   'technology-collection.js'
