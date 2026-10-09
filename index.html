@@ -19,6 +19,7 @@
       <button data-view="packs" class="tab active">Open Packs</button>
       <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel</button>
       <button data-view="collection" class="tab">Collection</button>
+      <button data-view="players" class="tab">Players</button>
       <button data-view="stats" class="tab">Stats</button>
       <button data-view="odds" class="tab">Odds</button>
       <button data-view="admin" class="tab admin-tab" id="adminTabBtn">Admin</button>
@@ -99,6 +100,7 @@
           <button data-own="missing">Missing</button>
           <button data-own="dupes">Duplicates</button>
           <button data-own="holo">Holo</button>
+          <button data-own="fav">Favorites</button>
         </div>
         <select id="collSort">
           <option value="num">Sort: Number</option>
@@ -109,6 +111,15 @@
         <span class="filter-count" id="collCount"></span>
       </div>
       <div class="coll-grid" id="collGrid"></div>
+    </section>
+
+    <!-- ============ PLAYERS ============ -->
+    <section id="view-players" class="view">
+      <div class="panel">
+        <h2>Players</h2>
+        <p class="muted small">See what everyone is collecting — tap a player to view their favorites and collection.</p>
+        <div id="playerList" class="player-list"></div>
+      </div>
     </section>
 
     <!-- ============ STATS ============ -->
