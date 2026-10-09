@@ -811,7 +811,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .empty { color: var(--muted); padding: 40px; text-align: center; grid-column: 1/-1; }
 
 /* ===================================================== stats */
-.stats-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+.stats-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: stretch; }
 .stats-layout .wide { grid-column: 1 / -1; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .tile { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
@@ -821,7 +821,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .barrow .bl { color: var(--rc); font-weight: 700; } .barrow .bar { height: 10px; } .barrow .bn { text-align: right; } .barrow em { color: var(--muted); font-style: normal; font-size: .8rem; }
 .best-pull { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .best-pull .card { width: 230px; cursor: pointer; }
-.best-cap { text-align: center; display: flex; flex-direction: column; gap: 3px; } .best-cap span { color: var(--muted); font-size: .85rem; }
+.best-cap { text-align: center; display: flex; flex-direction: column; gap: 3px; } .bpc-line { white-space: nowrap; } .best-cap span { color: var(--muted); font-size: .85rem; }
 .recent { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
 
 /* ===================================================== odds */
