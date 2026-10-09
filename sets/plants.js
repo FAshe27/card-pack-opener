@@ -1293,7 +1293,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "common-yarrow",
       "subtitle": "Wildflower",
-      "details": "Achilles' wound herb; feathery leaves.",
+      "details": "Achilles' wound herb; feathery leaves. (Sage was here)",
       "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Achillea_millefolium_%28bright%29.jpg/1280px-Achillea_millefolium_%28bright%29.jpg"
     },
     {
