@@ -1070,7 +1070,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   50% { box-shadow: 0 0 20px rgba(255,178,30,.9); }
 }
 .wheel-wrap { max-width: 640px; margin: 0 auto; text-align: center; padding: 12px 0 48px; }
-.spin-btns { display: flex; gap: 10px; justify-content: center; } .spin-btns .btn.big { flex: 1; width: auto; margin: 0; }
+.spin-btns { display: flex; gap: 10px; justify-content: center; margin-top: 20px; } .spin-btns .btn.big { flex: 1 1 0; width: 0; margin: 0; }
 .wheel-title { margin: 6px 0 2px; }
 .ticket-box {
   display: inline-flex; align-items: center; gap: 10px;
@@ -1080,7 +1080,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 }
 .ticket-box .ticket-emoji { font-size: 1.6rem; }
 .ticket-box b { font-size: 1.35rem; color: #ffe08a; }
-.wheel-stage { position: relative; width: min(92vw, 520px); margin: 0 auto; }
+.wheel-stage { position: relative; width: min(92vw, 520px); margin: 10px auto 0; }
 #wheelCanvas { width: 100%; height: auto; display: block; filter: drop-shadow(0 8px 24px rgba(0,0,0,.45)); }
 .wheel-pointer {
   position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
