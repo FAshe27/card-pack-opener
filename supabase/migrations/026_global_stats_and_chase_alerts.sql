@@ -150,7 +150,7 @@ begin
 end $$;
 
 -- --- global pull stats -------------------------------------------------------------
-drop function if exists public.cps_global_pull_stats();
+-- (p_token overload coexists with the old zero-arg version; PostgREST routes by args)
 create or replace function public.cps_global_pull_stats(p_token text)
 returns jsonb language sql security definer set search_path = cps, pg_temp as $$
   with agg as (
