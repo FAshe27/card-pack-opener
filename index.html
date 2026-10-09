@@ -18,6 +18,7 @@
     <nav class="tabs" role="tablist">
       <button data-view="packs" class="tab active">Open Packs</button>
       <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel</button>
+      <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily</button>
       <button data-view="collection" class="tab">Collection</button>
       <button data-view="players" class="tab" id="playersTabBtn">Players<span class="tab-badge hidden" id="playersBadge"></span></button>
       <button data-view="stats" class="tab">Stats</button>
@@ -205,6 +206,15 @@
         <div id="wheelResult" class="wheel-result hidden"></div>
         <button id="spinBtn" class="btn big">SPIN</button>
         <p class="muted small wheel-hint">Everyone gets a free spin ticket every day at midnight if you have fewer than 10 spin tickets saved. Franklin can gift extra spin tickets. Wheel hops are free — a spin only ends when you win packs.</p>
+      </div>
+    </section>
+
+    <!-- ============ DAILY ACHIEVEMENTS ============ -->
+    <section id="view-daily" class="view">
+      <div class="panel">
+        <h2>Daily Achievements</h2>
+        <p class="muted small">Fresh quests every day at midnight. Finish one, claim spin tickets.</p>
+        <div id="questList" class="quest-list"></div>
       </div>
     </section>
 
