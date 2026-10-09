@@ -118,12 +118,26 @@
       <div class="panel hidden" id="tradePanel">
         <h2>Trade offers</h2>
         <div id="tradeList"></div>
-        <button class="btn" id="newTradeBtn">Propose a trade</button>
+        <div class="trade-panel-actions">
+          <button class="btn" id="newTradeBtn">Propose a trade</button>
+          <button class="btn small" id="tradeHistBtn">Trade history</button>
+        </div>
       </div>
       <div class="panel">
         <h2>Players</h2>
         <p class="muted small">See what everyone is collecting — tap a player to view their favorites and collection.</p>
         <div id="playerList" class="player-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ TRADE HISTORY ============ -->
+    <section id="view-trade-history" class="view">
+      <div class="panel">
+        <div class="trade-top">
+          <button class="btn small" id="tradeHistBackBtn">&larr; Back</button>
+          <h2>Trade history</h2>
+        </div>
+        <div id="tradeHistList"></div>
       </div>
     </section>
 
