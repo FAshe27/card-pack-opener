@@ -731,7 +731,7 @@
       var favs = (p.favorites || []).map(function (f) {
         var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
         if (!set || !card) return '';
-        return '<div class="prof-fav">' + CPS.cards.render(set, card, {}) +
+        return '<div class="prof-fav">' + CPS.cards.render(set, card, { holo: !!f.holo }) +
           '<div class="prof-fav-cap"><b>' + esc(card.name) + '</b>' +
           '<span class="muted small">' + esc(set.name) + ' · ' + rarityOf(card.rarity).label + '</span></div></div>';
       }).join('');
