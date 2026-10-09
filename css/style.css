@@ -1083,6 +1083,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .prof-set { cursor: pointer; transition: border-color .15s; }
 .prof-set:hover { border-color: #f5b942; }
 .trade-panel-actions { display: flex; gap: 10px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
+.trade-panel-actions .btn { display: inline-flex; align-items: center; justify-content: center; line-height: 1.4; margin: 0; }
 .pill.st-accepted { background: #2c4a2c; color: #bfe3bf; }
 .pill.st-declined { background: #4a2c2c; color: #e3bfbf; }
 .pill.st-cancelled { background: #3a3a3a; color: #bbb; }
