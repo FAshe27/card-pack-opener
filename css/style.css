@@ -1070,6 +1070,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   50% { box-shadow: 0 0 20px rgba(255,178,30,.9); }
 }
 .wheel-wrap { max-width: 640px; margin: 0 auto; text-align: center; padding: 12px 0 48px; }
+.spin-btns { display: flex; gap: 10px; justify-content: center; } .spin-btns .btn.big { flex: 1; width: auto; margin: 0; }
 .wheel-title { margin: 6px 0 2px; }
 .ticket-box {
   display: inline-flex; align-items: center; gap: 10px;
