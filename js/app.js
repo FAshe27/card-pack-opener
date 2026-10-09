@@ -138,7 +138,7 @@
   }
 
   async function refreshCloud() {
-    try { enterCloud(await CPS.cloud.call('get_state')); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); }
+    try { enterCloud(await CPS.cloud.call('get_state')); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); refreshQuests(); }
     catch (e) { cloudError(e); }
   }
 
@@ -169,7 +169,7 @@
 
   function afterEnter() {
     S._wheelEnd = null;
-    applyPrefsUI(); fillSetSelect(); renderPacksSide(); resetStage(); renderView();
+    applyPrefsUI(); fillSetSelect(); renderPacksSide(); resetStage(); renderView(); refreshQuests();
   }
 
   /* What the server needs to know about a set: cards + the resolved pack odds. */
@@ -237,6 +237,7 @@
 
   /* ---------------------------------------------------------- views */
   function showView(name, quiet) {
+    if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
     if (name === 'admin' && !canAdminArea()) name = 'packs';
     S.view = name;
@@ -248,6 +249,7 @@
     if (name === 'admin' && !quiet && isAdmin() && !S.dev) requestDevUnlock();
   }
   function renderView() {
+    if (S.view === 'daily') { renderDaily(); return; }
     if (S.view === 'collection') {
       renderCollection();
       if (isCloud() && !S.myVariants) ensureVariants().then(function () { if (S.view === 'collection') renderCollection(); });
@@ -343,6 +345,7 @@
     save();
 
     S.opening = { set: set, pulls: pulls, torn: false, revealed: pulls.map(function () { return false; }), finished: false, auto: false };
+    refreshQuests();
     $('#stageIdle').classList.add('hidden');
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
     $('#stageControls').classList.add('hidden');
@@ -699,6 +702,7 @@
     st.packs += trades;
     await save();
     msg(trades * t.rate, trades);
+    refreshQuests();
     renderCollection();
     renderPacksSide();
   }
@@ -915,7 +919,7 @@
           var btn = this; btn.disabled = true;
           try {
             await CPS.cloud.call('gift_card', { p_to: toId, p_set: setId, p_card: cardId, p_holo: isHolo, p_variant_id: variantId || null });
-            S.myVariants = null;
+            S.myVariants = null; refreshQuests();
             closeModal();
             toast('🎁 Gift sent to ' + toName + '!');
             if (S.view === 'collection') renderCollection();
@@ -1090,7 +1094,7 @@
   async function respondTrade(id, accept) {
     try {
       await CPS.cloud.call('respond_trade', { p_offer: id, p_accept: accept });
-      S.myVariants = null;
+      S.myVariants = null; refreshQuests();
       toast(accept ? 'Trade complete! Cards swapped.' : 'Offer declined.');
       renderPlayers();
     } catch (e) { cloudError(e); }
@@ -1814,6 +1818,37 @@
     var b = $('#wheelTabBtn');
     if (b) b.classList.toggle('has-spins', !isLocked() && spinCount() > 0);
   }
+  async function refreshQuests() {
+    if (!isCloud()) { S.quests = null; updateDailyGlow(); return; }
+    try { S.quests = await CPS.cloud.call('list_quests', {}); }
+    catch (e) { S.quests = []; }
+    updateDailyGlow();
+  }
+  function updateDailyGlow() {
+    var b = $('#dailyTabBtn');
+    var has = (S.quests || []).some(function (q) { return q.done && !q.claimed; });
+    if (b) b.classList.toggle('has-claimable', !isLocked() && has);
+  }
+  function questHtml(q) {
+    var pct = Math.min(100, Math.round(q.progress / q.target * 100));
+    return '<div class="quest tier-' + q.tier + (q.done && !q.claimed ? ' claimable' : '') + '">' +
+      '<div class="quest-top"><div><b>' + esc(q.title) + '</b>' +
+      '<span class="quest-tier">' + q.tier + ' &middot; &#x1F39F;&#xFE0F;' + q.tickets + '</span></div>' +
+      (q.claimed ? '<span class="quest-done">Claimed &#x2713;</span>' :
+       q.done ? '<button class="btn small primary" data-claim="' + esc(q.key) + '">Claim</button>' :
+       '<span class="quest-prog">' + q.progress + '/' + q.target + '</span>') +
+      '</div><div class="bar quest-bar"><i style="width:' + pct + '%"></i></div></div>';
+  }
+  async function renderDaily() {
+    var list = $('#questList');
+    if (!list) return;
+    list.innerHTML = '<div class="muted">Loading&hellip;</div>';
+    await refreshQuests();
+    if (S.view !== 'daily') return;
+    var qs = S.quests || [];
+    list.innerHTML = qs.length ? qs.map(questHtml).join('') :
+      '<div class="empty">No quests today &mdash; check back tomorrow.</div>';
+  }
   function wheelConfig() {
     if (isCloud()) return S.wheelCfg ? CPS.wheel.enrich(S.wheelCfg) : null;
     return CPS.wheel.localConfig();
@@ -1871,6 +1906,7 @@
       if (isCloud()) {
         out = await CPS.cloud.call('spin_wheel', {});
         S.spins = out.spins_left;
+        refreshQuests();
       } else {
         out = CPS.wheel.rollLocal(cfg);
         S.player.spins = Math.max(0, (S.player.spins || 1) - 1);
@@ -2000,6 +2036,20 @@
       $$('#collOwn button').forEach(function (x) { x.classList.toggle('active', x === b); });
       if (b.dataset.own === 'numbered') ensureVariants().then(function () { renderCollection(); });
       else renderCollection();
+    });
+    $('#questList').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-claim]'); if (!b || b.disabled) return;
+      b.disabled = true;
+      (async function () {
+        try {
+          var r = await CPS.cloud.call('claim_quest', { p_key: b.dataset.claim });
+          S.spins = r.spins_now; updateWheelGlow();
+          fx.confetti(120);
+          toast('+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
+          await refreshQuests();
+          if (S.view === 'daily') renderDaily();
+        } catch (err) { cloudError(err); b.disabled = false; }
+      })();
     });
     $('#rarityProgress').addEventListener('click', function (e) {
       var b = e.target.closest('[data-r]'); if (!b) return;
