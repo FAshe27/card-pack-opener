@@ -70,6 +70,8 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .notif-text { flex: 1; min-width: 0; }
 .notif-time { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
 .notif-actions { display: flex; gap: 10px; margin-top: 4px; }
+.grant-all { margin-bottom: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; align-items: center; }
+.grant-all .muted { margin-right: 4px; }
 .variant-census { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.02); display: grid; gap: 5px; font-size: .88rem; }
 .variant-census .vc-row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
 .variant-census .vc-n { font-weight: 800; font-variant-numeric: tabular-nums; }
