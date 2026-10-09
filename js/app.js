@@ -1468,7 +1468,10 @@
     if (!isAdmin() || !S.dev) return;
     var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
       .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('');
-    $('#naSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
+    $('#naSets').innerHTML = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
+      .map(function (x) { return '<label class="check"><input type="checkbox" value="' + esc(x.id) + '"' +
+        (x.id === S.set.id ? ' checked' : '') + '> ' + esc(x.name) + '</label>'; }).join('') ||
+      '<span class="muted small">(upload a set first)</span>';
     $('#serverSets').innerHTML = window.CardSets.all().map(function (x) {
       var on = S.onlineSets.indexOf(x.id) >= 0;
       return '<div class="set-item">' + CPS.cards.swatch(x) +
@@ -1573,10 +1576,13 @@
     if (!validPin(pin)) { toast('Enter a 4-digit PIN (or press Random).', 'warn'); $('#naPin').focus(); return; }
     btn.disabled = true;
     try {
+      var setIds = Array.prototype.filter.call(document.querySelectorAll('#naSets input[type=checkbox]'),
+        function (c) { return c.checked; }).map(function (c) { return c.value; });
       var r = await CPS.cloud.call('admin_create_account', { p_username: user, p_display_name: display, p_pin: pin,
-        p_start_packs: Math.max(0, parseInt($('#naPacks').value, 10) || 0), p_set: $('#naSet').value || null, p_is_admin: $('#naAdmin').checked });
+        p_start_packs: Math.max(0, parseInt($('#naPacks').value, 10) || 0), p_sets: setIds.length ? setIds : null, p_is_admin: $('#naAdmin').checked });
       showCreated(r.display_name, r.username || user, pin);
-      toast('Created ' + r.display_name + ' with ' + r.packs + ' pack' + (r.packs === 1 ? '' : 's') + '.', 'good');
+      toast('Created ' + r.display_name + ' with ' + r.packs + ' pack' + (r.packs === 1 ? '' : 's') +
+        ' of ' + (r.set_ids || []).length + ' set' + ((r.set_ids || []).length === 1 ? '' : 's') + '.', 'good');
       $('#naName').value = ''; $('#naUser').value = ''; $('#naPin').value = ''; $('#naAdmin').checked = false;
       renderAdmin();
     } catch (err) { cloudError(err); }
