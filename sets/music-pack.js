@@ -3,10 +3,17 @@ CardSets.register({
   "id": "music-pack",
   "name": "Music Pack",
   "code": "MUSIC",
-  "description": "",
+  "description": "music be like doot doo doot and people be like YEAHHHHHHHH",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#001540",
+    "secondary": "#420c09",
+    "artBackground": "#d3d3d3",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Music Album Pack",
+    "emblem": "🎶",
+    "skin": "music"
   },
   "cards": [
     {
