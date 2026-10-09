@@ -2318,7 +2318,7 @@ CardSets.register({
       "id": "daulton-varsho",
       "subtitle": "Outfielder, Houston Astros",
       "details": "Gold Glove defender; ex-Blue Jay.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/19/Daulton_Varsho_on_July_9%2C_2024_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "assets/sets/misc/Daulton-Varsho.jpg"
     },
     {
       "name": "Cam Smith",
