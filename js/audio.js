@@ -50,6 +50,7 @@
   api.deal = function () { noise(0, 0.05, { freq: 2500, q: 2, gain: 0.08 }); };
   api.flip = function () { tone(620, 0, 0.07, { type: 'triangle', gain: 0.08, slideTo: 300 }); noise(0, 0.05, { freq: 3000, q: 1, gain: 0.08 }); };
   api.click = function () { tone(440, 0, 0.05, { type: 'square', gain: 0.03 }); };
+  api.tick = function () { noise(0, 0.025, { freq: 4200, q: 0.8, gain: 0.045 }); };
   api.reveal = function (rarity) {
     switch (rarity) {
       case 'uncommon': tone(880, 0.02, 0.25, { gain: 0.06 }); break;
