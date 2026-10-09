@@ -1814,7 +1814,7 @@ CardSets.register({
       "id": "team-radio",
       "subtitle": "Broadcast",
       "details": "\"Get in there, Lewis!\"; F1's soap opera.",
-      "image": "https://www.f1head.nl/wp-content/uploads/2023/03/shutterstock_2197973759-scaled.jpg"
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQx7naAH8KP3Dccsq7JX1FaTBrYGm-3DFys6ZIUZ2KRg&s=10"
     },
     {
       "name": "Trophy",
@@ -2454,7 +2454,7 @@ CardSets.register({
       "id": "out-lap",
       "subtitle": "Session Term",
       "details": "Warming up; building the tires.",
-      "image": "https://f1i.com/wp-content/uploads/2025/03/XPB_1262771_1200px.jpg"
+      "image": "https://d3cm515ijfiu6w.cloudfront.net/wp-content/uploads/2021/08/02055706/George-Russell-leads-leaving-pits-Hungary.jpg"
     },
     {
       "name": "In Lap",
