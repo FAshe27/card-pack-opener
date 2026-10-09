@@ -308,9 +308,10 @@
       try { server = await CPS.cloud.call('open_pack', { p_set: set.id }); }
       catch (e) { S.busy = false; renderPacksSide(); cloudError(e); return; }
       S.busy = false;
+      S.myVariants = null; S.variantCensus = null;
       pulls = server.cards.map(function (c) {
         var card = set.byId.get(c.id) || { id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '', details: '(This card is newer than your copy of the set file. Refresh the page.)', image: '' };
-        return { card: card, holo: !!c.holo, serverNew: !!c.new };
+        return { card: card, holo: !!c.holo, serverNew: !!c.new, variant: c.variant || null, serial: c.serial || null };
       });
     } else {
       pulls = CPS.packs.open(set);
@@ -387,7 +388,8 @@
     var grid = $('#revealGrid');
     grid.innerHTML = o.pulls.map(function (p, i) {
       var tease = R.INDEX[p.card.rarity] >= 3 ? ' tease' : '';
-      return CPS.cards.render(o.set, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease });
+      return CPS.cards.render(o.set, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease,
+        variant: p.variant ? { tier: p.variant, serial: p.serial } : null });
     }).join('');
     $$('.card', grid).forEach(function (el, i) {
       el.dataset.i = i; el.style.animationDelay = (i * 70) + 'ms';
@@ -410,7 +412,8 @@
     var holos = o.pulls.filter(function (p) { return p.holo; }).length;
     $('#stageSummary').innerHTML = '<b>' + news + '</b> new card' + (news === 1 ? '' : 's') +
       (holos ? ' · <b>' + holos + '</b> holo' : '') +
-      ' · Top pull: <b class="rt-' + best.card.rarity + '">' + esc(best.card.name) + (best.holo ? ' ✦' : '') + '</b> (' + rarityOf(best.card.rarity).label + ')';
+      ' · Top pull: <b class="rt-' + best.card.rarity + '">' + esc(best.card.name) + (best.holo ? ' ✦' : '') +
+      (best.variant ? ' 🌈 #' + best.serial + '/' + CPS.cards.VARIANTS[best.variant].run : '') + '</b> (' + rarityOf(best.card.rarity).label + ')';
   }
 
   function reveal(i) {
@@ -426,19 +429,27 @@
   }
 
   function flair(el, p) {
-    var c = fx.center(el), r = p.card.rarity, col = rarityOf(r).color;
+    var c = fx.center(el), r = p.card.rarity, col = rarityOf(r).color, isVar = !!p.variant;
+    if (isVar) {
+      var vt = CPS.cards.VARIANTS[p.variant];
+      fx.flash('rgba(255,255,255,.4)', 1000);
+      fx.burst(c.x, c.y, { count: 150, colors: ['#ff5f5f', '#ffb21e', '#f7f75f', '#38c97f', '#3f8cff', '#b35cff', '#fff'], speed: 12, shape: 'star', size: 3, life: 90 });
+      fx.confetti(220);
+      fx.banner('🌈 ' + vt.name.toUpperCase() + ' #' + p.serial + '/' + vt.run + ' 🌈', 'variant', 3200);
+      $('#stage').classList.add('shake'); setTimeout(function () { $('#stage').classList.remove('shake'); }, 700);
+    }
     if (r === 'rare') fx.burst(c.x, c.y, { count: 22, colors: [col, '#fff'], speed: 5, size: 2.2 });
     else if (r === 'epic') { fx.burst(c.x, c.y, { count: 60, colors: [col, '#fff', '#e3c2ff'], speed: 8, shape: 'star', size: 2.5 }); fx.flash('rgba(179,92,255,.25)', 600); }
     else if (r === 'legendary') {
       fx.flash('rgba(255,178,30,.45)', 900);
       fx.burst(c.x, c.y, { count: 120, colors: [col, '#fff', '#ffe08a'], speed: 11, shape: 'star', size: 3, life: 80 });
-      fx.banner('LEGENDARY!', 'legendary');
+      if (!isVar) fx.banner('LEGENDARY!', 'legendary');
       $('#stage').classList.add('shake'); setTimeout(function () { $('#stage').classList.remove('shake'); }, 600);
     } else if (r === 'chase') {
       fx.flash('rgba(255,79,163,.55)', 1200);
       fx.burst(c.x, c.y, { count: 160, colors: ['#ff4fa3', '#ffb21e', '#38c97f', '#3f8cff', '#b35cff', '#fff'], speed: 13, shape: 'star', size: 3.2, life: 90 });
       fx.confetti(240);
-      fx.banner('★ CHASE CARD ★', 'chase', 2800);
+      if (!isVar) fx.banner('★ CHASE CARD ★', 'chase', 2800);
       $('#stage').classList.add('shake'); setTimeout(function () { $('#stage').classList.remove('shake'); }, 700);
     }
     if (p.holo) setTimeout(function () { fx.burst(c.x, c.y, { count: 26, colors: ['#fff', '#bff', '#fbf', '#ffb'], speed: 4, shape: 'star', size: 2, gravity: 0 }); }, 120);
@@ -589,6 +600,28 @@
       var e = st.cards[c.id];
       return CPS.cards.collected(set, c, e ? e.n : 0, e ? e.h : 0);   // card + count pills below it
     }).join('') : '<div class="empty">No cards match these filters.</div>';
+    renderVariantsSection(set);
+  }
+
+  async function renderVariantsSection(set) {
+    var panel = $('#variantsPanel'), grid = $('#variantsGrid'), setId = set.id;
+    if (!isCloud()) { panel.classList.add('hidden'); return; }
+    var all = await ensureVariants();
+    if (!S.set || S.set.id !== setId) return;
+    var mine = all.filter(function (v) { return v.set_id === setId; });
+    if (!mine.length) { panel.classList.add('hidden'); return; }
+    panel.classList.remove('hidden');
+    $('#variantsCount').textContent = mine.length + ' numbered ' + (mine.length === 1 ? 'card' : 'cards');
+    grid.innerHTML = mine.map(function (v) {
+      var card = set.byId.get(v.card_id);
+      if (!card) return '';
+      return '<div class="coll-item" data-variant-card="' + esc(v.card_id) + '">' +
+        CPS.cards.render(set, card, { variant: { tier: v.tier, serial: v.serial } }) +
+        '<div class="vserial-cap"><b>' + esc(CPS.cards.VARIANTS[v.tier].name) + ' #' + v.serial + '/' + CPS.cards.VARIANTS[v.tier].run + '</b></div></div>';
+    }).join('');
+    grid.querySelectorAll('[data-variant-card]').forEach(function (el) {
+      el.addEventListener('click', function () { openCardModal(set.id, el.dataset.variantCard); });
+    });
   }
 
   /* ---------------------------------------------------- dupe trade-in */
@@ -736,7 +769,7 @@
   }
   /* ---------------------------------------------------------- notifications */
   var NOTIF_KIND_ICON = { gift_card: '🎁', gift_pack: '📦', gift_spin: '🎟️',
-    trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌' };
+    trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌', variant_pull: '🌈' };
 
   async function refreshNotifBadge() {
     if (!isCloud()) return;
@@ -820,6 +853,19 @@
       var holoOnly = e.h >= e.n;            // every owned copy is holo
       var canChoose = e.h > 0 && e.h < e.n;  // owns both kinds
       var holo = holoOnly;
+      await ensureVariants();
+      var serials = myVariantSerials(setId, cardId);
+      var regulars = e.n - serials.length;
+      function copyPickerHtml() {
+        if (!serials.length) return '';
+        var opts = serials.map(function (v, i) {
+          var vt = CPS.cards.VARIANTS[v.tier];
+          return '<label class="check"><input type="radio" name="giftCopy" value="' + v.id + '"' +
+            (regulars <= 0 && i === 0 ? ' checked' : '') + '> ' + vt.name + ' #' + v.serial + '/' + vt.run + '</label>';
+        }).join('');
+        if (regulars > 0) opts = '<label class="check"><input type="radio" name="giftCopy" value="" checked> Regular copy</label>' + opts;
+        return '<div class="gift-copies"><span class="fld-label">Which copy?</span>' + opts + '</div>';
+      }
       function showForm() {
         openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="gift-modal">' +
           '<h2>🎁 Gift card</h2>' +
@@ -832,19 +878,26 @@
           (canChoose ? '<label class="inline"><input type="checkbox" id="giftHolo"> Holographic copy</label>' :
            holoOnly ? '<div class="muted small">Holographic copy</div>' : '') +
           (e.n === 1 ? '<div class="warn-box">This is your last copy — you’ll no longer own this card.</div>' : '') +
+          copyPickerHtml() +
           '<div class="gift-actions"><button class="btn primary" id="giftNextBtn">Continue</button></div></div>');
         var hb = $('#giftHolo');
         if (hb) hb.addEventListener('change', function () { holo = this.checked; });
         $('#giftNextBtn').addEventListener('click', function () {
           var toId = $('#giftTo').value;
           var to = others.filter(function (p) { return p.id === toId; })[0];
-          showConfirm(toId, to ? to.display_name : '', holo);
+          var picked = box_query('input[name=giftCopy]:checked');
+          var vid = picked ? picked.value || null : null;
+          var vtext = null;
+          if (vid) { var vv = serials.filter(function (s) { return s.id === vid; })[0];
+            if (vv) vtext = CPS.cards.VARIANTS[vv.tier].name + ' #' + vv.serial + '/' + CPS.cards.VARIANTS[vv.tier].run; }
+          showConfirm(toId, to ? to.display_name : '', holo, vid, vtext);
         });
+        function box_query(sel) { return document.querySelector('#modal ' + sel); }
       }
-      function showConfirm(toId, toName, isHolo) {
+      function showConfirm(toId, toName, isHolo, variantId, variantText) {
         openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="gift-modal">' +
           '<h2>Confirm gift</h2>' +
-          '<p>Gift <b>' + esc(card.name) + '</b>' + (isHolo ? ' ✦ holo' : '') +
+          '<p>Gift <b>' + esc(card.name) + '</b>' + (variantText ? ' (' + esc(variantText) + ')' : (isHolo ? ' ✦ holo' : '')) +
           ' to <b>' + esc(toName) + '</b>?</p>' +
           '<div class="gift-actions"><button class="btn" id="giftBackBtn">Back</button>' +
           '<button class="btn primary" id="giftConfirmBtn">Send gift</button></div></div>');
@@ -852,7 +905,8 @@
         $('#giftConfirmBtn').addEventListener('click', async function () {
           var btn = this; btn.disabled = true;
           try {
-            await CPS.cloud.call('gift_card', { p_to: toId, p_set: setId, p_card: cardId, p_holo: isHolo });
+            await CPS.cloud.call('gift_card', { p_to: toId, p_set: setId, p_card: cardId, p_holo: isHolo, p_variant_id: variantId || null });
+            S.myVariants = null;
             closeModal();
             toast('🎁 Gift sent to ' + toName + '!');
             if (S.view === 'collection') renderCollection();
@@ -861,6 +915,55 @@
       }
       showForm();
     } catch (e2) { closeModal(true); cloudError(e2); }
+  }
+
+  /* ---------------------------------------------------------- variants */
+  var VARIANT_ORDER = ['oneofone', 'obsidian', 'prism', 'rainbow'];
+
+  async function ensureVariants() {
+    if (!isCloud()) return [];
+    if (!S.myVariants) {
+      try { S.myVariants = await CPS.cloud.call('list_variants', {}); }
+      catch (e) { S.myVariants = []; }
+    }
+    return S.myVariants;
+  }
+  async function ensureCensus(setId) {
+    if (!isCloud()) return {};
+    S.variantCensus = S.variantCensus || {};
+    if (!S.variantCensus[setId]) {
+      try { S.variantCensus[setId] = await CPS.cloud.call('variant_census', { p_set: setId }); }
+      catch (e) { S.variantCensus[setId] = {}; }
+    }
+    return S.variantCensus[setId];
+  }
+  function myVariantSerials(setId, cardId) {
+    return (S.myVariants || []).filter(function (v) { return v.set_id === setId && v.card_id === cardId; })
+      .sort(function (a, b) { return a.serial - b.serial; });
+  }
+  async function fillCensus(box, set, card) {
+    var el = box.querySelector('#vcensus');
+    if (!el || !isCloud() || R.INDEX[card.rarity] < 2) return;   // variants are rare+
+    var census = await ensureCensus(set.id);
+    if (!box.isConnected) return;
+    var c = census[card.id] || { rainbow: 0, prism: 0, obsidian: 0, oneofone: 0, oneofone_by: null };
+    var rows = VARIANT_ORDER.map(function (t) {
+      var vt = CPS.cards.VARIANTS[t];
+      if (t === 'oneofone') {
+        return '<div class="vc-row"><span>One-of-one variant</span><span class="vc-n ' + (c.oneofone_by ? 'vc-done' : '') + '">' +
+          (c.oneofone_by ? 'found by <b>' + esc(c.oneofone_by) + '</b>' : 'not found') + '</span></div>';
+      }
+      var n = c[t] || 0;
+      return '<div class="vc-row"><span>' + vt.name + ' variants</span><span class="vc-n ' + (n >= vt.run ? 'vc-done' : '') + '">' +
+        n + '/' + vt.run + ' found</span></div>';
+    }).join('');
+    var mine = myVariantSerials(set.id, card.id);
+    if (mine.length) {
+      rows += '<div class="vc-row"><span>Your serials</span><span class="vc-mine">' +
+        mine.map(function (v) { return CPS.cards.VARIANTS[v.tier].name + ' #' + v.serial; }).join(', ') + '</span></div>';
+    }
+    el.innerHTML = rows;
+    el.style.display = '';
   }
 
   /* ---------------------------------------------------------- trading */
@@ -978,6 +1081,7 @@
   async function respondTrade(id, accept) {
     try {
       await CPS.cloud.call('respond_trade', { p_offer: id, p_accept: accept });
+      S.myVariants = null;
       toast(accept ? 'Trade complete! Cards swapped.' : 'Offer declined.');
       renderPlayers();
     } catch (e) { cloudError(e); }
@@ -1006,6 +1110,7 @@
       var to = prefillTo && others.some(function (p) { return p.id === prefillTo; }) ? prefillTo : others[0].id;
       TB = { to: to, step: 1, their: [], toName: '', setId: '', q: '', rarity: '',
              picks: [], offer: [], want: [], myColl: tbMyCollection() };
+      await ensureVariants();
       $('#tradeWithSel').innerHTML = others.map(function (p) {
         return '<option value="' + esc(p.id) + '"' + (p.id === to ? ' selected' : '') + '>' + esc(p.display_name) + '</option>';
       }).join('');
@@ -1080,6 +1185,10 @@
     tbRenderDock();
   }
 
+  function pickTravelVariant(p) {
+    var s = myVariantSerials(p.setId, p.cardId);
+    return s.length ? { tier: s[0].tier, serial: s[0].serial } : null;
+  }
   function tbRenderDock() {
     var dock = $('#tradeDock');
     if (TB.step === 3 || !TB.picks.length) { dock.classList.add('hidden'); return; }
@@ -1087,7 +1196,9 @@
     $('#tradeChips').innerHTML = TB.picks.map(function (p, i) {
       var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
       if (!set || !card) return '';
+      var tv = TB.step === 1 ? pickTravelVariant(p) : null;
       return '<span class="trade-chip"><b>' + esc(card.name) + '</b>' +
+        (tv ? '<span class="chip-variant" title="' + esc(CPS.cards.variantLabel(tv.tier, tv.serial)) + ' travels with this card">' + RB + ' #' + tv.serial + '</span>' : '') +
         (p.h > 0 ? '<button class="chip-holo' + (p.holo ? ' on' : '') + '" data-chip-holo="' + i + '" title="Toggle holographic">\u2726</button>' : '') +
         '<button class="chip-x" data-chip-x="' + i + '" title="Remove">\u00d7</button></span>';
     }).join('');
@@ -1108,19 +1219,21 @@
     $('#tradeFilters').classList.add('hidden');
     $('#tradeGrid').classList.add('hidden');
     $('#tradeDock').classList.add('hidden');
-    function cardsHtml(picks) {
+    function cardsHtml(picks, mine) {
       return '<div class="trade-review-cards">' + picks.map(function (p) {
         var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
         if (!set || !card) return '';
-        return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: p.holo }) +
+        var tv = mine ? pickTravelVariant(p) : null;
+        return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: p.holo, variant: tv }) +
           '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
-          (p.holo ? ' \u00b7 \u2726 holo' : '') + '</span></div></div>';
+          (p.holo ? ' \u00b7 \u2726 holo' : '') +
+          (tv ? ' \u00b7 ' + RB + ' #' + tv.serial + '/' + CPS.cards.VARIANTS[tv.tier].run : '') + '</span></div></div>';
       }).join('') + '</div>';
     }
     var box = $('#tradeReview');
     box.classList.remove('hidden');
     box.innerHTML = '<div class="trade-review-group"><span class="trade-cap-top">You give (' + TB.offer.length + ')</span>' +
-      cardsHtml(TB.offer) + '</div>' +
+      cardsHtml(TB.offer, true) + '</div>' +
       '<div class="trade-review-swap">\u21c4</div>' +
       '<div class="trade-review-group"><span class="trade-cap-top">You get (' + TB.want.length + ')</span>' +
       cardsHtml(TB.want) + '</div>' +
@@ -1217,6 +1330,7 @@
       '<dt>Set</dt><dd>' + esc(set.name) + '</dd>' +
       '<dt>You own</dt><dd>' + (owned ? e.n + (e.h ? ' (' + e.h + ' holo)' : '') : '0') + '</dd>' +
       '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd></dl>' +
+      '<div class="variant-census" id="vcensus" style="display:none"></div>' +
       (owned && card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
       (owned ? '<button class="btn small fav-btn' + (isFav(set.id, card.id) ? ' active' : '') + '" data-fav>' + (isFav(set.id, card.id) ? '★' : '☆') + ' Favorite <span class="muted">' + favCount() + '/' + FAV_MAX + '</span></button>' : '') +
@@ -1229,6 +1343,7 @@
       if (f) f.addEventListener('click', function () { toggleFavorite(setId, cardId, holo); });
       var g = box.querySelector('[data-gift]');
       if (g) g.addEventListener('click', function () { openGiftModal(setId, cardId); });
+      fillCensus(box, set, card);
     });
   }
 
