@@ -1845,9 +1845,11 @@
     list.innerHTML = '<div class="muted">Loading&hellip;</div>';
     await refreshQuests();
     if (S.view !== 'daily') return;
-    var qs = S.quests || [];
+    var all = S.quests || [];
+    var qs = all.filter(function (q) { return !q.claimed; });
     list.innerHTML = qs.length ? qs.map(questHtml).join('') :
-      '<div class="empty">No quests today &mdash; check back tomorrow.</div>';
+      (all.length ? '<div class="empty">All quests complete &mdash; fresh ones at midnight.</div>' :
+       '<div class="empty">No quests today &mdash; check back tomorrow.</div>');
   }
   function wheelConfig() {
     if (isCloud()) return S.wheelCfg ? CPS.wheel.enrich(S.wheelCfg) : null;
