@@ -1909,13 +1909,36 @@
     S._wheelCfg = cfg;
     btn.disabled = S.spinning || isLocked() || n < 1;
     btn.textContent = isLocked() ? 'Log in to spin' : (n < 1 ? 'No spin tickets left' : 'SPIN');
+    var abtn = $('#autoSpinBtn');
+    if (abtn) {
+      abtn.style.display = (!isLocked() && n > 1 && cfg && cfg.wheels.length) ? '' : 'none';
+      abtn.disabled = S.spinning && !S.autospin;
+      abtn.textContent = S.autospin ? 'STOP' : 'AUTOSPIN';
+    }
     updateWheelGlow();
   }
   async function startWheelSpin() {
     if (S.spinning || isLocked()) return;
     if (spinCount() < 1) { toast('No spin tickets left. Come back tomorrow for your daily spin!', 'warn'); audio.error(); return; }
+    doOneSpin(1);
+  }
+  async function startAutospin() {
+    if (S.autospin || S.spinning || isLocked()) return;
+    if (spinCount() < 2) { toast('Autospin needs at least 2 spin tickets.', 'warn'); return; }
+    S.autospin = true;
+    renderWheel();
+    while (S.autospin && S.view === 'wheel' && spinCount() > 0) {
+      var ok = await doOneSpin(2);
+      if (!ok) break;
+    }
+    S.autospin = false;
+    S.spinning = false;
+    renderWheel();
+  }
+  async function doOneSpin(speed) {
+    speed = speed || 1;
     var cfg = S._wheelCfg || wheelConfig();
-    if (!cfg || !cfg.wheels.length) { toast('The wheel isn\'t ready yet.', 'warn'); return; }
+    if (!cfg || !cfg.wheels.length) { toast('The wheel isn\'t ready yet.', 'warn'); return false; }
     S.spinning = true;
     S._wheelEnd = null;
     CPS.wheel.draw($('#wheelCanvas'), cfg.wheels[0], 0);
@@ -1938,10 +1961,10 @@
       S.spinning = false;
       renderWheel();
       cloudError(e);
-      return;
+      return false;
     }
     /* The outcome was rolled above; the animation below is just theater. */
-    var endState = await CPS.wheel.playHops(canvas, cfg, out.hops || []);
+    var endState = await CPS.wheel.playHops(canvas, cfg, out.hops || [], speed);
     var pset = out.prize && window.CardSets.get(out.prize.set_id);
     if (isCloud() && pset) ps(pset).packs = out.packs_now;
     if (!isCloud()) renderPacksSide();
@@ -1961,6 +1984,7 @@
     S.spinning = false;
     renderWheel();
     renderPacksSide();
+    return true;
   }
 
   /* ---------------------------------------------------------- events */
@@ -1973,6 +1997,9 @@
     $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
     $('#openBtn').addEventListener('click', startOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
+    $('#autoSpinBtn').addEventListener('click', function () {
+      if (S.autospin) S.autospin = false; else startAutospin();
+    });
     $('#nextPackBtn').addEventListener('click', startOpen);
     $('#doneBtn').addEventListener('click', resetStage);
     $('#revealAllBtn').addEventListener('click', revealAll);
