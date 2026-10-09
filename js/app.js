@@ -767,12 +767,17 @@
   }
 
 
-  function tradeMiniCard(setId, cardId, holo) {
+  function tradeMiniCard(setId, cardId, holo, qty) {
     var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
     if (!set || !card) return '<span class="muted">?</span>';
     return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo }) +
-      '<div class="trade-cap"><b>' + esc(card.name) + '</b>' +
+      '<div class="trade-cap"><b>' + esc(card.name) + (qty > 1 ? ' \u00d7' + qty : '') + '</b>' +
       '<span class="muted small">' + esc(set.name) + (holo ? ' \u00b7 \u2726 holo' : '') + '</span></div></div>';
+  }
+  function tradeItemsHtml(items) {
+    return '<div class="trade-items">' + (items || []).map(function (it) {
+      return tradeMiniCard(it.set_id, it.card_id, it.holo, it.qty);
+    }).join('') + '</div>';
   }
 
   function tradeTimeLeft(expiresAt) {
@@ -794,10 +799,12 @@
     box.innerHTML = trades.map(function (t) {
       var leftCap = t.direction === 'incoming' ? 'You get' : 'You give';
       var rightCap = t.direction === 'incoming' ? 'You give' : 'You get';
+      var nGive = (t.direction === 'incoming' ? t.want_items : t.offer_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0);
+      var nGet = (t.direction === 'incoming' ? t.offer_items : t.want_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0);
       var head = t.direction === 'incoming'
         ? '<b>' + esc(t.other_name) + '</b> offers you a trade'
         : 'You offered <b>' + esc(t.other_name) + '</b> a trade';
-      head += ' <span class="muted small">\u00b7 ' + tradeTimeLeft(t.expires_at) + '</span>';
+      head += ' <span class="muted small">\u00b7 ' + nGive + ' for ' + nGet + ' \u00b7 ' + tradeTimeLeft(t.expires_at) + '</span>';
       var actions;
       if (t.status === 'pending') {
         actions = t.direction === 'incoming'
@@ -809,9 +816,9 @@
       }
       return '<div class="trade-row"><div class="trade-head">' + head + '</div>' +
         '<div class="trade-cards"><div class="trade-side"><span class="trade-cap-top">' + leftCap + '</span>' +
-        tradeMiniCard(t.offer_set, t.offer_card, t.offer_holo) + '</div>' +
+        tradeItemsHtml(t.offer_items) + '</div>' +
         '<span class="trade-swap">\u21c4</span><div class="trade-side"><span class="trade-cap-top">' + rightCap + '</span>' +
-        tradeMiniCard(t.want_set, t.want_card, t.want_holo) + '</div></div>' +
+        tradeItemsHtml(t.want_items) + '</div></div>' +
         '<div class="trade-actions">' + actions + '</div></div>';
     }).join('');
   }
@@ -846,7 +853,7 @@
       }
       var to = prefillTo && others.some(function (p) { return p.id === prefillTo; }) ? prefillTo : others[0].id;
       TB = { to: to, step: 1, their: [], toName: '', setId: '', q: '', rarity: '',
-             sel: null, holo: false, offer: null, want: null, myColl: tbMyCollection() };
+             picks: [], offer: [], want: [], myColl: tbMyCollection() };
       $('#tradeWithSel').innerHTML = others.map(function (p) {
         return '<option value="' + esc(p.id) + '"' + (p.id === to ? ' selected' : '') + '>' + esc(p.display_name) + '</option>';
       }).join('');
@@ -866,7 +873,7 @@
       TB.their = p.collection || [];
       TB.toName = p.display_name;
     } catch (e) { TB.their = []; TB.toName = ''; cloudError(e); }
-    TB.step = 1; TB.sel = null; TB.holo = false; TB.offer = null; TB.want = null;
+    TB.step = 1; TB.picks = []; TB.offer = []; TB.want = [];
     TB.setId = ''; TB.q = ''; TB.rarity = '';
     $('#tradeSearch').value = '';
     renderTradeBuilder();
@@ -880,9 +887,9 @@
       return '<span class="tstep' + (n === TB.step ? ' active' : n < TB.step ? ' done' : '') + '">' + n + '. ' + esc(s) + '</span>';
     }).join('');
     $('#tradeTitle').textContent = TB.step === 1 ? 'Choose your offer' : TB.step === 2 ? 'Choose what you want' : 'Review trade';
+    $('#tradeReview').classList.add('hidden');
+    $('#tradeGrid').classList.remove('hidden');
     if (TB.step === 3) {
-      $('#tradeFilters').classList.add('hidden');
-      $('#tradeDock').classList.add('hidden');
       renderTradeReview();
       return;
     }
@@ -914,7 +921,7 @@
     });
     $('#tradeCount').textContent = list.length + ' shown';
     $('#tradeGrid').innerHTML = list.length ? list.map(function (it) {
-      var sel = TB.sel && TB.sel.setId === it.set.id && TB.sel.cardId === it.card.id;
+      var sel = TB.picks.some(function (p) { return p.setId === it.set.id && p.cardId === it.card.id; });
       return '<button class="trade-pick' + (sel ? ' selected' : '') + '" data-set="' + esc(it.set.id) +
         '" data-card="' + esc(it.card.id) + '">' + CPS.cards.collected(it.set, it.card, it.n, it.h) + '</button>';
     }).join('') : '<div class="empty">' + (TB.step === 1 ? 'You don\'t own any cards yet.' : esc(TB.toName) + ' doesn\'t own any cards yet.') + '</div>';
@@ -923,45 +930,52 @@
 
   function tbRenderDock() {
     var dock = $('#tradeDock');
-    if (TB.step === 3 || !TB.sel) { dock.classList.add('hidden'); return; }
+    if (TB.step === 3 || !TB.picks.length) { dock.classList.add('hidden'); return; }
     dock.classList.remove('hidden');
-    var set = window.CardSets.get(TB.sel.setId), card = set && set.byId.get(TB.sel.cardId);
-    if (!set || !card) { dock.classList.add('hidden'); return; }
-    $('#tradeDockLabel').innerHTML = '<b>' + esc(card.name) + '</b> <span class="muted small">#' +
-      U.pad(card.num, set.numWidth) + ' ' + esc(set.name) + '</span>';
-    var wrap = $('#tradeHoloWrap'), box = $('#tradeHolo');
-    wrap.classList.toggle('hidden', !(TB.sel.h > 0));
-    box.checked = TB.holo && TB.sel.h > 0;
-    $('#tradeContinueBtn').innerHTML = TB.step === 1 ? 'Continue \u2192 pick their card' : 'Continue \u2192 review';
+    $('#tradeChips').innerHTML = TB.picks.map(function (p, i) {
+      var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
+      if (!set || !card) return '';
+      return '<span class="trade-chip"><b>' + esc(card.name) + '</b>' +
+        (p.h > 0 ? '<button class="chip-holo' + (p.holo ? ' on' : '') + '" data-chip-holo="' + i + '" title="Toggle holographic">\u2726</button>' : '') +
+        '<button class="chip-x" data-chip-x="' + i + '" title="Remove">\u00d7</button></span>';
+    }).join('');
+    $('#tradeContinueBtn').innerHTML = (TB.step === 1 ? 'Continue \u2192 pick their card' : 'Continue \u2192 review') +
+      ' (' + TB.picks.length + '/10)';
   }
 
   function tbContinue() {
-    if (!TB || !TB.sel || TB.step === 3) return;
-    var set = window.CardSets.get(TB.sel.setId), card = set && set.byId.get(TB.sel.cardId);
-    if (!set || !card) return;
-    var pick = { setId: TB.sel.setId, cardId: TB.sel.cardId, holo: TB.holo && TB.sel.h > 0 };
-    if (TB.step === 1) { TB.offer = pick; TB.step = 2; } else { TB.want = pick; TB.step = 3; }
-    TB.sel = null; TB.holo = false; TB.setId = ''; TB.q = ''; TB.rarity = '';
+    if (!TB || !TB.picks.length || TB.step === 3) return;
+    if (TB.step === 1) { TB.offer = TB.picks; TB.step = 2; } else { TB.want = TB.picks; TB.step = 3; }
+    TB.picks = []; TB.setId = ''; TB.q = ''; TB.rarity = '';
     $('#tradeSearch').value = '';
     renderTradeBuilder();
     window.scrollTo(0, 0);
   }
 
   function renderTradeReview() {
-    function mini(p, cap) {
-      var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
-      if (!set || !card) return '';
-      return '<div class="trade-side"><span class="trade-cap-top">' + cap + '</span><div class="trade-card">' +
-        CPS.cards.render(set, card, { holo: p.holo }) +
-        '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
-        (p.holo ? ' \u00b7 \u2726 holo' : '') + '</span></div></div></div>';
+    $('#tradeFilters').classList.add('hidden');
+    $('#tradeGrid').classList.add('hidden');
+    $('#tradeDock').classList.add('hidden');
+    function cardsHtml(picks) {
+      return '<div class="trade-review-cards">' + picks.map(function (p) {
+        var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
+        if (!set || !card) return '';
+        return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: p.holo }) +
+          '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
+          (p.holo ? ' \u00b7 \u2726 holo' : '') + '</span></div></div>';
+      }).join('') + '</div>';
     }
-    $('#tradeGrid').innerHTML = '<div class="trade-review">' + mini(TB.offer, 'You give') +
-      '<span class="trade-swap">\u21c4</span>' + mini(TB.want, 'You get') + '</div>' +
+    var box = $('#tradeReview');
+    box.classList.remove('hidden');
+    box.innerHTML = '<div class="trade-review-group"><span class="trade-cap-top">You give (' + TB.offer.length + ')</span>' +
+      cardsHtml(TB.offer) + '</div>' +
+      '<div class="trade-review-swap">\u21c4</div>' +
+      '<div class="trade-review-group"><span class="trade-cap-top">You get (' + TB.want.length + ')</span>' +
+      cardsHtml(TB.want) + '</div>' +
       '<div class="trade-review-actions"><button class="btn" id="tradeStartOver">Start over</button>' +
       '<button class="btn primary" id="tradeSendBtn">Send offer to ' + esc(TB.toName) + '</button></div>';
     $('#tradeStartOver').addEventListener('click', function () {
-      TB.step = 1; TB.offer = null; TB.want = null; TB.sel = null; TB.holo = false;
+      TB.step = 1; TB.offer = []; TB.want = []; TB.picks = [];
       renderTradeBuilder(); window.scrollTo(0, 0);
     });
     $('#tradeSendBtn').addEventListener('click', async function () {
@@ -969,8 +983,8 @@
       try {
         await CPS.cloud.call('propose_trade', {
           p_to: TB.to,
-          p_offer_set: TB.offer.setId, p_offer_card: TB.offer.cardId, p_offer_holo: TB.offer.holo,
-          p_want_set: TB.want.setId, p_want_card: TB.want.cardId, p_want_holo: TB.want.holo
+          p_offer: TB.offer.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo }; }),
+          p_want: TB.want.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo }; })
         });
         toast('Trade offer sent to ' + TB.toName + '!');
         showView('players');
@@ -992,7 +1006,7 @@
       }).join('');
       var sets = (p.sets || []).map(function (s) {
         var pct = s.total ? (s.unique / s.total * 100) : 0;
-        return '<div class="prof-set"><div class="prof-set-top"><span>' + esc(s.set_name) + '</span>' +
+        return '<div class="prof-set" data-pset="' + esc(s.set_id) + '"><div class="prof-set-top"><span>' + esc(s.set_name) + '</span>' +
           '<span class="muted small">' + s.unique + '/' + s.total + '</span></div>' +
           '<span class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></span></div>';
       }).join('');
@@ -1002,10 +1016,38 @@
         '<h3>★ Favorites (' + (p.favorites || []).length + '/' + FAV_MAX + ')</h3>' +
         (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">No favorites yet.</div>') +
         '<h3>Collection</h3><div class="prof-sets">' + (sets || '<div class="empty">—</div>') + '</div>' +
-        '</div>');
-      var ptb = $('#profTradeBtn');
-      if (ptb) ptb.addEventListener('click', function () { openTradeBuilder(accountId); });
+        '</div>', function (box) {
+        box.querySelectorAll('.prof-set').forEach(function (el) {
+          el.addEventListener('click', function () {
+            openPlayerSet(accountId, p.display_name, el.dataset.pset, p.collection || []);
+          });
+        });
+        var ptb = box.querySelector('#profTradeBtn');
+        if (ptb) ptb.addEventListener('click', function () { openTradeBuilder(accountId); });
+      });
     } catch (e) { closeModal(true); cloudError(e); }
+  }
+
+  function openPlayerSet(accountId, displayName, setId, collection) {
+    var set = window.CardSets.get(setId);
+    if (!set) return;
+    var owned = {};
+    (collection || []).forEach(function (c) { if (c.set_id === setId) owned[c.card_id] = c; });
+    var cards = set.cards.filter(function (card) { return owned[card.id]; });
+    openModal('<button class="modal-x" data-close aria-label="Close">\u00d7</button><div class="profile">' +
+      '<button class="btn small" id="pcBackBtn">\u2190 Back</button>' +
+      '<h2>' + esc(displayName) + '</h2>' +
+      '<div class="muted">' + esc(set.name) + ' \u00b7 ' + cards.length + ' / ' + set.cards.length + ' unique</div>' +
+      (cards.length ? '<div class="prof-favs">' + cards.map(function (card) {
+        var e = owned[card.id];
+        return '<div class="prof-fav">' + CPS.cards.render(set, card, { holo: e.h > 0 }) +
+          '<div class="prof-fav-cap"><b>' + esc(card.name) + '</b>' +
+          '<span class="muted small">#' + U.pad(card.num, set.numWidth) + ' \u00b7 ' + rarityOf(card.rarity).label +
+          (e.h > 0 ? ' \u00b7 \u2726 holo' : '') + ' \u00b7 \u00d7' + e.n + '</span></div></div>';
+      }).join('') + '</div>' : '<div class="empty">No cards in this set yet.</div>') +
+      '</div>', function (box) {
+        box.querySelector('#pcBackBtn').addEventListener('click', function () { openProfile(accountId); });
+      });
   }
 
   function openCardModal(setId, cardId, forceHolo) {
@@ -1627,22 +1669,34 @@
     $('#tradeSearch').addEventListener('input', function () { if (TB) { TB.q = this.value; tbRenderGrid(); } });
     $('#tradeSetSel').addEventListener('change', function () { if (TB) { TB.setId = this.value; tbRenderGrid(); } });
     $('#tradeRarity').addEventListener('change', function () { if (TB) { TB.rarity = this.value; tbRenderGrid(); } });
-    $('#tradeHolo').addEventListener('change', function () { if (TB) TB.holo = this.checked; });
     $('#tradeContinueBtn').addEventListener('click', tbContinue);
     $('#tradeGrid').addEventListener('click', function (e) {
       if (!TB || TB.step === 3) return;
       var b = e.target.closest('.trade-pick');
       if (!b) return;
       var setId = b.dataset.set, cardId = b.dataset.card;
-      var coll = TB.step === 1 ? TB.myColl : TB.their;
-      var found = coll.filter(function (c) { return c.set_id === setId && c.card_id === cardId; })[0];
-      if (!found) return;
-      TB.sel = { setId: setId, cardId: cardId, h: found.h || 0 };
-      TB.holo = false;
-      $$('#tradeGrid .trade-pick').forEach(function (x) {
-        x.classList.toggle('selected', x.dataset.set === setId && x.dataset.card === cardId);
-      });
+      var idx = TB.picks.findIndex(function (p) { return p.setId === setId && p.cardId === cardId; });
+      if (idx >= 0) { TB.picks.splice(idx, 1); }
+      else {
+        if (TB.picks.length >= 10) { toast('Up to 10 cards per side.'); return; }
+        var coll = TB.step === 1 ? TB.myColl : TB.their;
+        var found = coll.filter(function (c) { return c.set_id === setId && c.card_id === cardId; })[0];
+        if (!found) return;
+        TB.picks.push({ setId: setId, cardId: cardId, holo: false, h: found.h || 0 });
+      }
+      b.classList.toggle('selected', idx < 0);
       tbRenderDock();
+    });
+    $('#tradeChips').addEventListener('click', function (e) {
+      if (!TB) return;
+      var h = e.target.closest('[data-chip-holo]'), x = e.target.closest('[data-chip-x]');
+      if (h) {
+        var p = TB.picks[+h.dataset.chipHolo];
+        if (p && p.h > 0) { p.holo = !p.holo; tbRenderDock(); }
+      } else if (x) {
+        TB.picks.splice(+x.dataset.chipX, 1);
+        tbRenderGrid();
+      }
     });
     $('#tradeList').addEventListener('click', function (e) {
       var a = e.target.closest('[data-trade-accept]');
