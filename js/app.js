@@ -1848,7 +1848,7 @@
     var all = S.quests || [];
     var qs = all.filter(function (q) { return !q.claimed; });
     list.innerHTML = qs.length ? qs.map(questHtml).join('') :
-      (all.length ? '<div class="empty">All quests complete &mdash; fresh ones at midnight.</div>' :
+      (all.length ? '<div class="empty">All quests complete &mdash; fresh ones at midnight CST.</div>' :
        '<div class="empty">No quests today &mdash; check back tomorrow.</div>');
   }
   function wheelConfig() {
