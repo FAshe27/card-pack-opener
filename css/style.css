@@ -69,6 +69,7 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .notif-icon { font-size: 1.3rem; flex: none; }
 .notif-text { flex: 1; min-width: 0; }
 .notif-time { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
+.notif-actions { display: flex; gap: 10px; margin-top: 4px; }
 .gift-modal label { display: block; margin: 10px 0; }
 .gift-modal select { width: 100%; margin-top: 4px; }
 .gift-modal .trade-card { max-width: 170px; margin: 4px 0 8px; }
