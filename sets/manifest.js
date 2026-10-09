@@ -7,7 +7,7 @@ CardSets.manifest = [
   'fast-food.js',
   'formula-1-collection.js',
   'aircraft.js',
-  'mlb.js
+  'mlb.js,
   'movie-pack.js',
   'music-pack.js',
   'nascar-collection.js',
