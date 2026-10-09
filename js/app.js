@@ -221,12 +221,25 @@
   }
 
   function fillSetSelect() {
-    $('#setSelect').innerHTML = window.CardSets.all().map(function (s) {
+    var sets = window.CardSets.all().slice().sort(function (a, b) {
+      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+    });
+    function opt(s) {
       var n = packCount(s), cur = s.id === S.set.id, cls = (n > 0 ? 'has-packs' : '') + (cur ? ' is-current' : '');
       var mark = (cur ? '\u2192 ' : '') + (n > 0 ? '\u25CF ' : '');
       return '<option value="' + esc(s.id) + '"' + (cur ? ' selected' : '') + (cls ? ' class="' + cls.trim() + '"' : '') + '>' +
         mark + esc(s.name) + (n > 0 ? ' (' + n + ')' : '') + '</option>';
-    }).join('');
+    }
+    var withPacks = sets.filter(function (s) { return packCount(s) > 0; });
+    var without = sets.filter(function (s) { return packCount(s) <= 0; });
+    var html;
+    if (withPacks.length && without.length) {
+      html = '<optgroup label="Available Packs">' + withPacks.map(opt).join('') + '</optgroup>' +
+             '<optgroup label="No packs">' + without.map(opt).join('') + '</optgroup>';
+    } else {
+      html = sets.map(opt).join('');
+    }
+    $('#setSelect').innerHTML = html;
   }
 
   function selectSet(id) {
