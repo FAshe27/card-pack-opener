@@ -790,13 +790,13 @@
           });
           var ra = box.querySelector('#notifReadAll');
           if (ra) ra.addEventListener('click', async function () {
-            try { await CPS.cloud.call('read_notifications', {}); } catch (e) {}
-            box.querySelectorAll('.notif.unread').forEach(function (x) { x.classList.remove('unread'); });
+            try { await CPS.cloud.call('read_notifications', {}); } catch (e) { cloudError(e); return; }
             refreshNotifBadge();
+            openNotifications();
           });
           var cr = box.querySelector('#notifClearRead');
           if (cr) cr.addEventListener('click', async function () {
-            try { await CPS.cloud.call('clear_notifications', {}); } catch (e) {}
+            try { await CPS.cloud.call('clear_notifications', {}); } catch (e) { cloudError(e); return; }
             openNotifications();
           });
         });
