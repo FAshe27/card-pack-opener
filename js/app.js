@@ -727,8 +727,8 @@
       box.innerHTML = players.map(function (p) {
         return '<button class="player-card" data-player="' + esc(p.id) + '">' +
           '<span class="avatar">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
-          '<span class="player-meta"><b>' + esc(p.display_name) + '</b>' +
-          (p.is_me ? ' <span class="pill">You</span>' : '') +
+          '<span class="player-meta"><span class="player-name-row"><b>' + esc(p.display_name) + '</b>' +
+          (p.is_me ? '<span class="pill pill-you">You</span>' : '') + '</span>' +
           '<span class="muted small">' + p.favorites + ' favorites · ' + p.unique_cards + ' unique cards</span></span>' +
           '<span class="player-go">›</span></button>';
       }).join('') || '<div class="empty">No players yet.</div>';
@@ -1036,7 +1036,7 @@
       }).join('');
       openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
         '<div class="prof-head"><span class="avatar big">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
-        '<div><h2>' + esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button>') + '</div></div>' +
+        '<div><h2>' + esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button>') + '</div></div>' +
         '<h3>★ Favorites (' + (p.favorites || []).length + '/' + FAV_MAX + ')</h3>' +
         (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">No favorites yet.</div>') +
         '<h3>Collection</h3><div class="prof-sets">' + (sets || '<div class="empty">—</div>') + '</div>' +
