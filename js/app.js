@@ -295,6 +295,7 @@
     var busy = (S.opening && !S.opening.finished) || S.busy;
     $('#openBtn').disabled = !st.packs || busy;
     $('#openBtn').textContent = st.packs ? 'Open a pack' : 'No packs left';
+    if (CPS.jumbled) CPS.jumbled.renderBox();
     var owned = ownedCount(set, st);
     $('#miniStats').innerHTML =
       '<div><span>Packs opened</span><b>' + st.stats.opened + '</b></div>' +
@@ -370,8 +371,6 @@
     sp.classList.remove('hidden');
     audio.click();
     renderPacksSide();
-    // only scroll when the pack that just appeared is off screen (e.g. opened from the sidebar pack on a phone);
-    // tapping the big pack / "Open next pack" leaves the page where it is
     var pr = $('#stagePack .pack').getBoundingClientRect();
     if (pr.top < 0 || pr.bottom > innerHeight) $('#stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
     return true;
@@ -410,7 +409,8 @@
     var grid = $('#revealGrid');
     grid.innerHTML = o.pulls.map(function (p, i) {
       var tease = R.INDEX[p.card.rarity] >= 3 ? ' tease' : '';
-      return CPS.cards.render(o.set, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease,
+      var rset = p.homeSet || o.set;
+      return CPS.cards.render(rset, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease,
         variant: p.variant ? { tier: p.variant, serial: p.serial } : null });
     }).join('');
     $$('.card', grid).forEach(function (el, i) {
@@ -1626,7 +1626,8 @@
   async function renderAdmin() {
     if (!isAdmin() || !S.dev) return;
     var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
-      .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('');
+      .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') +
+      '<option value="jumbled">🎲 Jumbled Mess</option>';
     $('#naSets').innerHTML = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
       .map(function (x) { return '<label class="check"><input type="checkbox" value="' + esc(x.id) + '"' +
         (x.id === S.set.id ? ' checked' : '') + '> ' + esc(x.name) + '</label>'; }).join('') ||
@@ -1680,7 +1681,7 @@
         if (!sid || !n) { toast('Pick a set and a number of packs.', 'warn'); return; }
         r = await CPS.cloud.call('admin_grant_packs', { p_set: sid, p_packs: n, p_account: id });
         toast((n > 0 ? 'Gave ' : 'Removed ') + Math.abs(n) + ' pack' + (Math.abs(n) === 1 ? '' : 's') + (n > 0 ? ' to ' : ' from ') + name + ' (now ' + r.packs_now + ').', 'good');
-        if (id === S.account.id) { var st = window.CardSets.get(sid); if (st) ps(st).packs = r.packs_now; renderPacksSide(); }
+        if (id === S.account.id) { ps({ id: sid }).packs = r.packs_now; renderPacksSide(); }
       } else if (act === 'grantspins') {
         var sn = parseInt($('.ga-sp', row).value, 10);
         if (!sn) { toast('Enter a number of spins.', 'warn'); return; }
@@ -2013,7 +2014,11 @@
     $('#autoSpinBtn').addEventListener('click', function () {
       if (S.autospin) S.autospin = false; else startAutospin();
     });
-    $('#nextPackBtn').addEventListener('click', startOpen);
+    $('#nextPackBtn').addEventListener('click', function () {
+      if (S.opening && S.opening.set.id === 'jumbled' && CPS.jumbled) CPS.jumbled.open();
+      else startOpen();
+    });
+    $('#openJumbledBtn').addEventListener('click', function () { if (CPS.jumbled) CPS.jumbled.open(); });
     $('#doneBtn').addEventListener('click', resetStage);
     $('#revealAllBtn').addEventListener('click', revealAll);
     $('#stagePack').addEventListener('click', function (e) { if (e.target.closest('.pack')) tear(); });
@@ -2269,6 +2274,6 @@
     renderCollection: renderCollection, renderPacksSide: renderPacksSide,
     updateWheelGlow: updateWheelGlow, spinCount: spinCount, refreshQuests: refreshQuests,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
-    ensureVariants: ensureVariants, rarityOf: rarityOf };
+    ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
