@@ -83,7 +83,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -131,6 +131,8 @@
     S.onlineSets = state.online_sets || [];
     S.spins = state.spins || 0;
     S.wheelCfg = state.wheel || null;
+    S.favorites = {};
+    (state.favorites || []).forEach(function (f) { S.favorites[f[0] + ':' + f[1]] = true; });
     S.guestImported = !!state.guest_imported;
     S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
   }
@@ -247,6 +249,7 @@
   }
   function renderView() {
     if (S.view === 'collection') renderCollection();
+    else if (S.view === 'players') renderPlayers();
     else if (S.view === 'stats') renderStats();
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
@@ -567,6 +570,7 @@
       if (f.own === 'missing' && has) return false;
       if (f.own === 'dupes' && !(e && e.n > 1)) return false;
       if (f.own === 'holo' && !(e && e.h > 0)) return false;
+      if (f.own === 'fav' && !isFav(set.id, c.id)) return false;
       if (q) {
         var hay = (has ? (c.name + ' ' + c.subtitle + ' ' + c.details) : '') + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
         if (hay.toLowerCase().indexOf(q) < 0) return false;
@@ -672,6 +676,81 @@
     });
   }
 
+  /* ---------------------------------------------------------- favorites */
+  var FAV_MAX = 20;
+  function favKey(setId, cardId) { return setId + ':' + cardId; }
+  function isFav(setId, cardId) {
+    if (isCloud()) return !!(S.favorites && S.favorites[favKey(setId, cardId)]);
+    var p = S.player; return !!(p && p.favs && p.favs.indexOf(favKey(setId, cardId)) >= 0);
+  }
+  function favCount() {
+    if (isCloud()) return S.favorites ? Object.keys(S.favorites).length : 0;
+    var p = S.player; return p && p.favs ? p.favs.length : 0;
+  }
+  async function toggleFavorite(setId, cardId, holo) {
+    var k = favKey(setId, cardId), already = isFav(setId, cardId);
+    if (!already && favCount() >= FAV_MAX) { toast('You can only favorite ' + FAV_MAX + ' cards.', 'warn'); return; }
+    if (isCloud()) {
+      try {
+        var r = await CPS.cloud.call('toggle_favorite', { p_set: setId, p_card: cardId });
+        if (r.favorited) S.favorites[k] = true; else delete S.favorites[k];
+        toast(r.favorited ? 'Added to favorites (' + r.count + '/' + FAV_MAX + ').' : 'Removed from favorites.', 'good');
+      } catch (e) { cloudError(e); return; }
+    } else {
+      var p = S.player; p.favs = p.favs || [];
+      var ix = p.favs.indexOf(k);
+      if (ix >= 0) p.favs.splice(ix, 1); else p.favs.push(k);
+      await save();
+      toast(ix >= 0 ? 'Removed from favorites.' : 'Added to favorites (' + p.favs.length + '/' + FAV_MAX + ').', 'good');
+    }
+    openCardModal(setId, cardId, holo); // re-render the modal button
+    if (S.view === 'collection') renderCollection();
+  }
+
+  /* ---------------------------------------------------------- players */
+  async function renderPlayers() {
+    var box = $('#playerList');
+    if (!isCloud()) { box.innerHTML = '<div class="empty">Log in to see the other players.</div>'; return; }
+    box.innerHTML = '<div class="muted small">Loading…</div>';
+    try {
+      var players = await CPS.cloud.call('list_players');
+      box.innerHTML = players.map(function (p) {
+        return '<button class="player-card" data-player="' + esc(p.id) + '">' +
+          '<span class="avatar">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
+          '<span class="player-meta"><b>' + esc(p.display_name) + '</b>' +
+          (p.is_me ? ' <span class="pill">You</span>' : '') +
+          '<span class="muted small">' + p.favorites + ' favorites · ' + p.unique_cards + ' unique cards</span></span>' +
+          '<span class="player-go">›</span></button>';
+      }).join('') || '<div class="empty">No players yet.</div>';
+    } catch (e) { cloudError(e); }
+  }
+  async function openProfile(accountId) {
+    openModal('<div class="muted" style="padding:24px">Loading…</div>');
+    try {
+      var p = await CPS.cloud.call('get_profile', { p_account: accountId });
+      var favs = (p.favorites || []).map(function (f) {
+        var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
+        if (!set || !card) return '';
+        return '<div class="prof-fav">' + CPS.cards.render(set, card, {}) +
+          '<div class="prof-fav-cap"><b>' + esc(card.name) + '</b>' +
+          '<span class="muted small">' + esc(set.name) + ' · ' + rarityOf(card.rarity).label + '</span></div></div>';
+      }).join('');
+      var sets = (p.sets || []).map(function (s) {
+        var pct = s.total ? (s.unique / s.total * 100) : 0;
+        return '<div class="prof-set"><div class="prof-set-top"><span>' + esc(s.set_name) + '</span>' +
+          '<span class="muted small">' + s.unique + '/' + s.total + '</span></div>' +
+          '<span class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></span></div>';
+      }).join('');
+      openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
+        '<div class="prof-head"><span class="avatar big">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
+        '<div><h2>' + esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill">You</span>' : '') + '</div></div>' +
+        '<h3>★ Favorites (' + (p.favorites || []).length + '/' + FAV_MAX + ')</h3>' +
+        (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">No favorites yet.</div>') +
+        '<h3>Collection</h3><div class="prof-sets">' + (sets || '<div class="empty">—</div>') + '</div>' +
+        '</div>');
+    } catch (e) { closeModal(true); cloudError(e); }
+  }
+
   function openCardModal(setId, cardId, forceHolo) {
     var set = window.CardSets.get(setId); if (!set) return;
     var card = set.byId.get(cardId); if (!card) return;
@@ -689,10 +768,13 @@
       '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd></dl>' +
       (owned && card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
+      (owned ? '<button class="btn small fav-btn' + (isFav(set.id, card.id) ? ' active' : '') + '" data-fav>' + (isFav(set.id, card.id) ? '★' : '☆') + ' Favorite <span class="muted">' + favCount() + '/' + FAV_MAX + '</span></button>' : '') +
       '</div></div>';
     openModal(html, function (box) {
       var t = box.querySelector('[data-toggle-holo]');
       if (t) t.addEventListener('click', function () { openCardModal(setId, cardId, t.dataset.toggleHolo === '1'); });
+      var f = box.querySelector('[data-fav]');
+      if (f) f.addEventListener('click', function () { toggleFavorite(setId, cardId, holo); });
     });
   }
 
@@ -1277,6 +1359,10 @@
     $('#tradeinRows').addEventListener('click', function (e) {
       var b = e.target.closest('[data-trade]');
       if (b && !b.disabled) tradeDupes(b.dataset.trade);
+    });
+    $('#playerList').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-player]');
+      if (b) openProfile(b.dataset.player);
     });
     $('#collOwn').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
