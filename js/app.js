@@ -734,7 +734,129 @@
       }).join('') || '<div class="empty">No players yet.</div>';
     } catch (e) { cloudError(e); }
   }
-  /* ---------------------------------------------------------- trading */
+  /* ---------------------------------------------------------- notifications */
+  var NOTIF_KIND_ICON = { gift_card: '🎁', gift_pack: '📦', gift_spin: '🎟️',
+    trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌' };
+
+  async function refreshNotifBadge() {
+    if (!isCloud()) return;
+    try {
+      var n = await CPS.cloud.call('list_notifications');
+      var b = $('#notifBadge');
+      b.textContent = n.unread > 99 ? '99+' : n.unread;
+      b.classList.toggle('hidden', !n.unread);
+    } catch (e) { /* silent: badge just stays as-is */ }
+  }
+
+  function notifTime(iso) {
+    var ms = Date.now() - new Date(iso).getTime();
+    if (ms < 0) ms = 0;
+    var m = Math.floor(ms / 60000);
+    if (m < 1) return 'just now';
+    if (m < 60) return m + 'm ago';
+    var hh = Math.floor(m / 60);
+    if (hh < 24) return hh + 'h ago';
+    var d = Math.floor(hh / 24);
+    if (d < 7) return d + 'd ago';
+    try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
+    catch (e) { return ''; }
+  }
+
+  async function openNotifications() {
+    openModal('<div class="muted" style="padding:24px">Loading…</div>');
+    try {
+      var n = await CPS.cloud.call('list_notifications');
+      var items = n.items || [];
+      openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
+        '<h2>Notifications</h2>' +
+        (items.length ? '<div class="notif-list">' + items.map(function (it) {
+          return '<button class="notif' + (it.read ? '' : ' unread') + '" data-notif="' + it.id + '"' +
+            (it.view ? ' data-view="' + esc(it.view) + '"' : '') + '>' +
+            '<span class="notif-icon">' + (NOTIF_KIND_ICON[it.kind] || '🔔') + '</span>' +
+            '<span class="notif-text">' + esc(it.text) +
+            '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
+        }).join('') + '</div><button class="btn small" id="notifReadAll">Mark all read</button>'
+        : '<div class="empty">No notifications yet.</div>') +
+        '</div>', function (box) {
+          box.querySelectorAll('.notif').forEach(function (el) {
+            el.addEventListener('click', async function () {
+              var id = el.dataset.notif, view = el.dataset.view;
+              try { await CPS.cloud.call('read_notifications', { p_ids: [id] }); } catch (e) {}
+              el.classList.remove('unread');
+              refreshNotifBadge();
+              if (view) { closeModal(); showView(view); }
+            });
+          });
+          var ra = box.querySelector('#notifReadAll');
+          if (ra) ra.addEventListener('click', async function () {
+            try { await CPS.cloud.call('read_notifications', {}); } catch (e) {}
+            box.querySelectorAll('.notif.unread').forEach(function (x) { x.classList.remove('unread'); });
+            refreshNotifBadge();
+          });
+        });
+    } catch (e) { closeModal(true); cloudError(e); }
+  }
+
+  /* ---------------------------------------------------------- gifting */
+  async function openGiftModal(setId, cardId) {
+    var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
+    if (!set || !card) return;
+    var st = tbStateOf(set), e = st.cards[card.id];
+    if (!e || !e.n) return;
+    openModal('<div class="muted" style="padding:24px">Loading…</div>');
+    try {
+      var players = await CPS.cloud.call('list_players');
+      var others = players.filter(function (p) { return !p.is_me; });
+      if (!others.length) {
+        openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="empty" style="padding:24px">No other players to gift to yet.</div>');
+        return;
+      }
+      var holoOnly = e.h >= e.n;            // every owned copy is holo
+      var canChoose = e.h > 0 && e.h < e.n;  // owns both kinds
+      var holo = holoOnly;
+      function showForm() {
+        openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="gift-modal">' +
+          '<h2>🎁 Gift card</h2>' +
+          '<div class="trade-card">' + CPS.cards.render(set, card, { holo: holoOnly }) +
+          '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
+          ' · you own ' + e.n + (e.h ? ' (' + e.h + ' holo)' : '') + '</span></div></div>' +
+          '<label>To<select id="giftTo">' + others.map(function (p) {
+            return '<option value="' + esc(p.id) + '">' + esc(p.display_name) + '</option>';
+          }).join('') + '</select></label>' +
+          (canChoose ? '<label class="inline"><input type="checkbox" id="giftHolo"> Holographic copy</label>' :
+           holoOnly ? '<div class="muted small">Holographic copy</div>' : '') +
+          (e.n === 1 ? '<div class="warn-box">This is your last copy — you’ll no longer own this card.</div>' : '') +
+          '<div class="gift-actions"><button class="btn primary" id="giftNextBtn">Continue</button></div></div>');
+        var hb = $('#giftHolo');
+        if (hb) hb.addEventListener('change', function () { holo = this.checked; });
+        $('#giftNextBtn').addEventListener('click', function () {
+          var toId = $('#giftTo').value;
+          var to = others.filter(function (p) { return p.id === toId; })[0];
+          showConfirm(toId, to ? to.display_name : '', holo);
+        });
+      }
+      function showConfirm(toId, toName, isHolo) {
+        openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="gift-modal">' +
+          '<h2>Confirm gift</h2>' +
+          '<p>Gift <b>' + esc(card.name) + '</b>' + (isHolo ? ' ✦ holo' : '') +
+          ' to <b>' + esc(toName) + '</b>?</p>' +
+          '<div class="gift-actions"><button class="btn" id="giftBackBtn">Back</button>' +
+          '<button class="btn primary" id="giftConfirmBtn">Send gift</button></div></div>');
+        $('#giftBackBtn').addEventListener('click', showForm);
+        $('#giftConfirmBtn').addEventListener('click', async function () {
+          var btn = this; btn.disabled = true;
+          try {
+            await CPS.cloud.call('gift_card', { p_to: toId, p_set: setId, p_card: cardId, p_holo: isHolo });
+            closeModal();
+            toast('🎁 Gift sent to ' + toName + '!');
+            if (S.view === 'collection') renderCollection();
+          } catch (err) { cloudError(err); btn.disabled = false; }
+        });
+      }
+      showForm();
+    } catch (e2) { closeModal(true); cloudError(e2); }
+  }
+
   /* ---------------------------------------------------------- trading */
   var TB = null; // trade builder state
 
@@ -1092,12 +1214,15 @@
       (owned && card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
       (owned ? '<button class="btn small fav-btn' + (isFav(set.id, card.id) ? ' active' : '') + '" data-fav>' + (isFav(set.id, card.id) ? '★' : '☆') + ' Favorite <span class="muted">' + favCount() + '/' + FAV_MAX + '</span></button>' : '') +
+      (owned && isCloud() ? '<button class="btn small" data-gift>🎁 Gift</button>' : '') +
       '</div></div>';
     openModal(html, function (box) {
       var t = box.querySelector('[data-toggle-holo]');
       if (t) t.addEventListener('click', function () { openCardModal(setId, cardId, t.dataset.toggleHolo === '1'); });
       var f = box.querySelector('[data-fav]');
       if (f) f.addEventListener('click', function () { toggleFavorite(setId, cardId, holo); });
+      var g = box.querySelector('[data-gift]');
+      if (g) g.addEventListener('click', function () { openGiftModal(setId, cardId); });
     });
   }
 
@@ -1784,6 +1909,10 @@
     });
     $('#soundToggle').addEventListener('change', function (e) { audio.enabled = e.target.checked; Store.setPref('sound', audio.enabled); applyPrefsUI(); });
     $('#soundBtn').addEventListener('click', function () { audio.enabled = !audio.enabled; Store.setPref('sound', audio.enabled); applyPrefsUI(); if (audio.enabled) audio.click(); });
+    $('#notifBtn').addEventListener('click', openNotifications);
+    refreshNotifBadge();
+    setInterval(function () { if (!document.hidden) refreshNotifBadge(); }, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshNotifBadge(); });
     $('#devToggle').addEventListener('change', function (e) {
       if (e.target.checked) { e.target.checked = S.dev; if (!S.dev) requestDevUnlock(); return; }
       S.dev = false; Store.setPref('dev', false); applyPrefsUI(); if (S.view === 'admin') renderView(); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
