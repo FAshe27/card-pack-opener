@@ -25,6 +25,7 @@
   }
 
   function setName(setId) {
+    if (setId === 'jumbled') return 'Jumbled Mess';
     try {
       var s = window.CardSets && window.CardSets.get(setId);
       if (s && s.name) return s.name;
