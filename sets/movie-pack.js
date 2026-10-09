@@ -1,12 +1,19 @@
 /* Card set: movies pack images (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "movies-pack-images",
-  "name": "movies pack images",
-  "code": "MOV",
-  "description": "",
+  "name": "Movies",
+  "code": "MOVIE",
+  "description": "It insists upon itself",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#DC143C",
+    "secondary": "#3e424b",
+    "artBackground": "#d3d3d3",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Movie Pack",
+    "emblem": "🎬",
+    "skin": "movies"
   },
   "cards": [
     {
