@@ -8,9 +8,9 @@
 
   /* Static, set-agnostic structure. Resolved against a set list by localConfig(). */
   var STRUCTURE = [
-    { id: 'w1', name: 'Prize Wheel',  tiers: [{ packs: 1, weight: 3 }, { goto: 'w2', label: 'Go to second wheel', weight: 1 }] },
-    { id: 'w2', name: 'Double Wheel', tiers: [{ packs: 2, weight: 2 }, { goto: 'w1', label: 'Back to first wheel', weight: 2 }, { goto: 'w3', label: 'Go to third wheel', weight: 1 }] },
-    { id: 'w3', name: 'Triple Wheel', tiers: [{ packs: 3, weight: 2 }, { goto: 'w1', label: 'Back to first wheel', weight: 1 }, { goto: 'w2', label: 'Back to second wheel', weight: 1 }] }
+    { id: 'w1', name: 'Prize Wheel',  tiers: [{ packs: 1, weight: 1 }, { goto: 'w2', label: 'Go to second wheel', weight: 1 }] },
+    { id: 'w2', name: 'Double Wheel', tiers: [{ packs: 2, weight: 1 }, { goto: 'w1', label: 'Back to first wheel', weight: 1 }, { goto: 'w3', label: 'Go to third wheel', weight: 1 }] },
+    { id: 'w3', name: 'Triple Wheel', tiers: [{ packs: 3, weight: 1 }, { goto: 'w1', label: 'Back to first wheel', weight: 1 }, { goto: 'w2', label: 'Back to second wheel', weight: 1 }] }
   ];
 
   var GOTO_COLORS = { w1: '#8e6cc9', w2: '#ffb21e', w3: '#ff5d5d' };
