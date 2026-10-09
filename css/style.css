@@ -778,7 +778,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .ring::before { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: var(--panel); }
 .ring span { position: relative; font-weight: 800; font-size: 1.15rem; }
 .comp-title { font-weight: 800; font-size: 1.2rem; } .comp-sub { color: var(--muted); font-size: .9rem; margin-top: 4px; }
-.rarity-progress { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.rarity-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .rarity-progress { grid-template-columns: repeat(2, 1fr); } }
 .rp { text-align: left; background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: border-color .2s, background .2s; }
 .rp:hover { background: rgba(255,255,255,.07); } .rp.active { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 12%, transparent); }
 .rp-top { display: flex; justify-content: space-between; gap: 8px; font-size: .85rem; font-weight: 700; } .rp-top > span:last-child { white-space: nowrap; } .rp-name { color: var(--rc); }
