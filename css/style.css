@@ -826,6 +826,10 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 
 /* ===================================================== odds */
 .table-wrap { overflow-x: auto; }
+.stats-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.stats-table th, .stats-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+.stats-table th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+.stats-table td:not(:first-child), .stats-table th:not(:first-child) { text-align: right; }
 .odds-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
 .odds-table th { text-align: left; color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .odds-table td { padding: 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
