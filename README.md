@@ -1,4 +1,4 @@
-# YayPelleds — Card Pack Opener
+# PackRipper — Card Pack Opener
 
 A browser-based trading card pack opener. Open packs, build a collection, chase ultra-rare cards, and redeem prize codes. Vanilla HTML / CSS / JS — no build step. Works from `file://` or any static host (GitHub Pages, Netlify, etc.).
 
@@ -9,7 +9,7 @@ Cards are for collecting and trading only. Each card has a free-form **details**
 - **Local:** open `index.html` in a browser, or `python3 -m http.server 8000` from this folder and visit http://localhost:8000
 - **Host:** push this folder to GitHub Pages / Netlify / any static host. Point the site root at this directory.
 
-The site is **accounts-only**: everyone logs in with a username + 4-digit PIN that the site owner creates (see [Online accounts](#online-accounts-supabase)). To open a pack, click the big pack in the middle or the one in **Your packs** (it opens and tears in one go), or use the **Open a pack** button / Space. The **YayPelleds** logo always takes you back to Open Packs.
+The site is **accounts-only**: everyone logs in with a username + 4-digit PIN that the site owner creates (see [Online accounts](#online-accounts-supabase)). To open a pack, click the big pack in the middle or the one in **Your packs** (it opens and tears in one go), or use the **Open a pack** button / Space. The **PackRipper** logo always takes you back to Open Packs.
 
 **Admin tab** (admin accounts only) holds the account tools plus everything that used to be under Sets & Settings (card sets, CSV import, prize code generator, Dev tools). It's guarded twice: the server checks the account is an admin, and the browser asks for the **Dev password** before showing the tools. Only a SHA-256 hash of that password is stored (`DEV_HASH` in `js/devlock.js`). Once unlocked it stays on in that browser; untick "Admin tools unlocked" to lock it again. To change the password, run `printf 'new-password' | sha256sum` and paste the hex into `DEV_HASH`. Regular players only see Open Packs, Collection, Stats and Odds, plus the sound button and their account menu (log out, export).
 
