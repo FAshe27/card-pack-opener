@@ -14,7 +14,7 @@
       { count: 1, label: 'Rare or better (guaranteed)', odds: { rare: 81.8, epic: 14, legendary: 4, chase: 0.2 } }
     ],
     // % chance that a pulled card of each rarity is a holo foil
-    holo: { common: 2, uncommon: 3, rare: 6, epic: 10, legendary: 15, chase: 25 }
+    holo: { common: 1, uncommon: 1.5, rare: 3, epic: 5, legendary: 7.5, chase: 12.5 }
   };
 
   var sets = new Map();
