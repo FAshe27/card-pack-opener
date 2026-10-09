@@ -1051,7 +1051,6 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .trade-cap b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .trade-swap { font-size: 24px; color: #f5b942; flex: none; }
 .trade-actions { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
-#newTradeBtn { margin-top: 4px; }
 .trade-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .trade-top h2 { margin: 0; }
 .trade-with { display: block; margin: 8px 0; }
