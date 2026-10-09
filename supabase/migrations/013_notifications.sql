@@ -212,8 +212,8 @@ begin
   if target <> a.id and p_packs > 0 then
     select s.name into set_name from cps.card_sets s where s.id = p_set;
     perform cps.notify(target, 'gift_pack',
-      a.display_name || ' gifted you ' || p_packs || ' pack' || case when p_packs = 1 then '' else 's' end ||
-      ' (' || coalesce(set_name, p_set) || ')', 'packs');
+      'You''ve been gifted ' || case when p_packs = 1 then 'a pack' else p_packs || ' packs' end ||
+      ' (' || coalesce(set_name, p_set) || ')!', 'packs');
   end if;
   return jsonb_build_object('account', target, 'set_id', p_set, 'packs_now', n);
 end $$;
@@ -239,7 +239,7 @@ begin
     values (target, p_spins, 'admin', a.id);
   if target <> a.id and p_spins > 0 then
     perform cps.notify(target, 'gift_spin',
-      a.display_name || ' gifted you ' || p_spins || ' spin ticket' || case when p_spins = 1 then '' else 's' end || '!',
+      'You''ve been gifted ' || case when p_spins = 1 then 'a spin ticket' else p_spins || ' spin tickets' end || '!',
       'wheel');
   end if;
   return jsonb_build_object('account', target, 'spins_now', n);
