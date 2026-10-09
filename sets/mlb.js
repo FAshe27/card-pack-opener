@@ -3,10 +3,17 @@ CardSets.register({
   "id": "mlb",
   "name": "MLB",
   "code": "MLB",
-  "description": "",
+  "description": "How can you not be romantic about baseball?",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#4D8064",
+    "secondary": "#4b5a51",
+    "artBackground": "#222222",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "MLB Pack",
+    "emblem": "⚾",
+    "skin": "mlb"
   },
   "cards": [
     {
