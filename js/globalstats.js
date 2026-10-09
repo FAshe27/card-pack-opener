@@ -32,7 +32,7 @@
         bp.style.display = '';
         var bset = window.CardSets.get(lb.set_id), bcard = bset && bset.byId.get(lb.card_id);
         $('#bigPull').innerHTML = bcard ? CPS.cards.render(bset, bcard, {}) : '';
-        $('#bigPullCap').innerHTML = '<b>' + esc(lb.player) + '</b> pulled <b class="rt-' + lb.rarity + '">' + esc(lb.card_name) + '</b>' +
+        $('#bigPullCap').innerHTML = '<span class="bpc-line"><b>' + esc(lb.player) + '</b> pulled <b class="rt-' + lb.rarity + '">' + esc(lb.card_name) + '</b></span>' +
           '<span>' + rarityOf(lb.rarity).label + ' · ' + esc(lb.set_name) + ' · ' + new Date(lb.pulled_at).toLocaleDateString() + '</span>';
       } else if (bp) { bp.style.display = 'none'; }
     } catch (e) { hide(); }
