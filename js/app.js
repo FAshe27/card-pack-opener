@@ -2131,6 +2131,17 @@
     $('#naPinRandom').addEventListener('click', function () { $('#naPin').value = randomPin(); });
     $('#acctList').addEventListener('click', adminAction);
     $('#adminRefresh').addEventListener('click', function () { refreshCloud().then(renderAdmin); });
+    $('#gaSpinAllBtn').addEventListener('click', async function () {
+      var n = parseInt($('#gaSpinAllN').value, 10);
+      if (!(n >= 1)) { toast('Pick a number of spin tickets.', 'warn'); return; }
+      if (!confirm('Give ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to every non-admin player?')) return;
+      var btn = this; btn.disabled = true;
+      try {
+        var r = await CPS.cloud.call('admin_grant_spins_all', { p_spins: n });
+        toast('Gave ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        renderAdmin();
+      } catch (e) { cloudError(e); btn.disabled = false; }
+    });
     $('#gaAllBtn').addEventListener('click', async function () {
       var sid = $('#gaAllSet').value, n = parseInt($('#gaAllN').value, 10);
       if (!sid || !(n >= 1)) { toast('Pick a set and a number of packs.', 'warn'); return; }
