@@ -25,6 +25,14 @@ CardSets.register({
       "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/IPhone_%26_iPhone_3G_fronts.jpg/1280px-IPhone_%26_iPhone_3G_fronts.jpg"
     },
     {
+      "name": "Minolta SRT 201",
+      "rarity": "legendary",
+      "id": "minolta-srt-201",
+      "subtitle": "Camera",
+      "details": "Photography legend Sage began film photography with one of these.",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnc9shuaZ8lVf6LO_nFbxtAAkGwezscbJBUBHmSUunGA&s=10"
+    },
+    {
       "name": "Sony Walkman TPS-L2 (1979)",
       "rarity": "chase",
       "id": "sony-walkman-tps-l2-1979",
