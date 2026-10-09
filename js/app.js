@@ -583,6 +583,10 @@
     sel.value = f.rarity;
 
     renderTradein(set, st);
+    if (CPS.tickets) CPS.tickets.render();
+    if (isCloud() && !S.myVariants) ensureVariants().then(function () {
+      if (S.view === 'collection') { renderTradein(set, st); if (CPS.tickets) CPS.tickets.render(); }
+    });
 
     var q = f.q.trim().toLowerCase();
     var numberedIds = null;
@@ -648,18 +652,28 @@
   ];
   var DUPE_RARS = { common: ['common'], uncommon: ['uncommon'], rare: ['rare'], epic: ['epic', 'legendary', 'chase'] };
   /* Tradable dupes per tier: every copy beyond the first of each card. */
-  function dupeCounts(set, st) {
+  /* Numbered variant copies are never tradable (cloud only; guests have none). */
+  function variantCountMap() {
+    var m = {};
+    (S.myVariants || []).forEach(function (v) {
+      var k = v.set_id + ':' + v.card_id;
+      m[k] = (m[k] || 0) + 1;
+    });
+    return m;
+  }
+  function dupeCounts(set, st, vmap) {
     var out = { common: 0, uncommon: 0, rare: 0, epic: 0 };
     set.cards.forEach(function (c) {
       var e = st.cards[c.id];
       if (!e || !e.n) return;
       var t = c.rarity === 'common' ? 'common' : c.rarity === 'uncommon' ? 'uncommon' : c.rarity === 'rare' ? 'rare' : 'epic';
-      out[t] += Math.max(0, e.n - 1);
+      var v = vmap ? (vmap[set.id + ':' + c.id] || 0) : 0;
+      out[t] += Math.max(0, e.n - Math.max(1, v));
     });
     return out;
   }
   function renderTradein(set, st) {
-    var counts = dupeCounts(set, st);
+    var counts = dupeCounts(set, st, isCloud() ? variantCountMap() : null);
     $('#tradeinRows').innerHTML = DUPE_TIERS.map(function (t) {
       var n = counts[t.tier], trades = Math.floor(n / t.rate);
       return '<div class="tradein-row">' +
@@ -2207,5 +2221,13 @@
   }
 
   CPS.app = { state: S, config: CONFIG, openPack: startOpen, tear: tear, revealAll: revealAll, showView: showView, selectSet: selectSet };
+  /* Shared context for split-out modules (js/tickets.js). */
+  CPS.appCtx = { S: S, U: U, R: R, Store: Store, audio: audio, fx: fx,
+    $: $, $$: $$, esc: esc, save: save, isCloud: isCloud, isLocked: isLocked, isAdmin: isAdmin,
+    toast: toast, cloudError: cloudError, refreshCloud: refreshCloud, renderView: renderView,
+    renderCollection: renderCollection, renderPacksSide: renderPacksSide,
+    updateWheelGlow: updateWheelGlow, spinCount: spinCount, refreshQuests: refreshQuests,
+    dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
+    ensureVariants: ensureVariants };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
