@@ -3030,7 +3030,7 @@ CardSets.register({
       "id": "minolta-srt-201",
       "subtitle": "Camera",
       "details": "Photography legend Sage began film photography with one of these.",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnc9shuaZ8lVf6LO_nFbxtAAkGwezscbJBUBHmSUunGA&s=10"
+      "image": "assets/sets/misc/minolta-srt-201.jpg"
     }
 ]
 });
