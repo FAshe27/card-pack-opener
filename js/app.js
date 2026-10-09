@@ -225,7 +225,7 @@
       var n = packCount(s), cur = s.id === S.set.id, cls = (n > 0 ? 'has-packs' : '') + (cur ? ' is-current' : '');
       var mark = (cur ? '\u2192 ' : '') + (n > 0 ? '\u25CF ' : '');
       return '<option value="' + esc(s.id) + '"' + (cur ? ' selected' : '') + (cls ? ' class="' + cls.trim() + '"' : '') + '>' +
-        mark + esc(s.name) + ' (' + n + ')</option>';
+        mark + esc(s.name) + (n > 0 ? ' (' + n + ')' : '') + '</option>';
     }).join('');
   }
 
