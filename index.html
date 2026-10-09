@@ -237,6 +237,12 @@
         </div>
         <div class="panel wide collapsible" id="panelAccounts">
           <h2>Accounts <button class="btn small ghost" id="adminRefresh" type="button">Refresh</button></h2>
+          <div class="grant-all row wrap">
+            <b>Give packs to everyone</b><span class="muted small">(all non-admin players)</span>
+            <select id="gaAllSet" aria-label="Set"></select>
+            <input id="gaAllN" type="number" value="3" min="1" max="999" aria-label="Packs">
+            <button class="btn small primary" id="gaAllBtn" type="button">Grant to everyone</button>
+          </div>
           <div id="acctList" class="acct-list"></div>
         </div>
         <div class="panel wide collapsible" id="panelCodes">
