@@ -180,7 +180,6 @@
     return '<div class="pack ' + (extraCls || '') + skin + '" style="' + themeStyle(set) + '">' +
       '<div class="pack-top"><div class="crimp"></div></div>' +
       '<div class="pack-body"><div class="pack-shine"></div>' +
-      '<div class="pack-code' + codeCls(set) + '">' + esc(set.code) + '</div>' +
       '<div class="pack-emblem">' + esc(set.pack.emblem || '✦') + '</div>' +
       '<div class="pack-name">' + esc(set.name) + '</div>' +
       '<div class="pack-sub">' + esc(set.pack.name) + ' · ' + set.pack.size + ' cards</div>' +
