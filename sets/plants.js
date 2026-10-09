@@ -3,10 +3,17 @@ CardSets.register({
   "id": "plants",
   "name": "Plants",
   "code": "NAT",
-  "description": "",
+  "description": "These things grow everywhere!",
   "theme": {
-    "primary": "#ff7a59",
-    "secondary": "#7b2ff7"
+    "primary": "#06402B",
+    "secondary": "#2E6F40",
+    "artBackground": "#d3d3d3",
+    "artFit": "contain"
+  },
+  "pack": {
+    "name": "Plant Pack",
+    "emblem": "🌿",
+    "skin": "plants"
   },
   "cards": [
     {
