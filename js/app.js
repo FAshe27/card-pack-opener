@@ -710,10 +710,18 @@
   /* ---------------------------------------------------------- players */
   async function renderPlayers() {
     var box = $('#playerList');
-    if (!isCloud()) { box.innerHTML = '<div class="empty">Log in to see the other players.</div>'; return; }
+    if (!isCloud()) {
+      box.innerHTML = '<div class="empty">Log in to see the other players.</div>';
+      $('#tradePanel').classList.add('hidden');
+      return;
+    }
+    $('#tradePanel').classList.remove('hidden');
     box.innerHTML = '<div class="muted small">Loading…</div>';
+    $('#tradeList').innerHTML = '<div class="muted small">Loading…</div>';
     try {
       var players = await CPS.cloud.call('list_players');
+      var trades = await CPS.cloud.call('list_trades');
+      renderTrades(trades);
       box.innerHTML = players.map(function (p) {
         return '<button class="player-card" data-player="' + esc(p.id) + '">' +
           '<span class="avatar">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
@@ -724,6 +732,191 @@
       }).join('') || '<div class="empty">No players yet.</div>';
     } catch (e) { cloudError(e); }
   }
+  /* ---------------------------------------------------------- trading */
+  var TRADE = { my: {}, their: {} }; // 'setId|cardId' -> { n, h }
+
+  function tradeCardOptions(groups) {
+    return groups.map(function (g) {
+      return '<optgroup label="' + esc(g.set.name) + '">' + g.cards.map(function (c) {
+        return '<option value="' + esc(g.set.id) + '|' + esc(c.card.id) + '">#' +
+          U.pad(c.card.num, g.set.numWidth) + ' ' + esc(c.card.name) + ' \u00d7' + c.n + '</option>';
+      }).join('') + '</optgroup>';
+    }).join('');
+  }
+
+  function collectMine() {
+    TRADE.my = {};
+    var groups = [];
+    window.CardSets.list.forEach(function (set) {
+      var st = ps(set), cards = [];
+      set.cards.forEach(function (card) {
+        var e = st.cards[card.id];
+        if (e && e.n > 0) {
+          cards.push({ card: card, n: e.n, h: e.h || 0 });
+          TRADE.my[set.id + '|' + card.id] = { n: e.n, h: e.h || 0 };
+        }
+      });
+      if (cards.length) groups.push({ set: set, cards: cards });
+    });
+    return groups;
+  }
+
+  function tradeMiniCard(setId, cardId, holo) {
+    var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
+    if (!set || !card) return '<span class="muted">?</span>';
+    return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo }) +
+      '<div class="trade-cap"><b>' + esc(card.name) + '</b>' +
+      '<span class="muted small">' + esc(set.name) + (holo ? ' \u00b7 \u2726 holo' : '') + '</span></div></div>';
+  }
+
+  function tradeTimeLeft(expiresAt) {
+    var ms = new Date(expiresAt).getTime() - Date.now();
+    if (ms <= 0) return 'expired';
+    var d = Math.floor(ms / 864e5);
+    if (d >= 1) return d + (d === 1 ? ' day' : ' days') + ' left';
+    var h = Math.floor(ms / 36e5);
+    return (h >= 1 ? h + 'h' : Math.max(1, Math.floor(ms / 6e4)) + 'm') + ' left';
+  }
+
+  function renderTrades(trades) {
+    var box = $('#tradeList');
+    var incoming = trades.filter(function (t) { return t.direction === 'incoming' && t.status === 'pending'; }).length;
+    var badge = $('#playersBadge');
+    badge.textContent = incoming;
+    badge.classList.toggle('hidden', !incoming);
+    if (!trades.length) { box.innerHTML = '<div class="empty">No trade offers yet.</div>'; return; }
+    box.innerHTML = trades.map(function (t) {
+      var leftCap = t.direction === 'incoming' ? 'You get' : 'You give';
+      var rightCap = t.direction === 'incoming' ? 'You give' : 'You get';
+      var head = t.direction === 'incoming'
+        ? '<b>' + esc(t.other_name) + '</b> offers you a trade'
+        : 'You offered <b>' + esc(t.other_name) + '</b> a trade';
+      head += ' <span class="muted small">\u00b7 ' + tradeTimeLeft(t.expires_at) + '</span>';
+      var actions;
+      if (t.status === 'pending') {
+        actions = t.direction === 'incoming'
+          ? '<button class="btn small primary" data-trade-accept="' + t.id + '">Accept</button>' +
+            '<button class="btn small" data-trade-decline="' + t.id + '">Decline</button>'
+          : '<button class="btn small" data-trade-cancel="' + t.id + '">Cancel offer</button>';
+      } else {
+        actions = '<span class="muted small">' + esc(t.status) + '</span>';
+      }
+      return '<div class="trade-row"><div class="trade-head">' + head + '</div>' +
+        '<div class="trade-cards"><div class="trade-side"><span class="trade-cap-top">' + leftCap + '</span>' +
+        tradeMiniCard(t.offer_set, t.offer_card, t.offer_holo) + '</div>' +
+        '<span class="trade-swap">\u21c4</span><div class="trade-side"><span class="trade-cap-top">' + rightCap + '</span>' +
+        tradeMiniCard(t.want_set, t.want_card, t.want_holo) + '</div></div>' +
+        '<div class="trade-actions">' + actions + '</div></div>';
+    }).join('');
+  }
+
+  async function respondTrade(id, accept) {
+    try {
+      await CPS.cloud.call('respond_trade', { p_offer: id, p_accept: accept });
+      toast(accept ? 'Trade complete! Cards swapped.' : 'Offer declined.');
+      renderPlayers();
+    } catch (e) { cloudError(e); }
+  }
+
+  async function cancelTrade(id) {
+    if (!confirm('Cancel this trade offer?')) return;
+    try {
+      await CPS.cloud.call('cancel_trade', { p_offer: id });
+      toast('Offer cancelled.');
+      renderPlayers();
+    } catch (e) { cloudError(e); }
+  }
+
+  async function openTradeModal(prefill) {
+    prefill = prefill || {};
+    openModal('<div class="muted" style="padding:24px">Loading…</div>');
+    try {
+      var players = await CPS.cloud.call('list_players');
+      var others = players.filter(function (p) { return !p.is_me; });
+      if (!others.length) {
+        openModal('<button class="modal-x" data-close aria-label="Close">\u00d7</button><div class="empty" style="padding:24px">No other players to trade with yet.</div>');
+        return;
+      }
+      var toId = prefill.to && others.some(function (p) { return p.id === prefill.to; }) ? prefill.to : others[0].id;
+      var myGroups = collectMine();
+      if (!myGroups.length) {
+        openModal('<button class="modal-x" data-close aria-label="Close">\u00d7</button><div class="empty" style="padding:24px">You don\'t own any cards to trade yet.</div>');
+        return;
+      }
+      openModal('<button class="modal-x" data-close aria-label="Close">\u00d7</button><div class="trade-modal">' +
+        '<h2>Propose a trade</h2>' +
+        '<label>Trade with<select id="tradeTo">' + others.map(function (p) {
+          return '<option value="' + esc(p.id) + '"' + (p.id === toId ? ' selected' : '') + '>' + esc(p.display_name) + '</option>';
+        }).join('') + '</select></label>' +
+        '<label>You offer<select id="tradeOffer">' + tradeCardOptions(myGroups) + '</select></label>' +
+        '<label class="inline"><input type="checkbox" id="tradeOfferHolo"> Holographic copy</label>' +
+        '<label>You want<select id="tradeWant"><option value="">Loading their collection…</option></select></label>' +
+        '<label class="inline"><input type="checkbox" id="tradeWantHolo"> Holographic copy</label>' +
+        '<div class="trade-modal-actions"><button class="btn primary" id="tradeProposeBtn">Send offer</button></div>' +
+        '<div class="muted small">Offers expire after 7 days. Cards aren\'t locked while an offer is pending — if a card moves before acceptance, the offer expires.</div>' +
+        '</div>');
+      var wantSel = $('#tradeWant'), wantHolo = $('#tradeWantHolo'),
+          offerSel = $('#tradeOffer'), offerHolo = $('#tradeOfferHolo');
+      function syncOfferHolo() {
+        var info = TRADE.my[offerSel.value];
+        offerHolo.disabled = !(info && info.h > 0);
+        if (offerHolo.disabled) offerHolo.checked = false;
+      }
+      function syncWantHolo() {
+        var info = TRADE.their[wantSel.value];
+        wantHolo.disabled = !(info && info.h > 0);
+        if (wantHolo.disabled) wantHolo.checked = false;
+      }
+      async function loadTheir() {
+        wantSel.innerHTML = '<option value="">Loading…</option>';
+        wantHolo.disabled = true; wantHolo.checked = false;
+        try {
+          var p = await CPS.cloud.call('get_profile', { p_account: $('#tradeTo').value });
+          TRADE.their = {};
+          var groups = [];
+          (p.collection || []).forEach(function (c) {
+            var set = window.CardSets.get(c.set_id), card = set && set.byId.get(c.card_id);
+            if (!set || !card) return;
+            TRADE.their[c.set_id + '|' + c.card_id] = { n: c.n, h: c.h || 0 };
+            var g = groups.filter(function (x) { return x.set === set; })[0];
+            if (!g) { g = { set: set, cards: [] }; groups.push(g); }
+            g.cards.push({ card: card, n: c.n, h: c.h || 0 });
+          });
+          groups.forEach(function (g) { g.cards.sort(function (a, b) { return a.card.num - b.card.num; }); });
+          wantSel.innerHTML = groups.length ? tradeCardOptions(groups) : '<option value="">They don\'t own any cards yet</option>';
+          if (prefill.wantSet && prefill.wantCard) {
+            var v = prefill.wantSet + '|' + prefill.wantCard;
+            if (TRADE.their[v]) wantSel.value = v;
+          }
+          syncWantHolo();
+        } catch (e) { wantSel.innerHTML = '<option value="">Could not load</option>'; }
+      }
+      $('#tradeTo').addEventListener('change', loadTheir);
+      offerSel.addEventListener('change', syncOfferHolo);
+      wantSel.addEventListener('change', syncWantHolo);
+      if (prefill.offerSet && prefill.offerCard) {
+        var ov = prefill.offerSet + '|' + prefill.offerCard;
+        if (TRADE.my[ov]) offerSel.value = ov;
+      }
+      syncOfferHolo();
+      loadTheir();
+      $('#tradeProposeBtn').addEventListener('click', async function () {
+        var btn = this; btn.disabled = true;
+        try {
+          var o = offerSel.value.split('|'), w = wantSel.value.split('|');
+          if (!o[0] || !w[0]) throw new Error('Pick a card on both sides.');
+          await CPS.cloud.call('propose_trade', {
+            p_to: $('#tradeTo').value,
+            p_offer_set: o[0], p_offer_card: o[1], p_offer_holo: offerHolo.checked,
+            p_want_set: w[0], p_want_card: w[1], p_want_holo: wantHolo.checked
+          });
+          closeModal(); toast('Trade offer sent!');
+          if (S.view === 'players') renderPlayers();
+        } catch (e) { cloudError(e); btn.disabled = false; }
+      });
+    } catch (e) { closeModal(true); cloudError(e); }
+  }
+
   async function openProfile(accountId) {
     openModal('<div class="muted" style="padding:24px">Loading…</div>');
     try {
@@ -743,11 +936,13 @@
       }).join('');
       openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
         '<div class="prof-head"><span class="avatar big">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
-        '<div><h2>' + esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill">You</span>' : '') + '</div></div>' +
+        '<div><h2>' + esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button>') + '</div></div>' +
         '<h3>★ Favorites (' + (p.favorites || []).length + '/' + FAV_MAX + ')</h3>' +
         (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">No favorites yet.</div>') +
         '<h3>Collection</h3><div class="prof-sets">' + (sets || '<div class="empty">—</div>') + '</div>' +
         '</div>');
+      var ptb = $('#profTradeBtn');
+      if (ptb) ptb.addEventListener('click', function () { openTradeModal({ to: accountId }); });
     } catch (e) { closeModal(true); cloudError(e); }
   }
 
@@ -1363,6 +1558,15 @@
     $('#playerList').addEventListener('click', function (e) {
       var b = e.target.closest('[data-player]');
       if (b) openProfile(b.dataset.player);
+    });
+    $('#newTradeBtn').addEventListener('click', function () { openTradeModal({}); });
+    $('#tradeList').addEventListener('click', function (e) {
+      var a = e.target.closest('[data-trade-accept]');
+      if (a) { respondTrade(a.dataset.tradeAccept, true); return; }
+      var d = e.target.closest('[data-trade-decline]');
+      if (d) { respondTrade(d.dataset.tradeDecline, false); return; }
+      var c = e.target.closest('[data-trade-cancel]');
+      if (c) cancelTrade(c.dataset.tradeCancel);
     });
     $('#collOwn').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
