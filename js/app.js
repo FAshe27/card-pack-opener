@@ -747,7 +747,7 @@
   function collectMine() {
     TRADE.my = {};
     var groups = [];
-    window.CardSets.list.forEach(function (set) {
+    window.CardSets.all().forEach(function (set) {
       var st = ps(set), cards = [];
       set.cards.forEach(function (card) {
         var e = st.cards[card.id];
