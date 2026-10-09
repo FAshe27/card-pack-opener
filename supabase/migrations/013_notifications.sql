@@ -57,6 +57,16 @@ begin
   return jsonb_build_object('ok', true);
 end $$;
 
+-- --- clear read notifications -------------------------------------------------------
+create or replace function public.cps_clear_notifications(p_token text)
+returns jsonb language plpgsql security definer set search_path = cps, pg_temp as $$
+declare a cps.accounts%rowtype;
+begin
+  a := cps.auth(p_token);
+  delete from cps.notifications where account_id = a.id and read_at is not null;
+  return jsonb_build_object('ok', true);
+end $$;
+
 -- --- transfer_card: drop favorites the giver no longer owns -------------------
 create or replace function cps.transfer_card(p_from uuid, p_to uuid, p_set text, p_card text, p_holo boolean, p_qty int, p_ref text default null)
 returns void language plpgsql set search_path = cps, pg_temp as $$
