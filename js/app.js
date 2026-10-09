@@ -124,7 +124,7 @@
       st.best = x.best ? { id: x.best.id, holo: !!x.best.holo, at: Date.parse(x.best.at) || Date.now() } : null;
     });
     Object.keys(state.recent || {}).forEach(function (id) {
-      get(id).recent = state.recent[id].map(function (c) { return { id: c.id, holo: !!c.holo }; });
+      get(id).recent = state.recent[id].map(function (c) { return { id: c.id, holo: !!c.holo, at: c.at || 0 }; });
     });
     S.mode = 'cloud';
     S.account = state.account;
@@ -1368,12 +1368,26 @@
         return '<tr><td>' + esc(x.set.name) + '</td><td>' + x.opened + '</td><td>' + x.pulled + '</td>' +
           '<td>' + x.owned + ' / ' + x.set.cards.length + '</td><td>' + pc.toFixed(1) + '%</td><td>' + x.holos + '</td></tr>';
       }).join('') + '</tbody>';
-    var best = s.best && set.byId.get(s.best.id);
+    var bestO = null, bestSd = null, bestSc = -1;
+    window.CardSets.all().forEach(function (sd) {
+      var pst = S.player.sets[sd.id], bb = pst && pst.stats && pst.stats.best, cc = bb && sd.byId.get(bb.id);
+      if (!cc) return;
+      var sc = CPS.packs.score(cc, bb.holo);
+      if (sc > bestSc) { bestSc = sc; bestO = bb; bestSd = sd; }
+    });
+    var best = bestO && bestSd.byId.get(bestO.id);
     $('#bestPull').innerHTML = best
-      ? CPS.cards.render(set, best, { holo: s.best.holo }) + '<div class="best-cap"><b class="rt-' + best.rarity + '">' + esc(best.name) + (s.best.holo ? ' (holo)' : '') + '</b><span>' + rarityOf(best.rarity).label + ' · ' + new Date(s.best.at).toLocaleDateString() + '</span></div>'
+      ? CPS.cards.render(bestSd, best, { holo: bestO.holo }) + '<div class="best-cap"><b class="rt-' + best.rarity + '">' + esc(best.name) + (bestO.holo ? ' (holo)' : '') + '</b><span>' + rarityOf(best.rarity).label + ' · ' + esc(bestSd.name) + ' · ' + new Date(bestO.at).toLocaleDateString() + '</span></div>'
       : '<div class="empty">Open a pack to get started.</div>';
-    $('#recentPulls').innerHTML = st.recent.length ? st.recent.map(function (x) {
-      var c = set.byId.get(x.id); return c ? CPS.cards.render(set, c, { holo: x.holo }) : '';
+    var allRec = [];
+    window.CardSets.all().forEach(function (sd) {
+      var pst = S.player.sets[sd.id];
+      (pst && pst.recent || []).forEach(function (x) { allRec.push({ sd: sd, id: x.id, holo: x.holo, at: x.at || 0 }); });
+    });
+    allRec.sort(function (a, b) { return b.at - a.at; });
+    allRec = allRec.slice(0, CONFIG.recentMax);
+    $('#recentPulls').innerHTML = allRec.length ? allRec.map(function (x) {
+      var c = x.sd.byId.get(x.id); return c ? CPS.cards.render(x.sd, c, { holo: x.holo }) : '';
     }).join('') : '<div class="empty">Nothing yet.</div>';
     if (CPS.globalStats) CPS.globalStats.render();
   }
