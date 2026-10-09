@@ -2310,7 +2310,7 @@ CardSets.register({
       "id": "civ-md-600n",
       "subtitle": "Helicopter",
       "details": "Stretched NOTAR; eight seats.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/2011_MD_Helicopters_MD600N_%2826009172967%29.jpg/1000px-2011_MD_Helicopters_MD600N_%2826009172967%29.jpg"
+      "image": "https://upload.wikimedia.org/wikipedia/commons/7/73/MD_Helicopters_MD-600N_Aveo_Air_Service%2C_BBJ_Bitburg_(Bitburg_Air_Base)%2C_Germany_PP1277497970.jpg"
     },
     {
       "name": "Enstrom 480B",
