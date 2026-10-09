@@ -775,7 +775,8 @@
             '<span class="notif-icon">' + (NOTIF_KIND_ICON[it.kind] || '🔔') + '</span>' +
             '<span class="notif-text">' + esc(it.text) +
             '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
-        }).join('') + '</div><button class="btn small" id="notifReadAll">Mark all read</button>'
+        }).join('') + '</div><div class="notif-actions"><button class="btn small" id="notifReadAll">Mark all read</button>' +
+        (items.some(function (it) { return it.read; }) ? '<button class="btn small" id="notifClearRead">Clear read</button>' : '') + '</div>'
         : '<div class="empty">No notifications yet.</div>') +
         '</div>', function (box) {
           box.querySelectorAll('.notif').forEach(function (el) {
@@ -792,6 +793,11 @@
             try { await CPS.cloud.call('read_notifications', {}); } catch (e) {}
             box.querySelectorAll('.notif.unread').forEach(function (x) { x.classList.remove('unread'); });
             refreshNotifBadge();
+          });
+          var cr = box.querySelector('#notifClearRead');
+          if (cr) cr.addEventListener('click', async function () {
+            try { await CPS.cloud.call('clear_notifications', {}); } catch (e) {}
+            openNotifications();
           });
         });
     } catch (e) { closeModal(true); cloudError(e); }
