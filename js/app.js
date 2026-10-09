@@ -251,6 +251,7 @@
     if (S.view === 'collection') renderCollection();
     else if (S.view === 'players') renderPlayers();
     else if (S.view === 'trade') renderTradeBuilder();
+    else if (S.view === 'trade-history') renderTradeHistory();
     else if (S.view === 'stats') renderStats();
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
@@ -789,38 +790,61 @@
     return (h >= 1 ? h + 'h' : Math.max(1, Math.floor(ms / 6e4)) + 'm') + ' left';
   }
 
+  function tradeRowHtml(t, isHistory) {
+    var leftCap = t.direction === 'incoming' ? 'You get' : 'You give';
+    var rightCap = t.direction === 'incoming' ? 'You give' : 'You get';
+    var nGive = (t.direction === 'incoming' ? t.want_items : t.offer_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0);
+    var nGet = (t.direction === 'incoming' ? t.offer_items : t.want_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0);
+    var head = t.direction === 'incoming'
+      ? '<b>' + esc(t.other_name) + '</b> offers you a trade'
+      : 'You offered <b>' + esc(t.other_name) + '</b> a trade';
+    head += ' <span class="muted small">\u00b7 ' + nGive + ' for ' + nGet;
+    head += isHistory
+      ? (t.decided_at ? ' \u00b7 ' + tradeDate(t.decided_at) : '') + '</span>'
+      : ' \u00b7 ' + tradeTimeLeft(t.expires_at) + '</span>';
+    var actions;
+    if (!isHistory && t.status === 'pending') {
+      actions = t.direction === 'incoming'
+        ? '<button class="btn small primary" data-trade-accept="' + t.id + '">Accept</button>' +
+          '<button class="btn small" data-trade-decline="' + t.id + '">Decline</button>'
+        : '<button class="btn small" data-trade-cancel="' + t.id + '">Cancel offer</button>';
+    } else {
+      actions = '<span class="pill st-' + t.status + '">' + esc(t.status) + '</span>';
+    }
+    return '<div class="trade-row"><div class="trade-head">' + head + '</div>' +
+      '<div class="trade-cards"><div class="trade-side"><span class="trade-cap-top">' + leftCap + '</span>' +
+      tradeItemsHtml(t.offer_items) + '</div>' +
+      '<span class="trade-swap">\u21c4</span><div class="trade-side"><span class="trade-cap-top">' + rightCap + '</span>' +
+      tradeItemsHtml(t.want_items) + '</div></div>' +
+      '<div class="trade-actions">' + actions + '</div></div>';
+  }
+
+  function tradeDate(iso) {
+    try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
+    catch (e) { return ''; }
+  }
+
   function renderTrades(trades) {
-    var box = $('#tradeList');
-    var incoming = trades.filter(function (t) { return t.direction === 'incoming' && t.status === 'pending'; }).length;
+    S.trades = trades;
+    var pending = trades.filter(function (t) { return t.status === 'pending'; });
+    var decided = trades.filter(function (t) { return t.status !== 'pending'; });
+    var incoming = pending.filter(function (t) { return t.direction === 'incoming'; }).length;
     var badge = $('#playersBadge');
     badge.textContent = incoming;
     badge.classList.toggle('hidden', !incoming);
-    if (!trades.length) { box.innerHTML = '<div class="empty">No trade offers yet.</div>'; return; }
-    box.innerHTML = trades.map(function (t) {
-      var leftCap = t.direction === 'incoming' ? 'You get' : 'You give';
-      var rightCap = t.direction === 'incoming' ? 'You give' : 'You get';
-      var nGive = (t.direction === 'incoming' ? t.want_items : t.offer_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0);
-      var nGet = (t.direction === 'incoming' ? t.offer_items : t.want_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0);
-      var head = t.direction === 'incoming'
-        ? '<b>' + esc(t.other_name) + '</b> offers you a trade'
-        : 'You offered <b>' + esc(t.other_name) + '</b> a trade';
-      head += ' <span class="muted small">\u00b7 ' + nGive + ' for ' + nGet + ' \u00b7 ' + tradeTimeLeft(t.expires_at) + '</span>';
-      var actions;
-      if (t.status === 'pending') {
-        actions = t.direction === 'incoming'
-          ? '<button class="btn small primary" data-trade-accept="' + t.id + '">Accept</button>' +
-            '<button class="btn small" data-trade-decline="' + t.id + '">Decline</button>'
-          : '<button class="btn small" data-trade-cancel="' + t.id + '">Cancel offer</button>';
-      } else {
-        actions = '<span class="muted small">' + esc(t.status) + '</span>';
-      }
-      return '<div class="trade-row"><div class="trade-head">' + head + '</div>' +
-        '<div class="trade-cards"><div class="trade-side"><span class="trade-cap-top">' + leftCap + '</span>' +
-        tradeItemsHtml(t.offer_items) + '</div>' +
-        '<span class="trade-swap">\u21c4</span><div class="trade-side"><span class="trade-cap-top">' + rightCap + '</span>' +
-        tradeItemsHtml(t.want_items) + '</div></div>' +
-        '<div class="trade-actions">' + actions + '</div></div>';
-    }).join('');
+    $('#tradeList').innerHTML = pending.length
+      ? pending.map(function (t) { return tradeRowHtml(t, false); }).join('')
+      : '<div class="empty">No pending offers.</div>';
+    var hb = $('#tradeHistBtn');
+    hb.innerHTML = 'Trade history' + (decided.length ? ' (' + decided.length + ')' : '');
+  }
+
+  function renderTradeHistory() {
+    var decided = (S.trades || []).filter(function (t) { return t.status !== 'pending'; });
+    $('#tradeHistList').innerHTML = decided.length
+      ? decided.map(function (t) { return tradeRowHtml(t, true); }).join('')
+      : '<div class="empty">No trade history yet.</div>';
+    window.scrollTo(0, 0);
   }
 
   async function respondTrade(id, accept) {
@@ -1665,6 +1689,8 @@
     });
     $('#newTradeBtn').addEventListener('click', function () { openTradeBuilder(null); });
     $('#tradeBackBtn').addEventListener('click', function () { showView('players'); });
+    $('#tradeHistBtn').addEventListener('click', function () { showView('trade-history'); });
+    $('#tradeHistBackBtn').addEventListener('click', function () { showView('players'); });
     $('#tradeWithSel').addEventListener('change', function () { if (TB) { TB.to = this.value; tbLoadTheir(); } });
     $('#tradeSearch').addEventListener('input', function () { if (TB) { TB.q = this.value; tbRenderGrid(); } });
     $('#tradeSetSel').addEventListener('change', function () { if (TB) { TB.setId = this.value; tbRenderGrid(); } });
