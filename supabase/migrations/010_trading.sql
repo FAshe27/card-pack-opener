@@ -41,10 +41,11 @@ create or replace function public.cps_propose_trade(
   p_want_set text, p_want_card text, p_want_holo boolean)
 returns jsonb language plpgsql security definer set search_path = cps, pg_temp as $$
 declare
-  a   cps.accounts%rowtype;
-  tgt cps.accounts%rowtype;
-  oc  cps.collection%rowtype;
-  wc  cps.collection%rowtype;
+  a      cps.accounts%rowtype;
+  tgt    cps.accounts%rowtype;
+  oc     cps.collection%rowtype;
+  wc     cps.collection%rowtype;
+  new_id uuid;
 begin
   a := cps.auth(p_token);
   if p_to = a.id then raise exception 'You cannot trade with yourself.'; end if;
@@ -74,12 +75,13 @@ begin
     raise exception 'You have too many pending offers (max 10).';
   end if;
 
-  return jsonb_build_object('id', (insert into cps.trade_offers
+  insert into cps.trade_offers
       (from_account, to_account, offer_set, offer_card, offer_holo,
        want_set, want_card, want_holo)
-      values (a.id, tgt.id, p_offer_set, p_offer_card, coalesce(p_offer_holo,false),
-              p_want_set, p_want_card, coalesce(p_want_holo,false))
-      returning id).id);
+    values (a.id, tgt.id, p_offer_set, p_offer_card, coalesce(p_offer_holo,false),
+            p_want_set, p_want_card, coalesce(p_want_holo,false))
+    returning id into new_id;
+  return jsonb_build_object('id', new_id);
 end $$;
 
 -- --- respond (accept / decline) -------------------------------------------
