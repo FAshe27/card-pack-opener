@@ -2613,7 +2613,7 @@ CardSets.register({
       "rarity": "common",
       "id": "microphone",
       "subtitle": "Audio",
-      "details": "The Shure SM58 is indestructible.",
+      "details": "Some people sing into these.",
       "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/AKG_C214_Condenser_microphone.jpg/1280px-AKG_C214_Condenser_microphone.jpg"
     },
     {
