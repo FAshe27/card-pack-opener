@@ -1602,6 +1602,7 @@
         '<div class="set-meta"><b>' + esc(x.name) + '</b><span>' + x.cards.length + ' cards · ' + (on ? 'on the server' : 'not on the server yet') + '</span></div>' +
         '<div class="set-actions"><button class="btn small' + (on ? ' ghost' : ' primary') + '" data-sync="' + esc(x.id) + '">' + (on ? 'Re-sync' : 'Upload') + '</button></div></div>';
     }).join('');
+    $('#gaAllSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
     $('#acctList').innerHTML = '<div class="muted small">Loading…</div>';
     $('#codeList').innerHTML = '<div class="muted small">Loading…</div>';
     try {
@@ -2075,6 +2076,18 @@
     $('#naPinRandom').addEventListener('click', function () { $('#naPin').value = randomPin(); });
     $('#acctList').addEventListener('click', adminAction);
     $('#adminRefresh').addEventListener('click', function () { refreshCloud().then(renderAdmin); });
+    $('#gaAllBtn').addEventListener('click', async function () {
+      var sid = $('#gaAllSet').value, n = parseInt($('#gaAllN').value, 10);
+      if (!sid || !(n >= 1)) { toast('Pick a set and a number of packs.', 'warn'); return; }
+      var setName = (window.CardSets.get(sid) || {}).name || sid;
+      if (!confirm('Give ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to every non-admin player?')) return;
+      var btn = this; btn.disabled = true;
+      try {
+        var r = await CPS.cloud.call('admin_grant_packs_all', { p_set: sid, p_packs: n });
+        toast('Gave ' + n + ' pack' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        renderAdmin();
+      } catch (e) { cloudError(e); btn.disabled = false; }
+    });
     initCollapsible();
     document.addEventListener('click', function (e) {
       var b = e.target.closest('.collapse-btn'); if (!b) return;
