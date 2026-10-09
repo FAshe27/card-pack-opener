@@ -70,6 +70,18 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .notif-text { flex: 1; min-width: 0; }
 .notif-time { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
 .notif-actions { display: flex; gap: 10px; margin-top: 4px; }
+.quest-list { display: grid; gap: 10px; margin-top: 12px; }
+.quest { border: 1px solid var(--line); border-left-width: 3px; border-radius: 12px; padding: 12px 14px; background: var(--panel2); }
+.quest.tier-easy { border-left-color: #38c97f; }
+.quest.tier-medium { border-left-color: #3f8cff; }
+.quest.tier-hard { border-left-color: #b35cff; }
+.quest.claimable { border-color: var(--accent); box-shadow: 0 0 14px rgba(124,108,255,.28); }
+.quest-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+.quest-tier { display: block; font-size: .78rem; color: var(--muted); text-transform: capitalize; margin-top: 2px; }
+.quest-bar { height: 8px; }
+.quest-done { color: var(--good); font-weight: 700; font-size: .85rem; white-space: nowrap; }
+.quest-prog { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.tab.has-claimable { color: #06281c; background: linear-gradient(135deg, #9df0c0, #38c97f); animation: wheelPulse 1.6s ease-in-out infinite; }
 .grant-all { margin-bottom: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; align-items: center; }
 .grant-all .muted { margin-right: 4px; }
 .variant-census { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.02); display: grid; gap: 5px; font-size: .88rem; }
