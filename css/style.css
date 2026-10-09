@@ -1064,6 +1064,21 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .trade-pick.selected { border-color: #f5b942; background: #1d1a12; }
 .trade-dock { position: sticky; bottom: 0; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 10px 14px; margin-top: 12px; background: #1c1c22; border: 1px solid #f5b942; border-radius: 12px; }
 .trade-dock .btn { margin-left: auto; flex: none; }
-.trade-review { display: flex; align-items: flex-start; gap: 14px; justify-content: center; padding: 12px 0; }
-.trade-review .trade-side { flex: 1; max-width: 220px; }
-.trade-review-actions { display: flex; gap: 10px; justify-content: center; margin: 12px 0 24px; flex-wrap: wrap; }
+.trade-review-group { margin: 4px 0 8px; }
+.trade-review-cards { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.trade-review-cards .trade-card { width: 118px; }
+.trade-review-swap { text-align: center; font-size: 26px; color: #f5b942; margin: 2px 0; }
+.trade-review-actions { display: flex; gap: 10px; justify-content: center; margin: 14px 0 24px; flex-wrap: wrap; }
+#tradeReview { padding-bottom: 8px; }
+.trade-items { display: flex; flex-wrap: wrap; gap: 8px; }
+.trade-items .trade-card { width: 92px; }
+.trade-items .trade-cap { font-size: .75rem; }
+.trade-chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
+.trade-chip { display: inline-flex; align-items: center; gap: 6px; background: #2a2a32; border: 1px solid #4a4a55; border-radius: 16px; padding: 3px 4px 3px 10px; font-size: .8rem; }
+.trade-chip b { font-weight: 600; }
+.chip-holo { border: none; background: none; color: #666; cursor: pointer; font-size: 14px; padding: 2px 4px; }
+.chip-holo.on { color: #f5b942; text-shadow: 0 0 6px #f5b942; }
+.chip-x { border: none; background: none; color: #999; cursor: pointer; font-size: 14px; padding: 2px 6px; }
+.chip-x:hover { color: #fff; }
+.prof-set { cursor: pointer; transition: border-color .15s; }
+.prof-set:hover { border-color: #f5b942; }
