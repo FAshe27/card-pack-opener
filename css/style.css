@@ -82,6 +82,9 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .quest-done { color: var(--good); font-weight: 700; font-size: .85rem; white-space: nowrap; }
 .quest-prog { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 700; white-space: nowrap; }
 .tab.has-claimable { color: #06281c; background: linear-gradient(135deg, #9df0c0, #38c97f); animation: wheelPulse 1.6s ease-in-out infinite; }
+/* set picker: sets with packs glow gold, the current set is marked in accent */
+#setSelect option.has-packs { color: #ffe08a; font-weight: 700; }
+#setSelect option.is-current { color: #aab4ff; }
 .grant-all { margin-bottom: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; align-items: center; }
 .grant-all .muted { margin-right: 4px; }
 .variant-census { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.02); display: grid; gap: 5px; font-size: .88rem; }
