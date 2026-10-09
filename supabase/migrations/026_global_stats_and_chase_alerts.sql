@@ -150,7 +150,8 @@ begin
 end $$;
 
 -- --- global pull stats -------------------------------------------------------------
-create or replace function public.cps_global_pull_stats()
+drop function if exists public.cps_global_pull_stats();
+create or replace function public.cps_global_pull_stats(p_token text)
 returns jsonb language sql security definer set search_path = cps, pg_temp as $$
   with agg as (
     select coalesce(sum(pulled), 0) as pulled,
