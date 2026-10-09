@@ -781,7 +781,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .rarity-progress { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
 .rp { text-align: left; background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: border-color .2s, background .2s; }
 .rp:hover { background: rgba(255,255,255,.07); } .rp.active { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 12%, transparent); }
-.rp-top { display: flex; justify-content: space-between; font-size: .85rem; font-weight: 700; } .rp-name { color: var(--rc); }
+.rp-top { display: flex; justify-content: space-between; gap: 8px; font-size: .85rem; font-weight: 700; } .rp-top > span:last-child { white-space: nowrap; } .rp-name { color: var(--rc); }
 .bar { display: block; height: 7px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--rc2, var(--accent)), var(--rc, var(--accent2))); transition: width .6s ease; }
 .r-chase .bar i { background: linear-gradient(90deg,#ff4fa3,#ffb21e,#38c97f,#3f8cff,#b35cff); }
