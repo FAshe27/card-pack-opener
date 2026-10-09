@@ -1,7 +1,7 @@
 /* Card set: Music Pack (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "music-pack",
-  "name": "Music Pack",
+  "name": "Music Albums",
   "code": "MUSIC",
   "description": "music be like doot doo doot and people be like YEAHHHHHHHH",
   "theme": {
