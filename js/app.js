@@ -222,7 +222,10 @@
 
   function fillSetSelect() {
     $('#setSelect').innerHTML = window.CardSets.all().map(function (s) {
-      return '<option value="' + esc(s.id) + '"' + (s.id === S.set.id ? ' selected' : '') + '>' + esc(s.name) + ' (' + packCount(s) + ')</option>';
+      var n = packCount(s), cur = s.id === S.set.id, cls = (n > 0 ? 'has-packs' : '') + (cur ? ' is-current' : '');
+      var mark = (cur ? '\u2192 ' : '') + (n > 0 ? '\u25CF ' : '');
+      return '<option value="' + esc(s.id) + '"' + (cur ? ' selected' : '') + (cls ? ' class="' + cls.trim() + '"' : '') + '>' +
+        mark + esc(s.name) + ' (' + n + ')</option>';
     }).join('');
   }
 
