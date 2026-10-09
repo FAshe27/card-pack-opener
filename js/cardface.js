@@ -126,17 +126,32 @@
       (t.artBackground ? '--art-bg:' + t.artBackground + ';' : '') + (t.artFit ? '--art-fit:' + t.artFit + ';' : '');
   }
 
-  /* opts: {holo, flippable, isNew, count, holoCount, cls} */
+  /* Numbered variant tiers: print run + display name. */
+  var VARIANTS = {
+    rainbow:  { name: 'Rainbow',    run: 50 },
+    prism:    { name: 'Prism',      run: 10 },
+    obsidian: { name: 'Obsidian',   run: 5 },
+    oneofone: { name: 'One-of-One', run: 1 }
+  };
+  function variantLabel(tier, serial) {
+    var t = VARIANTS[tier]; if (!t) return '';
+    return t.name + ' #' + serial + '/' + t.run;
+  }
+
+  /* opts: {holo, flippable, isNew, count, holoCount, cls, variant:{tier, serial}} */
   function render(set, card, opts) {
     opts = opts || {};
     var cls = ['card', 'r-' + card.rarity];
     if (opts.holo) cls.push('holo');
+    if (opts.variant && VARIANTS[opts.variant.tier]) cls.push('variant', 'vt-' + opts.variant.tier);
     if (opts.flippable) cls.push('flippable');
     if (opts.cls) cls.push(opts.cls);
     var badges = '';
     if (opts.isNew) badges += '<span class="badge-new">NEW</span>';
     if (opts.count > 1) badges += '<span class="badge-count">×' + opts.count + '</span>';
     if (opts.holoCount > 0) badges += '<span class="badge-holo" title="' + opts.holoCount + ' holo">✦' + (opts.holoCount > 1 ? opts.holoCount : '') + '</span>';
+    if (opts.variant && VARIANTS[opts.variant.tier])
+      badges += '<span class="badge-variant" title="' + variantLabel(opts.variant.tier, opts.variant.serial) + '">🌈 ' + opts.variant.serial + '/' + VARIANTS[opts.variant.tier].run + '</span>';
     return '<div class="' + cls.join(' ') + '" data-set="' + esc(set.id) + '" data-card="' + esc(card.id) + '" style="' + themeStyle(set) + '">' +
       '<div class="card-inner">' + front(set, card, opts.holo) + (opts.flippable ? back(set) : '') + '</div>' + badges + '</div>';
   }
@@ -172,5 +187,5 @@
       '<div class="crimp bottom"></div></div></div>';
   }
 
-  CPS.cards = { codeCls: codeCls, swatch: swatch, nameFit: nameFit, render: render, silhouette: silhouette, collected: collected, pack: pack, art: art, themeStyle: themeStyle };
+  CPS.cards = { codeCls: codeCls, swatch: swatch, nameFit: nameFit, render: render, silhouette: silhouette, collected: collected, pack: pack, art: art, themeStyle: themeStyle, VARIANTS: VARIANTS, variantLabel: variantLabel };
 })(window.CPS);
