@@ -248,7 +248,10 @@
     if (name === 'admin' && !quiet && isAdmin() && !S.dev) requestDevUnlock();
   }
   function renderView() {
-    if (S.view === 'collection') renderCollection();
+    if (S.view === 'collection') {
+      renderCollection();
+      if (isCloud() && !S.myVariants) ensureVariants().then(function () { if (S.view === 'collection') renderCollection(); });
+    }
     else if (S.view === 'players') renderPlayers();
     else if (S.view === 'trade') renderTradeBuilder();
     else if (S.view === 'trade-history') renderTradeHistory();
@@ -576,9 +579,15 @@
     renderTradein(set, st);
 
     var q = f.q.trim().toLowerCase();
+    var numberedIds = null;
+    if (f.own === 'numbered') {
+      numberedIds = {};
+      (S.myVariants || []).forEach(function (v) { if (v.set_id === set.id) numberedIds[v.card_id] = 1; });
+    }
     var list = set.cards.filter(function (c) {
       var e = st.cards[c.id], has = e && e.n > 0;
       if (f.rarity && c.rarity !== f.rarity) return false;
+      if (f.own === 'numbered' && !numberedIds[c.id]) return false;
       if (f.own === 'owned' && !has) return false;
       if (f.own === 'missing' && has) return false;
       if (f.own === 'dupes' && !(e && e.n > 1)) return false;
@@ -1988,7 +1997,8 @@
       var b = e.target.closest('button'); if (!b) return;
       S.coll.own = b.dataset.own;
       $$('#collOwn button').forEach(function (x) { x.classList.toggle('active', x === b); });
-      renderCollection();
+      if (b.dataset.own === 'numbered') ensureVariants().then(function () { renderCollection(); });
+      else renderCollection();
     });
     $('#rarityProgress').addEventListener('click', function (e) {
       var b = e.target.closest('[data-r]'); if (!b) return;
