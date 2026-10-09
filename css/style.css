@@ -70,6 +70,14 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .notif-text { flex: 1; min-width: 0; }
 .notif-time { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
 .notif-actions { display: flex; gap: 10px; margin-top: 4px; }
+.variant-census { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.02); display: grid; gap: 5px; font-size: .88rem; }
+.variant-census .vc-row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.variant-census .vc-n { font-weight: 800; font-variant-numeric: tabular-nums; }
+.variant-census .vc-done { color: var(--good); }
+.variant-census .vc-mine { color: var(--accent2); font-weight: 700; }
+.variants-grid .card { max-width: 170px; }
+.vserial-cap { text-align: center; font-size: .8rem; margin-top: 4px; color: var(--muted); }
+.vserial-cap b { color: var(--text); }
 .gift-modal label { display: block; margin: 10px 0; }
 .gift-modal select { width: 100%; margin-top: 4px; }
 .gift-modal .trade-card { max-width: 170px; margin: 4px 0 8px; }
@@ -655,6 +663,27 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   background-image: radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.4px); background-size: 7cqw 7cqw; animation: twinkle 2.2s ease-in-out infinite;
 }
 
+/* numbered variants: rainbow border, amped holo, serial badge */
+.card.variant::after {
+  content: ''; position: absolute; inset: -2.5px; border-radius: 14px; z-index: -1; pointer-events: none;
+  background: conic-gradient(#ff5f5f, #ffb21e, #f7f75f, #38c97f, #3f8cff, #b35cff, #ff5f5f);
+  animation: variant-hue 5s linear infinite;
+}
+@keyframes variant-hue { to { filter: hue-rotate(360deg); } }
+.card.variant .front::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; mix-blend-mode: color-dodge;
+  background:
+    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.5), transparent 42%),
+    linear-gradient(115deg, transparent 10%, rgba(255,70,190,.8) 24%, rgba(60,220,255,.8) 38%, rgba(255,240,90,.8) 52%, rgba(120,255,160,.75) 64%, rgba(180,120,255,.75) 74%, transparent 88%);
+  background-size: 100% 100%, 200% 200%; animation: holo-fast 2.6s ease-in-out infinite;
+}
+@keyframes holo-fast { 0%, 100% { background-position: 50% 50%, 0% 50%; opacity: .85; } 50% { background-position: 50% 50%, 100% 50%; opacity: 1; } }
+.card.variant .front::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; border-radius: inherit; opacity: .5; mix-blend-mode: overlay;
+  background-image: radial-gradient(rgba(255,255,255,.95) 1px, transparent 1.4px); background-size: 7cqw 7cqw; animation: twinkle 1.6s ease-in-out infinite;
+}
+.card.vt-oneofone::after { animation-duration: 2.5s; box-shadow: 0 0 18px rgba(255,210,102,.55); }
+
 /* back */
 .back { background: linear-gradient(145deg, var(--p1), var(--p2)); padding: 4cqw; box-shadow: 0 8px 24px rgba(0,0,0,.45); }
 .cb { position: relative; height: 100%; border-radius: 3.5cqw; border: 1.2cqw solid rgba(255,255,255,.55); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6cqw; overflow: hidden;
@@ -676,10 +705,11 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .card.glow.holo { outline: 2px solid rgba(255,255,255,.35); outline-offset: 3px; }
 
 /* badges */
-.badge-new, .badge-count, .badge-holo { position: absolute; z-index: 3; font-weight: 800; border-radius: 999px; font-size: 11px; padding: 3px 8px; pointer-events: none; box-shadow: 0 3px 10px rgba(0,0,0,.4); }
+.badge-new, .badge-count, .badge-holo, .badge-variant { position: absolute; z-index: 3; font-weight: 800; border-radius: 999px; font-size: 11px; padding: 3px 8px; pointer-events: none; box-shadow: 0 3px 10px rgba(0,0,0,.4); }
 .badge-new { top: -8px; left: -6px; background: var(--good); color: #062; letter-spacing: .06em; }
 .badge-count { top: -8px; right: -6px; background: #fff; color: #111; }
 .badge-holo { bottom: -8px; right: -6px; background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); color: #222; }
+.badge-variant { top: -8px; right: -6px; background: linear-gradient(90deg,#ff5f5f,#ffb21e,#38c97f,#3f8cff,#b35cff); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); }
 .card.flippable:not(.flipped) .badge-new { opacity: 0; }
 .card.flippable .badge-new { transition: opacity .3s .5s; }
 
@@ -803,6 +833,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 .fx-banner { position: fixed; inset: 0; z-index: 65; display: grid; place-items: center; pointer-events: none; }
 .fx-banner span { font-size: clamp(2.4rem, 8vw, 5.5rem); font-weight: 900; letter-spacing: .04em; animation: bannerIn 2.2s cubic-bezier(.2,1.3,.4,1) forwards; text-shadow: 0 6px 30px rgba(0,0,0,.6); -webkit-text-stroke: 2px rgba(0,0,0,.25); }
 .fx-banner.legendary span { color: #ffd166; text-shadow: 0 0 40px rgba(255,178,30,.9), 0 6px 30px rgba(0,0,0,.6); }
+.fx-banner.variant span { background: linear-gradient(90deg,#ff5f5f,#ffb21e,#f7f75f,#38c97f,#3f8cff,#b35cff,#ff5f5f); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 26px rgba(255,255,255,.75)); animation: bannerIn 3.2s cubic-bezier(.2,1.3,.4,1) forwards, rainbowText 1s linear infinite; }
 .fx-banner.chase span { background: linear-gradient(90deg,#ff4fa3,#ffb21e,#f5f56a,#38c97f,#12c2e9,#b35cff); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 24px rgba(255,79,163,.8)); animation: bannerIn 2.8s cubic-bezier(.2,1.3,.4,1) forwards, rainbowText 1s linear infinite; }
 
 /* ===================================================== keyframes */
@@ -1094,6 +1125,9 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .trade-chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
 .trade-chip { display: inline-flex; align-items: center; gap: 6px; background: #2a2a32; border: 1px solid #4a4a55; border-radius: 16px; padding: 3px 4px 3px 10px; font-size: .8rem; }
 .trade-chip b { font-weight: 600; }
+.chip-variant { font-size: .72rem; font-weight: 800; background: linear-gradient(90deg,#ff5f5f,#ffb21e,#38c97f,#3f8cff,#b35cff); -webkit-background-clip: text; background-clip: text; color: transparent; white-space: nowrap; }
+.gift-copies { display: grid; gap: 6px; margin: 10px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.gift-copies .fld-label { font-size: .8rem; color: var(--muted); font-weight: 700; }
 .chip-holo { border: none; background: none; color: #666; cursor: pointer; font-size: 14px; padding: 2px 4px; }
 .chip-holo.on { color: #f5b942; text-shadow: 0 0 6px #f5b942; }
 .chip-x { border: none; background: none; color: #999; cursor: pointer; font-size: 14px; padding: 2px 6px; }
