@@ -59,6 +59,8 @@
 
     var now = Date.now();
     var pulls = server.cards.map(function (c) {
+      if (c.ticket) return { ticket: true };
+      if (c.tokens) return { tokens: c.tokens };
       var home = window.CardSets.get(c.set_id) || null;
       var card = (home && home.byId.get(c.id)) || {
         id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '',
@@ -74,7 +76,7 @@
     ctx.ps({ id: 'jumbled' }).packs = server.packs_left;
     var touched = {};
     pulls.forEach(function (p) {
-      if (!p.homeSet) return;
+      if (p.ticket || p.tokens || !p.homeSet) return;
       var st = ctx.ps(p.homeSet);
       var e = st.cards[p.card.id] = st.cards[p.card.id] || { n: 0, h: 0 };
       e.n++; if (p.holo) e.h++;
