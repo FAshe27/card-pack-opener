@@ -54,12 +54,21 @@
     }
     html += '</div>';
     box.innerHTML = html;
+    updateBadge();
     bind();
   }
 
   function setTokens(n) {
     ctx.S.gameTokens = n;
     var t = ctx.$('#gameTokens'); if (t) t.textContent = n;
+    updateBadge();
+  }
+
+  function updateBadge() {
+    var b = ctx.$('#arcadeBadge'); if (!b) return;
+    var n = ctx.S.gameTokens || 0;
+    b.textContent = n;
+    b.classList.toggle('hidden', !(n > 0));
   }
 
   function bind() {
@@ -116,9 +125,9 @@
       G = null;
       render();
       ctx.renderPacksSide();
-      ctx.updateWheelGlow();
+      ctx.updateWheelBadge();
     } catch (e) { ctx.cloudError(e); }
   }
 
-  CPS.games = { render: render, refresh: render };
+  CPS.games = { render: render, refresh: render, setTokens: setTokens, updateBadge: updateBadge };
 })(window.CPS);
