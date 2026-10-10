@@ -780,6 +780,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .badge-new { top: -8px; left: -6px; background: var(--good); color: #062; letter-spacing: .06em; }
 .badge-count { top: -8px; right: -6px; background: #fff; color: #111; }
 .badge-holo { bottom: -8px; right: -6px; background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); color: #222; }
+/* variant serial stays hidden until the card is flipped (pack reveal) */
+.flippable:not(.flipped) .badge-variant { display: none; }
 .badge-variant { top: -8px; right: -6px; background: linear-gradient(90deg,#ff5f5f,#ffb21e,#38c97f,#3f8cff,#b35cff); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); }
 .card.flippable:not(.flipped) .badge-new { opacity: 0; }
 .card.flippable .badge-new { transition: opacity .3s .5s; }
