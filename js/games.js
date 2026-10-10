@@ -35,7 +35,7 @@
         'Ties keep your streak alive, but one wrong guess busts the whole bank &mdash; claim your prizes any time! ' +
         'Streaks of 3, 5, 7&hellip; guarantee a bonus pack.</p>';
       html += '<button class="btn primary" id="gameStartBtn"' + (tokens > 0 ? '' : ' disabled') + '>New run (1 token)</button>';
-      if (!(tokens > 0)) html += '<p class="muted small">Earn tokens from packs (1&ndash;3 on a token slip, ~1 in 10 packs).</p>';
+      if (!(tokens > 0)) html += '<p class="muted small">Earn tokens from packs (5 on a token slip, ~1 in 10 packs).</p>';
     } else {
       html += '<div class="game-table">';
       html += '<div class="game-card">' + cardHTML(G.card) + '</div>';
