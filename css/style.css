@@ -1081,16 +1081,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .cf-logo-strip:has(.broken) { background: rgba(255,255,255,.045); border-color: rgba(255,255,255,.07); }
 
 /* ===================================================== prize wheel */
-.tab.has-spins {
-  color: #1a1206;
-  background: linear-gradient(135deg, #ffe08a, #ffb21e);
-  animation: wheelPulse 1.6s ease-in-out infinite;
-}
-.tab.has-spins:hover { color: #1a1206; }
-@keyframes wheelPulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(255,178,30,.45); }
-  50% { box-shadow: 0 0 20px rgba(255,178,30,.9); }
-}
+/* wheel/arcade counts now show as tab badges (see .tab-badge) */
 .wheel-wrap { max-width: 640px; margin: 0 auto; text-align: center; padding: 12px 0 48px; }
 .spin-btns { display: flex; gap: 10px; justify-content: center; margin-top: 20px; } .spin-btns .btn.big { flex: 1 1 0; width: 0; margin: 0; }
 .wheel-title { margin: 6px 0 2px; }
