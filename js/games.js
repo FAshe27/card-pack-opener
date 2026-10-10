@@ -15,11 +15,16 @@
     return '—';
   }
 
+  function rankLabel(r) {
+    return r === 14 ? 'A' : r === 13 ? 'K' : r === 12 ? 'Q' : r === 11 ? 'J' : String(r);
+  }
+
   function cardHTML(c) {
-    var home = window.CardSets.get(c.set_id) || null;
-    var card = home && home.byId.get(c.id);
-    if (!card || !home) return '<div class="card r-common"><div class="card-inner"><div class="face">?</div></div></div>';
-    return CPS.cards.render(home, card, {});
+    var red = (c.suit === '\u2665' || c.suit === '\u2666');
+    return '<div class="pcard' + (red ? ' red' : '') + '">' +
+      '<div class="pc-corner tl"><b>' + rankLabel(c.rank) + '</b><span>' + c.suit + '</span></div>' +
+      '<div class="pc-center">' + c.suit + '</div>' +
+      '<div class="pc-corner br"><b>' + rankLabel(c.rank) + '</b><span>' + c.suit + '</span></div></div>';
   }
 
   function bankHTML(bank) {
