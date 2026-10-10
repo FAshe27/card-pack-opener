@@ -19,12 +19,12 @@
     <nav class="tabs" role="tablist">
       <button data-view="packs" class="tab active">Open Packs</button>
       <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel</button>
+      <button data-view="arcade" class="tab arcade-tab" id="arcadeTabBtn">🕹️ Arcade</button>
       <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily</button>
       <button data-view="collection" class="tab">Collection</button>
       <button data-view="players" class="tab" id="playersTabBtn">Players<span class="tab-badge hidden" id="playersBadge"></span></button>
       <button data-view="stats" class="tab">Stats</button>
       <button data-view="odds" class="tab">Odds</button>
-      <button data-view="arcade" class="tab arcade-tab" id="arcadeTabBtn">🕹️ Arcade</button>
       <button data-view="admin" class="tab admin-tab" id="adminTabBtn">Admin</button>
     </nav>
     <div class="top-actions">
@@ -278,6 +278,11 @@
             <input id="gaSpinAllN" type="number" value="3" min="1" max="999" aria-label="Spins">
             <button class="btn small primary" id="gaSpinAllBtn" type="button">Grant to everyone</button>
           </div>
+          <div class="grant-all row wrap">
+            <b>Give tokens to everyone</b><span class="muted small">(all non-admin players)</span>
+            <input id="gaTokenAllN" type="number" value="3" min="1" max="999" aria-label="Tokens">
+            <button class="btn small primary" id="gaTokenAllBtn" type="button">Grant to everyone</button>
+          </div>
           <div id="acctList" class="acct-list"></div>
         </div>
         <div class="panel wide collapsible" id="panelCodes">
@@ -370,6 +375,7 @@
   <script src="js/globalstats.js"></script>
   <script src="js/jumbled.js"></script>
   <script src="js/games.js"></script>
+  <script src="js/admintokens.js"></script>
   <script src="js/profile.js"></script>
 </body>
 </html>
