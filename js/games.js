@@ -15,16 +15,8 @@
     return '—';
   }
 
-  function rankLabel(r) {
-    return r === 14 ? 'A' : r === 13 ? 'K' : r === 12 ? 'Q' : r === 11 ? 'J' : String(r);
-  }
-
   function cardHTML(c) {
-    var red = (c.suit === '\u2665' || c.suit === '\u2666');
-    return '<div class="pcard' + (red ? ' red' : '') + '">' +
-      '<div class="pc-corner tl"><b>' + rankLabel(c.rank) + '</b><span>' + c.suit + '</span></div>' +
-      '<div class="pc-center">' + c.suit + '</div>' +
-      '<div class="pc-corner br"><b>' + rankLabel(c.rank) + '</b><span>' + c.suit + '</span></div></div>';
+    return '<div class="numcard"><span>' + c.rank + '</span></div>';
   }
 
   function bankHTML(bank) {
@@ -46,14 +38,15 @@
       html += '<div class="game-streak">Streak: <b>' + G.streak + '</b></div>';
       if (!G.over) {
         var rk = G.card.rank;
-        html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 14 ? ' disabled' : '') + '>▲ Higher</button>' +
-                '<button class="btn big" id="gameLower"' + (rk <= 2 ? ' disabled' : '') + '>▼ Lower</button></div>';
+        html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 10 ? ' disabled' : '') + '>▲ Higher</button>' +
+                '<button class="btn big" id="gameLower"' + (rk <= 1 ? ' disabled' : '') + '>▼ Lower</button></div>';
         html += '<button class="btn ghost" id="gameClaim">Claim prizes &amp; end run</button>';
       } else {
         html += '<div class="game-over">' + (G.busted ? '💥 Bust! The bank is gone.' : 'Prizes claimed!') + '</div>';
         html += '<button class="btn primary" id="gameAgain">Play again (1 token)</button>';
       }
       html += '<div class="prize-box"><b>Prize bank</b><div id="gameBank">' + bankHTML(G.bank) + '</div></div>';
+      html += '<p class="muted small">Cards are numbered 1&ndash;10.</p>';
       html += '</div>';
     }
     box.innerHTML = html;
