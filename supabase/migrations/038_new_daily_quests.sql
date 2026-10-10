@@ -296,15 +296,15 @@ begin
   for set_rec in select distinct e->>'set_id' as sid from jsonb_array_elements(out) e loop
     update cps.daily_quests q
     set meta = jsonb_build_object('sets',
-              (select coalesce(jsonb_agg(distinct s), '[]'::jsonb)
-               from (select jsonb_array_elements_text(coalesce(q.meta->'sets', '[]'::jsonb)) as s
-                     union select set_rec.sid as s) sub)),
-        progress = (select count(distinct s)
-                    from (select jsonb_array_elements_text(coalesce(q.meta->'sets', '[]'::jsonb)) as s
-                          union select set_rec.sid as s) sub),
-        done = (select count(distinct s) >= 3
-                from (select jsonb_array_elements_text(coalesce(q.meta->'sets', '[]'::jsonb)) as s
-                      union select set_rec.sid as s) sub)
+              (select coalesce(jsonb_agg(distinct sx), '[]'::jsonb)
+               from (select jsonb_array_elements_text(coalesce(q.meta->'sets', '[]'::jsonb)) as sx
+                     union select set_rec.sid as sx) sub)),
+        progress = (select count(distinct sx)
+                    from (select jsonb_array_elements_text(coalesce(q.meta->'sets', '[]'::jsonb)) as sx
+                          union select set_rec.sid as sx) sub),
+        done = (select count(distinct sx) >= 3
+                from (select jsonb_array_elements_text(coalesce(q.meta->'sets', '[]'::jsonb)) as sx
+                      union select set_rec.sid as sx) sub)
     where q.account_id = a.id
       and q.day = (now() at time zone 'America/Chicago')::date
       and q.quest_key = 'pull_3_sets'
