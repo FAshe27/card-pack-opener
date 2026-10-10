@@ -1339,17 +1339,15 @@
     var set = S.set, st = ps();
     // Aggregate across all sets
     var agg = { opened: 0, pulled: 0, holos: 0, byRarity: {}, unique: 0, total: 0, packs: 0 };
-    var perSet = window.CardSets.all().map(function (sd) {
+    window.CardSets.all().forEach(function (sd) {
       var pst = S.player.sets[sd.id], psd = pst ? pst.stats : null;
-      var o = pst ? ownedCount(sd, pst) : 0;
       agg.opened += psd ? psd.opened || 0 : 0;
       agg.pulled += psd ? psd.pulled || 0 : 0;
       agg.holos += psd ? psd.holos || 0 : 0;
-      agg.unique += o; agg.total += sd.cards.length; agg.packs += pst ? pst.packs || 0 : 0;
+      agg.unique += pst ? ownedCount(sd, pst) : 0;
+      agg.total += sd.cards.length; agg.packs += pst ? pst.packs || 0 : 0;
       R.RARITIES.forEach(function (r) { agg.byRarity[r.key] = (agg.byRarity[r.key] || 0) + (psd && psd.byRarity[r.key] || 0); });
-      return { set: sd, opened: psd ? psd.opened || 0 : 0, pulled: psd ? psd.pulled || 0 : 0,
-               holos: psd ? psd.holos || 0 : 0, owned: o };
-    }).filter(function (x) { return x.opened > 0 || x.owned > 0; });
+    });
     var epicPlus = (agg.byRarity.epic || 0) + (agg.byRarity.legendary || 0) + (agg.byRarity.chase || 0);
     var tiles = [
       ['Packs opened', agg.opened], ['Cards pulled', agg.pulled], ['Unique cards', agg.unique + ' / ' + agg.total],
@@ -1362,12 +1360,7 @@
       var n = agg.byRarity[r.key] || 0;
       return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + n + (agg.pulled ? ' <em>' + U.pct(n / agg.pulled) + '</em>' : '') + '</span></div>';
     }).join('');
-    $('#statsTable').innerHTML = '<thead><tr><th>Set</th><th>Packs</th><th>Cards</th><th>Unique</th><th>Done</th><th>Holos</th></tr></thead><tbody>' +
-      perSet.map(function (x) {
-        var pc = x.set.cards.length ? (x.owned / x.set.cards.length * 100) : 0;
-        return '<tr><td>' + esc(x.set.name) + '</td><td>' + x.opened + '</td><td>' + x.pulled + '</td>' +
-          '<td>' + x.owned + ' / ' + x.set.cards.length + '</td><td>' + pc.toFixed(1) + '%</td><td>' + x.holos + '</td></tr>';
-      }).join('') + '</tbody>';
+
     var bestO = null, bestSd = null, bestSc = -1;
     window.CardSets.all().forEach(function (sd) {
       var pst = S.player.sets[sd.id], bb = pst && pst.stats && pst.stats.best, cc = bb && sd.byId.get(bb.id);
