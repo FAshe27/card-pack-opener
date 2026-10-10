@@ -31,7 +31,8 @@
       if (lb && bp) {
         bp.style.display = '';
         var bset = window.CardSets.get(lb.set_id), bcard = bset && bset.byId.get(lb.card_id);
-        $('#bigPull').innerHTML = bcard ? CPS.cards.render(bset, bcard, {}) : '';
+        var bvar = lb.variant_tier ? { tier: lb.variant_tier, serial: lb.variant_serial } : null;
+        $('#bigPull').innerHTML = bcard ? CPS.cards.render(bset, bcard, { variant: bvar }) : '';
         $('#bigPullCap').innerHTML = '<span class="bpc-line"><b>' + esc(lb.player) + '</b> pulled</span><b class="rt-' + lb.rarity + '">' + esc(lb.card_name) + '</b>' +
           '<span>' + rarityOf(lb.rarity).label + ' · ' + esc(lb.set_name) + ' · ' + new Date(lb.pulled_at).toLocaleDateString() + '</span>';
       } else if (bp) { bp.style.display = 'none'; }
