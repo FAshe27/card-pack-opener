@@ -515,6 +515,7 @@
   function finish(o) {
     o.finished = true;
     updateSummary();
+    CPS.slips.applyPackGrants(o.pulls);
     var st = ps(o.set);
     $('#revealAllBtn').classList.add('hidden');
     var nb = $('#nextPackBtn');
