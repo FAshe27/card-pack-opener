@@ -1297,3 +1297,14 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .prize-box b { display: block; margin-bottom: 6px; }
 .bank-prize { display: inline-block; background: #243; border: 1px solid #4caf50; border-radius: 999px; padding: 3px 10px; margin: 2px 4px 2px 0; font-size: 0.9rem; }
 .game-over { font-size: 1.1rem; font-weight: 700; }
+
+/* Traditional playing card for Higher/Lower */
+.pcard { position: relative; width: 150px; height: 210px; background: #fdfdf8; border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.45); color: #1a1a1a; }
+.pcard.red { color: #c0272d; }
+.pc-corner { position: absolute; display: flex; flex-direction: column; align-items: center; line-height: 1.1; padding: 8px; }
+.pc-corner b { font-size: 1.5rem; }
+.pc-corner span { font-size: 1.3rem; }
+.pc-corner.tl { top: 0; left: 0; }
+.pc-corner.br { bottom: 0; right: 0; transform: rotate(180deg); }
+.pc-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 4.5rem; opacity: .9; }
