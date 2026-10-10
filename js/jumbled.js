@@ -45,7 +45,6 @@
     if (!ctx.isCloud()) { ctx.toast('Jumbled Mess packs need online play.', 'warn'); return; }
     if (jpacks() <= 0) { ctx.toast('Out of Jumbled Mess packs! Ask Franklin for more.', 'warn'); ctx.audio.error(); return; }
     S.busy = true;
-    ctx.$('#openJumbledBtn').disabled = true;
     var server = null;
     try {
       server = await CPS.cloud.call('open_pack', { p_set: 'jumbled' });
