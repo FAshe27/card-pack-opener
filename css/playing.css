@@ -1,0 +1,47 @@
+/* Playing Cards set: the card IS the playing card — full-bleed face art,
+   no text chrome at all (no title, subtitle, details, footer, or rarity
+   frame). Name/subtitle/details/rarity stay in the card modal. NEW / holo /
+   variant badges and holo shimmer still overlay. Rarity reads via the
+   rarity-colored outer glow. Same treatment as the Periodic Table tiles,
+   but the 5/7 card ratio is already the site default so no aspect override.
+   Append to css/style.css on push. */
+.card[data-set="playing"] {
+  box-shadow: 0 0 26px 3px color-mix(in srgb, var(--rc) 55%, transparent); }
+.card[data-set="playing"] .front { padding: 0; background: #fdfdfd; }
+.card[data-set="playing"] .cf { padding: 0; gap: 0; background: #fdfdfd; border-radius: inherit; overflow: hidden; }
+.card[data-set="playing"] .cf-top,
+.card[data-set="playing"] .cf-type,
+.card[data-set="playing"] .cf-details,
+.card[data-set="playing"] .cf-foot { display: none; }
+.card[data-set="playing"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #fdfdfd; }
+/* pack skin "playing": classic card-back lattice in navy, crimson and ivory (class pack-skin-playing) */
+.pack-skin-playing .pack-top {
+  background:
+    radial-gradient(ellipse 90% 30% at 50% -8%, rgba(255,255,255,.22), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.16) 0 2px, transparent 2px 14px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.16) 0 2px, transparent 2px 14px),
+    repeating-linear-gradient(45deg, rgba(200,16,46,.35) 0 6px, transparent 6px 28px),
+    repeating-linear-gradient(-45deg, rgba(200,16,46,.35) 0 6px, transparent 6px 28px),
+    linear-gradient(180deg, #1b2a5e 0%, #141f4a 55%, #0d1430 100%);
+}
+.pack-skin-playing .pack-body {
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 108%, rgba(255,255,255,.10), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.13) 0 2px, transparent 2px 14px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.13) 0 2px, transparent 2px 14px),
+    repeating-linear-gradient(45deg, rgba(200,16,46,.30) 0 6px, transparent 6px 28px),
+    repeating-linear-gradient(-45deg, rgba(200,16,46,.30) 0 6px, transparent 6px 28px),
+    linear-gradient(180deg, #0d1430 0%, #0a0f26 70%, #070b1c 100%);
+}
+.pack-skin-playing .pack-body::before {
+  background: radial-gradient(ellipse 90% 30% at 50% 0%, rgba(255,255,255,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%); mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+}
+.pack-skin-playing .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(200,16,46,.35) 4px 6px, rgba(255,255,255,.10) 6px 9px); }
+.pack-skin-playing .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.68) 0 4px, rgba(200,16,46,.30) 4px 6px, rgba(255,255,255,.06) 6px 9px); }
+.pack-skin-playing .pack-top::after { border-bottom-color: rgba(255,255,255,.45); }
+.pack-skin-playing .pack-code { color: #f3ecd9; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(200,16,46,.9); }
+.pack-skin-playing .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.30), rgba(20,28,70,.92) 72%);
+  border-color: rgba(243,236,217,.75); box-shadow: 0 0 28px rgba(200,16,46,.55), inset 0 0 18px rgba(255,255,255,.20); text-shadow: 0 0 16px rgba(255,255,255,.9); }
+.pack-skin-playing .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(200,16,46,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-playing .pack-sub { color: #d7def5; }
