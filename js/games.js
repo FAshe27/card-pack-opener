@@ -109,12 +109,17 @@
       var bits = [];
       if (r.packs) bits.push('🎁 ' + r.packs + ' pack' + (r.packs === 1 ? '' : 's'));
       if (r.tickets) bits.push('🎟️ ' + r.tickets + ' ticket' + (r.tickets === 1 ? '' : 's'));
-      if (r.tokens) { bits.push('🪙 ' + r.tokens + ' token' + (r.tokens === 1 ? '' : 's')); setTokens((ctx.S.gameTokens || 0) + r.tokens); }
+      if (r.tokens) bits.push('🪙 ' + r.tokens + ' token' + (r.tokens === 1 ? '' : 's'));
+      // sync live balances so no refresh is needed
+      Object.keys(r.inventory || {}).forEach(function (sid) { ctx.ps({ id: sid }).packs = r.inventory[sid]; });
+      if (typeof r.spins === 'number') ctx.S.spins = r.spins;
+      if (typeof r.game_tokens === 'number') setTokens(r.game_tokens);
       ctx.toast(bits.length ? 'Claimed: ' + bits.join(', ') : 'No prizes banked.', bits.length ? 'good' : '');
       ctx.audio.reveal('epic');
       G = null;
       render();
-      if (ctx.renderPacksSide) ctx.renderPacksSide();
+      ctx.renderPacksSide();
+      ctx.updateWheelGlow();
     } catch (e) { ctx.cloudError(e); }
   }
 
