@@ -19,9 +19,9 @@
     try {
       var r = await CPS.cloud.call('admin_grant_tokens', { p_account: id, p_tokens: tn });
       ctx.toast((tn > 0 ? 'Gave ' : 'Removed ') + Math.abs(tn) + ' token' + (Math.abs(tn) === 1 ? '' : 's') + (tn > 0 ? ' to ' : ' from ') + name + ' (now ' + r.tokens_now + ').', 'good');
-      if (id === ctx.S.account.id) {
-        ctx.S.gameTokens = r.tokens_now;
-        if (CPS.games) CPS.games.render();
+      if (id === ctx.S.account.id && CPS.games) {
+        CPS.games.setTokens(r.tokens_now);
+        CPS.games.render();
       }
       ctx.renderAdmin();
     } catch (e) { ctx.cloudError(e); }
