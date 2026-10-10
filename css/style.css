@@ -709,9 +709,9 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
    modal. NEW / holo / variant badges and holo shimmer still overlay.
    The card keeps a rarity-colored outer glow so rarity reads at a glance,
    and its corner radius is concentric with the tile's white border
-   (white border: 9.67cqw radius at 4cqw inset -> card edge 13.7cqw). */
-.card[data-set="periodic"] { aspect-ratio: 1/1; border-radius: 13.7cqw;
-  box-shadow: 0 0 5cqw 0.6cqw color-mix(in srgb, var(--rc) 55%, transparent); }
+   (white border: 9.67% radius at 4% inset -> card edge 13.7%). */
+.card[data-set="periodic"] { aspect-ratio: 1/1; border-radius: 13.7%;
+  box-shadow: 0 0 26px 3px color-mix(in srgb, var(--rc) 55%, transparent); }
 .card[data-set="periodic"] .front { padding: 0; background: #000; }
 .card[data-set="periodic"] .cf { padding: 0; gap: 0; background: #000; border-radius: inherit; overflow: hidden; }
 .card[data-set="periodic"] .cf-top,
