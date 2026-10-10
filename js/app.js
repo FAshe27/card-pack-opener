@@ -1316,7 +1316,8 @@
       '<dl><dt>Number</dt><dd>#' + U.pad(card.num, set.numWidth) + ' of ' + set.cards.length + '</dd>' +
       '<dt>Set</dt><dd>' + esc(set.name) + '</dd>' +
       '<dt>You own</dt><dd>' + (owned ? e.n + (e.h ? ' (' + e.h + ' holo)' : '') : '0') + '</dd>' +
-      '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd></dl>' +
+      '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd>' +
+      '<dt>In the wild</dt><dd id="cardPop">…</dd></dl>' +
       '<div class="variant-census" id="vcensus" style="display:none"></div>' +
       (owned && card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
@@ -1331,7 +1332,18 @@
       var g = box.querySelector('[data-gift]');
       if (g) g.addEventListener('click', function () { openGiftModal(setId, cardId); });
       fillCensus(box, set, card);
+      fillPopulation(box, set, card);
     });
+  }
+
+  async function fillPopulation(box, set, card) {
+    var el = box.querySelector('#cardPop');
+    if (!el || !isCloud()) { if (el) el.textContent = '—'; return; }
+    try {
+      var pop = await CPS.cloud.call('card_population', { p_set: set.id, p_card: card.id });
+      if (el.isConnected) el.textContent = pop.total + ' cop' + (pop.total === 1 ? 'y' : 'ies') +
+        (pop.holos ? ' (' + pop.holos + ' holo)' : '');
+    } catch (e) { if (el.isConnected) el.textContent = '—'; }
   }
 
   /* ---------------------------------------------------------- stats */
