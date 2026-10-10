@@ -332,6 +332,7 @@
       S.busy = false;
       S.myVariants = null; S.variantCensus = null;
       pulls = server.cards.map(function (c) {
+        if (c.ticket) return { ticket: true };
         var card = set.byId.get(c.id) || { id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '', details: '(This card is newer than your copy of the set file. Refresh the page.)', image: '' };
         return { card: card, holo: !!c.holo, serverNew: !!c.new, variant: c.variant || null, serial: c.serial || null };
       });
@@ -342,6 +343,7 @@
     var curBest = bc ? CPS.packs.score(bc, st.stats.best.holo) : -1, prevBest = curBest, bestPull = null;
     st.packs--;
     pulls.forEach(function (p) {
+      if (p.ticket) return;
       var id = p.card.id, e = st.cards[id];
       p.isNew = server ? p.serverNew : (!(e && e.n) && !seen[id]); seen[id] = 1;
       e = st.cards[id] = e || { n: 0, h: 0 };
@@ -408,6 +410,7 @@
   function buildGrid(o) {
     var grid = $('#revealGrid');
     grid.innerHTML = o.pulls.map(function (p, i) {
+      if (p.ticket) return '<div class="card ticket-card deal"><div class="ticket-face">🎟️<b>SPIN TICKET</b><span>Jackpot!</span></div></div>';
       var tease = R.INDEX[p.card.rarity] >= 3 ? ' tease' : '';
       var rset = p.homeSet || o.set;
       return CPS.cards.render(rset, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease,
@@ -445,7 +448,11 @@
     var el = $('#revealGrid').children[i], p = o.pulls[i];
     el.classList.remove('tease'); el.classList.add('flipped');
     audio.flip();
-    setTimeout(function () { el.classList.add('glow'); audio.reveal(p.card.rarity); flair(el, p); }, 300);
+    if (p.ticket) {
+      setTimeout(function () { el.classList.add('glow'); fx.banner('🎟️ SPIN TICKET!', 'ticket', 2000); }, 300);
+    } else {
+      setTimeout(function () { el.classList.add('glow'); audio.reveal(p.card.rarity); flair(el, p); }, 300);
+    }
     if (o.revealed.every(Boolean)) finish(o);
     else updateSummary();
   }
