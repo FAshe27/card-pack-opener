@@ -212,7 +212,8 @@
     $('#playerBtn').classList.toggle('online', isCloud());
     $('#playerBtn').title = isCloud() ? 'Your account' : isLocked() ? 'Log in' : 'Switch player';
     $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : isLocked() ? '' : 'local';
-    updateWheelGlow();
+    updateWheelBadge();
+    if (typeof CPS !== 'undefined' && CPS.games) CPS.games.updateBadge();
   }
 
   /* Packs the player currently holds for a set. Side-effect-free (unlike ps()). */
@@ -1698,7 +1699,7 @@
         if (!sn) { toast('Enter a number of spins.', 'warn'); return; }
         r = await CPS.cloud.call('admin_grant_spins', { p_account: id, p_spins: sn });
         toast((sn > 0 ? 'Gave ' : 'Removed ') + Math.abs(sn) + ' spin' + (Math.abs(sn) === 1 ? '' : 's') + (sn > 0 ? ' to ' : ' from ') + name + ' (now ' + r.spins_now + ').', 'good');
-        if (id === S.account.id) { S.spins = r.spins_now; updateWheelGlow(); if (S.view === 'wheel') renderWheel(); }
+        if (id === S.account.id) { S.spins = r.spins_now; updateWheelBadge(); if (S.view === 'wheel') renderWheel(); }
         renderAdmin();
       } else if (act === 'granttokens') {
         await CPS.admintokens.grant(row, id, name);
@@ -1859,9 +1860,9 @@
     return isCloud() ? (S.spins || 0) : ((S.player && S.player.spins) || 0);
   }
   /* The wheel tab lights up while the player holds at least one spin. */
-  function updateWheelGlow() {
-    var b = $('#wheelTabBtn');
-    if (b) b.classList.toggle('has-spins', !isLocked() && spinCount() > 0);
+  function updateWheelBadge() {
+    var b = $('#wheelBadge');
+    if (b) { var n = spinCount(); b.textContent = n; b.classList.toggle('hidden', !(n > 0)); }
   }
   async function refreshQuests() {
     if (!isCloud()) { S.quests = null; updateDailyGlow(); return; }
@@ -1911,7 +1912,7 @@
       btn.textContent = 'Unavailable';
       res.classList.remove('hidden');
       res.innerHTML = 'The wheel isn\'t ready yet — the server needs an update. Check back soon.';
-      updateWheelGlow();
+      updateWheelBadge();
       return;
     }
     var n = spinCount();
@@ -1942,7 +1943,7 @@
       abtn.disabled = S.spinning && !S.autospin;
       abtn.textContent = S.autospin ? 'STOP' : 'AUTOSPIN';
     }
-    updateWheelGlow();
+    updateWheelBadge();
   }
   async function startWheelSpin() {
     if (S.spinning || isLocked()) return;
@@ -2120,7 +2121,7 @@
       (async function () {
         try {
           var r = await CPS.cloud.call('claim_quest', { p_key: b.dataset.claim });
-          S.spins = r.spins_now; updateWheelGlow();
+          S.spins = r.spins_now; updateWheelBadge();
           fx.confetti(120);
           toast('+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
           await refreshQuests();
@@ -2285,7 +2286,7 @@
     $: $, $$: $$, esc: esc, save: save, isCloud: isCloud, isLocked: isLocked, isAdmin: isAdmin,
     toast: toast, cloudError: cloudError, refreshCloud: refreshCloud, renderView: renderView,
     renderCollection: renderCollection, renderPacksSide: renderPacksSide,
-    updateWheelGlow: updateWheelGlow, spinCount: spinCount, refreshQuests: refreshQuests,
+    updateWheelBadge: updateWheelBadge, spinCount: spinCount, refreshQuests: refreshQuests,
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
