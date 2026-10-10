@@ -1993,15 +1993,15 @@
     }
     /* The outcome was rolled above; the animation below is just theater. */
     var endState = await CPS.wheel.playHops(canvas, cfg, out.hops || [], speed);
-    var pset = out.prize && window.CardSets.get(out.prize.set_id);
+    var prize = out.prize || {}, isTok = prize.kind === 'tokens';
+    var pset = !isTok && prize.set_id ? window.CardSets.get(prize.set_id) : null;
     if (isCloud() && pset) ps(pset).packs = out.packs_now;
+    if (isCloud() && isTok && CPS.games) CPS.games.setTokens(out.tokens_now);
     if (!isCloud()) renderPacksSide();
-    var pname = pset ? pset.name : (out.prize ? out.prize.set_id : 'packs');
-    var pwon = out.prize ? out.prize.packs : 0;
     if (endState) {
       S._wheelEnd = {
         wheelId: endState.wheelId, key: endState.key, rot: endState.rotation,
-        resultHtml: '🎉 You won <b>' + pwon + ' ' + esc(pname) + ' pack' + (pwon === 1 ? '' : 's') + '</b>!'
+        resultHtml: CPS.wheel.prizeHtml(prize, pset && pset.name)
       };
     }
     try {
