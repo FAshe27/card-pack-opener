@@ -221,7 +221,9 @@
   }
 
   function fillSetSelect() {
-    var sets = window.CardSets.all().slice().sort(function (a, b) {
+    var sets = window.CardSets.all().slice();
+    if (typeof CPS !== 'undefined' && CPS.jumbled && CPS.jumbled.count() > 0) sets.push(CPS.jumbled.pseudoSet());
+    sets.sort(function (a, b) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     });
     function opt(s) {
@@ -1999,7 +2001,14 @@
     // (its cards are already saved), so coming back mid-reveal is safe.
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
-    $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
+    $('#setSelect').addEventListener('change', function (e) {
+      if (e.target.value === 'jumbled') {
+        e.target.value = S.set.id;
+        if (CPS.jumbled) CPS.jumbled.open();
+        return;
+      }
+      selectSet(e.target.value);
+    });
     $('#openBtn').addEventListener('click', startOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
     $('#autoSpinBtn').addEventListener('click', function () {
@@ -2009,7 +2018,6 @@
       if (S.opening && S.opening.set.id === 'jumbled' && CPS.jumbled) CPS.jumbled.open();
       else startOpen();
     });
-    $('#openJumbledBtn').addEventListener('click', function () { if (CPS.jumbled) CPS.jumbled.open(); });
     $('#doneBtn').addEventListener('click', resetStage);
     $('#revealAllBtn').addEventListener('click', revealAll);
     $('#stagePack').addEventListener('click', function (e) { if (e.target.closest('.pack')) tear(); });
