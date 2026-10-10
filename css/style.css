@@ -702,6 +702,23 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent); mask-image: linear-gradient(180deg, #000 78%, transparent); }
 .cf-foot { display: flex; justify-content: space-between; align-items: center; font-size: 3.8cqw; color: #8c96ad; font-weight: 700; letter-spacing: .08em; }
 .cf-foot .cf-code.code-l5, .cf-foot .cf-code.code-l6 { letter-spacing: .03em; }
+
+/* Periodic Table set: the card IS the element tile — literally. Square,
+   full-bleed tile art, no text chrome at all (no title, subtitle, details,
+   footer, or rarity frame). Name/subtitle/details/rarity stay in the card
+   modal. NEW / holo / variant badges and holo shimmer still overlay.
+   The card keeps a rarity-colored outer glow so rarity reads at a glance,
+   and its corner radius is concentric with the tile's white border
+   (white border: 9.67cqw radius at 4cqw inset -> card edge 13.7cqw). */
+.card[data-set="periodic"] { aspect-ratio: 1/1; border-radius: 13.7cqw;
+  box-shadow: 0 0 5cqw 0.6cqw color-mix(in srgb, var(--rc) 55%, transparent); }
+.card[data-set="periodic"] .front { padding: 0; background: #000; }
+.card[data-set="periodic"] .cf { padding: 0; gap: 0; background: #000; border-radius: inherit; overflow: hidden; }
+.card[data-set="periodic"] .cf-top,
+.card[data-set="periodic"] .cf-type,
+.card[data-set="periodic"] .cf-details,
+.card[data-set="periodic"] .cf-foot { display: none; }
+.card[data-set="periodic"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #000; }
 .foil { background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* holo */
