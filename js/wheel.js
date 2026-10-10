@@ -8,9 +8,9 @@
 
   /* Static, set-agnostic structure. Resolved against a set list by localConfig(). */
   var STRUCTURE = [
-    { id: 'w1', name: 'Prize Wheel',  tiers: [{ packs: 1, weight: 1 }, { goto: 'w2', label: 'Go to second wheel', weight: 1 }] },
-    { id: 'w2', name: 'Double Wheel', tiers: [{ packs: 2, weight: 1 }, { goto: 'w1', label: 'Back to first wheel', weight: 1 }, { goto: 'w3', label: 'Go to third wheel', weight: 1 }] },
-    { id: 'w3', name: 'Triple Wheel', tiers: [{ packs: 3, weight: 1 }, { goto: 'w1', label: 'Back to first wheel', weight: 1 }, { goto: 'w2', label: 'Back to second wheel', weight: 1 }] }
+    { id: 'w1', name: 'Prize Wheel',  tiers: [{ packs: 1, weight: 1 }, { tokens: 3, weight: 1 }, { goto: 'w2', label: 'Go to second wheel', weight: 1 }] },
+    { id: 'w2', name: 'Double Wheel', tiers: [{ packs: 2, weight: 1 }, { tokens: 7, weight: 1 }, { goto: 'w1', label: 'Back to first wheel', weight: 1 }, { goto: 'w3', label: 'Go to third wheel', weight: 1 }] },
+    { id: 'w3', name: 'Triple Wheel', tiers: [{ packs: 3, weight: 1 }, { tokens: 10, weight: 1 }, { goto: 'w1', label: 'Back to first wheel', weight: 1 }, { goto: 'w2', label: 'Back to second wheel', weight: 1 }] }
   ];
 
   var GOTO_COLORS = { w1: '#8e6cc9', w2: '#ffb21e', w3: '#ff5d5d' };
@@ -45,12 +45,16 @@
             var out = {
               key: sg.key, kind: sg.kind,
               set_id: sg.set_id || null, packs: sg.packs || 0,
+              tokens: sg.tokens || 0,
               weight: sg.weight, wheel: sg.wheel || null,
               label: sg.label || ''
             };
             if (sg.kind === 'packs') {
               out.label = sg.packs + ' × ' + setName(sg.set_id);
               out.color = setColor(sg.set_id, i++);
+            } else if (sg.kind === 'tokens') {
+              out.label = sg.tokens + ' 🪙';
+              out.color = '#6b6bd6';
             } else {
               out.color = GOTO_COLORS[sg.wheel] || '#999';
             }
@@ -73,6 +77,8 @@
             sets.forEach(function (s) {
               segs.push({ key: 'packs:' + s.id, kind: 'packs', set_id: s.id, packs: t.packs, weight: t.weight });
             });
+          } else if (t.tokens) {
+            segs.push({ key: 'tokens:' + t.tokens, kind: 'tokens', tokens: t.tokens, label: t.tokens + ' Arcade tokens', weight: t.weight });
           } else {
             segs.push({ key: 'goto:' + t.goto, kind: 'goto', wheel: t.goto, label: t.label, weight: t.weight });
           }
@@ -98,7 +104,8 @@
       }
       if (!seg) break;
       hops.push({ wheel: wid, key: seg.key, kind: seg.kind, set_id: seg.set_id, packs: seg.packs, label: seg.label });
-      if (seg.kind === 'packs') { prize = { set_id: seg.set_id, packs: seg.packs }; break; }
+      if (seg.kind === 'packs') { prize = { kind: 'packs', set_id: seg.set_id, packs: seg.packs }; break; }
+      if (seg.kind === 'tokens') { prize = { kind: 'tokens', tokens: seg.tokens }; break; }
       wid = seg.wheel;
     }
     return { hops: hops, prize: prize };
@@ -240,12 +247,30 @@
     });
   }
 
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* Result banner HTML for a spin prize (packs or Arcade tokens). */
+  function prizeHtml(prize, setName) {
+    if (prize && prize.kind === 'tokens') {
+      var n = prize.tokens || 0;
+      return '🎉 You won <b>' + n + ' Arcade token' + (n === 1 ? '' : 's') + '</b>!';
+    }
+    var pname = setName || (prize && prize.set_id) || 'packs';
+    var pwon = (prize && prize.packs) || 0;
+    return '🎉 You won <b>' + pwon + ' ' + escHtml(pname) + ' pack' + (pwon === 1 ? '' : 's') + '</b>!';
+  }
+
   CPS.wheel = {
     enrich: enrich,
     localConfig: localConfig,
     rollLocal: rollLocal,
     draw: draw,
     spinTo: spinTo,
-    playHops: playHops
+    playHops: playHops,
+    prizeHtml: prizeHtml
   };
 })(window.CPS);
