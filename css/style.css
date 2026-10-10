@@ -1267,3 +1267,9 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .pill.st-expired { background: #3a3a3a; color: #888; }
 .player-name-row { display: flex; align-items: center; gap: 8px; }
 .pill-you { font-size: .65rem; padding: 1px 8px; }
+
+/* Spin ticket jackpot card */
+.ticket-card { background: linear-gradient(135deg, #1a2f1a, #2d5a2d); border: 2px solid #4caf50; }
+.ticket-face { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; font-size: 3rem; gap: 8px; padding: 20px; text-align: center; }
+.ticket-face b { font-size: 1.1rem; color: #a5d6a7; letter-spacing: 0.1em; }
+.ticket-face span { font-size: 0.9rem; color: #c8e6c9; }
