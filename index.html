@@ -24,6 +24,7 @@
       <button data-view="players" class="tab" id="playersTabBtn">Players<span class="tab-badge hidden" id="playersBadge"></span></button>
       <button data-view="stats" class="tab">Stats</button>
       <button data-view="odds" class="tab">Odds</button>
+      <button data-view="arcade" class="tab arcade-tab" id="arcadeTabBtn">🕹️ Arcade</button>
       <button data-view="admin" class="tab admin-tab" id="adminTabBtn">Admin</button>
     </nav>
     <div class="top-actions">
@@ -202,6 +203,14 @@
       </div>
     </section>
 
+    <!-- ============ ARCADE ============ -->
+    <section id="view-arcade" class="view">
+      <div class="panel" id="panelGames">
+        <h2>Arcade <span class="pill r-legendary">beta · admins only</span></h2>
+        <div id="gamesPanel"><p class="muted small">Loading…</p></div>
+      </div>
+    </section>
+
     <!-- ============ PRIZE WHEEL ============ -->
     <section id="view-wheel" class="view">
       <div class="wheel-wrap">
@@ -237,10 +246,6 @@
         <button class="btn primary" id="adminUnlockBtn" type="button">Unlock</button>
       </div>
       <div id="adminBody" class="admin-layout">
-        <div class="panel collapsible" id="panelGames">
-          <h2>Games <span class="pill r-legendary">beta · admins only</span></h2>
-          <div id="gamesPanel"><p class="muted small">Loading…</p></div>
-        </div>
         <div class="panel collapsible" id="panelCreate">
           <h2>Create a friend's account</h2>
           <p class="muted small">There's no public sign-up: you create each account here. Friends log in with their <b>username</b> and a <b>4-digit PIN</b>. The PIN is shown once after you create the account (you can reset it any time).</p>
