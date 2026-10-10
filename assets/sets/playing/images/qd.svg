@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 350">
 <rect x="1" y="1" width="248" height="348" rx="20" fill="#fdfdfd" stroke="#d8d8d8" stroke-width="2"/>
+<rect x="9" y="9" width="232" height="332" rx="14" fill="none" stroke="#b35cff" stroke-width="3"/>
 <text x="28" y="38" font-size="26" font-weight="bold" fill="#c8102e" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">Q</text><text x="28" y="82" font-size="22" fill="#c8102e" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">♦</text><g transform="translate(250,350) rotate(180)"><text x="28" y="38" font-size="26" font-weight="bold" fill="#c8102e" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">Q</text><text x="28" y="82" font-size="22" fill="#c8102e" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">♦</text></g>
 <text x="125.0" y="228.0" font-size="150" fill="#c8102e" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">♦</text>
 </svg>
