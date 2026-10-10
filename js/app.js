@@ -85,7 +85,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -262,6 +262,7 @@
     if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
     if (name === 'admin' && !canAdminArea()) name = 'packs';
+    if (name === 'arcade' && !isAdmin()) name = 'packs';
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
@@ -282,6 +283,7 @@
     else if (S.view === 'stats') renderStats();
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
+    else if (S.view === 'arcade') { if (typeof CPS !== 'undefined' && CPS.games) CPS.games.render(); }
     else if (S.view === 'wheel') renderWheel();
     else renderPacksSide();
   }
@@ -1682,7 +1684,6 @@
             esc((c.redeemed_by || []).join(', ') || '—') + '</td><td>' + esc(c.note || '') + '</td><td>' + new Date(c.created_at).toLocaleDateString() + '</td></tr>';
         }).join('') + '</tbody></table></div>' : '<div class="empty">No codes yet. Make some in Sets &amp; Settings → Prize code generator.</div>';
     } catch (e) { cloudError(e); }
-    if (CPS.games) CPS.games.render();
   }
 
   async function adminAction(e) {
