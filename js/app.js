@@ -78,7 +78,9 @@
 
     await initAccount();
     var last = Store.getPref('set', null);
-    S.set = window.CardSets.get(last) || window.CardSets.all()[0];
+    S.set = window.CardSets.get(last) ||
+      (last === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null) ||
+      window.CardSets.all()[0];
     bind();
     fillSetSelect();
     applyPrefsUI();
@@ -222,7 +224,8 @@
 
   function fillSetSelect() {
     var sets = window.CardSets.all().slice();
-    if (typeof CPS !== 'undefined' && CPS.jumbled && CPS.jumbled.count() > 0) sets.push(CPS.jumbled.pseudoSet());
+    if (typeof CPS !== 'undefined' && CPS.jumbled &&
+        (CPS.jumbled.count() > 0 || S.set.id === 'jumbled')) sets.push(CPS.jumbled.pseudoSet());
     sets.sort(function (a, b) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     });
@@ -245,7 +248,7 @@
   }
 
   function selectSet(id) {
-    var set = window.CardSets.get(id);
+    var set = id === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : window.CardSets.get(id);
     if (!set) return;
     S.set = set; Store.setPref('set', id);
     $('#setSelect').value = id;
@@ -296,7 +299,7 @@
     $('#packCountLabel').textContent = st.packs === 1 ? 'unopened pack' : 'unopened packs';
     var busy = (S.opening && !S.opening.finished) || S.busy;
     $('#openBtn').disabled = !st.packs || busy;
-    $('#openBtn').textContent = st.packs ? 'Open a pack' : 'No packs left';
+    $('#openBtn').textContent = st.packs ? (set.id === 'jumbled' ? 'Open Jumbled Mess' : 'Open a pack') : 'No packs left';
     if (CPS.jumbled) CPS.jumbled.renderBox();
     var owned = ownedCount(set, st);
     $('#miniStats').innerHTML =
@@ -322,6 +325,7 @@
 
   async function startOpen() {
     if ((S.opening && !S.opening.finished) || S.busy) return;
+    if (S.set.id === 'jumbled') { if (typeof CPS !== 'undefined' && CPS.jumbled) CPS.jumbled.open(); return; }
     if (isLocked()) { showGate({}); return; }
     var set = S.set, st = ps();
     if (st.packs <= 0) { toast('Out of packs! Win, earn, or beg for packs and redeem them!', 'warn'); audio.error(); return; }
@@ -586,6 +590,13 @@
   /* ---------------------------------------------------------- collection */
   function renderCollection() {
     var set = S.set, st = ps(), f = S.coll;
+    if (set.id === 'jumbled') {
+      $('#compTitle').textContent = 'Jumbled Mess';
+      $('#compSub').textContent = 'Cards land in their home sets \u2014 no collection here.';
+      $('#compRing').style.setProperty('--p', 0); $('#compPct').textContent = '\u2014';
+      $('#rarityProgress').innerHTML = ''; $('#collGrid').innerHTML = '';
+      return;
+    }
     var owned = ownedCount(set, st), total = set.cards.length;
     var copies = 0, holoU = 0;
     set.cards.forEach(function (c) { var e = st.cards[c.id]; if (e) { copies += e.n; if (e.h) holoU++; } });
@@ -1411,7 +1422,14 @@
 
   /* ---------------------------------------------------------- odds */
   function renderOdds() {
-    var set = S.set, rows = window.CardSets.oddsTable(set);
+    var set = S.set;
+    if (set.id === 'jumbled') {
+      $('#oddsSetName').textContent = '\u00b7 Jumbled Mess';
+      $('#oddsIntro').textContent = '5 cards, each from a random set at that set\u2019s own odds. First four: Uncommon or better. Fifth: Rare or better.';
+      $('#oddsTable').innerHTML = ''; $('#slotList').innerHTML = '';
+      return;
+    }
+    var rows = window.CardSets.oddsTable(set);
     $('#oddsSetName').textContent = '· ' + set.name;
     $('#oddsIntro').textContent = set.cards.length + ' cards in this set. Each ' + set.pack.name.toLowerCase() + ' has ' + set.pack.size + ' cards, including at least one Rare or better.' +
       (set.description ? ' ' + set.description : '');
@@ -2001,14 +2019,7 @@
     // (its cards are already saved), so coming back mid-reveal is safe.
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
-    $('#setSelect').addEventListener('change', function (e) {
-      if (e.target.value === 'jumbled') {
-        e.target.value = S.set.id;
-        if (CPS.jumbled) CPS.jumbled.open();
-        return;
-      }
-      selectSet(e.target.value);
-    });
+    $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
     $('#openBtn').addEventListener('click', startOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
     $('#autoSpinBtn').addEventListener('click', function () {
