@@ -26,20 +26,23 @@
 
   function render() {
     var box = el(); if (!box) return;
-    var html = '<div class="games-head"><b>🪙 <span id="gameTokens">' + (ctx.S.gameTokens || 0) + '</span> tokens</b>';
+    var tokens = ctx.S.gameTokens || 0;
+    var html = '<div class="panel"><h2>Arcade</h2>' +
+      '<div class="arcade-tokens">🪙 <b><span id="gameTokens">' + tokens + '</span> token' + (tokens === 1 ? '' : 's') + '</b></div></div>';
+    html += '<div class="panel"><h3>High / Low</h3>';
     if (!G) {
-      html += '<button class="btn primary" id="gameStartBtn" ' +
-        ((ctx.S.gameTokens || 0) > 0 ? '' : 'disabled') + '>New run (1 token)</button></div>';
-      if (!(ctx.S.gameTokens > 0)) html += '<p class="muted small">Earn tokens from packs (1–3 on a token slip, ~1 in 10 packs).</p>';
+      html += '<p class="muted">Guess whether the next number is <b>higher</b> or <b>lower</b>. ' +
+        'Ties keep your streak alive, but one wrong guess busts the whole bank &mdash; claim your prizes any time!</p>';
+      html += '<button class="btn primary" id="gameStartBtn"' + (tokens > 0 ? '' : ' disabled') + '>New run (1 token)</button>';
+      if (!(tokens > 0)) html += '<p class="muted small">Earn tokens from packs (1&ndash;3 on a token slip, ~1 in 10 packs).</p>';
     } else {
-      html += '</div>';
       html += '<div class="game-table">';
       html += '<div class="game-card">' + cardHTML(G.card) + '</div>';
       html += '<div class="game-streak">Streak: <b>' + G.streak + '</b></div>';
       if (!G.over) {
         var rk = G.card.rank;
-        html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 10 ? ' disabled' : '') + '>▲ Higher</button>' +
-                '<button class="btn big" id="gameLower"' + (rk <= 1 ? ' disabled' : '') + '>▼ Lower</button></div>';
+        html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 10 ? ' disabled' : '') + '>\u25b2 Higher</button>' +
+                '<button class="btn big" id="gameLower"' + (rk <= 1 ? ' disabled' : '') + '>\u25bc Lower</button></div>';
         html += '<button class="btn ghost" id="gameClaim">Claim prizes &amp; end run</button>';
       } else {
         html += '<div class="game-over">' + (G.busted ? '💥 Bust! The bank is gone.' : 'Prizes claimed!') + '</div>';
@@ -49,6 +52,7 @@
       html += '<p class="muted small">Cards are numbered 1&ndash;10.</p>';
       html += '</div>';
     }
+    html += '</div>';
     box.innerHTML = html;
     bind();
   }
