@@ -262,7 +262,6 @@
     if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
     if (name === 'admin' && !canAdminArea()) name = 'packs';
-    if (name === 'arcade' && !isAdmin()) name = 'packs';
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
