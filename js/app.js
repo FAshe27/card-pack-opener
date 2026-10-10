@@ -410,7 +410,7 @@
   function buildGrid(o) {
     var grid = $('#revealGrid');
     grid.innerHTML = o.pulls.map(function (p, i) {
-      if (p.ticket) return '<div class="card ticket-card deal"><div class="ticket-face">🎟️<b>SPIN TICKET</b><span>Jackpot!</span></div></div>';
+      if (p.ticket) return '<div class="card ticket-card deal" data-ticket="1"><div class="card-back"></div><div class="ticket-face">🎟️<b>SPIN TICKET</b><span>Jackpot!</span></div></div>';
       var tease = R.INDEX[p.card.rarity] >= 3 ? ' tease' : '';
       var rset = p.homeSet || o.set;
       return CPS.cards.render(rset, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease,
@@ -496,7 +496,7 @@
     for (var i = 0; i < o.pulls.length; i++) {
       if (S.opening !== o) return;
       if (o.revealed[i]) continue;
-      var big = R.INDEX[o.pulls[i].card.rarity] >= 3;
+      var big = !o.pulls[i].ticket && R.INDEX[o.pulls[i].card.rarity] >= 3;
       if (big) await U.sleep(450);
       reveal(i);
       await U.sleep(big ? 900 : 160);
@@ -2020,7 +2020,7 @@
     $('#revealGrid').addEventListener('click', function (e) {
       var c = e.target.closest('.card'); if (!c) return;
       if (!c.classList.contains('flipped')) reveal(+c.dataset.i);
-      else openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
+      else if (!c.dataset.ticket) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
     });
     $('#redeemForm').addEventListener('submit', redeem);
     $('#freePackBtn').addEventListener('click', function () { addFree(1); });
