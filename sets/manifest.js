@@ -18,5 +18,6 @@ CardSets.manifest = [
   'sea.js',
   'space.js',
   'technology-collection.js',
-  'periodic.js'
+  'periodic.js',
+  'calendar.js'
 ];
