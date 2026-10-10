@@ -432,11 +432,14 @@
     var o = S.opening; if (!o) return;
     var n = o.revealed.filter(Boolean).length;
     if (!o.finished) { $('#stageSummary').innerHTML = 'Click a card to flip it · <b>' + n + ' / ' + o.pulls.length + '</b> revealed'; return; }
-    var news = o.pulls.filter(function (p) { return p.isNew; }).length, best = o.pulls[0];
-    o.pulls.forEach(function (p) { if (CPS.packs.score(p.card, p.holo) > CPS.packs.score(best.card, best.holo)) best = p; });
-    var holos = o.pulls.filter(function (p) { return p.holo; }).length;
+    var cards = o.pulls.filter(function (p) { return !p.ticket; });
+    var tickets = o.pulls.filter(function (p) { return p.ticket; }).length;
+    var news = cards.filter(function (p) { return p.isNew; }).length, best = cards[0];
+    cards.forEach(function (p) { if (CPS.packs.score(p.card, p.holo) > CPS.packs.score(best.card, best.holo)) best = p; });
+    var holos = cards.filter(function (p) { return p.holo; }).length;
     $('#stageSummary').innerHTML = '<b>' + news + '</b> new card' + (news === 1 ? '' : 's') +
       (holos ? ' · <b>' + holos + '</b> holo' : '') +
+      (tickets ? ' · 🎟️ <b>' + tickets + '</b> spin ticket' : '') +
       ' · Top pull: <b class="rt-' + best.card.rarity + '">' + esc(best.card.name) + (best.holo ? ' ✦' : '') +
       (best.variant ? ' 🌈 #' + best.serial + '/' + CPS.cards.VARIANTS[best.variant].run : '') + '</b> (' + rarityOf(best.card.rarity).label + ')';
   }
