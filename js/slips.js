@@ -16,6 +16,18 @@
 
   function isBig() { return false; } // slips never get the "tease" treatment
 
+  // Server grants slip currencies at pack-open; mirror the balances live so
+  // the Arcade header / wheel glow update without a refresh. Lazy appCtx:
+  // this module loads before app.js.
+  function applyPackGrants(pulls) {
+    var C = window.CPS && CPS.appCtx;
+    if (!C || !C.isCloud || !C.isCloud()) return;
+    var tok = 0, tik = 0;
+    (pulls || []).forEach(function (p) { if (p.tokens) tok += p.tokens; else if (p.ticket) tik++; });
+    if (tok) C.S.gameTokens = (C.S.gameTokens || 0) + tok;
+    if (tik) { C.S.spins = (C.S.spins || 0) + tik; C.updateWheelGlow(); }
+  }
+
   function summaryBits(o) {
     var tickets = 0, tokTotal = 0, out = '';
     o.pulls.forEach(function (p) {
@@ -27,5 +39,5 @@
     return out;
   }
 
-  CPS.slips = { isSlip: isSlip, render: render, banner: banner, isBig: isBig, summaryBits: summaryBits };
+  CPS.slips = { isSlip: isSlip, render: render, banner: banner, isBig: isBig, summaryBits: summaryBits, applyPackGrants: applyPackGrants };
 })(window.CPS);
