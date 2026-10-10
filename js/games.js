@@ -45,8 +45,9 @@
       html += '<div class="game-card">' + cardHTML(G.card) + '</div>';
       html += '<div class="game-streak">Streak: <b>' + G.streak + '</b></div>';
       if (!G.over) {
-        html += '<div class="row wrap"><button class="btn big" id="gameHigher">▲ Higher</button>' +
-                '<button class="btn big" id="gameLower">▼ Lower</button></div>';
+        var rk = G.card.rank;
+        html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 14 ? ' disabled' : '') + '>▲ Higher</button>' +
+                '<button class="btn big" id="gameLower"' + (rk <= 2 ? ' disabled' : '') + '>▼ Lower</button></div>';
         html += '<button class="btn ghost" id="gameClaim">Claim prizes &amp; end run</button>';
       } else {
         html += '<div class="game-over">' + (G.busted ? '💥 Bust! The bank is gone.' : 'Prizes claimed!') + '</div>';
