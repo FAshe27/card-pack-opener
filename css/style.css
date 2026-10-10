@@ -1142,6 +1142,11 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .pack-skin-periodic .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(120,200,255,.85), 0 2px 8px rgba(0,0,0,.65); }
 .pack-skin-periodic .pack-sub { color: #b8d9ec; }
 
+/* Periodic Table: square pack to match the square tile cards */
+.pack.pack-skin-periodic { aspect-ratio: 1/1; }
+.pack.pack-skin-periodic .pack-top { border-radius: 14px 14px 0 0; }
+.pack.pack-skin-periodic .pack-body { border-radius: 0 0 14px 14px; }
+
 #wheelCanvas { width: 100%; height: auto; display: block; filter: drop-shadow(0 8px 24px rgba(0,0,0,.45)); }
 .wheel-pointer {
   position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
