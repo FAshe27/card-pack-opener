@@ -3,8 +3,11 @@
 (function (CPS) {
   var ctx = CPS.appCtx;
 
-  function rowHTML() {
-    return '<input class="ga-sp" type="number" value="1" min="-99" max="999" aria-label="Spins">' +
+  function rowHTML(setOpts) {
+    return '<div class="acct-actions row wrap"><select class="ga-set">' + setOpts + '</select>' +
+      '<input class="ga-n" type="number" value="3" min="-99" max="999" aria-label="Packs">' +
+      '<button class="btn small" data-act="grant">Give packs</button>' +
+      '<input class="ga-sp" type="number" value="1" min="-99" max="999" aria-label="Spins">' +
       '<button class="btn small" data-act="grantspins">Give spins</button>' +
       '<input class="ga-tk" type="number" value="3" min="-99" max="999" aria-label="Tokens">' +
       '<button class="btn small" data-act="granttokens">Give tokens</button>';
@@ -42,4 +45,5 @@
   }
 
   CPS.admintokens = { rowHTML: rowHTML, grant: grant, bindAll: bindAll };
+  // rowHTML(setOpts) renders the full grant-buttons block for an account row.
 })(window.CPS);
