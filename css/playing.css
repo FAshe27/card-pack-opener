@@ -5,7 +5,7 @@
    rarity-colored outer glow. Same treatment as the Periodic Table tiles,
    but the 5/7 card ratio is already the site default so no aspect override.
    Append to css/style.css on push. */
-.card[data-set="playing"] {
+.card[data-set="playing"] { border-radius: 5% / 3.571%;
   box-shadow: 0 0 26px 3px color-mix(in srgb, var(--rc) 55%, transparent); }
 .card[data-set="playing"] .front { padding: 0; background: #fdfdfd; }
 .card[data-set="playing"] .cf { padding: 0; gap: 0; background: #fdfdfd; border-radius: inherit; overflow: hidden; }
