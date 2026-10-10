@@ -132,6 +132,7 @@
     S.account = state.account;
     S.onlineSets = state.online_sets || [];
     S.spins = state.spins || 0;
+    S.gameTokens = state.game_tokens || 0;
     S.wheelCfg = state.wheel || null;
     S.favorites = {};
     (state.favorites || []).forEach(function (f) { S.favorites[f[0] + ':' + f[1]] = true; });
@@ -338,7 +339,7 @@
       S.busy = false;
       S.myVariants = null; S.variantCensus = null;
       pulls = server.cards.map(function (c) {
-        if (c.ticket) return { ticket: true };
+        if (c.ticket || c.tokens) return { ticket: !!c.ticket, tokens: c.tokens || 0 };
         var card = set.byId.get(c.id) || { id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '', details: '(This card is newer than your copy of the set file. Refresh the page.)', image: '' };
         return { card: card, holo: !!c.holo, serverNew: !!c.new, variant: c.variant || null, serial: c.serial || null };
       });
@@ -349,7 +350,7 @@
     var curBest = bc ? CPS.packs.score(bc, st.stats.best.holo) : -1, prevBest = curBest, bestPull = null;
     st.packs--;
     pulls.forEach(function (p) {
-      if (p.ticket) return;
+      if (CPS.slips.isSlip(p)) return;
       var id = p.card.id, e = st.cards[id];
       p.isNew = server ? p.serverNew : (!(e && e.n) && !seen[id]); seen[id] = 1;
       e = st.cards[id] = e || { n: 0, h: 0 };
@@ -416,7 +417,7 @@
   function buildGrid(o) {
     var grid = $('#revealGrid');
     grid.innerHTML = o.pulls.map(function (p, i) {
-      if (p.ticket) return '<div class="card ticket-card deal" data-ticket="1"><div class="card-back"></div><div class="ticket-face">🎟️<b>SPIN TICKET</b><span>Jackpot!</span></div></div>';
+      if (CPS.slips.isSlip(p)) return CPS.slips.render(p);
       var tease = R.INDEX[p.card.rarity] >= 3 ? ' tease' : '';
       var rset = p.homeSet || o.set;
       return CPS.cards.render(rset, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease,
@@ -439,13 +440,13 @@
     var n = o.revealed.filter(Boolean).length;
     if (!o.finished) { $('#stageSummary').innerHTML = 'Click a card to flip it · <b>' + n + ' / ' + o.pulls.length + '</b> revealed'; return; }
     var cards = o.pulls.filter(function (p) { return !p.ticket; });
-    var tickets = o.pulls.filter(function (p) { return p.ticket; }).length;
+    var slipBits = CPS.slips.summaryBits(o);
     var news = cards.filter(function (p) { return p.isNew; }).length, best = cards[0];
     cards.forEach(function (p) { if (CPS.packs.score(p.card, p.holo) > CPS.packs.score(best.card, best.holo)) best = p; });
     var holos = cards.filter(function (p) { return p.holo; }).length;
     $('#stageSummary').innerHTML = '<b>' + news + '</b> new card' + (news === 1 ? '' : 's') +
       (holos ? ' · <b>' + holos + '</b> holo' : '') +
-      (tickets ? ' · 🎟️ <b>' + tickets + '</b> spin ticket' : '') +
+      slipBits +
       ' · Top pull: <b class="rt-' + best.card.rarity + '">' + esc(best.card.name) + (best.holo ? ' ✦' : '') +
       (best.variant ? ' 🌈 #' + best.serial + '/' + CPS.cards.VARIANTS[best.variant].run : '') + '</b> (' + rarityOf(best.card.rarity).label + ')';
   }
@@ -457,8 +458,8 @@
     var el = $('#revealGrid').children[i], p = o.pulls[i];
     el.classList.remove('tease'); el.classList.add('flipped');
     audio.flip();
-    if (p.ticket) {
-      setTimeout(function () { el.classList.add('glow'); fx.banner('🎟️ SPIN TICKET!', 'ticket', 2000); }, 300);
+    if (CPS.slips.isSlip(p)) {
+      setTimeout(function () { el.classList.add('glow'); fx.banner(CPS.slips.banner(p), 'ticket', 2000); }, 300);
     } else {
       setTimeout(function () { el.classList.add('glow'); audio.reveal(p.card.rarity); flair(el, p); }, 300);
     }
@@ -502,7 +503,7 @@
     for (var i = 0; i < o.pulls.length; i++) {
       if (S.opening !== o) return;
       if (o.revealed[i]) continue;
-      var big = !o.pulls[i].ticket && R.INDEX[o.pulls[i].card.rarity] >= 3;
+      var big = !CPS.slips.isSlip(o.pulls[i]) && R.INDEX[o.pulls[i].card.rarity] >= 3;
       if (big) await U.sleep(450);
       reveal(i);
       await U.sleep(big ? 900 : 160);
@@ -1681,6 +1682,7 @@
             esc((c.redeemed_by || []).join(', ') || '—') + '</td><td>' + esc(c.note || '') + '</td><td>' + new Date(c.created_at).toLocaleDateString() + '</td></tr>';
         }).join('') + '</tbody></table></div>' : '<div class="empty">No codes yet. Make some in Sets &amp; Settings → Prize code generator.</div>';
     } catch (e) { cloudError(e); }
+    if (CPS.games) CPS.games.render();
   }
 
   async function adminAction(e) {
@@ -2039,7 +2041,7 @@
     $('#revealGrid').addEventListener('click', function (e) {
       var c = e.target.closest('.card'); if (!c) return;
       if (!c.classList.contains('flipped')) reveal(+c.dataset.i);
-      else if (!c.dataset.ticket) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
+      else if (!c.dataset.ticket && !c.dataset.tokens) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
     });
     $('#redeemForm').addEventListener('submit', redeem);
     $('#freePackBtn').addEventListener('click', function () { addFree(1); });
