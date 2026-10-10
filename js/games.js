@@ -9,7 +9,7 @@
   function el() { return ctx.$('#gamesPanel'); }
 
   function prizeName(p) {
-    if (p.kind === 'pack') return '🎁 Pack';
+    if (p.kind === 'pack') return p.guaranteed ? '🎁 Pack ★' : '🎁 Pack';
     if (p.kind === 'ticket') return '🎟️ Spin ticket';
     if (p.kind === 'tokens') return '🪙 ' + (p.n || 1) + ' token' + ((p.n || 1) === 1 ? '' : 's');
     return '—';
@@ -32,7 +32,8 @@
     html += '<div class="panel"><h3>High / Low</h3>';
     if (!G) {
       html += '<p class="muted">Guess whether the next number is <b>higher</b> or <b>lower</b>. ' +
-        'Ties keep your streak alive, but one wrong guess busts the whole bank &mdash; claim your prizes any time!</p>';
+        'Ties keep your streak alive, but one wrong guess busts the whole bank &mdash; claim your prizes any time! ' +
+        'Streaks of 3, 5, 7&hellip; guarantee a bonus pack.</p>';
       html += '<button class="btn primary" id="gameStartBtn"' + (tokens > 0 ? '' : ' disabled') + '>New run (1 token)</button>';
       if (!(tokens > 0)) html += '<p class="muted small">Earn tokens from packs (1&ndash;3 on a token slip, ~1 in 10 packs).</p>';
     } else {
@@ -99,7 +100,7 @@
       if (r.tie) { ctx.toast('Tie — flip again, streak safe!', ''); }
       else if (r.win) {
         ctx.audio.reveal('rare');
-        if (r.prize && r.prize.kind !== 'nothing') ctx.toast('Won: ' + prizeName(r.prize), 'good');
+        (r.prizes || []).forEach(function (pr) { ctx.toast('Won: ' + prizeName(pr), 'good'); });
       } else if (r.bust) {
         G.over = true; G.busted = true; G.bank = [];
         ctx.audio.error();
