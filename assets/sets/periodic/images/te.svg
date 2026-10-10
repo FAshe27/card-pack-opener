@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+<rect width="600" height="600" fill="#000000"/>
+<rect x="24" y="24" width="552" height="552" rx="58" fill="none" stroke="#ffffff" stroke-width="9"/>
+<text x="300" y="166" text-anchor="middle" font-family="DejaVu Sans,Verdana,Helvetica,Arial,sans-serif" font-size="58" fill="#ffffff">52</text>
+<text x="300" y="391" text-anchor="middle" font-family="DejaVu Sans,Verdana,Helvetica,Arial,sans-serif" font-size="205" font-weight="bold" fill="#ffffff">Te</text>
+<text x="300" y="476" text-anchor="middle" font-family="DejaVu Sans,Verdana,Helvetica,Arial,sans-serif" font-size="56" fill="#ffffff">Tellurium</text>
+<text x="300" y="546" text-anchor="middle" font-family="DejaVu Sans,Verdana,Helvetica,Arial,sans-serif" font-size="56" fill="#ffffff">127.60</text>
+</svg>
