@@ -1,20 +1,43 @@
 /* Pack slips: ticket/token jackpot cards that replace a card in a pack.
    Centralizes slip rendering so app.js stays under the push size limit.
-   Registers as CPS.slips. */
+   Element of Surprise: slips use the standard flippable card structure, so
+   pre-flip they show the pack's set back exactly like every other card —
+   the jackpot is only revealed on flip. Registers as CPS.slips. */
 (function (CPS) {
   function isSlip(p) { return !!(p && (p.ticket || p.tokens)); }
 
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* The set whose pack this slip came from — its back is the disguise. */
+  function slipSet(p) {
+    if (p && p.homeSet) return p.homeSet;
+    var C = window.CPS && CPS.appCtx;
+    if (C && C.S && C.S.opening && C.S.opening.set) return C.S.opening.set;
+    return { id: '', code: '?', name: '', theme: { primary: '#1a1a2e', secondary: '#16213e' } };
+  }
+
   function render(p) {
-    if (p.ticket) return '<div class="card ticket-card deal" data-ticket="1"><div class="card-back"></div><div class="ticket-face">🎟️<b>SPIN TICKET</b><span>Jackpot!</span></div></div>';
-    return '<div class="card token-card deal" data-tokens="1"><div class="card-back"></div><div class="token-face">🪙<b>' +
-      p.tokens + ' GAME TOKEN' + (p.tokens === 1 ? '' : 'S') + '</b><span>Good luck!</span></div></div>';
+    var set = slipSet(p);
+    var cls = p.ticket ? 'ticket-card' : 'token-card';
+    var attr = p.ticket ? ' data-ticket="1"' : ' data-tokens="1"';
+    var face = p.ticket
+      ? '<div class="ticket-face">🎟️<b>SPIN TICKET</b><span>Jackpot!</span></div>'
+      : '<div class="token-face">🪙<b>' + p.tokens + ' GAME TOKEN' + (p.tokens === 1 ? '' : 'S') + '</b><span>Good luck!</span></div>';
+    return '<div class="card ' + cls + ' flippable deal" data-slip="1"' + attr +
+      ' data-set="' + esc(set.id) + '" style="' + CPS.cards.themeStyle(set) + '">' +
+      '<div class="card-inner"><div class="face front">' + face + '</div>' +
+      CPS.cards.back(set) + '</div></div>';
   }
 
   function banner(p) {
     return p.ticket ? '🎟️ SPIN TICKET!' : '🪙 +' + p.tokens + ' TOKENS!';
   }
 
-  function isBig() { return false; } // slips never get the "tease" treatment
+  function isBig() { return false; } // slips never get the "big pull" treatment
 
   // Server grants slip currencies at pack-open; mirror the balances live so
   // the Arcade header / wheel glow update without a refresh. Lazy appCtx:

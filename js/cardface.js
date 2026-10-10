@@ -186,5 +186,5 @@
       '<div class="crimp bottom"></div></div></div>';
   }
 
-  CPS.cards = { codeCls: codeCls, swatch: swatch, nameFit: nameFit, render: render, silhouette: silhouette, collected: collected, pack: pack, art: art, themeStyle: themeStyle, VARIANTS: VARIANTS, variantLabel: variantLabel };
+  CPS.cards = { codeCls: codeCls, swatch: swatch, nameFit: nameFit, render: render, silhouette: silhouette, collected: collected, pack: pack, art: art, themeStyle: themeStyle, VARIANTS: VARIANTS, variantLabel: variantLabel, back: back };
 })(window.CPS);

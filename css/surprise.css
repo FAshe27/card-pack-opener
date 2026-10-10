@@ -1,0 +1,26 @@
+/* "Element of Surprise" update (2026-10-10):
+   1. No pre-flip rarity tell. app.js tags unflipped epic+ cards with .tease,
+      whose pulsing rarity glow spoiled the pull before the flip. Neutralized
+      here (app.js is at the push size limit, so the class stays as a hook).
+   2. Stronger glow on flip — the reveal is the payoff now.
+   3. Ticket/token slips use the standard flippable card structure (js/slips.js),
+      so pre-flip they show the pack's set back like every other card.
+   Loaded last, so these rules win ties with style.css / playing.css. */
+.card.tease .back { animation: none; }
+
+.card.glow.r-uncommon { box-shadow: 0 0 20px rgba(56,201,127,.55); }
+.card.glow.r-rare { box-shadow: 0 0 32px 4px rgba(63,140,255,.85); }
+.card.glow.r-epic { box-shadow: 0 0 46px 10px rgba(179,92,255,.9); animation: glowPulse 2s ease-in-out infinite; --gc: rgba(179,92,255,.9); }
+.card.glow.r-legendary { box-shadow: 0 0 60px 16px rgba(255,178,30,.95); animation: glowPulse 1.6s ease-in-out infinite; --gc: rgba(255,178,30,.95); }
+.card.glow.r-chase { animation: rainbowGlow 1.5s linear infinite; }
+
+/* Jackpot slips get their own gold moment on flip. */
+.card.glow.ticket-card, .card.glow.token-card {
+  box-shadow: 0 0 44px 10px rgba(255,210,80,.85);
+  animation: glowPulse 1.8s ease-in-out infinite; --gc: rgba(255,210,80,.85);
+}
+
+/* Slip jackpot faces (the reveal side of the flip). */
+.ticket-card .face.front { background: linear-gradient(135deg, #1a2f1a, #2d5a2d); border: 2px solid #4caf50; padding: 0; }
+.token-card .face.front { background: linear-gradient(135deg, #2e2410, #5a4a1a); border: 2px solid #ffb21e; padding: 0; }
+.ticket-card .ticket-face, .token-card .token-face { display: flex; }
