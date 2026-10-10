@@ -1316,3 +1316,6 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .numcard span { font-size: 5.5rem; font-weight: 800; color: #fff; text-shadow: 0 2px 12px rgba(107,107,214,.6); }
 
 /* Arcade tab: public */
+
+/* Arcade lobby */
+.arcade-tokens { font-size: 1.15rem; margin-top: 4px; }
