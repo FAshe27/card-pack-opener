@@ -1278,3 +1278,22 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .ticket-card.flipped .ticket-face { display: flex; }
 .ticket-face b { font-size: 1.1rem; color: #a5d6a7; letter-spacing: 0.1em; }
 .ticket-face span { font-size: 0.9rem; color: #c8e6c9; }
+
+/* Game token slip card */
+.token-card { position: relative; background: linear-gradient(135deg, #2e2410, #5a4a1a); border: 2px solid #ffb21e; }
+.token-card .card-back { position: absolute; inset: 0; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: inherit; }
+.token-card.flipped .card-back { display: none; }
+.token-face { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; font-size: 3rem; gap: 8px; padding: 20px; text-align: center; }
+.token-card.flipped .token-face { display: flex; }
+.token-face b { font-size: 1rem; color: #ffd97a; letter-spacing: 0.08em; }
+.token-face span { font-size: 0.9rem; color: #ffe9b8; }
+
+/* Higher/Lower game */
+.games-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.game-table { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.game-card .card { width: 180px; }
+.game-streak { font-size: 1.05rem; }
+.prize-box { width: 100%; max-width: 420px; border: 1px dashed #888; border-radius: 10px; padding: 10px 12px; }
+.prize-box b { display: block; margin-bottom: 6px; }
+.bank-prize { display: inline-block; background: #243; border: 1px solid #4caf50; border-radius: 999px; padding: 3px 10px; margin: 2px 4px 2px 0; font-size: 0.9rem; }
+.game-over { font-size: 1.1rem; font-weight: 700; }
