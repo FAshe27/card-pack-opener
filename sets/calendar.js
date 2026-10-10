@@ -24,31 +24,31 @@ CardSets.register({
     },
     {
       "name": "January 2",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "01-02",
       "subtitle": "Historic Event",
-      "details": "In 1967, Ronald Reagan \u2014 former movie actor and future U.S. president \u2014 is sworn in as Governor of California.",
+      "details": "In 1944, World War II: United States and Australian forces successfully landed in Papua New Guinea in an attempt to cut off a Japanese retreat.",
       "image": "assets/sets/calendar/images/01-02.svg"
     },
     {
       "name": "January 3",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "01-03",
       "subtitle": "Historic Event",
-      "details": "In 1990, Panama's deposed strongman Manuel Noriega surrenders to American forces, ending the U.S. invasion.",
+      "details": "In 1990, Manuel Noriega surrenders to American forces, ending the U.S. invasion of Panama.",
       "image": "assets/sets/calendar/images/01-03.svg"
     },
     {
       "name": "January 4",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "01-04",
       "subtitle": "Historic Event",
-      "details": "In 2007, Nancy Pelosi becomes Speaker of the U.S. House, the highest-ranking woman in U.S. government history.",
+      "details": "In 1989, Two American F-14 Tomcats shot down two Libyan MiG-23 Floggers that appeared to be attempting to engage them over the Gulf of Sidra.",
       "image": "assets/sets/calendar/images/01-04.svg"
     },
     {
       "name": "January 5",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "01-05",
       "subtitle": "Holiday",
       "details": "National Bird Day, observed each year on January 5.",
@@ -56,15 +56,15 @@ CardSets.register({
     },
     {
       "name": "January 6",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "01-06",
       "subtitle": "Historic Event",
-      "details": "In 2021, supporters of outgoing President Donald Trump storm the U.S. Capitol to disrupt certification of the 2020 election.",
+      "details": "In 2005, A train collision in Graniteville, South Carolina, United States, releases about 60 tons of chlorine gas.",
       "image": "assets/sets/calendar/images/01-06.svg"
     },
     {
       "name": "January 7",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "01-07",
       "subtitle": "Historic Event",
       "details": "In 1782, The Bank of North America opened in Philadelphia as the de facto first central bank of the United States.",
@@ -72,15 +72,15 @@ CardSets.register({
     },
     {
       "name": "January 8",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "01-08",
       "subtitle": "Historic Event",
-      "details": "In 2002, President George W. Bush signs the No Child Left Behind Act into law.",
+      "details": "In 1956, Five Evangelical Christian missionaries from the United States were killed by the Huaorani in the rainforest of Ecuador shortly after...",
       "image": "assets/sets/calendar/images/01-08.svg"
     },
     {
       "name": "January 9",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "01-09",
       "subtitle": "Historic Event",
       "details": "In 1914, The Phi Beta Sigma fraternity is founded by African-American students at Howard University in Washington D.C., United States.",
@@ -91,12 +91,12 @@ CardSets.register({
       "rarity": "common",
       "id": "01-10",
       "subtitle": "Historic Event",
-      "details": "In 1984, Holy See\u2013United States relations: The United States and Holy See (Vatican City) re-establish full diplomatic relations after almost 117...",
+      "details": "In 1946, The United States Army Signal Corps successfully conducts Project Diana, bouncing radio waves off the Moon and receiving the reflected...",
       "image": "assets/sets/calendar/images/01-10.svg"
     },
     {
       "name": "January 11",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "01-11",
       "subtitle": "Holiday",
       "details": "National Human Trafficking Awareness Day, observed each year on January 11.",
@@ -107,7 +107,7 @@ CardSets.register({
       "rarity": "common",
       "id": "01-12",
       "subtitle": "Historic Event",
-      "details": "In 1991, Persian Gulf War: An act of the U.S. Congress authorizes the use of American military force to drive Iraq out of Kuwait.",
+      "details": "In 1991, the United States drives Iraq out of Kuwait in the Persian Gulf War.",
       "image": "assets/sets/calendar/images/01-12.svg"
     },
     {
@@ -120,7 +120,7 @@ CardSets.register({
     },
     {
       "name": "January 14",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "01-14",
       "subtitle": "Holiday",
       "details": "Ratification Day, observed each year on January 14.",
@@ -136,7 +136,7 @@ CardSets.register({
     },
     {
       "name": "January 16",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "01-16",
       "subtitle": "Holiday",
       "details": "National Religious Freedom Day, observed each year on January 16.",
@@ -160,7 +160,7 @@ CardSets.register({
     },
     {
       "name": "January 19",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "01-19",
       "subtitle": "Historic Event",
       "details": "In 1981, Iran hostage crisis: United States and Iranian officials sign an agreement to release 52 American hostages after 14 months of captivity.",
@@ -168,15 +168,15 @@ CardSets.register({
     },
     {
       "name": "January 20",
-      "rarity": "legendary",
+      "rarity": "common",
       "id": "01-20",
-      "subtitle": "Holiday",
-      "details": "Every four years the U.S. president takes the oath of office on the Capitol steps.",
+      "subtitle": "Historic Event",
+      "details": "In 1968, The Houston Cougars upset the UCLA Bruins in what became known as the \"Game of the Century\", ending the Bruins' 47-game winning streak...",
       "image": "assets/sets/calendar/images/01-20.svg"
     },
     {
       "name": "January 21",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "01-21",
       "subtitle": "Holiday",
       "details": "National Hugging Day, observed each year on January 21.",
@@ -187,15 +187,15 @@ CardSets.register({
       "rarity": "common",
       "id": "01-22",
       "subtitle": "Historic Event",
-      "details": "In 1917, American entry into World War I: President Woodrow Wilson of the still-neutral United States calls for \"peace without victory\" in Europe.",
+      "details": "In 1984, Apple introduces the Macintosh during Super Bowl XVIII.",
       "image": "assets/sets/calendar/images/01-22.svg"
     },
     {
       "name": "January 23",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "01-23",
       "subtitle": "Historic Event",
-      "details": "In 1997, Madeleine Albright is sworn in as the first female U.S. Secretary of State.",
+      "details": "In 1849, Elizabeth Blackwell becomes the first woman to earn a medical degree in the United States.",
       "image": "assets/sets/calendar/images/01-23.svg"
     },
     {
@@ -219,7 +219,7 @@ CardSets.register({
       "rarity": "common",
       "id": "01-26",
       "subtitle": "Historic Event",
-      "details": "In 1998, Lewinsky scandal: On American television, U.S. President Bill Clinton denies having had \"sexual relations\" with former White House intern...",
+      "details": "In 1945, Audie Murphy engaged in action at the Colmar Pocket that won him a Medal of Honor and made him one of the most famous and decorated U.S....",
       "image": "assets/sets/calendar/images/01-26.svg"
     },
     {
@@ -227,23 +227,23 @@ CardSets.register({
       "rarity": "common",
       "id": "01-27",
       "subtitle": "Historic Event",
-      "details": "In 2003, The first selections for the United States National Recording Registry were announced by the Library of Congress.",
+      "details": "In 1785, The University of Georgia, the oldest state-chartered public university in the United States, was founded.",
       "image": "assets/sets/calendar/images/01-27.svg"
     },
     {
       "name": "January 28",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "01-28",
       "subtitle": "Historic Event",
-      "details": "In 1915, An act of the U.S. Congress creates the United States Coast Guard as a branch of the United States Armed Forces.",
+      "details": "In 1909, United States troops leave Cuba, with the exception of Guantanamo Bay Naval Base, after being there since the Spanish\u2013American War.",
       "image": "assets/sets/calendar/images/01-28.svg"
     },
     {
       "name": "January 29",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "01-29",
       "subtitle": "Historic Event",
-      "details": "In 1907, Charles Curtis of Kansas, a citizen of the Kaw Nation, became the first Native American U.S. Senator.",
+      "details": "In 2025, American Eagle Flight 5342 collided mid-air with a Sikorsky UH-60 Black Hawk operated by the United States Army and crashed into the...",
       "image": "assets/sets/calendar/images/01-29.svg"
     },
     {
@@ -251,7 +251,7 @@ CardSets.register({
       "rarity": "rare",
       "id": "01-30",
       "subtitle": "Historic Event",
-      "details": "In 1835, Richard Lawrence tries to shoot President Andrew Jackson \u2014 the first assassination attempt on a U.S. president.",
+      "details": "In 1862, the U.S. Navy launches the USS Monitor, the first American ironclad warship.",
       "image": "assets/sets/calendar/images/01-30.svg"
     },
     {
@@ -259,12 +259,12 @@ CardSets.register({
       "rarity": "common",
       "id": "01-31",
       "subtitle": "Historic Event",
-      "details": "In 1865, American Civil War: The United States Congress passes the Thirteenth Amendment to the United States Constitution, abolishing slavery, and...",
+      "details": "In 1957, A DC-7B operated by Douglas Aircraft collided in mid-air with a U.S. Air Force F-89 and crashed into a schoolyard in Pacoima, California.",
       "image": "assets/sets/calendar/images/01-31.svg"
     },
     {
       "name": "February 1",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "02-01",
       "subtitle": "Holiday",
       "details": "National Freedom Day, observed each year on February 1.",
@@ -288,31 +288,31 @@ CardSets.register({
     },
     {
       "name": "February 4",
-      "rarity": "epic",
+      "rarity": "uncommon",
       "id": "02-04",
       "subtitle": "Historic Event",
-      "details": "In 1789, George Washington is unanimously elected the first President of the United States.",
+      "details": "In 1861, American Civil War: In Montgomery, Alabama, delegates from six breakaway U.S. states meet and initiate the process that would form the...",
       "image": "assets/sets/calendar/images/02-04.svg"
     },
     {
       "name": "February 5",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "02-05",
-      "subtitle": "Holiday",
-      "details": "Roger Williams, Anne Hutchinson), observed each year on February 5.",
+      "subtitle": "Historic Event",
+      "details": "In 1958, a U.S. bomber loses a hydrogen bomb off Tybee Island, Georgia; it was never recovered.",
       "image": "assets/sets/calendar/images/02-05.svg"
     },
     {
       "name": "February 6",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "02-06",
       "subtitle": "Historic Event",
-      "details": "In 1899, Spanish\u2013American War: The Treaty of Paris, a peace treaty between the United States and Spain, is ratified by the United States Senate.",
+      "details": "In 1899, the Treaty of Paris is ratified, ending the Spanish\u2013American War between the United States and Spain.",
       "image": "assets/sets/calendar/images/02-06.svg"
     },
     {
       "name": "February 7",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "02-07",
       "subtitle": "Holiday",
       "details": "National Black HIV/AIDS Awareness Day, observed each year on February 7.",
@@ -320,31 +320,31 @@ CardSets.register({
     },
     {
       "name": "February 8",
-      "rarity": "epic",
+      "rarity": "uncommon",
       "id": "02-08",
       "subtitle": "Historic Event",
-      "details": "In 1837, Richard Mentor Johnson becomes the only vice president ever elected by the U.S. Senate.",
+      "details": "In 1910, William D. Boyce established the Boy Scouts of America, expanding the Scout Movement into the United States.",
       "image": "assets/sets/calendar/images/02-08.svg"
     },
     {
       "name": "February 9",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "02-09",
       "subtitle": "Historic Event",
-      "details": "In 1825, with no Electoral College majority, the House elects John Quincy Adams president over Andrew Jackson.",
+      "details": "In 1965, Vietnam War: The United States Marine Corps sends a MIM-23 Hawk missile battalion to South Vietnam, the first American troops in-country...",
       "image": "assets/sets/calendar/images/02-09.svg"
     },
     {
       "name": "February 10",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "02-10",
       "subtitle": "Historic Event",
-      "details": "In 1954, U.S. President Dwight D. Eisenhower warns against United States intervention in Vietnam.",
+      "details": "In 1862, American Civil War: A Union naval flotilla destroyed the bulk of the Confederate Mosquito Fleet in the Battle of Elizabeth City on the...",
       "image": "assets/sets/calendar/images/02-10.svg"
     },
     {
       "name": "February 11",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "02-11",
       "subtitle": "Holiday",
       "details": "Inventors' Day, observed each year on February 11.",
@@ -354,13 +354,13 @@ CardSets.register({
       "name": "February 12",
       "rarity": "uncommon",
       "id": "02-12",
-      "subtitle": "Holiday",
-      "details": "Lincoln's Birthday, observed each year on February 12.",
+      "subtitle": "Historic Event",
+      "details": "In 1946, African American United States Army veteran Isaac Woodard is severely beaten by a South Carolina police officer to the point where he...",
       "image": "assets/sets/calendar/images/02-12.svg"
     },
     {
       "name": "February 13",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "02-13",
       "subtitle": "Holiday",
       "details": "Black Love Day, observed each year on February 13.",
@@ -376,7 +376,7 @@ CardSets.register({
     },
     {
       "name": "February 15",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "02-15",
       "subtitle": "Historic Event",
       "details": "In 1907, Japan and the United States sign the Gentlemen's Agreement on Japanese immigration.",
@@ -392,10 +392,10 @@ CardSets.register({
     },
     {
       "name": "February 17",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "02-17",
       "subtitle": "Historic Event",
-      "details": "In 1801, the House breaks the Jefferson\u2013Burr Electoral College tie, electing Thomas Jefferson president.",
+      "details": "In 1913, The Armory Show, the first large modern-art exhibition in the United States, opened at the 69th Regiment Armory in New York City.",
       "image": "assets/sets/calendar/images/02-17.svg"
     },
     {
@@ -403,15 +403,15 @@ CardSets.register({
       "rarity": "common",
       "id": "02-18",
       "subtitle": "Historic Event",
-      "details": "In 1946, President Harry S. Truman signed the Rescission Act, annulling benefits payable to Filipino troops who fought for the U.S. during World...",
+      "details": "In 2001, American FBI agent Robert Hanssen was arrested for having spied for the KGB and GRU over a 22-year period.",
       "image": "assets/sets/calendar/images/02-18.svg"
     },
     {
       "name": "February 19",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "02-19",
       "subtitle": "Historic Event",
-      "details": "In 1807, former Vice President Aaron Burr is arrested for treason in Alabama.",
+      "details": "In 1884, More than sixty tornadoes strike the Southern United States, one of the largest tornado outbreaks in U.S. history.",
       "image": "assets/sets/calendar/images/02-19.svg"
     },
     {
@@ -419,7 +419,7 @@ CardSets.register({
       "rarity": "common",
       "id": "02-20",
       "subtitle": "Historic Event",
-      "details": "In 1933, The U.S. Congress approves the Blaine Act to repeal federal Prohibition in the United States, sending the Twenty-first Amendment to the...",
+      "details": "In 1872, The Metropolitan Museum of Art , today the largest art museum in the United States with a collection of more than two million works...",
       "image": "assets/sets/calendar/images/02-20.svg"
     },
     {
@@ -427,7 +427,7 @@ CardSets.register({
       "rarity": "common",
       "id": "02-21",
       "subtitle": "Historic Event",
-      "details": "In 1972, United States President Richard Nixon visits China to normalize Sino-American relations.",
+      "details": "In 1965, American Black nationalist Malcolm X was assassinated while giving a speech in New York City's Audubon Ballroom.",
       "image": "assets/sets/calendar/images/02-21.svg"
     },
     {
@@ -435,23 +435,23 @@ CardSets.register({
       "rarity": "common",
       "id": "02-22",
       "subtitle": "Historic Event",
-      "details": "In 1819, By the Adams\u2013On\u00eds Treaty, Spain sells Florida to the United States for five million U.S. dollars.",
+      "details": "In 1980, At the Winter Olympics in Lake Placid, New York, the United States ice hockey team defeated the Soviet team in an unlikely victory that...",
       "image": "assets/sets/calendar/images/02-22.svg"
     },
     {
       "name": "February 23",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "02-23",
       "subtitle": "Historic Event",
-      "details": "In 1847, Mexican\u2013American War: The United States Army used artillery to repulse the much larger Mexican army at the Battle of Buena Vista near...",
+      "details": "In 1847, outnumbered U.S. troops repulse the Mexican army at the Battle of Buena Vista.",
       "image": "assets/sets/calendar/images/02-23.svg"
     },
     {
       "name": "February 24",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "02-24",
       "subtitle": "Historic Event",
-      "details": "In 1868, Andrew Johnson becomes the first U.S. president impeached by the House; the Senate acquits him.",
+      "details": "In 1917, World War I: The U.S. ambassador Walter Hines Page to the United Kingdom is given the Zimmermann Telegram, in which Germany pledges to...",
       "image": "assets/sets/calendar/images/02-24.svg"
     },
     {
@@ -459,7 +459,7 @@ CardSets.register({
       "rarity": "common",
       "id": "02-25",
       "subtitle": "Historic Event",
-      "details": "In 1870, Mississippi senator Hiram Rhodes Revels became the first African American to be seated in the U.S. Congress.",
+      "details": "In 1933, USS Ranger, the United States Navy's first purpose-built aircraft carrier, was launched.",
       "image": "assets/sets/calendar/images/02-25.svg"
     },
     {
@@ -475,12 +475,12 @@ CardSets.register({
       "rarity": "common",
       "id": "02-27",
       "subtitle": "Historic Event",
-      "details": "In 1939, United States labor law: The U.S. Supreme Court rules in NLRB v. Fansteel Metallurgical Corp. that the National Labor Relations Board has...",
+      "details": "In 1940, American biochemists Martin Kamen and Sam Ruben discovered carbon-14, a radioactive isotope of carbon, which is now used extensively as...",
       "image": "assets/sets/calendar/images/02-27.svg"
     },
     {
       "name": "February 28",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "02-28",
       "subtitle": "Historic Event",
       "details": "In 2026, The United States and Israel launched strikes against Iran, killing Supreme Leader Ali Khamenei and other senior officials.",
@@ -496,7 +496,7 @@ CardSets.register({
     },
     {
       "name": "March 1",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-01",
       "subtitle": "Holiday",
       "details": "National Pig Day, observed each year on March 1.",
@@ -504,7 +504,7 @@ CardSets.register({
     },
     {
       "name": "March 2",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-02",
       "subtitle": "Holiday",
       "details": "National Read Across America Day, observed each year on March 2.",
@@ -512,18 +512,18 @@ CardSets.register({
     },
     {
       "name": "March 3",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "03-03",
       "subtitle": "Historic Event",
-      "details": "In 1873, Censorship in the United States: The U.S. Congress enacts the Comstock Law, making it illegal to send any \"obscene literature and...",
+      "details": "In 1776, American Revolutionary War: The first amphibious landing of the United States Marine Corps begins the Battle of Nassau.",
       "image": "assets/sets/calendar/images/03-03.svg"
     },
     {
       "name": "March 4",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "03-04",
       "subtitle": "Historic Event",
-      "details": "In 1849, Zachary Taylor delays his oath by a day, sparking the legend of David Atchison's one-day presidency.",
+      "details": "In 1918, The United States Navy suffered its largest non-combat loss of life when the collier USS Cyclops set sail from Barbados to Baltimore and...",
       "image": "assets/sets/calendar/images/03-04.svg"
     },
     {
@@ -555,20 +555,20 @@ CardSets.register({
       "rarity": "common",
       "id": "03-08",
       "subtitle": "Historic Event",
-      "details": "In 1983, Cold War: In a speech to the National Association of Evangelicals in Orlando, Florida, U.S. president Ronald Reagan described the Soviet...",
+      "details": "In 1775, An anonymous writer, thought by some to be Thomas Paine, publishes \"African Slavery in America\", the first article in the American...",
       "image": "assets/sets/calendar/images/03-08.svg"
     },
     {
       "name": "March 9",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-09",
-      "subtitle": "Holiday",
-      "details": "Gregory of Nyssa), observed each year on March 9.",
+      "subtitle": "Historic Event",
+      "details": "In 1959, the Barbie doll debuts at the American International Toy Fair in New York City.",
       "image": "assets/sets/calendar/images/03-09.svg"
     },
     {
       "name": "March 10",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-10",
       "subtitle": "Holiday",
       "details": "National Women and Girls HIV/AIDS Awareness Day, observed each year on March 10.",
@@ -576,18 +576,18 @@ CardSets.register({
     },
     {
       "name": "March 11",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "03-11",
       "subtitle": "Historic Event",
-      "details": "In 1993, the Senate unanimously confirms Janet Reno as the first female U.S. attorney general.",
+      "details": "In 1888, The Great Blizzard of 1888 struck the northeastern United States, producing snowdrifts in excess of 50 ft (15 m) and confining some...",
       "image": "assets/sets/calendar/images/03-11.svg"
     },
     {
       "name": "March 12",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "03-12",
       "subtitle": "Historic Event",
-      "details": "In 1933, Franklin D. Roosevelt addresses the nation as president for the first time \u2014 the first fireside chat.",
+      "details": "In 2006, U.S. Army soldiers gang-raped a 14-year-old Iraqi girl and murdered her along with her family members.",
       "image": "assets/sets/calendar/images/03-12.svg"
     },
     {
@@ -632,7 +632,7 @@ CardSets.register({
     },
     {
       "name": "March 18",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "03-18",
       "subtitle": "Historic Event",
       "details": "In 1942, The War Relocation Authority is established in the United States to take Japanese Americans into custody.",
@@ -648,7 +648,7 @@ CardSets.register({
     },
     {
       "name": "March 20",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-20",
       "subtitle": "Holiday",
       "details": "Great American MeatOut, observed each year on March 20.",
@@ -656,7 +656,7 @@ CardSets.register({
     },
     {
       "name": "March 21",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-21",
       "subtitle": "Holiday",
       "details": "Rosie the Riveter Day, observed each year on March 21.",
@@ -664,7 +664,7 @@ CardSets.register({
     },
     {
       "name": "March 22",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "03-22",
       "subtitle": "Historic Event",
       "details": "In 1794, The Slave Trade Act of 1794 bans the export of slaves from the United States, and prohibits American citizens from outfitting a ship for...",
@@ -688,7 +688,7 @@ CardSets.register({
     },
     {
       "name": "March 25",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-25",
       "subtitle": "Holiday",
       "details": "Medal of Honor Day, observed each year on March 25.",
@@ -696,7 +696,7 @@ CardSets.register({
     },
     {
       "name": "March 26",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-26",
       "subtitle": "Holiday",
       "details": "National Science Appreciation Day, observed each year on March 26.",
@@ -704,10 +704,10 @@ CardSets.register({
     },
     {
       "name": "March 27",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "03-27",
       "subtitle": "Historic Event",
-      "details": "In 1866, President Andrew Johnson vetoes the Civil Rights Act; Congress overrides him and it becomes law.",
+      "details": "In 1998, The Food and Drug Administration approved the drug sildenafil, better known by the trade name Viagra, as the first treatment approved in...",
       "image": "assets/sets/calendar/images/03-27.svg"
     },
     {
@@ -715,7 +715,7 @@ CardSets.register({
       "rarity": "common",
       "id": "03-28",
       "subtitle": "Historic Event",
-      "details": "In 1990, United States President George H. W. Bush posthumously awards Jesse Owens the Congressional Gold Medal.",
+      "details": "In 1946, Cold War: The United States Department of State releases the Acheson\u2013Lilienthal Report, outlining a plan for the international control of...",
       "image": "assets/sets/calendar/images/03-28.svg"
     },
     {
@@ -728,7 +728,7 @@ CardSets.register({
     },
     {
       "name": "March 30",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "03-30",
       "subtitle": "Holiday",
       "details": "National Doctors' Day, observed each year on March 30.",
@@ -736,7 +736,7 @@ CardSets.register({
     },
     {
       "name": "March 31",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "03-31",
       "subtitle": "Historic Event",
       "details": "In 1854, U.S. Navy Commodore Matthew C. Perry and the Tokugawa shogunate signed the Convention of Kanagawa, forcing the opening of Japanese ports...",
@@ -755,7 +755,7 @@ CardSets.register({
       "rarity": "common",
       "id": "04-02",
       "subtitle": "Historic Event",
-      "details": "In 1917, American entry into World War I: President Wilson asks the U.S. Congress for a declaration of war on Germany.",
+      "details": "In 1865, American Civil War: On the third attempt, Union forces captured Petersburg, Virginia, although Confederate officials and most of their...",
       "image": "assets/sets/calendar/images/04-02.svg"
     },
     {
@@ -768,10 +768,10 @@ CardSets.register({
     },
     {
       "name": "April 4",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "04-04",
       "subtitle": "Historic Event",
-      "details": "In 1841, William Henry Harrison dies of pneumonia after 31 days \u2014 the first president to die in office.",
+      "details": "In 1975, Vietnam War: On a mission to evacuate children from South Vietnam, a U.S. Air Force plane crash-landed at Tan Son Nhut Air Base, killing...",
       "image": "assets/sets/calendar/images/04-04.svg"
     },
     {
@@ -784,7 +784,7 @@ CardSets.register({
     },
     {
       "name": "April 6",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "04-06",
       "subtitle": "Holiday",
       "details": "New Beer's Eve, observed each year on April 6.",
@@ -792,7 +792,7 @@ CardSets.register({
     },
     {
       "name": "April 7",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "04-07",
       "subtitle": "Historic Event",
       "details": "In 1862, American Civil War: Union forces defeated Confederate troops at the Battle of Shiloh, at the time the bloodiest battle in U.S. history...",
@@ -800,7 +800,7 @@ CardSets.register({
     },
     {
       "name": "April 8",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "04-08",
       "subtitle": "Historic Event",
       "details": "In 1832, Black Hawk War: Around 300 United States 6th Infantry troops leave St. Louis, Missouri to fight the Sauk Native Americans.",
@@ -808,7 +808,7 @@ CardSets.register({
     },
     {
       "name": "April 9",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "04-09",
       "subtitle": "Holiday",
       "details": "National Former Prisoner of War Recognition Day, observed each year on April 9.",
@@ -835,7 +835,7 @@ CardSets.register({
       "rarity": "common",
       "id": "04-12",
       "subtitle": "Historic Event",
-      "details": "In 1983, Harold Washington was elected as the first African-American mayor of Chicago.",
+      "details": "In 1861, Confederate forces began a bombardment of Fort Sumter in the harbor of Charleston, South Carolina, starting the American Civil War.",
       "image": "assets/sets/calendar/images/04-12.svg"
     },
     {
@@ -856,7 +856,7 @@ CardSets.register({
     },
     {
       "name": "April 15",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "04-15",
       "subtitle": "Holiday",
       "details": "Jackie Robinson Day, observed each year on April 15.",
@@ -864,7 +864,7 @@ CardSets.register({
     },
     {
       "name": "April 16",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "04-16",
       "subtitle": "Holiday",
       "details": "National Healthcare Decisions Day, observed each year on April 16.",
@@ -880,15 +880,15 @@ CardSets.register({
     },
     {
       "name": "April 18",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "04-18",
       "subtitle": "Historic Event",
-      "details": "In 2019, the Justice Department releases the redacted Mueller report on Russian election interference.",
+      "details": "In 1958, Controversial American poet Ezra Pound was released from St. Elizabeths Hospital, a psychiatric hospital in Washington, D.C., in which he...",
       "image": "assets/sets/calendar/images/04-18.svg"
     },
     {
       "name": "April 19",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "04-19",
       "subtitle": "Historic Event",
       "details": "In 1861, American Civil War: Baltimore riot of 1861: A pro-Secession mob in Baltimore attacks United States Army troops marching through the city.",
@@ -896,7 +896,7 @@ CardSets.register({
     },
     {
       "name": "April 20",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "04-20",
       "subtitle": "Historic Event",
       "details": "In 1861, American Civil War: Robert E. Lee resigns his commission in the United States Army in order to command the forces of the state of Virginia.",
@@ -904,18 +904,18 @@ CardSets.register({
     },
     {
       "name": "April 21",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "04-21",
       "subtitle": "Historic Event",
-      "details": "In 1898, the U.S. Navy blockades Cuban ports, opening the Spanish\u2013American War.",
+      "details": "In 1967, A violent tornado strikes multiple schools and destroys houses in Belvidere, Illinois, United States, causing over 450 casualties.",
       "image": "assets/sets/calendar/images/04-21.svg"
     },
     {
       "name": "April 22",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "04-22",
       "subtitle": "Historic Event",
-      "details": "In 2022, climate activist Wynn Bruce self-immolates outside the U.S. Supreme Court in protest.",
+      "details": "In 2000, In a pre-dawn raid, U.S. federal agents seized six-year-old Eli\u00e1n Gonz\u00e1lez from his relatives' home in Miami and returned him to his...",
       "image": "assets/sets/calendar/images/04-22.svg"
     },
     {
@@ -923,12 +923,12 @@ CardSets.register({
       "rarity": "common",
       "id": "04-23",
       "subtitle": "Historic Event",
-      "details": "In 2010, Arizona governor Jan Brewer signed into law the controversial anti\u2013illegal immigration bill SB 1070, much of which was later struck down...",
+      "details": "In 1976, The American band the Ramones released their debut album, which became highly influential on the emerging punk rock movement.",
       "image": "assets/sets/calendar/images/04-23.svg"
     },
     {
       "name": "April 24",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "04-24",
       "subtitle": "Historic Event",
       "details": "In 1967, Vietnam War: American General William Westmoreland says in a news conference that the enemy had \"gained support in the United States that...",
@@ -936,15 +936,15 @@ CardSets.register({
     },
     {
       "name": "April 25",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "04-25",
       "subtitle": "Historic Event",
-      "details": "In 1898, Congress declares war on Spain, backdating it to the Cuban blockade of April 21.",
+      "details": "In 1862, American Civil War: Forces under U.S. Admiral David Farragut demand the surrender of the Confederate city of New Orleans, Louisiana.",
       "image": "assets/sets/calendar/images/04-25.svg"
     },
     {
       "name": "April 26",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "04-26",
       "subtitle": "Holiday",
       "details": "Confederate Memorial Day, observed each year on April 26.",
@@ -952,7 +952,7 @@ CardSets.register({
     },
     {
       "name": "April 27",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "04-27",
       "subtitle": "Historic Event",
       "details": "In 1805, U.S. Marines win the Battle of Derna in Tripoli \u2014 America's first land battle on foreign soil.",
@@ -960,7 +960,7 @@ CardSets.register({
     },
     {
       "name": "April 28",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "04-28",
       "subtitle": "Historic Event",
       "details": "In 1965, United States occupation of the Dominican Republic: American troops land in the Dominican Republic to \"forestall establishment of a...",
@@ -976,7 +976,7 @@ CardSets.register({
     },
     {
       "name": "April 30",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "04-30",
       "subtitle": "Holiday",
       "details": "Honesty Day, observed each year on April 30.",
@@ -984,7 +984,7 @@ CardSets.register({
     },
     {
       "name": "May 1",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "05-01",
       "subtitle": "Holiday",
       "details": "Law Day, observed each year on May 1.",
@@ -1003,12 +1003,12 @@ CardSets.register({
       "rarity": "common",
       "id": "05-03",
       "subtitle": "Historic Event",
-      "details": "In 1951, The United States Senate Committee on Armed Services and United States Senate Committee on Foreign Relations begin their closed door...",
+      "details": "In 1963, Police in Birmingham, Alabama, used high-pressure water hoses and dogs against civil-rights protesters, bringing scrutiny on racial...",
       "image": "assets/sets/calendar/images/05-03.svg"
     },
     {
       "name": "May 4",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "05-04",
       "subtitle": "Holiday",
       "details": "Bird Day, observed each year on May 4.",
@@ -1024,10 +1024,10 @@ CardSets.register({
     },
     {
       "name": "May 6",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "05-06",
       "subtitle": "Historic Event",
-      "details": "In 1882, President Chester A. Arthur signs the Chinese Exclusion Act, banning Chinese immigration for 61 years.",
+      "details": "In 1942, World War II: Japanese troops overcame fierce American and Philippine resistance to win the Battle of Corregidor.",
       "image": "assets/sets/calendar/images/05-06.svg"
     },
     {
@@ -1035,15 +1035,15 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "05-07",
       "subtitle": "Historic Event",
-      "details": "In 1992, Michigan ratifies a 203-year-old proposed amendment to the United States Constitution making the 27th Amendment law. This amendment bars...",
+      "details": "In 1915, World War I: German submarine U-20 sinks RMS Lusitania, killing 1,199 people, including 128 Americans. Public reaction to the sinking...",
       "image": "assets/sets/calendar/images/05-07.svg"
     },
     {
       "name": "May 8",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "05-08",
       "subtitle": "Historic Event",
-      "details": "In 2025, Chicago-born Cardinal Prevost is elected Pope Leo XIV \u2014 the first pope born in the United States.",
+      "details": "In 1976, Great American Revolution opened at Six Flags Magic Mountain, California.",
       "image": "assets/sets/calendar/images/05-08.svg"
     },
     {
@@ -1051,15 +1051,15 @@ CardSets.register({
       "rarity": "common",
       "id": "05-09",
       "subtitle": "Historic Event",
-      "details": "In 2022, Russo-Ukrainian war: United States President Joe Biden signs the 2022 Lend-Lease Act into law, a rebooted World War II-era policy...",
+      "details": "In 1961, In a speech to U.S. broadcasters, Newton Minow, the chairman of the Federal Communications Commission, described commercial television...",
       "image": "assets/sets/calendar/images/05-09.svg"
     },
     {
       "name": "May 10",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "05-10",
       "subtitle": "Historic Event",
-      "details": "In 1872, Victoria Woodhull becomes the first woman nominated for U.S. president.",
+      "details": "In 1801, the corsairs of Tripoli declare war on the United States, starting the First Barbary War.",
       "image": "assets/sets/calendar/images/05-10.svg"
     },
     {
@@ -1072,15 +1072,15 @@ CardSets.register({
     },
     {
       "name": "May 12",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "05-12",
       "subtitle": "Historic Event",
-      "details": "In 2002, Jimmy Carter visits Cuba \u2014 the first U.S. president, in or out of office, to do so since the revolution.",
+      "details": "In 1938, During an exercise to demonstrate air power, United States Army Air Corps bomber aircraft intercepted the Italian ocean liner SS Rex 620...",
       "image": "assets/sets/calendar/images/05-12.svg"
     },
     {
       "name": "May 13",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "05-13",
       "subtitle": "Historic Event",
       "details": "In 1846, Mexican\u2013American War: The United States declares war on the Federal Republic of Mexico following a dispute over the American annexation...",
@@ -1104,10 +1104,10 @@ CardSets.register({
     },
     {
       "name": "May 16",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "05-16",
       "subtitle": "Historic Event",
-      "details": "In 1918, The Sedition Act was passed in the United States, forbidding Americans from using \"disloyal, profane, scurrilous, or abusive language\"...",
+      "details": "In 1960, American physicist Theodore Maiman operates the first working laser, at Hughes Research Labs in Malibu.",
       "image": "assets/sets/calendar/images/05-16.svg"
     },
     {
@@ -1120,7 +1120,7 @@ CardSets.register({
     },
     {
       "name": "May 18",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "05-18",
       "subtitle": "Holiday",
       "details": "National Speech Pathologist Day, observed each year on May 18.",
@@ -1128,7 +1128,7 @@ CardSets.register({
     },
     {
       "name": "May 19",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "05-19",
       "subtitle": "Holiday",
       "details": "National Asian & Pacific Islander HIV/AIDS Awareness Day, observed each year on May 19.",
@@ -1136,7 +1136,7 @@ CardSets.register({
     },
     {
       "name": "May 20",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "05-20",
       "subtitle": "Historic Event",
       "details": "In 2013, A tornado struck Moore, Oklahoma, United States, killing 24 people and causing an estimated $2 billion of damage.",
@@ -1152,10 +1152,10 @@ CardSets.register({
     },
     {
       "name": "May 22",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "05-22",
       "subtitle": "Historic Event",
-      "details": "In 1807, a grand jury indicts former Vice President Aaron Burr for treason.",
+      "details": "In 1863, American Civil War: Union forces begin the Siege of Port Hudson which lasts 48 days, the longest siege in U.S. military history.",
       "image": "assets/sets/calendar/images/05-22.svg"
     },
     {
@@ -1163,20 +1163,20 @@ CardSets.register({
       "rarity": "common",
       "id": "05-23",
       "subtitle": "Historic Event",
-      "details": "In 1846, Mexican\u2013American War: President Mariano Paredes of Mexico unofficially declares war on the United States.",
+      "details": "In 1939, The U.S. Navy submarine Squalus sank off Portsmouth, New Hampshire, during tests, causing 26 men to drown.",
       "image": "assets/sets/calendar/images/05-23.svg"
     },
     {
       "name": "May 24",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "05-24",
       "subtitle": "Historic Event",
-      "details": "In 1963, Attorney General Robert F. Kennedy meets author James Baldwin to discuss race relations.",
+      "details": "In 1962, Project Mercury: American astronaut Scott Carpenter orbited the Earth three times in the Aurora 7 space capsule.",
       "image": "assets/sets/calendar/images/05-24.svg"
     },
     {
       "name": "May 25",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "05-25",
       "subtitle": "Holiday",
       "details": "National Missing Children's Day, observed each year on May 25.",
@@ -1184,7 +1184,7 @@ CardSets.register({
     },
     {
       "name": "May 26",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "05-26",
       "subtitle": "Holiday",
       "details": "National Paper Airplane Day, observed each year on May 26.",
@@ -1192,10 +1192,10 @@ CardSets.register({
     },
     {
       "name": "May 27",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "05-27",
       "subtitle": "Historic Event",
-      "details": "In 2016, Barack Obama becomes the first sitting U.S. president to visit Hiroshima.",
+      "details": "In 1958, The F-4 Phantom II, the principal air superiority jet fighter for both the U.S. Navy and Air Force, made its first flight.",
       "image": "assets/sets/calendar/images/05-27.svg"
     },
     {
@@ -1203,7 +1203,7 @@ CardSets.register({
       "rarity": "common",
       "id": "05-28",
       "subtitle": "Historic Event",
-      "details": "In 1830, U.S. president Andrew Jackson signed the Indian Removal Act into law, authorizing him to negotiate with Native Americans for their...",
+      "details": "In 1892, Scottish-American preservationist John Muir founded the environmental organization Sierra Club in California.",
       "image": "assets/sets/calendar/images/05-28.svg"
     },
     {
@@ -1216,15 +1216,15 @@ CardSets.register({
     },
     {
       "name": "May 30",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "05-30",
       "subtitle": "Historic Event",
-      "details": "In 2024, Donald Trump is convicted of falsifying business records \u2014 the first criminal conviction of a former U.S. president.",
+      "details": "In 1948, A dike holding the Columbia River broke, causing a flood that destroyed Vanport, Oregon, U.S., only five years after the city was built.",
       "image": "assets/sets/calendar/images/05-30.svg"
     },
     {
       "name": "May 31",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "05-31",
       "subtitle": "Historic Event",
       "details": "In 2019, A shooting at a municipal building in Virginia Beach, United States, left 13 people dead, including the gunman, and injured four others.",
@@ -1240,15 +1240,15 @@ CardSets.register({
     },
     {
       "name": "June 2",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "06-02",
       "subtitle": "Historic Event",
-      "details": "In 1924, President Coolidge signs the Indian Citizenship Act, granting U.S. citizenship to all Native Americans.",
+      "details": "In 1919, First Red Scare: The anarchist followers of Luigi Galleani set off eight bombs in eight cities across the United States.",
       "image": "assets/sets/calendar/images/06-02.svg"
     },
     {
       "name": "June 3",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "06-03",
       "subtitle": "Holiday",
       "details": "Confederate Memorial Day, observed each year on June 3.",
@@ -1256,7 +1256,7 @@ CardSets.register({
     },
     {
       "name": "June 4",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "06-04",
       "subtitle": "Historic Event",
       "details": "In 1944, World War II: A hunter-killer group of the United States Navy captures the German Kriegsmarine submarine U-505, the first time a U.S....",
@@ -1267,12 +1267,12 @@ CardSets.register({
       "rarity": "common",
       "id": "06-05",
       "subtitle": "Historic Event",
-      "details": "In 1916, Louis Brandeis is sworn in as a Justice of the United States Supreme Court; he is the first American Jew to hold such a position.",
+      "details": "In 1976, The Teton Dam in eastern Idaho, U.S., collapsed as its reservoir was being filled for the first time, resulting in the deaths of eleven...",
       "image": "assets/sets/calendar/images/06-05.svg"
     },
     {
       "name": "June 6",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "06-06",
       "subtitle": "Historic Event",
       "details": "In 1942, World War II: The United States Navy's victory over the Imperial Japanese Navy at the Battle of Midway is a major turning point in the...",
@@ -1283,7 +1283,7 @@ CardSets.register({
       "rarity": "common",
       "id": "06-07",
       "subtitle": "Historic Event",
-      "details": "In 1776, American Revolution: Richard Henry Lee proposes the \"Lee Resolution\" to the Second Continental Congress, with the motion being seconded...",
+      "details": "In 1998, White supremacists murdered James Byrd Jr., an African American, by chaining him behind a pickup truck and dragging him along an asphalt...",
       "image": "assets/sets/calendar/images/06-07.svg"
     },
     {
@@ -1299,7 +1299,7 @@ CardSets.register({
       "rarity": "common",
       "id": "06-09",
       "subtitle": "Historic Event",
-      "details": "In 1954, During hearings investigating conflicting accusations between the United States Army and Senator Joseph McCarthy, Army lawyer Joseph N....",
+      "details": "In 2019, Dominican-American retired baseball player David Ortiz was shot and severely wounded while at a bar in Santo Domingo.",
       "image": "assets/sets/calendar/images/06-09.svg"
     },
     {
@@ -1320,7 +1320,7 @@ CardSets.register({
     },
     {
       "name": "June 12",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "06-12",
       "subtitle": "Holiday",
       "details": "Loving Day, observed each year on June 12.",
@@ -1328,7 +1328,7 @@ CardSets.register({
     },
     {
       "name": "June 13",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "06-13",
       "subtitle": "Historic Event",
       "details": "In 1850, The American League of Colored Laborers, the first African American labor union in the United States, is established in New York City.",
@@ -1344,18 +1344,18 @@ CardSets.register({
     },
     {
       "name": "June 15",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "06-15",
       "subtitle": "Historic Event",
-      "details": "In 1920, Three African-American circus workers were lynched by a mob in Duluth, Minnesota, a crime that shocked the country for having taken place...",
+      "details": "In 1859, the shooting of a pig in the San Juan Islands sparks the 'Pig War' border standoff between the U.S. and Britain.",
       "image": "assets/sets/calendar/images/06-15.svg"
     },
     {
       "name": "June 16",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "06-16",
       "subtitle": "Historic Event",
-      "details": "In 2015, businessman Donald Trump announces his campaign for President of the United States.",
+      "details": "In 2012, The United States Air Force's robotic Boeing X-37B spaceplane returns to Earth after a classified 469-day orbital mission.",
       "image": "assets/sets/calendar/images/06-16.svg"
     },
     {
@@ -1363,7 +1363,7 @@ CardSets.register({
       "rarity": "common",
       "id": "06-17",
       "subtitle": "Historic Event",
-      "details": "In 1932, Bonus Army: Around a thousand World War I veterans amass at the United States Capitol as the U.S. Senate considers a bill that would give...",
+      "details": "In 1877, American Indian Wars: Battle of White Bird Canyon: The Nez Perce defeat the U.S. Cavalry at White Bird Canyon in the Idaho Territory.",
       "image": "assets/sets/calendar/images/06-17.svg"
     },
     {
@@ -1384,18 +1384,18 @@ CardSets.register({
     },
     {
       "name": "June 20",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "06-20",
       "subtitle": "Historic Event",
-      "details": "In 1782, the Confederation Congress adopts the Great Seal of the United States.",
+      "details": "In 1863, American Civil War: West Virginia is admitted as the 35th U.S. state.",
       "image": "assets/sets/calendar/images/06-20.svg"
     },
     {
       "name": "June 21",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "06-21",
       "subtitle": "Historic Event",
-      "details": "In 1915, the Supreme Court strikes down Oklahoma's grandfather clause disenfranchising Black voters.",
+      "details": "In 1898, the United States captures Guam from Spain in a bloodless landing.",
       "image": "assets/sets/calendar/images/06-21.svg"
     },
     {
@@ -1403,7 +1403,7 @@ CardSets.register({
       "rarity": "common",
       "id": "06-22",
       "subtitle": "Historic Event",
-      "details": "In 1870, The United States Department of Justice is created by the U.S. Congress.",
+      "details": "In 1898, Spanish\u2013American War: In a chaotic operation, 6,000 men of the U.S. Fifth Army Corps begins landing at Daiquir\u00ed, Cuba, about 16 miles (26...",
       "image": "assets/sets/calendar/images/06-22.svg"
     },
     {
@@ -1419,12 +1419,12 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "06-24",
       "subtitle": "Historic Event",
-      "details": "In 1957, In Roth v. United States, the U.S. Supreme Court rules that obscenity is not protected by the First Amendment.",
+      "details": "In 2021, A portion of a 12-story condominium building collapsed in Surfside, Florida, United States, killing 98 people and injuring 11 others.",
       "image": "assets/sets/calendar/images/06-24.svg"
     },
     {
       "name": "June 25",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "06-25",
       "subtitle": "Holiday",
       "details": "National Catfish Day, observed each year on June 25.",
@@ -1432,15 +1432,15 @@ CardSets.register({
     },
     {
       "name": "June 26",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "06-26",
       "subtitle": "Historic Event",
-      "details": "In 2015, The U.S. Supreme Court rules, 5\u20134, that same-sex couples have a constitutional right to marriage under the 14th Amendment to the United...",
+      "details": "In 1918, World War I: The 26-day Battle of Belleau Wood near the Marne River in France ended with American forces finally clearing that forest of...",
       "image": "assets/sets/calendar/images/06-26.svg"
     },
     {
       "name": "June 27",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "06-27",
       "subtitle": "Holiday",
       "details": "Helen Keller Day, observed each year on June 27.",
@@ -1451,7 +1451,7 @@ CardSets.register({
       "rarity": "common",
       "id": "06-28",
       "subtitle": "Historic Event",
-      "details": "In 1776, American Revolution: Thomas Jefferson and the Committee of Five present the draft of the United States Declaration of Independence to the...",
+      "details": "In 1895, The U.S. Court of Private Land Claims ruled that James Reavis's claim to 18,600 sq mi (48,000 km2) of land in present-day Arizona and New...",
       "image": "assets/sets/calendar/images/06-28.svg"
     },
     {
@@ -1459,7 +1459,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "06-29",
       "subtitle": "Historic Event",
-      "details": "In 1956, The Federal Aid Highway Act of 1956 is signed by U.S. President Dwight D. Eisenhower, officially creating the United States Interstate...",
+      "details": "In 1956, the Federal Aid Highway Act launches the Interstate Highway System.",
       "image": "assets/sets/calendar/images/06-29.svg"
     },
     {
@@ -1467,12 +1467,12 @@ CardSets.register({
       "rarity": "common",
       "id": "06-30",
       "subtitle": "Historic Event",
-      "details": "In 1922, In Washington D.C., U.S. Secretary of State Charles Evans Hughes and Dominican Ambassador Francisco J. Peynado sign the Hughes\u2013Peynado...",
+      "details": "In 1966, The National Organization for Women, a leading United States feminist organization, was founded in Washington, D.C.",
       "image": "assets/sets/calendar/images/06-30.svg"
     },
     {
       "name": "July 1",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "07-01",
       "subtitle": "Holiday",
       "details": "Bobby Bonilla Day, observed each year on July 1.",
@@ -1483,7 +1483,7 @@ CardSets.register({
       "rarity": "common",
       "id": "07-02",
       "subtitle": "Historic Event",
-      "details": "In 1921, World War I: U.S. President Warren G. Harding signs the Knox\u2013Porter Resolution formally ending the war between the United States and Germany.",
+      "details": "In 1964, The Civil Rights Act was signed into law, outlawing segregation in schools, at the workplace, and other facilities that served the...",
       "image": "assets/sets/calendar/images/07-02.svg"
     },
     {
@@ -1504,7 +1504,7 @@ CardSets.register({
     },
     {
       "name": "July 5",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "07-05",
       "subtitle": "Historic Event",
       "details": "In 1950, Korean War: In the first encounter between North Korean and American forces, an unprepared and undisciplined U.S. Army task force was...",
@@ -1531,31 +1531,31 @@ CardSets.register({
       "rarity": "common",
       "id": "07-08",
       "subtitle": "Historic Event",
-      "details": "In 1876, The Hamburg massacre prior to the 1876 United States presidential election results in the deaths of six African-Americans of the...",
+      "details": "In 1776, The United States Declaration of Independence received its first formal public reading, in Philadelphia.",
       "image": "assets/sets/calendar/images/07-08.svg"
     },
     {
       "name": "July 9",
-      "rarity": "epic",
+      "rarity": "uncommon",
       "id": "07-09",
       "subtitle": "Historic Event",
-      "details": "In 1850, Millard Fillmore becomes president after Zachary Taylor's death \u2014 the last Whig to hold the office.",
+      "details": "In 1893, Daniel Hale Williams, American heart surgeon, performs the first successful open-heart surgery in United States without anesthesia.",
       "image": "assets/sets/calendar/images/07-09.svg"
     },
     {
       "name": "July 10",
-      "rarity": "uncommon",
+      "rarity": "epic",
       "id": "07-10",
       "subtitle": "Historic Event",
-      "details": "In 1945, Three African-American United States Marines who repeatedly raped local women in Katsuyama near Nago, Okinawa were killed by the...",
+      "details": "In 1999, the United States defeats China in the FIFA Women's World Cup final at the Rose Bowl.",
       "image": "assets/sets/calendar/images/07-10.svg"
     },
     {
       "name": "July 11",
-      "rarity": "epic",
+      "rarity": "uncommon",
       "id": "07-11",
       "subtitle": "Historic Event",
-      "details": "In 1921, ex-president William Howard Taft is sworn in as chief justice \u2014 the only man to hold both offices.",
+      "details": "In 1906, Murder of Grace Brown by Chester Gillette in the United States, inspiration for Theodore Dreiser's An American Tragedy.",
       "image": "assets/sets/calendar/images/07-11.svg"
     },
     {
@@ -1568,18 +1568,18 @@ CardSets.register({
     },
     {
       "name": "July 13",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "07-13",
       "subtitle": "Historic Event",
-      "details": "In 2024, Donald Trump is injured in an assassination attempt at a Pennsylvania campaign rally.",
+      "details": "In 1863, American Civil War: The New York City draft riots begin three days of rioting which will later be regarded as the worst in United States...",
       "image": "assets/sets/calendar/images/07-13.svg"
     },
     {
       "name": "July 14",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "07-14",
-      "subtitle": "Holiday",
-      "details": "Samson Occom, observed each year on July 14.",
+      "subtitle": "Historic Event",
+      "details": "In 2015, NASA's New Horizons probe makes the first flyby of Pluto.",
       "image": "assets/sets/calendar/images/07-14.svg"
     },
     {
@@ -1648,39 +1648,39 @@ CardSets.register({
     },
     {
       "name": "July 23",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "07-23",
       "subtitle": "Historic Event",
-      "details": "In 1940, The United States' Under Secretary of State Sumner Welles issues a declaration on the U.S. non-recognition policy of the Soviet...",
+      "details": "In 1967, Detroit Riots: In Detroit, one of the worst riots in United States history begins on 12th Street in the predominantly African American...",
       "image": "assets/sets/calendar/images/07-23.svg"
     },
     {
       "name": "July 24",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "07-24",
       "subtitle": "Historic Event",
-      "details": "In 1959, Soviet premier Nikita Khrushchev and U.S. vice president Richard Nixon held an impromptu debate at the opening of the American National...",
+      "details": "In 1980, The Australian swimming team, nicknamed the Quietly Confident Quartet, won the men's 4 \u00d7 100 metre medley relay at the Moscow Olympics...",
       "image": "assets/sets/calendar/images/07-24.svg"
     },
     {
       "name": "July 25",
-      "rarity": "uncommon",
+      "rarity": "epic",
       "id": "07-25",
       "subtitle": "Historic Event",
-      "details": "In 1898, Spanish\u2013American War: After more than two months of sea-based bombardment, the United States invaded Puerto Rico.",
+      "details": "In 1898, after months of naval bombardment, the United States invades Puerto Rico.",
       "image": "assets/sets/calendar/images/07-25.svg"
     },
     {
       "name": "July 26",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "07-26",
       "subtitle": "Historic Event",
-      "details": "In 2016, Hillary Clinton becomes the first woman nominated for president by a major U.S. party.",
+      "details": "In 1941, World War II: In response to the Japanese occupation of French Indochina, the United States, Britain and the Netherlands freeze all...",
       "image": "assets/sets/calendar/images/07-26.svg"
     },
     {
       "name": "July 27",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "07-27",
       "subtitle": "Historic Event",
       "details": "In 1964, Vietnam War: Five thousand more American military advisers are sent to South Vietnam bringing the total number of United States forces in...",
@@ -1691,7 +1691,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "07-28",
       "subtitle": "Historic Event",
-      "details": "In 1965, Vietnam War: U.S. president Lyndon B. Johnson announces his order to increase the number of United States troops in South Vietnam from...",
+      "details": "In 1868, The 14th Amendment to the United States Constitution is certified, establishing African American citizenship and guaranteeing due process...",
       "image": "assets/sets/calendar/images/07-28.svg"
     },
     {
@@ -1707,7 +1707,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "07-30",
       "subtitle": "Historic Event",
-      "details": "In 1974, Watergate scandal: U.S. President Richard Nixon releases subpoenaed White House recordings after being ordered to do so by the Supreme...",
+      "details": "In 1863, American Indian Wars: Representatives of the United States and tribal leaders including Chief Pocatello (of the Shoshone) sign the Treaty...",
       "image": "assets/sets/calendar/images/07-30.svg"
     },
     {
@@ -1715,12 +1715,12 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "07-31",
       "subtitle": "Historic Event",
-      "details": "In 1874, Patrick Francis Healy was inaugurated as president of Georgetown University, becoming the first African-American president of a...",
+      "details": "In 2020, A mid-air collision in Soldotna, Alaska, United States, killed seven people, including state representative Gary Knopp.",
       "image": "assets/sets/calendar/images/07-31.svg"
     },
     {
       "name": "August 1",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "08-01",
       "subtitle": "Historic Event",
       "details": "In 1957, The United States and Canada form the North American Aerospace Defense Command (NORAD).",
@@ -1728,10 +1728,10 @@ CardSets.register({
     },
     {
       "name": "August 2",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "08-02",
       "subtitle": "Historic Event",
-      "details": "In 1923, Calvin Coolidge becomes the 30th president after Warren G. Harding's fatal heart attack.",
+      "details": "In 1790, The first United States census was officially completed, with the nation's residential population enumerated to be 3,929,214.",
       "image": "assets/sets/calendar/images/08-02.svg"
     },
     {
@@ -1744,7 +1744,7 @@ CardSets.register({
     },
     {
       "name": "August 4",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "08-04",
       "subtitle": "Holiday",
       "details": "Coast Guard Day, observed each year on August 4.",
@@ -1752,7 +1752,7 @@ CardSets.register({
     },
     {
       "name": "August 5",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "08-05",
       "subtitle": "Historic Event",
       "details": "In 1861, American Civil War: In order to help pay for the war effort, the United States government levies the first income tax as part of the...",
@@ -1763,12 +1763,12 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "08-06",
       "subtitle": "Historic Event",
-      "details": "In 1965, U.S. president Lyndon B. Johnson signed the Voting Rights Act into law, outlawing literacy tests and other discriminatory voting...",
+      "details": "In 2011, War in Afghanistan: A United States military helicopter is shot down, killing 30 American special forces members and a working dog, seven...",
       "image": "assets/sets/calendar/images/08-06.svg"
     },
     {
       "name": "August 7",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "08-07",
       "subtitle": "Holiday",
       "details": "National Purple Heart Day, observed each year on August 7.",
@@ -1776,47 +1776,47 @@ CardSets.register({
     },
     {
       "name": "August 8",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "08-08",
       "subtitle": "Historic Event",
-      "details": "In 1974, Richard Nixon announces his resignation on national TV, effective noon the next day.",
+      "details": "In 1695, The foundation for what is now known as the Wren Building, the oldest surviving college building in the United States, was laid in a...",
       "image": "assets/sets/calendar/images/08-08.svg"
     },
     {
       "name": "August 9",
-      "rarity": "epic",
+      "rarity": "uncommon",
       "id": "08-09",
       "subtitle": "Historic Event",
-      "details": "In 1974, Richard Nixon's resignation takes effect \u2014 the first and only U.S. president to resign.",
+      "details": "In 1877, American Indian Wars: Battle of the Big Hole: A small band of Nez Perc\u00e9 Indians clash with the United States Army.",
       "image": "assets/sets/calendar/images/08-09.svg"
     },
     {
       "name": "August 10",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "08-10",
       "subtitle": "Historic Event",
-      "details": "In 1988, Reagan signs the Civil Liberties Act, paying $20,000 to Japanese Americans interned in WWII.",
+      "details": "In 2019, Jeffrey Epstein, an American financier and convicted sex offender, was found dead in his cell at the Metropolitan Correctional Center...",
       "image": "assets/sets/calendar/images/08-10.svg"
     },
     {
       "name": "August 11",
-      "rarity": "uncommon",
+      "rarity": "epic",
       "id": "08-11",
       "subtitle": "Historic Event",
-      "details": "In 1929, The first Bud Billiken Parade and Picnic, the oldest and largest African-American parade in the United States, was held in Chicago.",
+      "details": "In 1929, Chicago hosts the first Bud Billiken Parade, the largest African-American parade in the U.S.",
       "image": "assets/sets/calendar/images/08-11.svg"
     },
     {
       "name": "August 12",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "08-12",
       "subtitle": "Historic Event",
-      "details": "In 1834, A race riot in Philadelphia, United States, destroyed African-American businesses and killed two people.",
+      "details": "In 1834, a race riot in Philadelphia destroys Black businesses and kills two people.",
       "image": "assets/sets/calendar/images/08-12.svg"
     },
     {
       "name": "August 13",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "08-13",
       "subtitle": "Historic Event",
       "details": "In 1779, American Revolutionary War: The Royal Navy defeats the Penobscot Expedition with the most significant loss of United States naval forces...",
@@ -1840,7 +1840,7 @@ CardSets.register({
     },
     {
       "name": "August 16",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "08-16",
       "subtitle": "Holiday",
       "details": "National Airborne Day, observed each year on August 16.",
@@ -1856,15 +1856,15 @@ CardSets.register({
     },
     {
       "name": "August 18",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "08-18",
       "subtitle": "Historic Event",
-      "details": "In 1938, The Thousand Islands Bridge, connecting New York, United States, with Ontario, Canada, over the Saint Lawrence River, is dedicated by...",
+      "details": "In 1965, Vietnam War: Operation Starlite begins: United States Marines destroy a Viet Cong stronghold on the Van Tuong peninsula in the first...",
       "image": "assets/sets/calendar/images/08-18.svg"
     },
     {
       "name": "August 19",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "08-19",
       "subtitle": "Holiday",
       "details": "National Aviation Day, observed each year on August 19.",
@@ -1872,10 +1872,10 @@ CardSets.register({
     },
     {
       "name": "August 20",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "08-20",
       "subtitle": "Historic Event",
-      "details": "In 1998, the U.S. launches cruise missile strikes on al-Qaeda camps after the African embassy bombings.",
+      "details": "In 1998, the U.S. strikes al-Qaeda camps with cruise missiles after the African embassy bombings.",
       "image": "assets/sets/calendar/images/08-20.svg"
     },
     {
@@ -1888,15 +1888,15 @@ CardSets.register({
     },
     {
       "name": "August 22",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "08-22",
       "subtitle": "Historic Event",
-      "details": "In 1902, Theodore Roosevelt becomes the first president to appear publicly in an automobile.",
+      "details": "In 1777, American Revolutionary War: Benedict Arnold used a ruse to convince the British that a much larger force was arriving, causing them to...",
       "image": "assets/sets/calendar/images/08-22.svg"
     },
     {
       "name": "August 23",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "08-23",
       "subtitle": "Historic Event",
       "details": "In 1994, Eugene Bullard, the only African American pilot in World War I, is posthumously commissioned as Second Lieutenant in the United States...",
@@ -1904,7 +1904,7 @@ CardSets.register({
     },
     {
       "name": "August 24",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "08-24",
       "subtitle": "Holiday",
       "details": "National Waffle Day, observed each year on August 24.",
@@ -1920,7 +1920,7 @@ CardSets.register({
     },
     {
       "name": "August 26",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "08-26",
       "subtitle": "Holiday",
       "details": "Women's Equality Day, observed each year on August 26.",
@@ -1928,7 +1928,7 @@ CardSets.register({
     },
     {
       "name": "August 27",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "08-27",
       "subtitle": "Historic Event",
       "details": "In 1832, Black Hawk, the leader of the Sauk tribe of Native Americans, surrendered to U.S. authorities to end the Black Hawk War.",
@@ -1939,7 +1939,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "08-28",
       "subtitle": "Historic Event",
-      "details": "In 1963, American civil-rights leader Martin Luther King Jr. delivered the speech \"I Have a Dream\" during the March on Washington, calling for...",
+      "details": "In 1950, American tennis player Althea Gibson became the first African-American woman to compete at the U.S. National Championships.",
       "image": "assets/sets/calendar/images/08-28.svg"
     },
     {
@@ -1952,10 +1952,10 @@ CardSets.register({
     },
     {
       "name": "August 30",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "08-30",
       "subtitle": "Historic Event",
-      "details": "In 1967, Thurgood Marshall is confirmed as the first African American Justice of the Supreme Court of the United States.",
+      "details": "In 2021, The last remaining American troops leave Afghanistan, ending U.S. involvement in the war.",
       "image": "assets/sets/calendar/images/08-30.svg"
     },
     {
@@ -1976,7 +1976,7 @@ CardSets.register({
     },
     {
       "name": "September 2",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "09-02",
       "subtitle": "Holiday",
       "details": "National Blueberry Popsicle Day, observed each year on September 2.",
@@ -1984,7 +1984,7 @@ CardSets.register({
     },
     {
       "name": "September 3",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "09-03",
       "subtitle": "Holiday",
       "details": "National Welsh Rarebit Day, observed each year on September 3.",
@@ -2000,10 +2000,10 @@ CardSets.register({
     },
     {
       "name": "September 5",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "09-05",
       "subtitle": "Historic Event",
-      "details": "In 1905, Russo-Japanese War: In New Hampshire, United States, the Treaty of Portsmouth, mediated by U.S. President Theodore Roosevelt, ends the war.",
+      "details": "In 1877, American Indian Wars: Oglala Sioux chief Crazy Horse is bayoneted by a United States soldier after resisting confinement in a guardhouse...",
       "image": "assets/sets/calendar/images/09-05.svg"
     },
     {
@@ -2011,7 +2011,7 @@ CardSets.register({
       "rarity": "common",
       "id": "09-06",
       "subtitle": "Historic Event",
-      "details": "In 1901, U.S. president William McKinley was fatally shot by anarchist Leon Czolgosz at the Pan-American Exposition in Buffalo, New York, and died...",
+      "details": "In 1916, The first self-service grocery store, Piggly Wiggly, was founded in Memphis, Tennessee, U.S.",
       "image": "assets/sets/calendar/images/09-06.svg"
     },
     {
@@ -2056,7 +2056,7 @@ CardSets.register({
     },
     {
       "name": "September 12",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "09-12",
       "subtitle": "Holiday",
       "details": "National Day of Encouragement, observed each year on September 12.",
@@ -2067,20 +2067,20 @@ CardSets.register({
       "rarity": "common",
       "id": "09-13",
       "subtitle": "Historic Event",
-      "details": "In 1948, Margaret Chase Smith is elected United States senator, and becomes the first woman to serve in both the U.S. House of Representatives and...",
+      "details": "In 1814, War of 1812: Fort McHenry in Baltimore's Inner Harbor was attacked by British forces during the Battle of Baltimore, inspiring Francis...",
       "image": "assets/sets/calendar/images/09-13.svg"
     },
     {
       "name": "September 14",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "09-14",
       "subtitle": "Historic Event",
-      "details": "In 1901, Theodore Roosevelt becomes president at 42 \u2014 the youngest ever \u2014 after McKinley's assassination.",
+      "details": "In 2015, LIGO physicists directly observe gravitational waves for the first time.",
       "image": "assets/sets/calendar/images/09-14.svg"
     },
     {
       "name": "September 15",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "09-15",
       "subtitle": "Holiday",
       "details": "National Hispanic Heritage Month, observed each year on September 15.",
@@ -2088,7 +2088,7 @@ CardSets.register({
     },
     {
       "name": "September 16",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "09-16",
       "subtitle": "Historic Event",
       "details": "In 1863, Robert College, in Istanbul, the first American educational institution outside the United States, is founded by Christopher Robert, an...",
@@ -2096,7 +2096,7 @@ CardSets.register({
     },
     {
       "name": "September 17",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "09-17",
       "subtitle": "Holiday",
       "details": "Constitution Day and Citizenship Day, observed each year on September 17.",
@@ -2115,12 +2115,12 @@ CardSets.register({
       "rarity": "common",
       "id": "09-19",
       "subtitle": "Historic Event",
-      "details": "In 1995, Industrial Society and Its Future, the manifesto of American domestic terrorist Ted Kaczynski, was published in The Washington Post...",
+      "details": "In 1863, American Civil War: The Battle of Chickamauga began in northwestern Georgia and would end in the most significant Union defeat in the...",
       "image": "assets/sets/calendar/images/09-19.svg"
     },
     {
       "name": "September 20",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "09-20",
       "subtitle": "Historic Event",
       "details": "In 2011, The United States military ended its \"don't ask, don't tell\" policy, consequently allowing gay and lesbian people to serve openly.",
@@ -2131,7 +2131,7 @@ CardSets.register({
       "rarity": "common",
       "id": "09-21",
       "subtitle": "Historic Event",
-      "details": "In 1996, The Defense of Marriage Act was passed by the United States Congress, prohibiting federal recognition of same-sex marriage, while...",
+      "details": "In 2004, American rock band Green Day released their seventh studio album, American Idiot.",
       "image": "assets/sets/calendar/images/09-21.svg"
     },
     {
@@ -2144,7 +2144,7 @@ CardSets.register({
     },
     {
       "name": "September 23",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "09-23",
       "subtitle": "Historic Event",
       "details": "In 1779, American Revolutionary War: John Paul Jones, naval commander of the United States, on board the USS Bonhomme Richard, wins the Battle of...",
@@ -2195,7 +2195,7 @@ CardSets.register({
       "rarity": "common",
       "id": "09-29",
       "subtitle": "Historic Event",
-      "details": "In 2005, John Roberts became the 17th Chief Justice of the United States; he would be the first Chief Justice to serve for twenty years since...",
+      "details": "In 1760, The Williamsburg Bray School, the oldest-surviving school building in the U.S. dedicated to educating Black children, opened at Benjamin...",
       "image": "assets/sets/calendar/images/09-29.svg"
     },
     {
@@ -2211,15 +2211,15 @@ CardSets.register({
       "rarity": "common",
       "id": "10-01",
       "subtitle": "Historic Event",
-      "details": "In 1890, At the encouragement of preservationist John Muir and writer Robert Underwood Johnson, the U.S. Congress established Yosemite National...",
+      "details": "In 1890, Yosemite becomes a U.S. national park, championed by preservationist John Muir.",
       "image": "assets/sets/calendar/images/10-01.svg"
     },
     {
       "name": "October 2",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "10-02",
       "subtitle": "Historic Event",
-      "details": "In 1967, Thurgood Marshall is sworn in as the first Black justice of the U.S. Supreme Court.",
+      "details": "In 2006, Five Amish girls are murdered in a shooting at a school in Pennsylvania, United States.",
       "image": "assets/sets/calendar/images/10-02.svg"
     },
     {
@@ -2243,7 +2243,7 @@ CardSets.register({
       "rarity": "common",
       "id": "10-05",
       "subtitle": "Historic Event",
-      "details": "In 1988, During the United States vice-presidential debate, Democratic candidate Lloyd Bentsen told his opponent Dan Quayle, \"Senator, you're no...",
+      "details": "In 1986, Eugene Hasenfus's plane was shot down by Nicaraguan forces while carrying weapons to the Contra rebels on behalf of the U.S. government...",
       "image": "assets/sets/calendar/images/10-05.svg"
     },
     {
@@ -2283,7 +2283,7 @@ CardSets.register({
       "rarity": "common",
       "id": "10-10",
       "subtitle": "Historic Event",
-      "details": "In 1973, U.S. vice president Spiro Agnew resigned after being charged with tax evasion.",
+      "details": "In 2018, Hurricane Michael makes landfall in the Florida Panhandle as a catastrophic Category 5 hurricane. It kills 57 people in the United...",
       "image": "assets/sets/calendar/images/10-10.svg"
     },
     {
@@ -2312,7 +2312,7 @@ CardSets.register({
     },
     {
       "name": "October 14",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "10-14",
       "subtitle": "Historic Event",
       "details": "In 2021, Approximately 10,000 John Deere employees went on strike in one of the largest private-sector strikes in the United States.",
@@ -2336,10 +2336,10 @@ CardSets.register({
     },
     {
       "name": "October 17",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "10-17",
       "subtitle": "Historic Event",
-      "details": "In 1777, American Revolutionary War: British general John Burgoyne's Saratoga campaign ended with his surrender to the Americans, later convincing...",
+      "details": "In 1931, American gangster Al Capone was convicted on five counts of income-tax evasion.",
       "image": "assets/sets/calendar/images/10-17.svg"
     },
     {
@@ -2360,18 +2360,18 @@ CardSets.register({
     },
     {
       "name": "October 20",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "10-20",
       "subtitle": "Historic Event",
-      "details": "In 1973, Watergate scandal: \"Saturday Night Massacre\": United States President Richard Nixon fires U.S. Attorney General Elliot Richardson and...",
+      "details": "In 1977, Three members of the American rock band Lynyrd Skynyrd died when their chartered plane crashed in Gillsburg, Mississippi.",
       "image": "assets/sets/calendar/images/10-20.svg"
     },
     {
       "name": "October 21",
-      "rarity": "uncommon",
+      "rarity": "epic",
       "id": "10-21",
       "subtitle": "Historic Event",
-      "details": "In 1867, The first and second of three treaties were signed near Medicine Lodge, Kansas, between the United States federal government and several...",
+      "details": "In 1867, treaties at Medicine Lodge, Kansas, move Southern Plains tribes onto reservations.",
       "image": "assets/sets/calendar/images/10-21.svg"
     },
     {
@@ -2379,7 +2379,7 @@ CardSets.register({
       "rarity": "common",
       "id": "10-22",
       "subtitle": "Historic Event",
-      "details": "In 1790, Northwest Indian War: Native American forces defeat the United States, ending the Harmar Campaign.",
+      "details": "In 1945, Workers at the Cigar Factory in Charleston, South Carolina, began a labor strike against the American Tobacco Company that lasted more...",
       "image": "assets/sets/calendar/images/10-22.svg"
     },
     {
@@ -2400,7 +2400,7 @@ CardSets.register({
     },
     {
       "name": "October 25",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "10-25",
       "subtitle": "Historic Event",
       "details": "In 1944, USS Tang, the U.S. Navy submarine credited with sinking more ships than any other American submarine, sank when it was struck by its own...",
@@ -2411,7 +2411,7 @@ CardSets.register({
       "rarity": "common",
       "id": "10-26",
       "subtitle": "Historic Event",
-      "details": "In 2001, President George W. Bush signed the Patriot Act into law, significantly expanding the authority of United States law enforcement agencies.",
+      "details": "In 1892, Ida B. Wells began publishing her research on lynching in the United States, for which she was posthumously awarded a Pulitzer Prize in 2020.",
       "image": "assets/sets/calendar/images/10-26.svg"
     },
     {
@@ -2424,10 +2424,10 @@ CardSets.register({
     },
     {
       "name": "October 28",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "10-28",
       "subtitle": "Historic Event",
-      "details": "In 1919, Congress passes the Volstead Act over Wilson's veto, enforcing Prohibition.",
+      "details": "In 1965, In St. Louis, Missouri, U.S., the 630-foot (190 m)-tall steel catenary Gateway Arch was completed.",
       "image": "assets/sets/calendar/images/10-28.svg"
     },
     {
@@ -2464,26 +2464,26 @@ CardSets.register({
     },
     {
       "name": "November 2",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "11-02",
       "subtitle": "Historic Event",
-      "details": "In 1880, James A. Garfield is elected president in the closest popular-vote margin to date.",
+      "details": "In 1984, The serial killer Velma Barfield became the first woman to be executed in the United States since 1962.",
       "image": "assets/sets/calendar/images/11-02.svg"
     },
     {
       "name": "November 3",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "11-03",
       "subtitle": "Historic Event",
-      "details": "In 1936, Franklin D. Roosevelt is reelected President of the United States.",
+      "details": "In 1986, Iran\u2013Contra affair: The Lebanese magazine Ash-Shiraa reports that the United States has been secretly selling weapons to Iran in order to...",
       "image": "assets/sets/calendar/images/11-03.svg"
     },
     {
       "name": "November 4",
-      "rarity": "epic",
+      "rarity": "uncommon",
       "id": "11-04",
       "subtitle": "Historic Event",
-      "details": "In 2008, Barack Obama is elected the first Black President of the United States.",
+      "details": "In 1791, Northwest Indian War: The Western Confederacy of American Indians wins a major victory over the United States in the Battle of the Wabash.",
       "image": "assets/sets/calendar/images/11-04.svg"
     },
     {
@@ -2496,26 +2496,26 @@ CardSets.register({
     },
     {
       "name": "November 6",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "11-06",
       "subtitle": "Historic Event",
-      "details": "In 1860, Abraham Lincoln is elected the 16th president with just 40% of the popular vote.",
+      "details": "In 1971, The United States Atomic Energy Commission tests the largest U.S. underground hydrogen bomb, code-named Cannikin, on Amchitka Island in...",
       "image": "assets/sets/calendar/images/11-06.svg"
     },
     {
       "name": "November 7",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "11-07",
       "subtitle": "Historic Event",
-      "details": "In 2020, Joe Biden is confirmed elected the 46th president, defeating Donald Trump.",
+      "details": "In 1972, A ship collision with the Sidney Lanier Bridge in the U.S. state of Georgia resulted in a bridge collapse, which killed ten people.",
       "image": "assets/sets/calendar/images/11-07.svg"
     },
     {
       "name": "November 8",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "11-08",
       "subtitle": "Historic Event",
-      "details": "In 2016, Donald Trump is elected the 45th president, defeating Hillary Clinton.",
+      "details": "In 1950, Korean War: United States Air Force Lt. Russell J. Brown, while piloting an F-80 Shooting Star, shoots down two North Korean MiG-15s in...",
       "image": "assets/sets/calendar/images/11-08.svg"
     },
     {
@@ -2544,10 +2544,10 @@ CardSets.register({
     },
     {
       "name": "November 12",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "11-12",
       "subtitle": "Historic Event",
-      "details": "In 1979, Iran hostage crisis: In response to the hostage situation in Tehran, U.S. President Jimmy Carter orders a halt to all petroleum imports...",
+      "details": "In 1892, William Heffelfinger was paid $500 by the Allegheny Athletic Association, becoming the first professional American football player.",
       "image": "assets/sets/calendar/images/11-12.svg"
     },
     {
@@ -2560,10 +2560,10 @@ CardSets.register({
     },
     {
       "name": "November 14",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "id": "11-14",
       "subtitle": "Historic Event",
-      "details": "In 1851, Moby-Dick, an epic novel by American writer Herman Melville, was first published in the United States.",
+      "details": "In 1851, Herman Melville's Moby-Dick is first published in the United States.",
       "image": "assets/sets/calendar/images/11-14.svg"
     },
     {
@@ -2576,7 +2576,7 @@ CardSets.register({
     },
     {
       "name": "November 16",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "11-16",
       "subtitle": "Historic Event",
       "details": "In 2020, The El Dorado Fire in California, United States, was extinguished after 71 days, having destroyed 20 structures and killed one firefighter.",
@@ -2584,7 +2584,7 @@ CardSets.register({
     },
     {
       "name": "November 17",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "11-17",
       "subtitle": "Historic Event",
       "details": "In 1968, NBC cuts away from a Raiders\u2013Jets thriller to air Heidi, enraging football fans.",
@@ -2592,18 +2592,18 @@ CardSets.register({
     },
     {
       "name": "November 18",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "11-18",
       "subtitle": "Historic Event",
-      "details": "In 1993, In the United States, the North American Free Trade Agreement (NAFTA) is approved by the House of Representatives.",
+      "details": "In 1909, Two United States warships are sent to Nicaragua after 500 revolutionaries (including two Americans) are executed by order of Jos\u00e9 Santos...",
       "image": "assets/sets/calendar/images/11-18.svg"
     },
     {
       "name": "November 19",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "11-19",
       "subtitle": "Historic Event",
-      "details": "In 1863, American Civil War: U.S. president Abraham Lincoln delivered the Gettysburg Address at the dedication of the Soldiers' National Cemetery...",
+      "details": "In 1794, The United States and the Kingdom of Great Britain sign Jay's Treaty, which attempts to resolve some of the lingering problems left over...",
       "image": "assets/sets/calendar/images/11-19.svg"
     },
     {
@@ -2616,7 +2616,7 @@ CardSets.register({
     },
     {
       "name": "November 21",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "11-21",
       "subtitle": "Historic Event",
       "details": "In 1789, North Carolina ratifies the United States Constitution and is admitted as the 12th U.S. state.",
@@ -2624,18 +2624,18 @@ CardSets.register({
     },
     {
       "name": "November 22",
-      "rarity": "epic",
+      "rarity": "common",
       "id": "11-22",
       "subtitle": "Historic Event",
-      "details": "In 1963, President John F. Kennedy is assassinated in Dallas; Lyndon Johnson is sworn in.",
+      "details": "In 1995, Toy Story, the first feature film created using only computer-generated imagery, was released in theaters in the United States.",
       "image": "assets/sets/calendar/images/11-22.svg"
     },
     {
       "name": "November 23",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "11-23",
       "subtitle": "Historic Event",
-      "details": "In 1921, President Harding signs a law barring doctors from prescribing beer or liquor.",
+      "details": "In 1914, Mexican Revolution: The last of U.S. forces withdraw from Veracruz, occupied seven months earlier in response to the Tampico Affair.",
       "image": "assets/sets/calendar/images/11-23.svg"
     },
     {
@@ -2648,7 +2648,7 @@ CardSets.register({
     },
     {
       "name": "November 25",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "11-25",
       "subtitle": "Historic Event",
       "details": "In 1876, American Indian Wars: In retaliation for the American defeat at the Battle of the Little Bighorn, United States Army troops sack the...",
@@ -2664,10 +2664,10 @@ CardSets.register({
     },
     {
       "name": "November 27",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "11-27",
       "subtitle": "Historic Event",
-      "details": "In 1973, the Senate confirms Gerald Ford as vice president, 92\u20133.",
+      "details": "In 1868, American Indian Wars: Battle of Washita River: United States Army Lieutenant Colonel George Armstrong Custer leads an attack on Cheyenne...",
       "image": "assets/sets/calendar/images/11-27.svg"
     },
     {
@@ -2683,12 +2683,12 @@ CardSets.register({
       "rarity": "common",
       "id": "11-29",
       "subtitle": "Historic Event",
-      "details": "In 1979, The controversial Tellico Dam project by the Tennessee Valley Authority is completed despite being ordered to shut down from the Supreme...",
+      "details": "In 1776, American Revolutionary War: British reinforcements brought an end to the Patriot attempt to capture Fort Cumberland in Nova Scotia.",
       "image": "assets/sets/calendar/images/11-29.svg"
     },
     {
       "name": "November 30",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "11-30",
       "subtitle": "Historic Event",
       "details": "In 1782, American Revolutionary War: Treaty of Paris: In Paris, representatives from the United States and Great Britain sign preliminary peace...",
@@ -2707,7 +2707,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "12-02",
       "subtitle": "Historic Event",
-      "details": "In 1962, Returning from a fact-finding mission, U.S. senator Mike Mansfield became the first American official to comment adversely on the...",
+      "details": "In 1954, The Sino-American Mutual Defense Treaty, between the United States and Taiwan, is signed in Washington, D.C.",
       "image": "assets/sets/calendar/images/12-02.svg"
     },
     {
@@ -2720,10 +2720,10 @@ CardSets.register({
     },
     {
       "name": "December 4",
-      "rarity": "uncommon",
+      "rarity": "common",
       "id": "12-04",
       "subtitle": "Historic Event",
-      "details": "In 1992, U.S. president George H. W. Bush ordered American troops into Somalia to help provide humanitarian aid and restore order during the...",
+      "details": "In 2006, Six black teenagers assaulted a white student in Jena, Louisiana; the subsequent court cases became a cause c\u00e9l\u00e8bre for perceived racial...",
       "image": "assets/sets/calendar/images/12-04.svg"
     },
     {
@@ -2731,15 +2731,15 @@ CardSets.register({
       "rarity": "common",
       "id": "12-05",
       "subtitle": "Historic Event",
-      "details": "In 1848, California Gold Rush: In a message to the United States Congress, U.S. President James K. Polk confirms that large amounts of gold had...",
+      "details": "In 1775, American Revolutionary War: Continental Army colonel Henry Knox arrived at Fort Ticonderoga in New York to arrange the transport of 60...",
       "image": "assets/sets/calendar/images/12-05.svg"
     },
     {
       "name": "December 6",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "12-06",
       "subtitle": "Historic Event",
-      "details": "In 1973, the House confirms Gerald Ford as vice president, 387\u201335.",
+      "details": "In 1865, the Thirteenth Amendment is ratified, officially abolishing slavery in the United States.",
       "image": "assets/sets/calendar/images/12-06.svg"
     },
     {
@@ -2755,7 +2755,7 @@ CardSets.register({
       "rarity": "common",
       "id": "12-08",
       "subtitle": "Historic Event",
-      "details": "In 1953, U.S. President Dwight D. Eisenhower delivers his \"Atoms for Peace\" speech, which leads to an American program to supply equipment and...",
+      "details": "In 1963, After being struck by lightning while in a holding pattern, Pan Am Flight 214 crashed near Elkton, Maryland, U.S., killing all 81 people...",
       "image": "assets/sets/calendar/images/12-08.svg"
     },
     {
@@ -2768,7 +2768,7 @@ CardSets.register({
     },
     {
       "name": "December 10",
-      "rarity": "common",
+      "rarity": "uncommon",
       "id": "12-10",
       "subtitle": "Historic Event",
       "details": "In 1898, Spanish\u2013American War: The Treaty of Paris is signed, officially ending the conflict. Spain cedes administration of Cuba to the United...",
@@ -2787,7 +2787,7 @@ CardSets.register({
       "rarity": "common",
       "id": "12-12",
       "subtitle": "Historic Event",
-      "details": "In 2000, The U.S. Supreme Court ruled in Bush v. Gore that the recount of ballots cast in Florida for the presidential election be stopped...",
+      "details": "In 1985, Arrow Air Flight 1285R, a McDonnell Douglas DC-8, crashes after takeoff in Gander, Newfoundland, killing all 256 people on board...",
       "image": "assets/sets/calendar/images/12-12.svg"
     },
     {
@@ -2803,7 +2803,7 @@ CardSets.register({
       "rarity": "common",
       "id": "12-14",
       "subtitle": "Historic Event",
-      "details": "In 1964, American Civil Rights Movement: Heart of Atlanta Motel v. United States: The Supreme Court of the United States rules that Congress can...",
+      "details": "In 1972, Upon completing the third extra-vehicular activity of Apollo 17, American astronaut Gene Cernan became the last person to date to walk on...",
       "image": "assets/sets/calendar/images/12-14.svg"
     },
     {
@@ -2824,26 +2824,26 @@ CardSets.register({
     },
     {
       "name": "December 17",
-      "rarity": "uncommon",
+      "rarity": "legendary",
       "id": "12-17",
-      "subtitle": "Holiday",
-      "details": "Pan American Aviation Day, observed each year on December 17.",
+      "subtitle": "Historic Event",
+      "details": "In 1903, the Wright brothers make the first controlled, powered airplane flight at Kitty Hawk, North Carolina.",
       "image": "assets/sets/calendar/images/12-17.svg"
     },
     {
       "name": "December 18",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "12-18",
       "subtitle": "Historic Event",
-      "details": "In 1944, the Supreme Court upholds the incarceration of Japanese Americans in Korematsu v. United States.",
+      "details": "In 1777, The United States celebrates its first Thanksgiving, marking the recent victory by the American rebels over British General John Burgoyne...",
       "image": "assets/sets/calendar/images/12-18.svg"
     },
     {
       "name": "December 19",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "id": "12-19",
       "subtitle": "Historic Event",
-      "details": "In 1998, the House impeaches President Bill Clinton \u2014 the second U.S. president impeached.",
+      "details": "In 1995, The United States Government restores federal recognition to the Nottawaseppi Huron Band of Potawatomi Native American tribe.",
       "image": "assets/sets/calendar/images/12-19.svg"
     },
     {
@@ -2867,7 +2867,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "12-22",
       "subtitle": "Historic Event",
-      "details": "In 1807, In an effort to avoid engaging in the Napoleonic Wars, the United States Congress passed the Embargo Act, forbidding American ships from...",
+      "details": "In 2018, The 2018\u20132019 United States federal government shutdown, the second-longest shutdown of the U.S. federal government in history, begins.",
       "image": "assets/sets/calendar/images/12-22.svg"
     },
     {
@@ -2912,10 +2912,10 @@ CardSets.register({
     },
     {
       "name": "December 28",
-      "rarity": "rare",
+      "rarity": "common",
       "id": "12-28",
       "subtitle": "Historic Event",
-      "details": "In 1832, John C. Calhoun becomes the first U.S. vice president to resign.",
+      "details": "In 1916, Up to 1,000 lumber workers initiated a labor strike against the Virginia and Rainy Lake Lumber Company in Minnesota, United States, which...",
       "image": "assets/sets/calendar/images/12-28.svg"
     },
     {
@@ -2928,7 +2928,7 @@ CardSets.register({
     },
     {
       "name": "December 30",
-      "rarity": "rare",
+      "rarity": "epic",
       "id": "12-30",
       "subtitle": "Holiday",
       "details": "The fifth day of Kwanzaa, observed each year on December 30.",
