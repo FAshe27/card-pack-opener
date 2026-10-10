@@ -444,7 +444,7 @@ begin
   end if;
 
   insert into cps.pack_openings (account_id, set_id, cards)
-    values (a.id, p_set, (select jsonb_agg(jsonb_build_object('id', e->>'id', 'set_id', e->>'set_id', 'rarity', e->>'rarity', 'holo', (e->>'holo')::boolean)) from jsonb_array_elements(out) e where not coalesce((e->>'ticket')::boolean, false) and (e->>'tokens') is null)));
+    values (a.id, p_set, (select jsonb_agg(jsonb_build_object('id', e->>'id', 'set_id', e->>'set_id', 'rarity', e->>'rarity', 'holo', (e->>'holo')::boolean)) from jsonb_array_elements(out) e where not coalesce((e->>'ticket')::boolean, false) and (e->>'tokens') is null));
 
   return jsonb_build_object('set_id', p_set, 'packs_left', inv, 'cards', out,
     'best', case when is_jumbled then null
