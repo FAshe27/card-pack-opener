@@ -1315,6 +1315,4 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   display: flex; align-items: center; justify-content: center; }
 .numcard span { font-size: 5.5rem; font-weight: 800; color: #fff; text-shadow: 0 2px 12px rgba(107,107,214,.6); }
 
-/* Arcade tab: hidden unless admin (flip to public later by simplifying this) */
-.tab.arcade-tab { display: none; }
-body.admin .tab.arcade-tab { display: inline-block; }
+/* Arcade tab: public */
