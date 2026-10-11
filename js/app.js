@@ -85,7 +85,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'bounties', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -284,7 +284,6 @@
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
     else if (S.view === 'arcade') { if (typeof CPS !== 'undefined' && CPS.games) CPS.games.render(); }
-    else if (S.view === 'bounties' && CPS.bounties) CPS.bounties.render();
     else if (S.view === 'wheel') renderWheel();
     else renderPacksSide();
   }
@@ -646,7 +645,7 @@
       if (f.own === 'holo' && !(e && e.h > 0)) return false;
       if (f.own === 'fav' && !isFav(set.id, c.id)) return false;
       if (q) {
-        var hay = (has ? (c.name + ' ' + c.subtitle + ' ' + c.details) : '') + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
+        var hay = c.name + ' ' + c.subtitle + ' ' + c.details + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
         if (hay.toLowerCase().indexOf(q) < 0) return false;
       }
       return true;
