@@ -226,7 +226,7 @@
 
     <!-- ============ TRADING POST ============ -->
     <section id="view-trading" class="view">
-      <div id="tradePanel"><p class="muted small">Loading…</p></div>
+      <div id="tradingPanel"><p class="muted small">Loading…</p></div>
     </section>
 
     <!-- ============ PRIZE WHEEL ============ -->
@@ -404,16 +404,6 @@
   <script src="js/cotd.js"></script>
   <script src="js/bounties.js"></script>
   <script src="js/trading.js"></script>
-  <script>
-  window.addEventListener('load', function () {
-    try {
-      var ok = !!(window.CPS && window.CPS.trading);
-      var p = document.getElementById('tradePanel');
-      if (p && !ok) p.innerHTML = '<div class="panel"><p>DIAG: trading.js did not register (CPS.trading is ' +
-        (window.CPS ? (window.CPS.trading ? 'set' : 'missing') : 'CPS missing') + '). File may have failed to load.</p></div>';
-    } catch (e) {}
-  });
-  </script>
   <script src="js/sandbox.js"></script>
   <script src="js/slots.js"></script>
 </body>
