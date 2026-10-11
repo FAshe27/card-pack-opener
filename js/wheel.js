@@ -53,7 +53,7 @@
               out.label = sg.packs + ' × ' + setName(sg.set_id);
               out.color = setColor(sg.set_id, i++);
             } else if (sg.kind === 'tokens') {
-              out.label = sg.tokens + ' 🪙';
+              out.label = sg.tokens + ' x 🪙 Arcade Tokens';
               out.color = '#6b6bd6';
             } else {
               out.color = GOTO_COLORS[sg.wheel] || '#999';
