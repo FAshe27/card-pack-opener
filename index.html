@@ -21,7 +21,7 @@
       <select id="setSelect" aria-label="Card set"></select>
     </label>
     <nav class="tabs" role="tablist">
-      <button data-view="packs" class="tab active">Open Packs</button>
+      <button data-view="packs" class="tab active" id="packsTabBtn">Open Packs<span class="tab-badge hidden" id="packsBadge"></span></button>
       <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel<span class="tab-badge hidden" id="wheelBadge"></span></button>
       <button data-view="arcade" class="tab arcade-tab" id="arcadeTabBtn">Arcade<span class="tab-badge hidden" id="arcadeBadge"></span></button>
       <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily</button>
@@ -378,6 +378,7 @@
   <script src="js/slips.js"></script>
   <script src="js/app.js"></script>
   <script src="js/tickets.js"></script>
+  <script src="js/packsbadge.js"></script>
   <script src="js/globalstats.js"></script>
   <script src="js/jumbled.js"></script>
   <script src="js/games.js"></script>
