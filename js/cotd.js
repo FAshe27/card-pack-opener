@@ -15,7 +15,24 @@
 
   var C = CPS.appCtx || null;
   var statusCache = null;  // last cps_cotd_status payload
-  var poppedFor = null;    // cotd_date the claim pop-up already showed for (this login)
+  var poppedFor = null;    // in-memory fast path; localStorage (per account+date) is the durable record
+
+  /* The pop-up guard must survive page reloads: st.claimed stays true all
+     day, and onPackFinish runs after EVERY pack, so a memory-only flag
+     re-pops the announcement on the next pack after any reload or login
+     flap. Persist it per account + date in localStorage. */
+  function popKey() {
+    var pid = (C && C.S && C.S.player && C.S.player.id) || 'anon';
+    return 'cps_cotd_popped_' + pid;
+  }
+  function alreadyPopped(dateStr) {
+    if (poppedFor === dateStr) return true;
+    try { return localStorage.getItem(popKey()) === dateStr; } catch (e) { return false; }
+  }
+  function markPopped(dateStr) {
+    poppedFor = dateStr;
+    try { localStorage.setItem(popKey(), dateStr); } catch (e) {}
+  }
   var pillEl = null;
   var hooked = false;
   var wasOnline = false;
@@ -103,8 +120,8 @@
   async function onPackFinish() {
     var st = await fetchStatus(); // force refresh: the server is source of truth
     if (!st || !st.ok) return;
-    if (st.claimed && poppedFor !== st.cotd_date) {
-      poppedFor = st.cotd_date;
+    if (st.claimed && !alreadyPopped(st.cotd_date)) {
+      markPopped(st.cotd_date);
       claimPopup(st);
     }
   }
