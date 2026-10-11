@@ -121,12 +121,16 @@ function openFavManager(accountId, seedFavs) {
   var all = ownedCards();
 
   function renderFavs(box) {
-    box.querySelector('.favmgr-grid').innerHTML = myFavs.map(function (f) {
+    box.querySelector('.favmgr-grid').innerHTML = myFavs.map(function (f, i) {
       var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
       if (!set || !card) return '';
       return '<div class="favmgr-item" data-k="' + ctx.esc(f.set_id + ':' + f.card_id) + '">' +
         CPS.cards.render(set, card, { holo: !!f.holo }) +
-        '<button class="favmgr-x" aria-label="Remove from favorites">×</button></div>';
+        '<button class="favmgr-x" aria-label="Remove from favorites">×</button>' +
+        '<div class="favmgr-mv">' +
+          '<button data-mv="-1" aria-label="Move earlier"' + (i === 0 ? ' disabled' : '') + '>‹</button>' +
+          '<button data-mv="1" aria-label="Move later"' + (i === myFavs.length - 1 ? ' disabled' : '') + '>›</button>' +
+        '</div></div>';
     }).join('') || '<div class="empty">No favorites yet — search below to add some.</div>';
     box.querySelector('#favmgrCount').textContent = myFavs.length + '/' + FAV_MAX;
     box.querySelectorAll('.favmgr-x').forEach(function (x) {
@@ -135,6 +139,25 @@ function openFavManager(accountId, seedFavs) {
         toggle(k2[0], k2[1], box);
       });
     });
+    box.querySelectorAll('.favmgr-mv button').forEach(function (b) {
+      b.addEventListener('click', function () { moveFav(b, box); });
+    });
+  }
+
+  async function moveFav(btn, box) {
+    var k = btn.closest('.favmgr-item').dataset.k;
+    var i = -1;
+    myFavs.forEach(function (f, j) { if (f.set_id + ':' + f.card_id === k) i = j; });
+    if (i < 0) return;
+    var j = i + parseInt(btn.dataset.mv, 10);
+    if (j < 0 || j >= myFavs.length) return;
+    var t = myFavs[i]; myFavs[i] = myFavs[j]; myFavs[j] = t;
+    renderFavs(box);
+    try {
+      await CPS.cloud.call('reorder_favorites', { p_order: myFavs.map(function (f) {
+        return { set_id: f.set_id, card_id: f.card_id };
+      }) });
+    } catch (e) { ctx.cloudError(e); }
   }
 
   function renderResults(box, q) {
