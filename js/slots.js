@@ -43,6 +43,7 @@
         '<p class="muted">Slots need online play — log in to spin.</p></div>';
       return;
     }
+    var startBal = (ctx.S && ctx.S.gameTokens) || 0;
     var payRows = PAYTABLE.map(function (row) {
       return '<tr><td>' + symChip(row[0]) + ' × 3</td><td>' + row[1] + '</td></tr>';
     }).join('');
@@ -51,15 +52,16 @@
         '<h2>🎰 Slots</h2>' +
         '<p class="muted small">Match three symbols to win packs — ' +
         'legendary and chase triples are announced to everyone!</p>' +
+        '<div class="slot-balance" id="slotBalance"></div>' +
         '<div class="slot-reels">' +
           '<div class="slot-reel" id="slotReel0">' + symChip('common') + '</div>' +
           '<div class="slot-reel" id="slotReel1">' + symChip('uncommon') + '</div>' +
           '<div class="slot-reel" id="slotReel2">' + symChip('rare') + '</div>' +
         '</div>' +
         '<div class="slot-controls">' +
-          '<button class="btn primary slot-bet" data-spins="1">1 Spin — 3 🪙</button>' +
-          '<button class="btn slot-bet" data-spins="5">5 Spins — 15 🪙</button>' +
-          '<button class="btn slot-bet" data-spins="10">10 Spins — 30 🪙</button>' +
+          '<button class="btn primary slot-bet" data-spins="1" data-cost="3">1 Spin — 3 🪙</button>' +
+          '<button class="btn slot-bet" data-spins="5" data-cost="15">5 Spins — 15 🪙</button>' +
+          '<button class="btn slot-bet" data-spins="10" data-cost="30">10 Spins — 30 🪙</button>' +
         '</div>' +
         '<div class="slot-result" id="slotResult"><span class="muted small">Pick a bet to play.</span></div>' +
         '<details class="slot-paytable"><summary>Paytable</summary><table>' + payRows + '</table></details>' +
@@ -70,6 +72,7 @@
         spin(parseInt(e.currentTarget.getAttribute('data-spins'), 10));
       });
     }
+    updateBalance(startBal);
   }
 
   /* Reel animation: cycle random symbols, staggered stops, land on server's.
@@ -101,9 +104,18 @@
     for (var i = 0; i < btns.length; i++) btns[i].disabled = disabled;
   }
 
-  function syncBadges(tokensNow) {
+  /* Balance line + affordability: bet buttons you can't afford stay disabled,
+     so you can't overspend. Also keeps the arcade/packs badges in sync. */
+  function updateBalance(n) {
+    var d = ctx.$('#slotBalance');
+    if (d) d.innerHTML = '🪙 <b>' + n + ' token' + (n === 1 ? '' : 's') + '</b>';
+    var btns = document.querySelectorAll('.slot-bet');
+    for (var i = 0; i < btns.length; i++) {
+      var cost = parseInt(btns[i].getAttribute('data-cost'), 10) || 0;
+      if (!spinning) btns[i].disabled = n < cost;
+    }
     try {
-      if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(tokensNow);
+      if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(n);
       if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
     } catch (e) { /* non-fatal */ }
   }
@@ -117,6 +129,7 @@
     var fast = n > 1;
     var wins = [];
     var totRandom = 0, totJumbled = 0, done = 0, stoppedEarly = false;
+    var tokNow = (ctx.S && ctx.S.gameTokens) || 0;
 
     for (var s = 0; s < n; s++) {
       res.innerHTML = '<span class="muted small">Spin ' + (s + 1) + ' of ' + n + '…</span>';
@@ -130,7 +143,8 @@
         break;
       }
       done++;
-      syncBadges(r.tokens_now);
+      tokNow = r.tokens_now;
+      updateBalance(tokNow);
       if (r.win) {
         wins.push({ spin: s + 1, text: prizeText(r) });
         totRandom += r.packs_random;
@@ -156,7 +170,7 @@
     }
     res.innerHTML = html || '<span class="muted small">Pick a bet to play.</span>';
     spinning = false;
-    setBetButtons(false);
+    updateBalance(tokNow);
   }
 
   function escHtml(s) {
