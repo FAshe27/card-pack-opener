@@ -55,14 +55,22 @@
   }
 
   async function load() {
+    var host = ctx.$('#tradeList');
     try {
       T = await CPS.cloud.call('trading_post', {});
+      if (!T || !Array.isArray(T.listings)) throw new Error('Bad response from server (got ' + JSON.stringify(T).slice(0, 80) + ')');
       fillSetFilter();
       updateBadge();
       renderList();
       var mo = ctx.$('#tradeMyOpen');
       if (mo) mo.textContent = 'You have ' + (T.my_open || 0) + ' of 5 open listings.';
-    } catch (e) { ctx.cloudError(e); }
+    } catch (e) {
+      ctx.cloudError(e);
+      if (host) host.innerHTML = '<div class="panel"><p class="error">Could not load the Trading Post: ' + esc((e && e.message) || e) + '</p>' +
+        '<button class="btn" id="tradeRetry">Retry</button></div>';
+      var rb = ctx.$('#tradeRetry');
+      if (rb) rb.addEventListener('click', function () { host.innerHTML = '<p class="muted small">Loading…</p>'; load(); });
+    }
   }
 
   function fillSetFilter() {
