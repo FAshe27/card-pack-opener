@@ -441,7 +441,7 @@
     var o = S.opening; if (!o) return;
     var n = o.revealed.filter(Boolean).length;
     if (!o.finished) { $('#stageSummary').innerHTML = 'Click a card to flip it · <b>' + n + ' / ' + o.pulls.length + '</b> revealed'; return; }
-    var cards = o.pulls.filter(function (p) { return !p.ticket; });
+    var cards = o.pulls.filter(function (p) { return !CPS.slips.isSlip(p); });
     var slipBits = CPS.slips.summaryBits(o);
     var news = cards.filter(function (p) { return p.isNew; }).length, best = cards[0];
     cards.forEach(function (p) { if (CPS.packs.score(p.card, p.holo) > CPS.packs.score(best.card, best.holo)) best = p; });
