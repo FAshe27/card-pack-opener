@@ -21,5 +21,6 @@ CardSets.manifest = [
   'technology-collection.js',
   'periodic.js',
   'calendar.js',
-  'playing.js'
+  'playing.js',
+  'beverages.js'
 ];
