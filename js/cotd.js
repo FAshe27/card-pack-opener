@@ -61,8 +61,9 @@
     if (!actions) return;
     pillEl = document.createElement('button');
     pillEl.id = 'cotdPill';
-    pillEl.className = 'cotd-pill hidden';
-    pillEl.title = "Today's Card of the Day";
+    pillEl.className = 'icon-btn cotd-btn hidden';
+    pillEl.innerHTML = '🎯<span class="cotd-badge"></span>';
+    pillEl.setAttribute('aria-label', "Today's Card of the Day");
     pillEl.addEventListener('click', openDetail);
     actions.insertBefore(pillEl, bell || null);
   }
@@ -73,11 +74,14 @@
     var st = statusCache;
     pillEl.classList.remove('hidden');
     pillEl.classList.toggle('claimed', !!st.claimed);
-    pillEl.innerHTML = '🎯 <b>' + esc(cap(st.rarity)) + '</b>' +
-      '<span class="cotd-pill-set">&nbsp;·&nbsp;' + esc(st.set_name) + '</span>' +
-      '&nbsp;·&nbsp;+' + st.prize + '🎟️' + (st.claimed ? ' <span class="cotd-done">✓</span>' : '');
+    var badge = pillEl.querySelector('.cotd-badge');
+    if (badge) {
+      badge.textContent = st.claimed ? '\u2713' : '+' + st.prize;
+      badge.classList.toggle('done', !!st.claimed);
+    }
     pillEl.title = st.claimed ? 'Card of the Day — claimed! Nice hunting.'
-      : "Today's Card of the Day: a " + cap(st.rarity) + ' hiding in ' + st.set_name + '. Tap for details.';
+      : "Today's Card of the Day: a " + cap(st.rarity) + ' hiding in ' + st.set_name +
+        ' (+' + st.prize + ' spin tickets). Tap for details.';
   }
 
   function openDetail() {

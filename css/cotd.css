@@ -1,23 +1,11 @@
 /* Card of the Day — topbar pill + modal. Loaded last so its rules win ties. */
 
-.cotd-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 5px 12px;
-  border: 1px solid #f5b942;
-  border-radius: 999px;
-  background: rgba(245, 185, 66, 0.08);
-  color: var(--text);
-  font-size: 12px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.cotd-pill:hover { background: rgba(245, 185, 66, 0.18); }
-.cotd-pill.hidden { display: none; }
-.cotd-pill.claimed { border-color: #38c97f; background: rgba(56, 201, 127, 0.08); }
-.cotd-pill.claimed:hover { background: rgba(56, 201, 127, 0.16); }
-.cotd-done { color: #38c97f; font-weight: 700; }
+.cotd-btn { border-color: #f5b942; }
+.cotd-btn:hover { background: rgba(245, 185, 66, 0.18); }
+.cotd-btn.claimed { border-color: #38c97f; }
+.cotd-btn.claimed:hover { background: rgba(56, 201, 127, 0.16); }
+.cotd-badge { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; line-height: 18px; padding: 0 5px; border-radius: 9px; background: #f5b942; color: #1a1408; font-size: 11px; font-weight: 700; text-align: center; }
+.cotd-badge.done { background: #38c97f; color: #06281a; }
 
 .cotd-modal { text-align: center; padding: 18px 26px 26px; max-width: 380px; }
 .cotd-modal h2 { margin: 6px 0 10px; }
@@ -28,15 +16,4 @@
 .cotd-unfound { margin: 8px 0 0; color: var(--muted); font-style: italic; }
 .cotd-claimed { margin: 10px 0 0; color: #38c97f; font-weight: 700; }
 
-@media (max-width: 720px) {
-  .cotd-pill { font-size: 11px; padding: 4px 9px; }
-  .cotd-pill .cotd-pill-set { display: none; }
-}
-
-/* Narrow screens: the pill must never force the topbar wider than the viewport.
-   The pill truncates with an ellipsis; the icon buttons never shrink. */
-@media (max-width: 1100px) {
-  .top-actions { min-width: 0; }
-  .top-actions .icon-btn, .top-actions .player-chip { flex-shrink: 0; }
-  .cotd-pill { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-}
+/* The button is a fixed-size icon-btn, so no narrow-screen overrides are needed. */
