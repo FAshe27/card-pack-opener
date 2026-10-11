@@ -1,0 +1,15 @@
+/* Sandbox — admin-only testing ground */
+.sandbox-head h2 { margin: 0 0 6px; }
+.sandbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+.sandbox-card h3 { margin: 0 0 6px; }
+.sandbox-status { font-size: 13px; font-weight: 600; margin: 8px 0 10px; }
+.sandbox-status.is-testing { color: var(--warn, #f0a832); }
+.sandbox-status.is-public { color: var(--good, #46c46a); }
+.sandbox-back { margin-bottom: 12px; }
+#sbxStage { margin-top: 4px; }
+.sbx-public-stage { min-height: 200px; }
