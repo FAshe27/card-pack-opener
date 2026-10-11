@@ -53,9 +53,11 @@
       html += '</div>';
     }
     html += '</div>';
+    html += '<div id="slotsMount"></div>';
     box.innerHTML = html;
     updateBadge();
     bind();
+    if (CPS.slots) CPS.slots.mount(ctx.$('#slotsMount'));
   }
 
   function setTokens(n) {
