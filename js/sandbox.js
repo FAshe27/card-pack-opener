@@ -35,11 +35,6 @@
     //   status: 'testing',
     //   render: function (el) { CPS.diceDuel.render(el); },
     //   teardown: function () { CPS.diceDuel.teardown(); } },
-    { id: 'slots', title: 'Slots',
-      blurb: '3-token slot machine. Triples pay packs; legendary/chase triples are announced to everyone.',
-      status: 'testing',
-      render: function (el) { if (CPS.slots) CPS.slots.mount(el); },
-      teardown: function () {} },
   ];
 
   var launched = null; // id of the item currently open (sandbox or public tab)
