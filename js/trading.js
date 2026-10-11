@@ -5,7 +5,7 @@
    Consumes CPS.appCtx. Loads after js/app.js. Registers as CPS.trading. */
 (function (CPS) {
   var ctx = CPS.appCtx;
-  var T = null;              // {listings:[], my_open} from cps_list_trades
+  var T = null;              // {listings:[], my_open} from cps_trading_post
   var F = { set: '' };       // board filters
   var PL = null;             // post-listing form state
   var OF = null;             // offer form state
@@ -56,7 +56,7 @@
 
   async function load() {
     try {
-      T = await CPS.cloud.call('list_trades', {});
+      T = await CPS.cloud.call('trading_post', {});
       fillSetFilter();
       updateBadge();
       renderList();
