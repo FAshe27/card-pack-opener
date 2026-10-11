@@ -13,8 +13,8 @@
 }
 .slot-reel.spinning { border-color: #6b7280; }
 .slot-sym {
-  font-weight: 700; font-size: 13px; letter-spacing: .4px;
-  padding: 6px 10px; border-radius: 999px; white-space: nowrap;
+  font-weight: 700; font-size: 12px; letter-spacing: .4px;
+  padding: 7px 14px; border-radius: 999px; white-space: nowrap;
   border: 2px solid transparent;
 }
 .slot-sym-common    { color: #c8ccd4; border-color: #6b7280; background: #1d2027; }
@@ -44,5 +44,5 @@
 .slot-paytable td:first-child { white-space: nowrap; width: 42%; }
 @media (max-width: 480px) {
   .slot-reel { width: 88px; height: 88px; }
-  .slot-sym { font-size: 11px; padding: 5px 8px; }
+  .slot-sym { font-size: 11px; padding: 6px 10px; }
 }
