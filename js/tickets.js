@@ -6,7 +6,7 @@
   var S = C.S, $ = C.$, esc = C.esc, audio = C.audio;
   var isCloud = C.isCloud, save = C.save, toast = C.toast, cloudError = C.cloudError;
   var refreshCloud = C.refreshCloud, renderCollection = C.renderCollection;
-  var renderPacksSide = C.renderPacksSide, updateWheelGlow = C.updateWheelGlow;
+  var renderPacksSide = C.renderPacksSide, updateWheelBadge = C.updateWheelBadge;
   var refreshQuests = C.refreshQuests, dupeCounts = C.dupeCounts;
   var DUPE_RARS = C.DUPE_RARS, variantCountMap = C.variantCountMap;
 
@@ -53,7 +53,7 @@
         var r = await CPS.cloud.call('trade_dupes_tickets', { p_tier: tier });
         toast('Traded ' + r.dupes_used + ' dupes for ' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
         audio.coin();
-        S.spins = r.spins_now; updateWheelGlow();
+        S.spins = r.spins_now; updateWheelBadge();
         await refreshCloud();
       } catch (e) { cloudError(e); }
       return;
@@ -88,7 +88,7 @@
     await save();
     toast('Traded ' + (tickets * t.rate) + ' dupes for ' + tickets + ' spin ticket' + (tickets === 1 ? '' : 's') + '!', 'good');
     audio.coin();
-    updateWheelGlow();
+    updateWheelBadge();
     refreshQuests();
     renderCollection();
     renderPacksSide();
