@@ -13,8 +13,6 @@
 <link rel="stylesheet" href="css/cotd.css">
 <link rel="stylesheet" href="css/bounties.css">
 <link rel="stylesheet" href="css/beverages.css">
-<link rel="stylesheet" href="css/profile.css">
-<link rel="stylesheet" href="css/sandbox.css">
 </head>
 <body>
   <header class="topbar">
@@ -27,13 +25,12 @@
       <button data-view="packs" class="tab active" id="packsTabBtn">Open Packs<span class="tab-badge hidden" id="packsBadge"></span></button>
       <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel<span class="tab-badge hidden" id="wheelBadge"></span></button>
       <button data-view="arcade" class="tab arcade-tab" id="arcadeTabBtn">Arcade<span class="tab-badge hidden" id="arcadeBadge"></span></button>
-      <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily</button>
+      <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily<span class="tab-badge hidden" id="dailyBadge"></span></button>
       <button data-view="collection" class="tab">Collection</button>
       <button data-view="bounties" class="tab cloud-only" id="bountyTabBtn">Bounty Board<span class="tab-badge hidden" id="bountyBadge"></span></button>
       <button data-view="players" class="tab" id="playersTabBtn">Players<span class="tab-badge hidden" id="playersBadge"></span></button>
       <button data-view="stats" class="tab">Stats</button>
       <button data-view="odds" class="tab">Odds</button>
-      <button data-view="sandbox" class="tab admin-tab" id="sandboxTabBtn">Sandbox</button>
       <button data-view="admin" class="tab admin-tab" id="adminTabBtn">Admin</button>
     </nav>
     <div class="top-actions">
@@ -248,11 +245,6 @@
       </div>
     </section>
 
-    <!-- ============ SANDBOX (admin-only testing ground) ============ -->
-    <section id="view-sandbox" class="view">
-      <div id="sandboxPanel"><p class="muted small">Loading…</p></div>
-    </section>
-
     <!-- ============ ADMIN (admin accounts; also "Sets & Settings" when online play is off) ============ -->
     <section id="view-admin" class="view">
       <div id="adminGate" class="panel admin-gate hidden">
@@ -395,6 +387,5 @@
   <script src="js/profile.js"></script>
   <script src="js/cotd.js"></script>
   <script src="js/bounties.js"></script>
-  <script src="js/sandbox.js"></script>
 </body>
 </html>
