@@ -3023,6 +3023,14 @@ CardSets.register({
       "subtitle": "Driver",
       "details": "Part-time driver; Kaden's brother.",
       "image": "assets/sets/NASCAR-images/leland-honeyman.webp"
+    },
+    {
+      "name": "Sonny Hutchins",
+      "rarity": "uncommon",
+      "id": "sonny-hutchins",
+      "subtitle": "Driver",
+      "details": "Richmond short-track legend; the intimidator before The Intimidator.",
+      "image": "assets/sets/NASCAR-images/Sonny-Hutchins.svg"
     }
   ]
 });
