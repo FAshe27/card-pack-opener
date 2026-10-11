@@ -11,7 +11,7 @@
       rarity: 'epic',
       subtitle: 'Shortstop, Detroit Tigers · 1977–1996',
       details: '1984 World Series MVP; Hall of Fame shortstop who spent all 20 seasons in Detroit.',
-      image: 'assets/sets/mlb/alan-trammell.jpg',
+      image: 'assets/sets/mlb/alan-trammell.svg',
       logo: ''
     }
   ];
