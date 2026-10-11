@@ -19,7 +19,7 @@
       var g = await CPS.cloud.call('global_pull_stats', {});
       if (S.view !== 'stats') return;
       var br = g.by_rarity || {};
-      $('#globalTiles').innerHTML = [['Cards pulled', g.pulled], ['Holo pulls', g.holos]].map(function (t) {
+      $('#globalTiles').innerHTML = [['Cards pulled', g.pulled], ['Holo pulls', g.holos], ['Numbered', g.numbered || 0]].map(function (t) {
         return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b></div>';
       }).join('');
       var gmax = Math.max.apply(null, R.RARITIES.map(function (r) { return br[r.key] || 0; }).concat([1]));
