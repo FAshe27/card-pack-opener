@@ -1,0 +1,33 @@
+/* Card of the Day — topbar pill + modal. Loaded last so its rules win ties. */
+
+.cotd-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 12px;
+  border: 1px solid #f5b942;
+  border-radius: 999px;
+  background: rgba(245, 185, 66, 0.08);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cotd-pill:hover { background: rgba(245, 185, 66, 0.18); }
+.cotd-pill.hidden { display: none; }
+.cotd-pill.claimed { border-color: #38c97f; background: rgba(56, 201, 127, 0.08); }
+.cotd-pill.claimed:hover { background: rgba(56, 201, 127, 0.16); }
+.cotd-done { color: #38c97f; font-weight: 700; }
+
+.cotd-modal { text-align: center; padding: 18px 26px 26px; max-width: 380px; }
+.cotd-modal h2 { margin: 6px 0 10px; }
+.cotd-big { font-size: 3rem; line-height: 1; }
+.cotd-sub { margin: 0 0 8px; }
+.cotd-prize { font-size: 1.15rem; color: #f5b942; margin: 0 0 10px; }
+.cotd-found { margin: 8px 0 0; }
+.cotd-unfound { margin: 8px 0 0; color: var(--muted); font-style: italic; }
+.cotd-claimed { margin: 10px 0 0; color: #38c97f; font-weight: 700; }
+
+@media (max-width: 720px) {
+  .cotd-pill { font-size: 11px; padding: 4px 9px; }
+}
