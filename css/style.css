@@ -812,6 +812,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .bar { display: block; height: 7px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--rc2, var(--accent)), var(--rc, var(--accent2))); transition: width .6s ease; }
 .r-chase .bar i { background: linear-gradient(90deg,#ff4fa3,#ffb21e,#38c97f,#3f8cff,#b35cff); }
+.r-numbered { --rc: #b35cff; } .r-numbered .bar i { background: linear-gradient(90deg,#b35cff,#ff4fa3,#ffb21e); }
 .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; padding: 14px; }
 .filters input[type=search] { flex: 1 1 220px; }
 .seg { display: flex; background: #0e1324; border: 1px solid var(--line); border-radius: 10px; padding: 3px; flex-wrap: wrap; }
