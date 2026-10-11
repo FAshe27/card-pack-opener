@@ -1078,9 +1078,7 @@
   function tradeMiniCard(setId, cardId, holo, qty) {
     var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
     if (!set || !card) return '<span class="muted">?</span>';
-    return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo }) +
-      '<div class="trade-cap"><b>' + esc(card.name) + (qty > 1 ? ' \u00d7' + qty : '') + '</b>' +
-      '<span class="muted small">' + esc(set.name) + (holo ? ' \u00b7 \u2726 holo' : '') + '</span></div></div>';
+    return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo, count: qty > 1 ? qty : 0 }) + '</div>';
   }
   function tradeItemsHtml(items) {
     return '<div class="trade-items">' + (items || []).map(function (it) {
