@@ -21,6 +21,13 @@
       return n < m ? -1 : (n > m ? 1 : 0);
     });
   }
+  function sortByRarity(a, b) {
+    // highest rarity first, then alphabetical
+    var ra = (ctx.R.INDEX[a.rarity] || 0), rb = (ctx.R.INDEX[b.rarity] || 0);
+    if (rb !== ra) return rb - ra;
+    var n = (a.name || '').toLowerCase(), m = (b.name || '').toLowerCase();
+    return n < m ? -1 : (n > m ? 1 : 0);
+  }
 
   /* ------------------------------------------------------------ board */
   async function render() {
@@ -366,6 +373,7 @@
       }
       list.push(c);
     });
+    list.sort(sortByRarity);
     list = list.slice(0, 40);
     grid.innerHTML = list.map(function (c) {
       var sel = PB.wantCard && PB.wantCard.set === s.id && PB.wantCard.id === c.id;
@@ -428,6 +436,7 @@
       }
       list.push({ card: c, left: avail - used, holo: (e.h || 0) > 0 });
     });
+    list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
     list = list.slice(0, 40);
     grid.innerHTML = list.map(function (o) {
       return '<button class="bounty-pick" data-card="' + esc(o.card.id) + '">' +

@@ -69,3 +69,7 @@
   .bounty-tradebox { grid-template-columns: 1fr; text-align: center; }
   .bounty-trade-arrow { transform: rotate(90deg); }
 }
+
+/* Cancel/claim modal buttons sit in a .row — the global .btn.danger margin-top
+   misaligns them, so neutralize it there. */
+.row .btn.danger { margin-top: 0; }
