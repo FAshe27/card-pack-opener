@@ -1337,17 +1337,18 @@
     var row = window.CardSets.oddsTable(set).filter(function (x) { return x.rarity.key === card.rarity; })[0];
     var holo = forceHolo != null ? forceHolo : !!(e && e.h);
     var html = '<button class="modal-x" data-close aria-label="Close">×</button><div class="zoom">' +
-      '<div class="zoom-card">' + (owned ? CPS.cards.render(set, card, { holo: holo }) : CPS.cards.silhouette(set, card)) + '</div>' +
+      '<div class="zoom-card">' + (owned ? CPS.cards.render(set, card, { holo: holo }) : CPS.cards.render(set, card, { cls: 'unowned' })) + '</div>' +
       '<div class="zoom-info"><div class="pill r-' + card.rarity + '">' + r.label + '</div>' +
-      '<h3>' + (owned ? esc(card.name) : 'Not collected yet') + '</h3>' +
-      (owned && card.subtitle ? '<div class="muted">' + esc(card.subtitle) + '</div>' : '') +
+      '<h3>' + esc(card.name) + '</h3>' +
+      (!owned ? '<div class="muted">Not collected yet \u2014 pull it from a pack!</div>' : '') +
+      (card.subtitle ? '<div class="muted">' + esc(card.subtitle) + '</div>' : '') +
       '<dl><dt>Number</dt><dd>#' + U.pad(card.num, set.numWidth) + ' of ' + set.cards.length + '</dd>' +
       '<dt>Set</dt><dd>' + esc(set.name) + '</dd>' +
       '<dt>You own</dt><dd>' + (owned ? e.n + (e.h ? ' (' + e.h + ' holo)' : '') : '0') + '</dd>' +
       '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd>' +
       '<dt>In the wild</dt><dd id="cardPop">…</dd></dl>' +
       '<div class="variant-census" id="vcensus" style="display:none"></div>' +
-      (owned && card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
+      (card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
       (owned ? '<button class="btn small fav-btn' + (isFav(set.id, card.id) ? ' active' : '') + '" data-fav>' + (isFav(set.id, card.id) ? '★' : '☆') + ' Favorite <span class="muted">' + favCount() + '/' + FAV_MAX + '</span></button>' : '') +
       (owned && isCloud() ? '<button class="btn small" data-gift>🎁 Gift</button>' : '') +
