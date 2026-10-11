@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/playing.css">
 <link rel="stylesheet" href="css/surprise.css">
 <link rel="stylesheet" href="css/cotd.css">
+<link rel="stylesheet" href="css/bounties.css">
 </head>
 <body>
   <header class="topbar">
@@ -23,6 +24,7 @@
       <button data-view="packs" class="tab active">Open Packs</button>
       <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel<span class="tab-badge hidden" id="wheelBadge"></span></button>
       <button data-view="arcade" class="tab arcade-tab" id="arcadeTabBtn">Arcade<span class="tab-badge hidden" id="arcadeBadge"></span></button>
+      <button data-view="bounties" class="tab cloud-only" id="bountyTabBtn">Bounty Board<span class="tab-badge hidden" id="bountyBadge"></span></button>
       <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily</button>
       <button data-view="collection" class="tab">Collection</button>
       <button data-view="players" class="tab" id="playersTabBtn">Players<span class="tab-badge hidden" id="playersBadge"></span></button>
@@ -210,6 +212,10 @@
     <section id="view-arcade" class="view">
       <div id="gamesPanel"><p class="muted small">Loading…</p></div>
     </section>
+    <!-- ============ BOUNTY BOARD ============ -->
+    <section id="view-bounties" class="view">
+      <div id="bountyPanel"><p class="muted small">Loading…</p></div>
+    </section>
 
     <!-- ============ PRIZE WHEEL ============ -->
     <section id="view-wheel" class="view">
@@ -378,5 +384,6 @@
   <script src="js/admintokens.js"></script>
   <script src="js/profile.js"></script>
   <script src="js/cotd.js"></script>
+  <script src="js/bounties.js"></script>
 </body>
 </html>

@@ -1,0 +1,67 @@
+/* Bounty Board. Loads last (after surprise.css / cotd.css) so its rules win ties. */
+
+.bounty-head .row { align-items: center; }
+#bountyMyOpen { margin-left: auto; }
+
+.bounty-filters { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.bounty-filters label { display: flex; gap: 8px; align-items: center; }
+
+.bounty-list { display: grid; gap: 12px; margin-top: 12px; }
+
+.bounty-card {
+  display: grid;
+  grid-template-columns: 110px 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.bounty-want .card { width: 100%; }
+.bounty-want-missing {
+  width: 100%; aspect-ratio: 5/7; border: 1px dashed var(--line); border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; padding: 10px; text-align: center;
+}
+
+.bounty-want-label {
+  font-size: .72rem; font-weight: 800; letter-spacing: .12em; color: #f5b942;
+  margin-bottom: 4px;
+}
+.bounty-cardname { font-size: 1.15rem; font-weight: 700; }
+.bounty-req { margin: 6px 0; font-weight: 600; color: #ffd97a; }
+
+.bounty-offer { display: flex; flex-direction: column; gap: 4px; }
+.bounty-offer-line { display: block; }
+.bounty-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* claim confirm: what goes each way */
+.bounty-tradebox {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center;
+  background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px; margin: 12px 0;
+}
+.bounty-trade-arrow { font-size: 1.6rem; color: #f5b942; }
+
+/* post-bounty form */
+.bounty-form h4 { margin: 18px 0 8px; }
+.bounty-form .row { margin-bottom: 10px; }
+.bounty-pick-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px; max-height: 220px; overflow: auto; margin: 8px 0;
+  border: 1px solid var(--line); border-radius: 10px; padding: 8px;
+}
+.bounty-pick {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  background: none; border: 2px solid transparent; border-radius: 8px; padding: 6px 8px;
+  cursor: pointer; color: inherit; text-align: left; font-size: .85rem;
+}
+.bounty-pick:hover { border-color: var(--line); }
+.bounty-pick.selected { border-color: #f5b942; background: #1d1a12; }
+.bounty-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bounty-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.warn { color: #ff9d6b; }
+
+@media (max-width: 720px) {
+  .bounty-card { grid-template-columns: 84px 1fr; }
+  .bounty-offer { grid-column: 1 / -1; }
+  .bounty-tradebox { grid-template-columns: 1fr; text-align: center; }
+  .bounty-trade-arrow { transform: rotate(90deg); }
+}
