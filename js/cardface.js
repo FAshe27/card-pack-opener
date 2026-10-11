@@ -170,7 +170,7 @@
   function collected(set, card, n, h) {
     var b = (h > 0 ? '<span class="badge-holo" title="' + h + ' holo">✦' + (h > 1 ? h : '') + '</span>' : '') +
       (n > 1 ? '<span class="badge-count" title="You have ' + n + ' copies">×' + n + '</span>' : '');
-    return '<div class="coll-item"><div class="coll-card">' + (n ? render(set, card, { holo: h > 0 }) : silhouette(set, card)) +
+    return '<div class="coll-item"><div class="coll-card">' + (n ? render(set, card, { holo: h > 0 }) : render(set, card, { cls: 'unowned' })) +
       (b ? '<div class="coll-badges">' + b + '</div>' : '') + '</div></div>';
   }
 

@@ -768,6 +768,9 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .card.tease .back { animation: tease 1.2s ease-in-out infinite; }
 .card.tease.r-legendary .back, .card.tease.r-chase .back { animation-duration: .7s; }
 
+/* Unowned collection cards: full face, darkened */
+.card.unowned { filter: brightness(.38) saturate(.75); }
+
 /* glow after reveal */
 .card.glow.r-uncommon { box-shadow: 0 0 14px rgba(56,201,127,.45); }
 .card.glow.r-rare { box-shadow: 0 0 22px 2px rgba(63,140,255,.7); }
