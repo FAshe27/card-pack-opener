@@ -254,6 +254,7 @@
     var sets = sortByName(window.CardSets.all().filter(function (s) { return s.id !== 'jumbled'; }));
     PB = {
       sets: sets, wantSet: sets[0] ? sets[0].id : '', wantCard: null, q: '',
+      offerSet: '', offerQ: '',
       holo: 'any', tier: '', serial: '',
       tokens: 0, tickets: 0, packSet: '', packs: 0,
       offerCards: []   // {set, card, holo}
@@ -283,9 +284,10 @@
       '<div class="row wrap"><label>🎁 Packs <select id="pbPackSet"></select></label>' +
       '<input id="pbPacks" type="number" min="0" value="0" style="width:70px"><span class="muted small" id="pbPacksHave"></span></div>' +
       '<div class="row wrap"><label>🃏 Card <select id="pbCardSet"></select></label>' +
-      '<select id="pbCardSel"></select></div>' +
-      '<div class="row wrap"><label class="inline"><input type="checkbox" id="pbCardHolo"> holo</label>' +
-      '<button class="btn small" id="pbCardAdd">Add</button></div>' +
+      '<label>Search <input id="pbCardSearch" placeholder="card name or #" size="18"></label></div>' +
+      '<div id="pbOfferGrid" class="bounty-pick-grid"></div>' +
+      '<div class="row wrap"><label class="inline"><input type="checkbox" id="pbCardHolo"> add as holo</label>' +
+      '<span class="muted small">tap a card to add it to your offer (up to 5)</span></div>' +
       '<div id="pbOfferCards" class="bounty-offer-chips"></div>' +
       '<div class="row wrap"><button class="btn primary big" id="pbGo">Post bounty</button>' +
       '<button class="btn" data-close>Cancel</button></div>' +
@@ -327,44 +329,24 @@
     }
     packSet.addEventListener('change', syncPacks); syncPacks();
 
-    // offer-card picker
+    // offer-card picker (same pick-grid pattern as "You want": tap a card to add it)
     var oSets = ownedSets();
-    var cardSet = box.querySelector('#pbCardSet'), cardSel = box.querySelector('#pbCardSel');
-    cardSet.innerHTML = oSets.map(function (s) {
+    PB.offerSet = oSets[0] ? oSets[0].id : '';
+    PB.offerQ = '';
+    var oSetSel = box.querySelector('#pbCardSet');
+    oSetSel.innerHTML = oSets.map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>';
     }).join('');
-    function syncCardSel() {
-      var s = setObj(cardSet.value), vmap = variantCountMap(), opts = '';
-      if (s) {
-        var st = ctx.ps({ id: s.id });
-        s.cards.forEach(function (c) {
-          var e = st.cards[c.id];
-          var avail = e ? e.n - (vmap[s.id + ':' + c.id] || 0) : 0;
-          if (avail <= 0) return;
-          var already = PB.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id; })
-            .reduce(function (n, o) { return n + 1; }, 0);
-          if (avail - already <= 0) return;
-          opts += '<option value="' + esc(c.id) + '">' + esc(c.name) + ' ×' + (avail - already) +
-            (e.h > 0 ? ' (✦' + e.h + ')' : '') + '</option>';
-        });
-      }
-      cardSel.innerHTML = opts || '<option value="">—</option>';
-    }
-    cardSet.addEventListener('change', syncCardSel); syncCardSel();
-    box.querySelector('#pbCardAdd').addEventListener('click', function () {
-      if (PB.offerCards.length >= 5) { ctx.toast('At most 5 cards per bounty.', 'warn'); return; }
-      var sid = cardSet.value, cid = cardSel.value;
-      if (!sid || !cid) return;
-      var s = setObj(sid), st = ctx.ps({ id: sid }), e = st.cards[cid] || { n: 0, h: 0 };
-      var holo = box.querySelector('#pbCardHolo').checked && e.h > 0;
-      if (holo) {
-        var holoUsed = PB.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo; }).length;
-        if (holoUsed >= e.h) { ctx.toast('You don\'t have another holo copy.', 'warn'); return; }
-      }
-      PB.offerCards.push({ set: sid, card: cid, holo: holo });
-      box.querySelector('#pbCardHolo').checked = false;
-      pbRenderOfferCards(box); syncCardSel();
+    oSetSel.value = PB.offerSet;
+    oSetSel.addEventListener('change', function () {
+      PB.offerSet = oSetSel.value; PB.offerQ = '';
+      box.querySelector('#pbCardSearch').value = '';
+      pbRenderOfferGrid(box);
     });
+    box.querySelector('#pbCardSearch').addEventListener('input', function (e) {
+      PB.offerQ = e.target.value; pbRenderOfferGrid(box);
+    });
+    pbRenderOfferGrid(box);
 
     box.querySelector('#pbGo').addEventListener('click', function () { pbSubmit(box, this); });
     pbRenderResults(box);
@@ -425,6 +407,50 @@
         pbRenderOfferCards(box);
       });
     });
+  }
+
+  function pbRenderOfferGrid(box) {
+    var s = setObj(PB.offerSet), grid = box.querySelector('#pbOfferGrid');
+    if (!s) { grid.innerHTML = '<div class="muted small">No cards to offer.</div>'; return; }
+    var q = (PB.offerQ || '').trim().toLowerCase();
+    var vmap = variantCountMap(), st = ctx.ps({ id: s.id }), list = [];
+    s.cards.forEach(function (c) {
+      var e = st.cards[c.id];
+      var avail = e ? e.n - (vmap[s.id + ':' + c.id] || 0) : 0;
+      if (avail <= 0) return;
+      var used = PB.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id; }).length;
+      if (avail - used <= 0) return;
+      if (q) {
+        var hay = ('#' + c.num + ' ' + c.num + ' ' + c.name + ' ' + (c.subtitle || '')).toLowerCase();
+        if (hay.indexOf(q) < 0) return;
+      }
+      list.push({ card: c, left: avail - used, holo: (e.h || 0) > 0 });
+    });
+    list = list.slice(0, 40);
+    grid.innerHTML = list.map(function (o) {
+      return '<button class="bounty-pick" data-card="' + esc(o.card.id) + '">' +
+        '<span class="bounty-pick-name">' + esc(o.card.name) + (o.holo ? ' ✦' : '') + '</span>' +
+        '<span><span class="pill r-' + o.card.rarity + '">' + esc(o.card.rarity) + '</span>' +
+        ' <span class="muted small">×' + o.left + '</span></span></button>';
+    }).join('') || '<div class="muted small">No matches.</div>';
+    grid.querySelectorAll('[data-card]').forEach(function (btn) {
+      btn.addEventListener('click', function () { pbOfferAdd(box, s.id, btn.getAttribute('data-card')); });
+    });
+  }
+
+  function pbOfferAdd(box, sid, cid) {
+    if (PB.offerCards.length >= 5) { ctx.toast('At most 5 cards per bounty.', 'warn'); return; }
+    var st = ctx.ps({ id: sid }), e = st.cards[cid] || { n: 0, h: 0 };
+    var vmap = variantCountMap();
+    var avail = e.n - (vmap[sid + ':' + cid] || 0);
+    var used = PB.offerCards.filter(function (o) { return o.set === sid && o.card === cid; }).length;
+    if (used >= avail) { ctx.toast('No more copies to offer.', 'warn'); return; }
+    var wantHolo = box.querySelector('#pbCardHolo').checked;
+    var holoUsed = PB.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo; }).length;
+    if (wantHolo && holoUsed >= (e.h || 0)) { ctx.toast('You don\'t have another holo copy.', 'warn'); return; }
+    PB.offerCards.push({ set: sid, card: cid, holo: wantHolo && (e.h || 0) > 0 });
+    pbRenderOfferCards(box);
+    pbRenderOfferGrid(box);
   }
 
   async function pbSubmit(box, btn) {
