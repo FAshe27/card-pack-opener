@@ -15,7 +15,8 @@
   gap: 16px;
   align-items: start;
 }
-.bounty-want .card { width: 100%; }
+.bounty-want .card { width: 100%; border-radius: 8px; } /* keep rarity ring concentric on small faces */
+.bounty-want .cf { border-radius: 4px; }
 .bounty-want-missing {
   width: 100%; aspect-ratio: 5/7; border: 1px dashed var(--line); border-radius: 12px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
