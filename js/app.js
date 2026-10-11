@@ -85,7 +85,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'bounties', 'sets', 'admin'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -211,7 +211,9 @@
     document.body.classList.toggle('admin', !!isAdmin());
     $('#playerBtn').classList.toggle('online', isCloud());
     $('#playerBtn').title = isCloud() ? 'Your account' : isLocked() ? 'Log in' : 'Switch player';
-    $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : isLocked() ? '' : 'local';
+    var mt = $('#modeTag');
+    mt.textContent = isCloud() ? (isAdmin() ? 'admin' : '') : isLocked() ? '' : 'local';
+    mt.classList.toggle('hidden', !mt.textContent);
     updateWheelBadge();
     if (typeof CPS !== 'undefined' && CPS.games) CPS.games.updateBadge();
   }
@@ -262,7 +264,7 @@
   function showView(name, quiet) {
     if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
-    if ((name === 'admin' || name === 'sandbox') && !canAdminArea()) name = 'packs';
+    if (name === 'admin' && !canAdminArea()) name = 'packs';
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
@@ -284,8 +286,6 @@
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
     else if (S.view === 'arcade') { if (typeof CPS !== 'undefined' && CPS.games) CPS.games.render(); }
-    else if (S.view === 'bounties') { if (typeof CPS !== 'undefined' && CPS.bounties) CPS.bounties.render(); }
-    else if (CPS.sandbox && CPS.sandbox.PUBLIC[S.view]) { CPS.sandbox.render(S.view); }
     else if (S.view === 'wheel') renderWheel();
     else renderPacksSide();
   }
@@ -647,7 +647,7 @@
       if (f.own === 'holo' && !(e && e.h > 0)) return false;
       if (f.own === 'fav' && !isFav(set.id, c.id)) return false;
       if (q) {
-        var hay = c.name + ' ' + c.subtitle + ' ' + c.details + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
+        var hay = (has ? (c.name + ' ' + c.subtitle + ' ' + c.details) : '') + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
         if (hay.toLowerCase().indexOf(q) < 0) return false;
       }
       return true;
