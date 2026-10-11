@@ -30,6 +30,7 @@
 
 @media (max-width: 720px) {
   .cotd-pill { font-size: 11px; padding: 4px 9px; }
+  .cotd-pill .cotd-pill-set { display: none; }
 }
 
 /* Narrow screens: the pill must never force the topbar wider than the viewport.

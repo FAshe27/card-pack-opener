@@ -73,7 +73,8 @@
     var st = statusCache;
     pillEl.classList.remove('hidden');
     pillEl.classList.toggle('claimed', !!st.claimed);
-    pillEl.innerHTML = '🎯 <b>' + esc(cap(st.rarity)) + '</b>&nbsp;·&nbsp;' + esc(st.set_name) +
+    pillEl.innerHTML = '🎯 <b>' + esc(cap(st.rarity)) + '</b>' +
+      '<span class="cotd-pill-set">&nbsp;·&nbsp;' + esc(st.set_name) + '</span>' +
       '&nbsp;·&nbsp;+' + st.prize + '🎟️' + (st.claimed ? ' <span class="cotd-done">✓</span>' : '');
     pillEl.title = st.claimed ? 'Card of the Day — claimed! Nice hunting.'
       : "Today's Card of the Day: a " + cap(st.rarity) + ' hiding in ' + st.set_name + '. Tap for details.';
