@@ -15,8 +15,13 @@
 .trade-cardname { font-size: 1.15rem; font-weight: 700; }
 .trade-note { margin: 6px 0; font-style: italic; color: #ffd97a; }
 .trade-offercount { margin: 6px 0; font-weight: 600; }
-.trade-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.trade-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.trade-actions .btn { margin-top: 0; } /* .btn.danger carries margin-top:10px in style.css */
 .row .btn.danger { margin-top: 0; }
+/* Small trading faces: the global 12px card radius dwarfs the 4px inner panel at
+   120px, making the rarity ring lumpy and the inner corners look cut off. */
+.trade-face .card { border-radius: 8px; }
+.trade-face .cf { border-radius: 4px; }
 
 .trade-detail { display: grid; grid-template-columns: 140px 1fr; gap: 14px; margin: 10px 0 4px; }
 .trade-offers { display: grid; gap: 10px; margin: 8px 0 12px; }
