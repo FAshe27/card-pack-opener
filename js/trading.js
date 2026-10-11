@@ -4,7 +4,9 @@
    allowed on both sides, picked explicitly.
    Consumes CPS.appCtx. Loads after js/app.js. Registers as CPS.trading. */
 (function (CPS) {
+  try { window.__tradingLoaded = 'yes'; } catch (e) {}
   var ctx = CPS.appCtx;
+  try { window.__tradingCtx = ctx ? 'ctx-ok' : 'ctx-missing'; } catch (e) { try { window.__tradingCtx = 'ctx-err:' + e.message; } catch (e2) {} }
   var T = null;              // {listings:[], my_open} from cps_trading_post
   var F = { set: '' };       // board filters
   var PL = null;             // post-listing form state
@@ -34,7 +36,13 @@
 
   /* ------------------------------------------------------------ board */
   async function render() {
-    var box = el(); if (!box) return;
+    var box = el();
+    if (!box) {
+      var fb = document.getElementById('tradePanel');
+      if (fb) fb.innerHTML = '<div class="panel"><p>DIAG: #tradePanel not found via ctx.$</p></div>';
+      return;
+    }
+    box.innerHTML = '<div class="panel"><p>DIAG: render() reached, loading…</p></div>';
     if (!ctx.isCloud()) {
       box.innerHTML = '<div class="panel"><h2>Trading Post</h2>' +
         '<p class="muted">The Trading Post needs online play — log in to list and offer.</p></div>';
