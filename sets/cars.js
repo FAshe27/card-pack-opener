@@ -1,7 +1,7 @@
 /* Card set: Street Legal Cars (generated from cars-pack-images.csv by package_cars.py). */
 CardSets.register({
   "id": "cars",
-  "name": "Street Legal Cars",
+  "name": "Street Cars",
   "code": "CARS",
   "description": "502 street-legal production cars \u2014 muscle cars, JDM icons, supercars, hot hatches, and everyday heroes, 1960 to today. Real photos, each with an evergreen fact. Includes Franklin's own photos for the CR-Z, R56 Mini, ND Miata, and Tacoma.",
   "theme": {
