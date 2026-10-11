@@ -56,7 +56,7 @@ create index if not exists idx_trade_listings_lister on cps.trade_listings(liste
 create index if not exists idx_trade_listings_expiry on cps.trade_listings(status, expires_at);
 
 -- --- offers ---------------------------------------------------------------
-create table if not exists cps.trade_offers (
+create table if not exists cps.listing_offers (
   id         uuid primary key default gen_random_uuid(),
   listing_id uuid not null references cps.trade_listings(id) on delete cascade,
   offerer    uuid not null references cps.accounts(id) on delete cascade,
@@ -69,8 +69,8 @@ create table if not exists cps.trade_offers (
                check (status in ('open', 'accepted', 'declined', 'withdrawn', 'replaced', 'expired')),
   created_at timestamptz not null default now()
 );
-create index if not exists idx_trade_offers_listing on cps.trade_offers(listing_id, status);
-create index if not exists idx_trade_offers_offerer on cps.trade_offers(offerer, status);
+create index if not exists idx_listing_offers_listing on cps.listing_offers(listing_id, status);
+create index if not exists idx_listing_offers_offerer on cps.listing_offers(offerer, status);
 
 -- --- escrow ledger: cards held out of circulation --------------------------
 -- offer_id null  => the lister's card; otherwise one of an offer's cards.
@@ -78,7 +78,7 @@ create index if not exists idx_trade_offers_offerer on cps.trade_offers(offerer,
 create table if not exists cps.trade_escrow (
   id             uuid primary key default gen_random_uuid(),
   listing_id     uuid not null references cps.trade_listings(id) on delete cascade,
-  offer_id       uuid references cps.trade_offers(id) on delete cascade,
+  offer_id       uuid references cps.listing_offers(id) on delete cascade,
   account_id     uuid not null references cps.accounts(id) on delete cascade,
   set_id         text not null,
   card_id        text not null,
@@ -92,10 +92,10 @@ create index if not exists idx_trade_escrow_offer on cps.trade_escrow(offer_id);
 create index if not exists idx_trade_escrow_variant on cps.trade_escrow(set_id, card_id, variant_tier, variant_serial);
 
 alter table cps.trade_listings enable row level security;
-alter table cps.trade_offers   enable row level security;
+alter table cps.listing_offers   enable row level security;
 alter table cps.trade_escrow   enable row level security;
 revoke all on table cps.trade_listings from public;
-revoke all on table cps.trade_offers   from public;
+revoke all on table cps.listing_offers   from public;
 revoke all on table cps.trade_escrow   from public;
 
 -- --- internal: is this numbered serial currently escrowed? ----------------
@@ -112,10 +112,10 @@ $$;
 create or replace function cps.trade_refund_offer(p_offer uuid)
 returns void language plpgsql set search_path = cps, pg_temp as $$
 declare
-  o cps.trade_offers%rowtype;
+  o cps.listing_offers%rowtype;
   e record;
 begin
-  select * into o from cps.trade_offers where id = p_offer;
+  select * into o from cps.listing_offers where id = p_offer;
   if not found then return; end if;
 
   for e in select * from cps.trade_escrow where offer_id = p_offer loop
@@ -174,8 +174,8 @@ begin
     end loop;
 
     -- every open offer declined + refunded
-    for o in select id, offerer from cps.trade_offers where listing_id = l.id and status = 'open' loop
-      update cps.trade_offers set status = 'expired' where id = o.id;
+    for o in select id, offerer from cps.listing_offers where listing_id = l.id and status = 'open' loop
+      update cps.listing_offers set status = 'expired' where id = o.id;
       perform cps.trade_refund_offer(o.id);
       perform cps.notify(o.offerer, 'trade_offer_expired',
         'Your offer was returned — the listing expired before it was accepted.', 'trading');
@@ -303,8 +303,8 @@ begin
   end loop;
 
   -- open offers declined + refunded
-  for o in select id, offerer from cps.trade_offers where listing_id = l.id and status = 'open' loop
-    update cps.trade_offers set status = 'declined' where id = o.id;
+  for o in select id, offerer from cps.listing_offers where listing_id = l.id and status = 'open' loop
+    update cps.listing_offers set status = 'declined' where id = o.id;
     perform cps.trade_refund_offer(o.id);
     perform cps.notify(o.offerer, 'trade_offer_declined',
       'The listing you offered on was cancelled — your offer was refunded.', 'trading');
@@ -355,11 +355,11 @@ begin
   if ncards > 5 then raise exception 'At most 5 cards per offer.'; end if;
 
   -- replacing your existing open offer refunds it first
-  select id into old_id from cps.trade_offers
+  select id into old_id from cps.listing_offers
     where listing_id = p_listing and offerer = a.id and status = 'open'
     for update;
   if found then
-    update cps.trade_offers set status = 'replaced' where id = old_id;
+    update cps.listing_offers set status = 'replaced' where id = old_id;
     perform cps.trade_refund_offer(old_id);
   end if;
 
@@ -438,7 +438,7 @@ begin
      and not exists (select 1 from cps.trade_escrow where offer_id = new_id) then
     raise exception 'Your offer needs tokens, tickets, packs, or cards.'; end if;
 
-  insert into cps.trade_offers (id, listing_id, offerer, tokens, tickets, pack_set, packs,
+  insert into cps.listing_offers (id, listing_id, offerer, tokens, tickets, pack_set, packs,
                                cards, status)
     values (new_id, p_listing, a.id, otokens, otickets, opackset, opacks,
             coalesce(p_offer->'cards', '[]'::jsonb), 'open');
@@ -454,15 +454,15 @@ create or replace function public.cps_trade_withdraw(p_token text, p_offer uuid)
 returns jsonb language plpgsql security definer set search_path = cps, pg_temp as $$
 declare
   a cps.accounts%rowtype;
-  o cps.trade_offers%rowtype;
+  o cps.listing_offers%rowtype;
 begin
   a := cps.auth(p_token);
-  select * into o from cps.trade_offers where id = p_offer for update;
+  select * into o from cps.listing_offers where id = p_offer for update;
   if not found then raise exception 'Offer not found.'; end if;
   if o.offerer <> a.id then raise exception 'Only the offerer can withdraw this.'; end if;
   if o.status <> 'open' then raise exception 'This offer is no longer open.'; end if;
 
-  update cps.trade_offers set status = 'withdrawn' where id = o.id;
+  update cps.listing_offers set status = 'withdrawn' where id = o.id;
   perform cps.trade_refund_offer(o.id);
   return jsonb_build_object('ok', true);
 end $$;
@@ -473,7 +473,7 @@ returns jsonb language plpgsql security definer set search_path = cps, pg_temp a
 declare
   a          cps.accounts%rowtype;
   l          cps.trade_listings%rowtype;
-  o          cps.trade_offers%rowtype;
+  o          cps.listing_offers%rowtype;
   e          record;
   r          record;
   cardname   text;
@@ -492,7 +492,7 @@ begin
   if l.status <> 'open' then raise exception 'This listing is no longer open.'; end if;
   if l.lister <> a.id then raise exception 'Only the lister can accept an offer.'; end if;
 
-  select * into o from cps.trade_offers where id = p_offer and listing_id = p_listing for update;
+  select * into o from cps.listing_offers where id = p_offer and listing_id = p_listing for update;
   if not found then raise exception 'Offer not found.'; end if;
   if o.status <> 'open' then raise exception 'That offer is no longer open.'; end if;
 
@@ -558,12 +558,12 @@ begin
   end if;
   offer_desc := array_to_string(bits, ', ');
 
-  update cps.trade_offers set status = 'accepted' where id = o.id;
+  update cps.listing_offers set status = 'accepted' where id = o.id;
 
   -- --- losing offers: declined + refunded + notified ---
-  for r in select id, offerer from cps.trade_offers
+  for r in select id, offerer from cps.listing_offers
            where listing_id = l.id and status = 'open' and id <> o.id loop
-    update cps.trade_offers set status = 'declined' where id = r.id;
+    update cps.listing_offers set status = 'declined' where id = r.id;
     perform cps.trade_refund_offer(r.id);
     perform cps.notify(r.offerer, 'trade_offer_declined',
       'Your offer wasn''t accepted — everything was refunded.', 'trading');
@@ -607,9 +607,9 @@ begin
   for l in
     select t.*, ac.display_name as lister_name,
            k.name as card_name, s.name as set_name, k.rarity as rarity,
-           (select count(*) from cps.trade_offers ofr
+           (select count(*) from cps.listing_offers ofr
              where ofr.listing_id = t.id and ofr.status = 'open') as offer_count,
-           (select ofr.id from cps.trade_offers ofr
+           (select ofr.id from cps.listing_offers ofr
              where ofr.listing_id = t.id and ofr.offerer = a.id and ofr.status = 'open'
              limit 1) as my_offer_id
     from cps.trade_listings t
@@ -623,7 +623,7 @@ begin
     for o in
       select ofr.*, ac2.display_name as offerer_name,
              ps.name as pack_name
-      from cps.trade_offers ofr
+      from cps.listing_offers ofr
       join cps.accounts ac2 on ac2.id = ofr.offerer
       left join cps.card_sets ps on ps.id = ofr.pack_set
       where ofr.listing_id = l.id and ofr.status = 'open'
