@@ -1885,7 +1885,7 @@
     var pct = Math.min(100, Math.round(q.progress / q.target * 100));
     return '<div class="quest tier-' + q.tier + (q.done && !q.claimed ? ' claimable' : '') + '">' +
       '<div class="quest-top"><div><b>' + esc(q.title) + '</b>' +
-      '<span class="quest-tier">' + q.tier + ' &middot; &#x1F39F;&#xFE0F;' + q.tickets + '</span></div>' +
+      '<span class="quest-tier">' + q.tier + ' &middot; ' + q.reward + '</span></div>' +
       (q.claimed ? '<span class="quest-done">Claimed &#x2713;</span>' :
        q.done ? '<button class="btn small primary" data-claim="' + esc(q.key) + '">Claim</button>' :
        '<span class="quest-prog">' + q.progress + '/' + q.target + '</span>') +
@@ -2128,8 +2128,9 @@
         try {
           var r = await CPS.cloud.call('claim_quest', { p_key: b.dataset.claim });
           S.spins = r.spins_now; updateWheelBadge();
+          if (CPS.games) CPS.games.setTokens(r.tokens_now);
           fx.confetti(120);
-          toast('+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
+          toast(r.toast, 'good');
           await refreshQuests();
           if (S.view === 'daily') renderDaily();
         } catch (err) { cloudError(err); b.disabled = false; }
