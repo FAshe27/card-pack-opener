@@ -319,7 +319,6 @@
   function resetStage() {
     S.opening = null;
     var set = S.set, st = ps();
-    // the big pack in the middle is clickable too: one click opens + tears it (same as the sidebar pack)
     $('#stageIdle').innerHTML = '<div class="idle-pack' + (st.packs ? ' clickable' : ' empty') + '" role="button" tabindex="0" title="' +
         (st.packs ? 'Click to open and tear a pack' : 'No packs left') + '">' + CPS.cards.pack(set, 'float') + '</div>' +
       '<div class="idle-msg">' + (st.packs
@@ -1046,7 +1045,6 @@
   /* ---------------------------------------------------------- trading */
   var TB = null; // trade builder state
 
-  // read-only view of my per-set state (ps() would create+save missing entries)
   function tbStateOf(set) { return S.player.sets[set.id] || { cards: {} }; }
 
   // my owned cards as flat [{set_id, card_id, n, h}]
@@ -1062,7 +1060,6 @@
     return out;
   }
 
-  // group a flat collection into [{set, cards:[{card,n,h}]}] sorted by set name
   function tbGroup(coll) {
     var bySet = {};
     coll.forEach(function (c) {
@@ -1382,7 +1379,6 @@
   /* ---------------------------------------------------------- stats */
   function renderStats() {
     var set = S.set, st = ps();
-    // Aggregate across all sets
     var agg = { opened: 0, pulled: 0, holos: 0, byRarity: {}, unique: 0, total: 0, packs: 0 };
     window.CardSets.all().forEach(function (sd) {
       var pst = S.player.sets[sd.id], psd = pst ? pst.stats : null;
@@ -1394,12 +1390,9 @@
       R.RARITIES.forEach(function (r) { agg.byRarity[r.key] = (agg.byRarity[r.key] || 0) + (psd && psd.byRarity[r.key] || 0); });
     });
     var epicPlus = (agg.byRarity.epic || 0) + (agg.byRarity.legendary || 0) + (agg.byRarity.chase || 0);
-    var tiles = [
-      ['Packs opened', agg.opened], ['Cards pulled', agg.pulled], ['Unique cards', agg.unique + ' / ' + agg.total],
-      ['Completion', U.pct(agg.total ? agg.unique / agg.total : 0)], ['Holo pulls', agg.holos], ['Epic or better', epicPlus],
-      ['Chase pulls', agg.byRarity.chase || 0], ['Packs on hand', agg.packs]
-    ];
-    $('#statTiles').innerHTML = tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b></div>'; }).join('');
+    var tiles=[['Packs opened',agg.opened],['Cards pulled',agg.pulled],['Unique cards',agg.unique+' / '+agg.total],['Completion',U.pct(agg.total?agg.unique/agg.total:0)],['Holo pulls',agg.holos],['Epic or better',epicPlus],['Chase pulls',agg.byRarity.chase||0],['Numbered',(S.myVariants||[]).length],['Packs on hand',agg.packs]];
+    $('#statTiles').innerHTML=tiles.map(function(t){return '<div class="tile"><span>'+t[0]+'</span><b>'+t[1]+'</b></div>';}).join('');
+    if(isCloud()&&!S.myVariants)ensureVariants().then(function(){if(S.view==='stats')renderStats();});
     var max = Math.max.apply(null, R.RARITIES.map(function (r) { return agg.byRarity[r.key] || 0; }).concat([1]));
     $('#rarityBars').innerHTML = R.RARITIES.map(function (r) {
       var n = agg.byRarity[r.key] || 0;
@@ -2024,8 +2017,6 @@
   /* ---------------------------------------------------------- events */
   function bind() {
     $$('.tab').forEach(function (t) { t.addEventListener('click', function () { showView(t.dataset.view); }); });
-    // logo = "Open Packs" tab. Only switches the view: a pack being opened/revealed stays exactly as it was
-    // (its cards are already saved), so coming back mid-reveal is safe.
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
     $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
