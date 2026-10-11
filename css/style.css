@@ -1263,7 +1263,8 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .pill-you { font-size: .65rem; padding: 1px 8px; }
 
 /* Spin ticket jackpot card */
-.ticket-card { position: relative; background: linear-gradient(135deg, #1a2f1a, #2d5a2d); border: 2px solid #4caf50; }
+.ticket-card { position: relative; background: linear-gradient(135deg, #1a2f1a, #2d5a2d); border: 2px solid transparent; }
+.ticket-card.flipped { border-color: #4caf50; }
 .ticket-card .card-back { position: absolute; inset: 0; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: inherit; }
 .ticket-card.flipped .card-back { display: none; }
 .ticket-face { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; font-size: 3rem; gap: 8px; padding: 20px; text-align: center; }
@@ -1272,7 +1273,8 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .ticket-face span { font-size: 0.9rem; color: #c8e6c9; }
 
 /* Game token slip card */
-.token-card { position: relative; background: linear-gradient(135deg, #2e2410, #5a4a1a); border: 2px solid #ffb21e; }
+.token-card { position: relative; background: linear-gradient(135deg, #2e2410, #5a4a1a); border: 2px solid transparent; }
+.token-card.flipped { border-color: #ffb21e; }
 .token-card .card-back { position: absolute; inset: 0; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: inherit; }
 .token-card.flipped .card-back { display: none; }
 .token-face { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; font-size: 3rem; gap: 8px; padding: 20px; text-align: center; }
