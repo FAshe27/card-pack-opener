@@ -75,6 +75,7 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .quest.tier-easy { border-left-color: #38c97f; }
 .quest.tier-medium { border-left-color: #3f8cff; }
 .quest.tier-hard { border-left-color: #b35cff; }
+.quest.tier-ultra { border-left-color: #f0b429; }
 .quest.claimable { border-color: var(--accent); box-shadow: 0 0 14px rgba(124,108,255,.28); }
 .quest-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
 .quest-tier { display: block; font-size: .78rem; color: var(--muted); text-transform: capitalize; margin-top: 2px; }
