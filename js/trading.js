@@ -293,7 +293,7 @@
       '<div class="trade-form">' +
       '<div class="row wrap"><label>Set <select id="tpSet"></select></label>' +
       '<label>Search <input id="tpSearch" placeholder="card name or #" size="18"></label></div>' +
-      '<div id="tpCardGrid" class="trade-pick-grid"></div>' +
+      '<div id="tpCardGrid" class="tp-pick-grid"></div>' +
       '<div id="tpCardSel" class="muted small"></div>' +
       '<div class="row wrap"><label class="inline"><input type="checkbox" id="tpHolo"> list as holo</label>' +
       '<label>Which copy <select id="tpCopy"></select></label></div>' +
@@ -345,8 +345,8 @@
     list = list.slice(0, 40);
     grid.innerHTML = list.map(function (o) {
       var sel = PL.card && PL.card.set === s.id && PL.card.id === o.card.id;
-      return '<button class="trade-pick' + (sel ? ' selected' : '') + '" data-card="' + esc(o.card.id) + '">' +
-        '<span class="trade-pick-name">' + esc(o.card.name) + '</span>' +
+      return '<button class="tp-pick' + (sel ? ' selected' : '') + '" data-card="' + esc(o.card.id) + '">' +
+        '<span class="tp-pick-name">' + esc(o.card.name) + '</span>' +
         '<span><span class="pill r-' + o.card.rarity + '">' + esc(o.card.rarity) + '</span>' +
         ' <span class="muted small">×' + o.left + '</span></span></button>';
     }).join('') || '<div class="muted small">No matches.</div>';
@@ -447,7 +447,7 @@
       '<input id="ofPacks" type="number" min="0" value="0" style="width:70px"><span class="muted small" id="ofPacksHave"></span></div>' +
       '<div class="row wrap"><label>🃏 Card <select id="ofCardSet"></select></label>' +
       '<label>Search <input id="ofCardSearch" placeholder="card name or #" size="18"></label></div>' +
-      '<div id="ofCardGrid" class="trade-pick-grid"></div>' +
+      '<div id="ofCardGrid" class="tp-pick-grid"></div>' +
       '<div class="row wrap"><label class="inline"><input type="checkbox" id="ofCardHolo"> add as holo</label>' +
       '<span class="muted small">tap a card to add it (up to 5 — numbered serials listed separately)</span></div>' +
       '<div id="ofCards" class="trade-offer-chips"></div>' +
@@ -533,8 +533,8 @@
     var grid = box.querySelector('#ofCardGrid');
     var rows = ofGridRows();
     grid.innerHTML = rows.map(function (r, i) {
-      return '<button class="trade-pick" data-row="' + i + '">' +
-        '<span class="trade-pick-name">' + esc(r.label) + (r.kind === 'plain' && r.holo ? ' ✦' : '') + '</span>' +
+      return '<button class="tp-pick" data-row="' + i + '">' +
+        '<span class="tp-pick-name">' + esc(r.label) + (r.kind === 'plain' && r.holo ? ' ✦' : '') + '</span>' +
         '<span><span class="pill r-' + r.card.rarity + '">' + esc(r.card.rarity) + '</span>' +
         (r.kind === 'plain' ? ' <span class="muted small">×' + r.left + '</span>' : '') + '</span></button>';
     }).join('') || '<div class="muted small">No matches.</div>';
