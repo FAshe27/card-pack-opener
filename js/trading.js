@@ -48,14 +48,14 @@
       '<div class="row wrap"><button class="btn primary" id="tradePostBtn">List a card</button>' +
       '<span class="muted small" id="tradeMyOpen"></span></div></div>' +
       '<div class="panel trade-filters"><label>Set <select id="tradeSetFilter"><option value="">All sets</option></select></label></div>' +
-      '<div id="tradeList"><p class="muted small">Loading…</p></div>';
+      '<div id="tradingList"><p class="muted small">Loading…</p></div>';
     ctx.$('#tradePostBtn').addEventListener('click', openPostModal);
     ctx.$('#tradeSetFilter').addEventListener('change', function (e) { F.set = e.target.value; renderList(); });
     await load();
   }
 
   async function load() {
-    var host = ctx.$('#tradeList');
+    var host = ctx.$('#tradingList');
     try {
       T = await CPS.cloud.call('trading_post', {});
       if (!T || !Array.isArray(T.listings)) throw new Error('Bad response from server (got ' + JSON.stringify(T).slice(0, 80) + ')');
@@ -123,7 +123,7 @@
   }
 
   function renderList() {
-    var box = ctx.$('#tradeList'); if (!box || !T) return;
+    var box = ctx.$('#tradingList'); if (!box || !T) return;
     var list = T.listings.filter(function (l) { return !F.set || l.set_id === F.set; });
     if (!list.length) {
       box.innerHTML = '<div class="panel"><p class="muted">' +
