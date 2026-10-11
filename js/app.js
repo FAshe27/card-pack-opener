@@ -1390,14 +1390,15 @@
       R.RARITIES.forEach(function (r) { agg.byRarity[r.key] = (agg.byRarity[r.key] || 0) + (psd && psd.byRarity[r.key] || 0); });
     });
     var epicPlus = (agg.byRarity.epic || 0) + (agg.byRarity.legendary || 0) + (agg.byRarity.chase || 0);
-    var tiles=[['Packs opened',agg.opened],['Cards pulled',agg.pulled],['Unique cards',agg.unique+' / '+agg.total],['Completion',U.pct(agg.total?agg.unique/agg.total:0)],['Holo pulls',agg.holos],['Epic or better',epicPlus],['Chase pulls',agg.byRarity.chase||0],['Numbered',(S.myVariants||[]).length],['Packs on hand',agg.packs]];
+    var tiles=[['Packs opened',agg.opened],['Cards pulled',agg.pulled],['Unique cards',agg.unique+' / '+agg.total],['Completion',U.pct(agg.total?agg.unique/agg.total:0)],['Holo pulls',agg.holos],['Epic or better',epicPlus],['Chase pulls',agg.byRarity.chase||0],['Packs on hand',agg.packs]];
     $('#statTiles').innerHTML=tiles.map(function(t){return '<div class="tile"><span>'+t[0]+'</span><b>'+t[1]+'</b></div>';}).join('');
-    if(isCloud()&&!S.myVariants)ensureVariants().then(function(){if(S.view==='stats')renderStats();});
-    var max = Math.max.apply(null, R.RARITIES.map(function (r) { return agg.byRarity[r.key] || 0; }).concat([1]));
+    var numbered = (S.myVariants || []).length;
+    var max = Math.max.apply(null, R.RARITIES.map(function (r) { return agg.byRarity[r.key] || 0; }).concat([numbered, 1]));
     $('#rarityBars').innerHTML = R.RARITIES.map(function (r) {
       var n = agg.byRarity[r.key] || 0;
       return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + n + (agg.pulled ? ' <em>' + U.pct(n / agg.pulled) + '</em>' : '') + '</span></div>';
-    }).join('');
+    }).join('') + '<div class="barrow r-numbered"><span class="bl">Numbered</span><span class="bar"><i style="width:' + (numbered / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + numbered + '</span></div>';
+    if (isCloud() && !S.myVariants) ensureVariants().then(function () { if (S.view === 'stats') renderStats(); });
 
     var bestO = null, bestSd = null, bestSc = -1;
     window.CardSets.all().forEach(function (sd) {
