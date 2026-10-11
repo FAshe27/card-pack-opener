@@ -31,3 +31,11 @@
 @media (max-width: 720px) {
   .cotd-pill { font-size: 11px; padding: 4px 9px; }
 }
+
+/* Narrow screens: the pill must never force the topbar wider than the viewport.
+   The pill truncates with an ellipsis; the icon buttons never shrink. */
+@media (max-width: 1100px) {
+  .top-actions { min-width: 0; }
+  .top-actions .icon-btn, .top-actions .player-chip { flex-shrink: 0; }
+  .cotd-pill { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+}
