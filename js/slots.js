@@ -1,5 +1,5 @@
 /* Slot machine arcade game (Franklin's spec, 2026-10-11).
-   3 tokens per spin, server-authoritative reels (public.cps_slot_spin).
+   2 tokens per spin, server-authoritative reels (public.cps_slot_spin).
    Bet buttons: 1 / 5 / 10 spins, auto-spun sequentially.
    Triples pay packs only: common 0+3J / uncommon 3+3J / rare 5+5J /
    epic 10+10J / legendary 20+20J / chase 50+25J (random + Jumbled Mess).
@@ -9,7 +9,7 @@
    js/games.js) or as a sandbox testing item. Registers as CPS.slots. */
 (function (CPS) {
   var ctx = CPS.appCtx;
-  var SPIN_COST = 3;
+  var SPIN_COST = 2;
   var SYMBOLS = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'chase'];
   var LABEL = {
     common: 'Common', uncommon: 'Uncommon', rare: 'Rare',
@@ -59,9 +59,9 @@
           '<div class="slot-reel" id="slotReel2">' + symChip('rare') + '</div>' +
         '</div>' +
         '<div class="slot-controls">' +
-          '<button class="btn primary slot-bet" data-spins="1" data-cost="3">1 Spin — 3 🪙</button>' +
-          '<button class="btn slot-bet" data-spins="5" data-cost="15">5 Spins — 15 🪙</button>' +
-          '<button class="btn slot-bet" data-spins="10" data-cost="30">10 Spins — 30 🪙</button>' +
+          '<button class="btn primary slot-bet" data-spins="1" data-cost="2">1 Spin — 2 🪙</button>' +
+          '<button class="btn slot-bet" data-spins="5" data-cost="10">5 Spins — 10 🪙</button>' +
+          '<button class="btn slot-bet" data-spins="10" data-cost="20">10 Spins — 20 🪙</button>' +
         '</div>' +
         '<div class="slot-result" id="slotResult"><span class="muted small">Pick a bet to play.</span></div>' +
         '<details class="slot-paytable"><summary>Paytable</summary><table>' + payRows + '</table></details>' +
