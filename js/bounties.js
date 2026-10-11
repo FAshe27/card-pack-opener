@@ -15,6 +15,12 @@
   function esc(s) { return ctx.esc(s); }
   function setObj(id) { return window.CardSets.get(id); }
   function cardObj(sid, cid) { var s = setObj(sid); return s && s.byId.get(cid); }
+  function sortByName(a) {
+    return a.slice().sort(function (x, y) {
+      var n = (x.name || '').toLowerCase(), m = (y.name || '').toLowerCase();
+      return n < m ? -1 : (n > m ? 1 : 0);
+    });
+  }
 
   /* ------------------------------------------------------------ board */
   async function render() {
@@ -52,13 +58,16 @@
 
   function fillSetFilter() {
     var sel = ctx.$('#bountySetFilter'); if (!sel || !B) return;
-    var seen = {}, opts = '';
+    var seen = {}, list = [];
     B.bounties.forEach(function (b) {
       if (seen[b.want_set] || !setObj(b.want_set)) return;
       seen[b.want_set] = true;
-      opts += '<option value="' + esc(b.want_set) + '">' + esc(b.set_name || b.want_set) + '</option>';
+      list.push({ id: b.want_set, name: b.set_name || b.want_set });
     });
-    sel.innerHTML = '<option value="">All sets</option>' + opts;
+    list = sortByName(list);
+    sel.innerHTML = '<option value="">All sets</option>' + list.map(function (o) {
+      return '<option value="' + esc(o.id) + '">' + esc(o.name) + '</option>';
+    }).join('');
     sel.value = F.set;
   }
 
@@ -225,7 +234,7 @@
       });
       if (any) out.push(s);
     });
-    return out;
+    return sortByName(out);
   }
 
   function variantCountMap() {
@@ -242,7 +251,7 @@
 
   async function openPostModal() {
     try { await ctx.ensureVariants(); } catch (e) { /* variants optional for posting */ }
-    var sets = window.CardSets.all().filter(function (s) { return s.id !== 'jumbled'; });
+    var sets = sortByName(window.CardSets.all().filter(function (s) { return s.id !== 'jumbled'; }));
     PB = {
       sets: sets, wantSet: sets[0] ? sets[0].id : '', wantCard: null, q: '',
       holo: 'any', tier: '', serial: '',
@@ -265,7 +274,7 @@
       '<select id="pbTier"><option value="">—</option><option value="rainbow">Rainbow /50</option>' +
       '<option value="prism">Prism /10</option><option value="obsidian">Obsidian /5</option>' +
       '<option value="oneofone">One-of-One</option></select>' +
-      '<input id="pbSerial" type="number" min="1" placeholder="#" style="width:70px"></div>' +
+      '<input id="pbSerial" type="number" min="1" placeholder="#" style="width:64px;flex:none"></div>' +
       '<h4>You offer</h4>' +
       '<div class="row wrap"><label>🪙 Tokens <input id="pbTokens" type="number" min="0" max="' + (ctx.S.gameTokens || 0) +
         '" value="0" style="width:80px"></label><span class="muted small">you have ' + (ctx.S.gameTokens || 0) + '</span>' +
@@ -274,8 +283,8 @@
       '<div class="row wrap"><label>🎁 Packs <select id="pbPackSet"></select></label>' +
       '<input id="pbPacks" type="number" min="0" value="0" style="width:70px"><span class="muted small" id="pbPacksHave"></span></div>' +
       '<div class="row wrap"><label>🃏 Card <select id="pbCardSet"></select></label>' +
-      '<select id="pbCardSel"></select>' +
-      '<label class="inline"><input type="checkbox" id="pbCardHolo"> holo</label>' +
+      '<select id="pbCardSel"></select></div>' +
+      '<div class="row wrap"><label class="inline"><input type="checkbox" id="pbCardHolo"> holo</label>' +
       '<button class="btn small" id="pbCardAdd">Add</button></div>' +
       '<div id="pbOfferCards" class="bounty-offer-chips"></div>' +
       '<div class="row wrap"><button class="btn primary big" id="pbGo">Post bounty</button>' +
