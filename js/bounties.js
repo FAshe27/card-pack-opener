@@ -97,8 +97,10 @@
     }
     (b.offer_cards || []).forEach(function (c) {
       var s = setObj(c.set_id), card = s && s.byId.get(c.card_id);
+      var rar = c.rarity || (card && card.rarity);
       out.push('<span class="bounty-offer-line">🃏 <b>' + esc(c.card_name || (card && card.name) || c.card_id) + '</b>' +
-        (c.holo ? ' ✦ holo' : '') + ' <span class="muted">(' + esc(c.set_name || (s && s.name) || c.set_id) + ')</span></span>');
+        (c.holo ? ' ✦ holo' : '') + ' <span class="muted">(' + esc(c.set_name || (s && s.name) || c.set_id) +
+        (rar ? ' · ' + esc(rar) : '') + ')</span></span>');
     });
     return out.join('');
   }
