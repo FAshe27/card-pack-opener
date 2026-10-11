@@ -1,4 +1,4 @@
-/* Street Legal Cars set additions — cards appended after cars.js.
+/* Street Cars set additions — cards appended after cars.js.
    (cars.js exceeds the push size limit, so remaining cards live here instead of being
    edited into it. Must stay directly after 'cars.js' in sets/manifest.js.) */
 (function () {
