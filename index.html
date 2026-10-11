@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/surprise.css">
 <link rel="stylesheet" href="css/cotd.css">
 <link rel="stylesheet" href="css/bounties.css">
+<link rel="stylesheet" href="css/trading.css">
 <link rel="stylesheet" href="css/beverages.css">
 <link rel="stylesheet" href="css/profile.css">
 <link rel="stylesheet" href="css/sandbox.css">
@@ -31,9 +32,10 @@
       <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily<span class="tab-badge hidden" id="dailyBadge"></span></button>
       <button data-view="collection" class="tab">Collection</button>
       <button data-view="bounties" class="tab cloud-only" id="bountyTabBtn">Bounty Board<span class="tab-badge hidden" id="bountyBadge"></span></button>
+      <button data-view="trading" class="tab cloud-only" id="tradeTabBtn">Trading Post<span class="tab-badge hidden" id="tradeBadge"></span></button>
       <button data-view="players" class="tab" id="playersTabBtn">Players<span class="tab-badge hidden" id="playersBadge"></span></button>
       <button data-view="stats" class="tab">Stats</button>
-      <button data-view="odds" class="tab">Odds</button>
+      
       <button data-view="sandbox" class="tab admin-tab" id="sandboxTabBtn">Sandbox</button>
       <button data-view="admin" class="tab admin-tab" id="adminTabBtn">Admin</button>
     </nav>
@@ -222,6 +224,11 @@
       <div id="bountyPanel"><p class="muted small">Loading…</p></div>
     </section>
 
+    <!-- ============ TRADING POST ============ -->
+    <section id="view-trading" class="view">
+      <div id="tradePanel"><p class="muted small">Loading…</p></div>
+    </section>
+
     <!-- ============ PRIZE WHEEL ============ -->
     <section id="view-wheel" class="view">
       <div class="wheel-wrap">
@@ -396,6 +403,7 @@
   <script src="js/profile.js"></script>
   <script src="js/cotd.js"></script>
   <script src="js/bounties.js"></script>
+  <script src="js/trading.js"></script>
   <script src="js/sandbox.js"></script>
   <script src="js/slots.js"></script>
 </body>

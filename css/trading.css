@@ -1,0 +1,48 @@
+/* Trading Post: listing cards, offer boxes, pick grids. Mirrors bounties.css. */
+.trade-head .row { align-items: center; }
+.trade-head, .trade-filters { margin-bottom: 12px; }
+.trade-filters { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.trade-filters label { display: flex; gap: 8px; align-items: center; }
+
+.trade-list { display: grid; gap: 12px; margin-top: 12px; }
+.trade-card {
+  display: grid; grid-template-columns: 120px 1fr; gap: 14px; align-items: start;
+}
+.trade-face .card { width: 100%; }
+.trade-missing {
+  border: 1px dashed var(--line); border-radius: 12px; padding: 18px 10px; text-align: center;
+}
+.trade-cardname { font-size: 1.15rem; font-weight: 700; }
+.trade-note { margin: 6px 0; font-style: italic; color: #ffd97a; }
+.trade-offercount { margin: 6px 0; font-weight: 600; }
+.trade-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.row .btn.danger { margin-top: 0; }
+
+.trade-detail { display: grid; grid-template-columns: 140px 1fr; gap: 14px; margin: 10px 0 4px; }
+.trade-offers { display: grid; gap: 10px; margin: 8px 0 12px; }
+.trade-offerbox { padding: 12px 14px; }
+.trade-offerhead { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.trade-offerbody { display: flex; flex-direction: column; gap: 4px; }
+.trade-offer-line { display: block; }
+
+.trade-form h4 { margin: 18px 0 8px; }
+.trade-form .row { margin-bottom: 10px; }
+.trade-form label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: none; }
+.trade-pick-grid {
+  display: grid; gap: 6px; margin: 8px 0; max-height: 32vh; overflow-y: auto;
+}
+.trade-pick {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 12px; cursor: pointer; text-align: left; width: 100%;
+  font: inherit; color: inherit;
+}
+.trade-pick:hover { border-color: var(--line); }
+.trade-pick.selected { border-color: #f5b942; background: #1d1a12; }
+.trade-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trade-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+
+@media (max-width: 560px) {
+  .trade-card { grid-template-columns: 84px 1fr; }
+  .trade-detail { grid-template-columns: 96px 1fr; }
+}
