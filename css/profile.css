@@ -18,3 +18,14 @@
   .prof-stats { gap: 6px; }
   .prof-stat b { font-size: 1.1rem; }
 }
+
+/* ---------- favorites manager ---------- */
+.favmgr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin: 10px 0 4px; }
+.favmgr-item { position: relative; }
+.favmgr-x { position: absolute; top: -10px; right: -10px; width: 28px; height: 28px; border-radius: 50%; background: #4a2c2c; color: #ffb3b3; border: 1px solid #7a4444; font-size: 16px; line-height: 1; cursor: pointer; }
+.favmgr-search input { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel2); color: inherit; font-size: 1rem; }
+.favmgr-results { display: grid; gap: 6px; margin-top: 10px; max-height: 40vh; overflow-y: auto; }
+.favmgr-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.favmgr-row-t { min-width: 0; }
+.favmgr-row-t b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.favmgr-row .btn { margin: 0; flex-shrink: 0; }

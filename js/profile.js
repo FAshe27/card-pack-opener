@@ -4,6 +4,7 @@
   'use strict';
   var ctx = CPS.appCtx;
   var setSort = 'pct'; // 'pct' = by completion, 'name' = A-Z; persists across opens
+  var FAV_MAX = 20;
 
 /* Best pull = highest rarity owned; numbered variants then holos break ties. */
 function bestPull(collection) {
@@ -73,7 +74,8 @@ async function openProfile(accountId) {
       '<div class="prof-head"><span class="avatar big">' + ctx.esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
       '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button>') + '</div></div>' +
       statsHtml +
-      '<h3>★ Favorites (' + (p.favorites || []).length + '/' + 20 + ')</h3>' +
+      '<h3 class="prof-coll-h"><span>★ Favorites (' + (p.favorites || []).length + '/' + FAV_MAX + ')</span>' +
+      (p.is_me ? '<button class="btn small" id="profFavEditBtn">Edit</button>' : '') + '</h3>' +
       (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">No favorites yet.</div>') +
       '<h3 class="prof-coll-h"><span>Collection</span><button class="btn small" id="profSortBtn"></button></h3>' +
       '<div class="prof-sets cols2"></div>' +
@@ -86,10 +88,110 @@ async function openProfile(accountId) {
         setSort = setSort === 'pct' ? 'name' : 'pct';
         paintSort(); renderSets(box);
       });
+      var feb = box.querySelector('#profFavEditBtn');
+      if (feb) feb.addEventListener('click', function () { openFavManager(accountId, p.favorites || []); });
       var ptb = box.querySelector('#profTradeBtn');
       if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
     });
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
+}
+
+/* ---------------- favorites manager ---------------- */
+
+function ownedCards() {
+  // every owned card across all sets (side-effect-free read, unlike ps())
+  var out = [];
+  var psets = (ctx.S.player && ctx.S.player.sets) || {};
+  window.CardSets.all().forEach(function (s) {
+    if (s.id === 'jumbled') return;
+    var st = psets[s.id];
+    if (!st || !st.cards) return;
+    s.cards.forEach(function (c) {
+      var e = st.cards[c.id];
+      if (e && e.n > 0) out.push({ set: s, card: c, n: e.n });
+    });
+  });
+  return out;
+}
+
+function openFavManager(accountId, seedFavs) {
+  var myFavs = (seedFavs || []).slice(); // [{set_id, card_id, holo}]
+  var favKeys = {};
+  myFavs.forEach(function (f) { favKeys[f.set_id + ':' + f.card_id] = true; });
+  var all = ownedCards();
+
+  function renderFavs(box) {
+    box.querySelector('.favmgr-grid').innerHTML = myFavs.map(function (f) {
+      var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
+      if (!set || !card) return '';
+      return '<div class="favmgr-item" data-k="' + ctx.esc(f.set_id + ':' + f.card_id) + '">' +
+        CPS.cards.render(set, card, { holo: !!f.holo }) +
+        '<button class="favmgr-x" aria-label="Remove from favorites">×</button></div>';
+    }).join('') || '<div class="empty">No favorites yet — search below to add some.</div>';
+    box.querySelector('#favmgrCount').textContent = myFavs.length + '/' + FAV_MAX;
+    box.querySelectorAll('.favmgr-x').forEach(function (x) {
+      x.addEventListener('click', function () {
+        var k2 = x.parentNode.dataset.k.split(':');
+        toggle(k2[0], k2[1], box);
+      });
+    });
+  }
+
+  function renderResults(box, q) {
+    var el = box.querySelector('.favmgr-results');
+    q = (q || '').trim().toLowerCase();
+    if (!q) { el.innerHTML = '<div class="empty muted small">Type to search your collection.</div>'; return; }
+    var hits = all.filter(function (o) {
+      return !favKeys[o.set.id + ':' + o.card.id] && o.card.name.toLowerCase().indexOf(q) >= 0;
+    }).slice(0, 24);
+    el.innerHTML = hits.length ? hits.map(function (o) {
+      return '<div class="favmgr-row" data-k="' + ctx.esc(o.set.id + ':' + o.card.id) + '">' +
+        '<div class="favmgr-row-t"><b class="rt-' + o.card.rarity + '">' + ctx.esc(o.card.name) + '</b>' +
+        '<div class="muted small">' + ctx.esc(o.set.name) + ' · ' + ctx.rarityOf(o.card.rarity).label + ' · ×' + o.n + '</div></div>' +
+        '<button class="btn small">+ Add</button></div>';
+    }).join('') : '<div class="empty">No matches in your collection.</div>';
+    el.querySelectorAll('.favmgr-row').forEach(function (row) {
+      row.querySelector('button').addEventListener('click', function () {
+        var k3 = row.dataset.k.split(':');
+        toggle(k3[0], k3[1], box);
+      });
+    });
+  }
+
+  async function toggle(setId, cardId, box) {
+    var k = setId + ':' + cardId;
+    if (!favKeys[k] && myFavs.length >= FAV_MAX) { ctx.toast('You can only favorite ' + FAV_MAX + ' cards.', 'warn'); return; }
+    try {
+      var r = await CPS.cloud.call('toggle_favorite', { p_set: setId, p_card: cardId });
+      if (r.favorited) {
+        var st = ((ctx.S.player || {}).sets || {})[setId], e = st && st.cards[cardId];
+        myFavs.push({ set_id: setId, card_id: cardId, holo: !!(e && e.h > 0) });
+        favKeys[k] = true;
+        ctx.toast('Added to favorites (' + r.count + '/' + FAV_MAX + ').', 'good');
+      } else {
+        myFavs = myFavs.filter(function (f) { return f.set_id + ':' + f.card_id !== k; });
+        delete favKeys[k];
+        ctx.toast('Removed from favorites.', 'good');
+      }
+      renderFavs(box);
+      renderResults(box, box.querySelector('.favmgr-search input').value);
+    } catch (e2) { ctx.cloudError(e2); }
+  }
+
+  ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
+    '<h2>Manage favorites <span class="muted small" id="favmgrCount"></span></h2>' +
+    '<div class="favmgr-grid"></div>' +
+    '<h3>Add cards</h3>' +
+    '<div class="favmgr-search"><input type="search" placeholder="Search your cards…" aria-label="Search your cards"></div>' +
+    '<div class="favmgr-results"></div>' +
+    '<div class="row" style="margin-top:12px"><button class="btn primary" id="favmgrDone">Done</button></div>' +
+    '</div>', function (box) {
+    renderFavs(box);
+    renderResults(box, '');
+    var inp = box.querySelector('.favmgr-search input');
+    inp.addEventListener('input', function () { renderResults(box, inp.value); });
+    box.querySelector('#favmgrDone').addEventListener('click', function () { openProfile(accountId); });
+  });
 }
 
 function openPlayerSet(accountId, displayName, setId, collection) {
