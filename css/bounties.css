@@ -2,6 +2,7 @@
 
 .bounty-head .row { align-items: center; }
 #bountyMyOpen { margin-left: auto; }
+.bounty-head, .bounty-filters { margin-bottom: 12px; }
 
 .bounty-filters { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
 .bounty-filters label { display: flex; gap: 8px; align-items: center; }
