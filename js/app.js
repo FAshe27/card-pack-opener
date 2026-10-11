@@ -659,6 +659,7 @@
     if (f.sort === 'rarity') list.sort(function (a, b) { return R.INDEX[b.rarity] - R.INDEX[a.rarity] || a.num - b.num; });
     else if (f.sort === 'count') list.sort(function (a, b) { return cnt(b) - cnt(a) || a.num - b.num; });
     else if (f.sort === 'name') list.sort(function (a, b) { return a.name.localeCompare(b.name, undefined, { numeric: true }); });
+    if (q) list.sort(function (a, b) { return (cnt(a) > 0 ? 0 : 1) - (cnt(b) > 0 ? 0 : 1); });
 
     $('#collCount').textContent = list.length + ' shown';
     $('#collGrid').innerHTML = list.length ? list.map(function (c) {
