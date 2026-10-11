@@ -85,7 +85,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'bounties', 'sets', 'admin'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'sets', 'admin'].indexOf(v) >= 0 ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -211,9 +211,7 @@
     document.body.classList.toggle('admin', !!isAdmin());
     $('#playerBtn').classList.toggle('online', isCloud());
     $('#playerBtn').title = isCloud() ? 'Your account' : isLocked() ? 'Log in' : 'Switch player';
-    var mt = $('#modeTag');
-    mt.textContent = isCloud() ? (isAdmin() ? 'admin' : '') : isLocked() ? '' : 'local';
-    mt.classList.toggle('hidden', !mt.textContent);
+    $('#modeTag').textContent = isCloud() ? (isAdmin() ? 'admin' : 'online') : isLocked() ? '' : 'local';
     updateWheelBadge();
     if (typeof CPS !== 'undefined' && CPS.games) CPS.games.updateBadge();
   }
@@ -264,7 +262,7 @@
   function showView(name, quiet) {
     if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
-    if ((name === 'admin' || name === 'sandbox') && !canAdminArea()) name = 'packs';
+    if (name === 'admin' && !canAdminArea()) name = 'packs';
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
@@ -286,8 +284,6 @@
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
     else if (S.view === 'arcade') { if (typeof CPS !== 'undefined' && CPS.games) CPS.games.render(); }
-    else if (S.view === 'bounties' && CPS.bounties) CPS.bounties.render();
-    else if (CPS.sandbox && CPS.sandbox.PUBLIC[S.view]) { CPS.sandbox.render(S.view); }
     else if (S.view === 'wheel') renderWheel();
     else renderPacksSide();
   }
@@ -649,7 +645,7 @@
       if (f.own === 'holo' && !(e && e.h > 0)) return false;
       if (f.own === 'fav' && !isFav(set.id, c.id)) return false;
       if (q) {
-        var hay = c.name + ' ' + c.subtitle + ' ' + c.details + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
+        var hay = (has ? (c.name + ' ' + c.subtitle + ' ' + c.details) : '') + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
         if (hay.toLowerCase().indexOf(q) < 0) return false;
       }
       return true;
@@ -1871,21 +1867,21 @@
     if (b) { var n = spinCount(); b.textContent = n; b.classList.toggle('hidden', !(n > 0)); }
   }
   async function refreshQuests() {
-    if (!isCloud()) { S.quests = null; updateDailyGlow(); return; }
+    if (!isCloud()) { S.quests = null; updateDailyBadge(); return; }
     try { S.quests = await CPS.cloud.call('list_quests', {}); }
     catch (e) { S.quests = []; }
-    updateDailyGlow();
+    updateDailyBadge();
   }
-  function updateDailyGlow() {
-    var b = $('#dailyTabBtn');
-    var has = (S.quests || []).some(function (q) { return q.done && !q.claimed; });
-    if (b) b.classList.toggle('has-claimable', !isLocked() && has);
+  function updateDailyBadge() {
+    var n = (S.quests || []).filter(function (q) { return q.done && !q.claimed; }).length;
+    var b = $('#dailyBadge');
+    if (b) { b.textContent = n; b.classList.toggle('hidden', !(n > 0)); }
   }
   function questHtml(q) {
     var pct = Math.min(100, Math.round(q.progress / q.target * 100));
     return '<div class="quest tier-' + q.tier + (q.done && !q.claimed ? ' claimable' : '') + '">' +
       '<div class="quest-top"><div><b>' + esc(q.title) + '</b>' +
-      '<span class="quest-tier">' + q.tier + ' &middot; ' + q.reward + '</span></div>' +
+      '<span class="quest-tier">' + q.tier + ' &middot; &#x1F39F;&#xFE0F;' + q.tickets + '</span></div>' +
       (q.claimed ? '<span class="quest-done">Claimed &#x2713;</span>' :
        q.done ? '<button class="btn small primary" data-claim="' + esc(q.key) + '">Claim</button>' :
        '<span class="quest-prog">' + q.progress + '/' + q.target + '</span>') +
@@ -2128,9 +2124,8 @@
         try {
           var r = await CPS.cloud.call('claim_quest', { p_key: b.dataset.claim });
           S.spins = r.spins_now; updateWheelBadge();
-          if (CPS.games) CPS.games.setTokens(r.tokens_now);
           fx.confetti(120);
-          toast(r.toast, 'good');
+          toast('+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
           await refreshQuests();
           if (S.view === 'daily') renderDaily();
         } catch (err) { cloudError(err); b.disabled = false; }
@@ -2297,6 +2292,6 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder };
+    openModal: openModal, closeModal: closeModal, openTradeBuilder: openTradeBuilder };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
