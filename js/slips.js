@@ -48,7 +48,7 @@
     var tok = 0, tik = 0;
     (pulls || []).forEach(function (p) { if (p.tokens) tok += p.tokens; else if (p.ticket) tik++; });
     if (tok) C.S.gameTokens = (C.S.gameTokens || 0) + tok;
-    if (tik) { C.S.spins = (C.S.spins || 0) + tik; C.updateWheelGlow(); }
+    if (tik) { C.S.spins = (C.S.spins || 0) + tik; C.updateWheelBadge(); }
   }
 
   function summaryBits(o) {
