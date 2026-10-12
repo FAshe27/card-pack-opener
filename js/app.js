@@ -4,7 +4,6 @@
   var $ = U.$, $$ = U.$$, esc = U.esc;
 
   var CONFIG = {
-    starterPacks: 3,   // packs a player gets the first time they open a set
     recentMax: 36      // recent pulls kept in stats
   };
 
@@ -12,7 +11,7 @@
     player: null, set: null, view: 'packs', opening: null, dev: false,
     coll: { own: 'all', rarity: '', q: '', sort: 'rarity' },
     loadWarnings: [],
-    mode: 'locked',         // 'cloud' (logged in), 'locked' (login screen) or 'guest' (only when online play is off in js/config.js)
+    mode: 'locked',         // 'cloud' (logged in) or 'locked' (login screen) — the site is online-only
     account: null,          // cloud: {id, display_name, is_admin}
     onlineSets: [],         // cloud: set ids that exist on the server
     guestImported: false,
@@ -28,14 +27,14 @@
   function isCloud() { return S.mode === 'cloud'; }
   function isLocked() { return S.mode === 'locked'; }
   
-  function canAdminArea() { return isAdmin() || S.mode === 'guest'; }
+  function canAdminArea() { return isAdmin(); }
   function devOn() { return !!S.dev && canAdminArea(); } // Dev tools only ever show for admins (or offline mode)
   function isAdmin() { return isCloud() && S.account && S.account.is_admin; }
   function ps(set) {
     set = set || S.set;
     var p = S.player, st = p.sets[set.id];
     if (!st) {
-      st = p.sets[set.id] = { packs: S.mode === 'guest' ? CONFIG.starterPacks : 0, cards: {}, recent: [], created: Date.now(),
+      st = p.sets[set.id] = { packs: 0, cards: {}, recent: [], created: Date.now(),
         stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
       save();
     }
@@ -95,7 +94,7 @@
 
   /* --- online accounts */
   async function initAccount() {
-    if (!CPS.cloud.enabled) { await ensurePlayer(); S.mode = 'guest'; grantGuestDailySpin(); return; } // online play turned off in js/config.js
+    if (!CPS.cloud.enabled) { setLocked(); S.gate = { msg: "Can't reach the server right now. Please try again later.", retry: true }; return; }
     setLocked();
     if (!CPS.cloud.hasToken()) { S.gate = {}; return; }
     try {
@@ -187,27 +186,15 @@
     };
   }
 
-  async function ensurePlayer() {
-    var id = Store.getActivePlayerId(), p = id ? await Store.loadPlayer(id) : null;
-    if (!p) {
-      var list = await Store.listPlayers();
-      if (list.length) p = await Store.loadPlayer(list[0].id);
-      if (!p) p = await Store.createPlayer('Player 1');
-    }
-    p.sets = p.sets || {};
-    S.player = p; Store.setActivePlayerId(p.id);
-  }
-
   function applyPrefsUI() {
     document.body.classList.toggle('dev', devOn());
-    $('#adminTabBtn').textContent = S.mode === 'guest' ? 'Sets & Settings' : 'Admin';
+    $('#adminTabBtn').textContent = 'Admin';
     var dt = $('#devToggle'); if (dt) dt.checked = S.dev;
     var st = $('#soundToggle'); if (st) st.checked = audio.enabled;
     $('#soundBtn').textContent = audio.enabled ? '🔊' : '🔇';
     $('#playerName').textContent = S.player.name;
     $('#playerAvatar').textContent = (S.player.name.trim()[0] || 'P').toUpperCase();
     document.body.classList.toggle('cloud', isCloud());
-    document.body.classList.toggle('guest', S.mode === 'guest');
     document.body.classList.toggle('locked', isLocked());
     document.body.classList.toggle('online-enabled', CPS.cloud.enabled);
     document.body.classList.toggle('admin', !!isAdmin());
@@ -225,7 +212,7 @@
     var sets = (S.player && S.player.sets) || {};
     var st = sets[set.id];
     if (st) return st.packs;
-    return S.mode === 'guest' ? CONFIG.starterPacks : 0;
+    return 0;
   }
 
   function fillSetSelect() {
@@ -1527,37 +1514,9 @@
 
   function openPlayerModal() {
     if (isCloud()) return toggleAccountMenu();
-    if (isLocked()) return showGate({});
-    Store.listPlayers().then(function (list) {
-      var html = '<button class="modal-x" data-close aria-label="Close">×</button>' +
-        '<h2>Players on this device</h2>' +
-        '<p class="muted small">Online play is turned off, so collections stay in this browser. Each player has their own packs and cards.</p>' +
-        '<div class="player-list">' + list.map(function (p) {
-          var cur = p.id === S.player.id;
-          return '<div class="player-row' + (cur ? ' current' : '') + '"><span class="avatar">' + esc((p.name[0] || 'P').toUpperCase()) + '</span><b>' + esc(p.name) + '</b>' +
-            (cur ? '<span class="pill">Playing</span>' : '<button class="btn small" data-switch="' + esc(p.id) + '">Switch</button><button class="btn small ghost" data-del="' + esc(p.id) + '">Delete</button>') + '</div>';
-        }).join('') + '</div>' +
-        '<form class="row" id="renameForm"><input id="renameInput" value="' + esc(S.player.name) + '" maxlength="24" aria-label="Your name"><button class="btn small">Rename me</button></form>' +
-        '<form class="row" id="newPlayerForm"><input id="newPlayerInput" placeholder="New player name" maxlength="24"><button class="btn small">Add player</button></form>';
-      openModal(html, function (box) {
-        box.addEventListener('click', async function (e) {
-          var sw = e.target.closest('[data-switch]'), del = e.target.closest('[data-del]');
-          if (sw) { await switchPlayer(sw.dataset.switch); closeModal(); }
-          if (del && confirm('Delete this player and their collection?')) { await Store.deletePlayer(del.dataset.del); openPlayerModal(); }
-        });
-        $('#renameForm', box).addEventListener('submit', async function (e) {
-          e.preventDefault(); var v = $('#renameInput', box).value.trim(); if (!v) return;
-          S.player.name = v; await save(); applyPrefsUI(); openPlayerModal();
-        });
-        $('#newPlayerForm', box).addEventListener('submit', async function (e) {
-          e.preventDefault(); var v = $('#newPlayerInput', box).value.trim(); if (!v) return;
-          var p = await Store.createPlayer(v); await switchPlayer(p.id); closeModal(); toast('Welcome, ' + v + '!', 'good');
-        });
-      });
-    });
+    return showGate({});
   }
 
-  
   function showGate(opts) {
     opts = opts || {};
     var html = '<div class="login-box gate">' +
@@ -1633,12 +1592,12 @@
   function validPin(p) { return /^[0-9]{4}$/.test(p); }
 
   function renderAdminArea() {
-    var guest = S.mode === 'guest', unlocked = isAdmin() && !!S.dev;
-    $('#adminGate').classList.toggle('hidden', guest || unlocked || !isAdmin());
+    var unlocked = isAdmin() && !!S.dev;
+    $('#adminGate').classList.toggle('hidden', unlocked || !isAdmin());
     $('#adminBody').classList.toggle('hidden', !unlocked);
-    $('#setsArea').classList.toggle('hidden', !(guest || unlocked));
+    $('#setsArea').classList.toggle('hidden', !unlocked);
     if (unlocked) renderAdmin();
-    if (guest || unlocked) renderSets();
+    if (unlocked) renderSets();
   }
 
   async function renderAdmin() {
@@ -1767,25 +1726,6 @@
     S.player = p; Store.setActivePlayerId(id); applyPrefsUI(); resetStage(); renderView();
   }
 
-  function exportData() {
-    var data = { app: 'card-pack-sim', version: 1, exported: new Date().toISOString(), player: S.player };
-    U.download('collection-' + S.player.name.replace(/\W+/g, '_') + '.json', JSON.stringify(data, null, 2), 'application/json');
-  }
-  function importData(file) {
-    if (S.mode !== 'guest') { toast('Importing a backup only works when online play is turned off.', 'warn', 5000); return; }
-    var fr = new FileReader();
-    fr.onload = async function () {
-      try {
-        var data = JSON.parse(fr.result), p = data.player;
-        if (!p || !p.id || typeof p.sets !== 'object') throw new Error('Not a collection export');
-        var exists = await Store.loadPlayer(p.id);
-        if (exists && !confirm('Replace the existing "' + exists.name + '" on this device with the imported data?')) return;
-        await Store.savePlayer(p); await switchPlayer(p.id); toast('Imported ' + p.name + "'s collection.", 'good');
-      } catch (e) { toast('Import failed: ' + e.message, 'error'); }
-    };
-    fr.readAsText(file);
-  }
-
   /* --- dev mode lock */
   function requestDevUnlock() {
     var html = '<button class="modal-x" data-close aria-label="Close">×</button><h2>🔒 Unlock dev mode</h2>' +
@@ -1844,16 +1784,6 @@
     catch (e) { return new Date().toDateString(); }
   }
   
-  function grantGuestDailySpin() {
-    var p = S.player;
-    if (!p) return;
-    var today = chicagoToday();
-    if (p.lastDailySpin !== today && (p.spins || 0) < 10) {
-      p.lastDailySpin = today;
-      p.spins = (p.spins || 0) + 1;
-      save();
-    }
-  }
   function spinCount() {
     return isCloud() ? (S.spins || 0) : ((S.player && S.player.spins) || 0);
   }
@@ -2179,8 +2109,6 @@
       if (e.target.checked) { e.target.checked = S.dev; if (!S.dev) requestDevUnlock(); return; }
       S.dev = false; Store.setPref('dev', false); applyPrefsUI(); if (S.view === 'admin') renderView(); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
     });
-    var _exportBtn = $('#exportBtn'); if (_exportBtn) _exportBtn.addEventListener('click', exportData);
-    var _importDataFile = $('#importDataFile'); if (_importDataFile) _importDataFile.addEventListener('change', function (e) { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
     var _resetSetBtn = $('#resetSetBtn'); if (_resetSetBtn) _resetSetBtn.addEventListener('click', function () {
       if (isCloud()) { toast('Online progress can\'t be reset from here.', 'warn'); return; }
       if (!confirm('Reset all your packs, cards and stats in "' + S.set.name + '"?')) return;
