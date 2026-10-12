@@ -755,7 +755,19 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; border-radius: inherit; opacity: .5; mix-blend-mode: overlay;
   background-image: radial-gradient(rgba(255,255,255,.95) 1px, transparent 1.4px); background-size: 7cqw 7cqw; animation: twinkle 1.6s ease-in-out infinite;
 }
-.card.vt-oneofone::after { animation-duration: 2.5s; box-shadow: 0 0 18px rgba(255,210,102,.55); }
+/* One-of-One: solid gold */
+.card.vt-oneofone::after {
+  background: conic-gradient(#ffd700, #fff3b0, #ffb700, #ffdf5e, #ffd700, #fff3b0, #ffd700);
+  animation: gold-pulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 18px rgba(255,210,102,.55);
+}
+@keyframes gold-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
+.card.vt-oneofone .front::after {
+  background:
+    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.6), transparent 42%),
+    linear-gradient(115deg, transparent 15%, rgba(255,215,0,.55) 30%, rgba(255,243,176,.6) 45%, rgba(255,183,0,.5) 60%, transparent 80%);
+  background-size: 100% 100%, 200% 200%; animation: holo-fast 2.2s ease-in-out infinite;
+}
 /* Prism: crystalline ice-blue refraction */
 .card.vt-prism::after {
   background: conic-gradient(#a0e7ff, #ffffff, #7fd4ff, #d0f0ff, #a0e7ff, #ffffff, #a0e7ff);
