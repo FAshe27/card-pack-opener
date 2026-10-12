@@ -56,6 +56,23 @@
     });
   }
 
-  CPS.admintokens = { rowHTML: rowHTML, grant: grant, grantCredit: grantCredit, bindAll: bindAll };
+  function bindCreditAll() {
+    var btn = ctx.$('#gaCreditAllBtn');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', async function () {
+      var n = parseInt(ctx.$('#gaCreditAllN').value, 10);
+      if (!(n >= 1)) { ctx.toast('Pick an amount of Store Credit.', 'warn'); return; }
+      if (!confirm('Give $' + n + ' Store Credit to every non-admin player?')) return;
+      btn.disabled = true;
+      try {
+        var r = await CPS.cloud.call('admin_grant_credit_all', { p_credit: n });
+        ctx.toast('Gave $' + n + ' Store Credit to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        ctx.renderAdmin();
+      } catch (e) { ctx.cloudError(e); btn.disabled = false; }
+    });
+  }
+
+  CPS.admintokens = { rowHTML: rowHTML, grant: grant, grantCredit: grantCredit, bindAll: bindAll, bindCreditAll: bindCreditAll };
   // rowHTML(setOpts) renders the full grant-buttons block for an account row.
 })(window.CPS);
