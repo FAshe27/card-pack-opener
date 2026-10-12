@@ -1592,16 +1592,8 @@
     var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
       .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') +
       '<option value="jumbled">🎲 Jumbled Mess</option>';
-    $('#naSets').innerHTML = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
-      .map(function (x) { return '<label class="check"><input type="checkbox" value="' + esc(x.id) + '"' +
-        (x.id === S.set.id ? ' checked' : '') + '> ' + esc(x.name) + '</label>'; }).join('') ||
-      '<span class="muted small">(upload a set first)</span>';
-    $('#serverSets').innerHTML = window.CardSets.all().map(function (x) {
-      var on = S.onlineSets.indexOf(x.id) >= 0;
-      return '<div class="set-item">' + CPS.cards.swatch(x) +
-        '<div class="set-meta"><b>' + esc(x.name) + '</b><span>' + x.cards.length + ' cards · ' + (on ? 'on the server' : 'not on the server yet') + '</span></div>' +
-        '<div class="set-actions"><button class="btn small' + (on ? ' ghost' : ' primary') + '" data-sync="' + esc(x.id) + '">' + (on ? 'Re-sync' : 'Upload') + '</button></div></div>';
-    }).join('');
+
+
     $('#gaAllSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
     $('#acctList').innerHTML = '<div class="muted small">Loading…</div>';
     try {
@@ -1615,7 +1607,7 @@
           (x.has_pin === false ? ' <span class="pill r-chase">No PIN</span>' : '') + (x.is_me ? ' <span class="pill">You</span>' : '') +
           '<div class="muted small">username <b class="acct-user">' + esc(x.username || x.hint) + '</b> · packs ' + esc(packs) + ' · ' + (x.spins || 0) + ' spins (' + (x.spins_done || 0) + ' used) · ' + (x.tokens || 0) + ' tokens · ' + x.opened + ' opened · ' + x.unique_cards + ' unique · last login ' +
           (x.last_login_at ? new Date(x.last_login_at).toLocaleDateString() : 'never') + '</div></div></div>' +
-          CPS.admintokens.rowHTML(setOpts) +
+
           '<button class="btn small ghost" data-act="rename">Rename</button>' +
           '<button class="btn small ghost" data-act="reuser">Change username</button>' +
           '<button class="btn small ghost" data-act="pin">Reset PIN</button>' +
@@ -1703,10 +1695,9 @@
     if (!validPin(pin)) { toast('Enter a 4-digit PIN (or press Random).', 'warn'); $('#naPin').focus(); return; }
     btn.disabled = true;
     try {
-      var setIds = Array.prototype.filter.call(document.querySelectorAll('#naSets input[type=checkbox]'),
-        function (c) { return c.checked; }).map(function (c) { return c.value; });
+      var setIds = window.CardSets.all().filter(function (x) { return x.id !== 'jumbled' && S.onlineSets.indexOf(x.id) >= 0; }).map(function (x) { return x.id; });
       var r = await CPS.cloud.call('admin_create_account', { p_username: user, p_display_name: display, p_pin: pin,
-        p_start_packs: Math.max(0, parseInt($('#naPacks').value, 10) || 0), p_sets: setIds.length ? setIds : null, p_is_admin: $('#naAdmin').checked });
+        p_start_packs: Math.max(0, parseInt($('#naPacks').value, 10) || 0), p_sets: setIds, p_is_admin: $('#naAdmin').checked });
       showCreated(r.display_name, r.username || user, pin);
       toast('Created ' + r.display_name + ' with ' + r.packs + ' pack' + (r.packs === 1 ? '' : 's') +
         ' of ' + (r.set_ids || []).length + ' set' + ((r.set_ids || []).length === 1 ? '' : 's') + '.', 'good');
