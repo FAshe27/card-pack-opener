@@ -1366,3 +1366,8 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .market-toggle-btn { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); color: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; position: relative; }
 .market-toggle-btn.active { border-color: #f5b942; background: #1d1a12; color: #f5b942; }
 .market-toggle-btn .tab-badge { position: absolute; top: 8px; right: 12px; }
+
+/* All-sets collection mode */
+#allSetsBtn.active { background: #f5b942; color: #1a1a1a; border-color: #f5b942; }
+.allsets-setname { text-align: center; margin-top: 4px; font-size: .75rem; }
+.allsets-item { cursor: pointer; }
