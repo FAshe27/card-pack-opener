@@ -884,6 +884,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .tile span { color: var(--muted); font-size: .8rem; } .tile b { font-size: 1.4rem; }
 .tile.clickable { cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
 .tile.clickable:hover { border-color: var(--accent2); background: rgba(255,255,255,.07); transform: translateY(-1px); }
+.tile-hint { color: var(--accent2); font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .stat-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 12px; max-height: 70vh; overflow: auto; padding: 4px; }
 .stat-gallery-item { cursor: pointer; }
 .stat-gallery-item .card { width: 100%; }
