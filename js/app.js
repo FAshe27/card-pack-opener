@@ -1708,6 +1708,8 @@
         renderAdmin();
       } else if (act === 'granttokens') {
         await CPS.admintokens.grant(row, id, name);
+      } else if (act === 'grantcredit') {
+        await CPS.admintokens.grantCredit(row, id, name);
       } else if (act === 'rename') {
         var nn = prompt('New display name for ' + name + ':', name); if (!nn || !nn.trim()) return;
         await CPS.cloud.call('admin_update_account', { p_account: id, p_display_name: nn.trim() });
