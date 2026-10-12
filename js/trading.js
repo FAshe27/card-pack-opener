@@ -159,13 +159,14 @@
 
   /* ------------------------------------------------------------ detail */
   function offerCardLines(c) {
-    var s = setObj(c.set_id), card = s && s.byId.get(c.card_id);
-    var name = esc(card ? card.name : (c.card_id || 'card'));
+    var sid = c.set_id || c.set, cid = c.card_id || c.card;
+    var s = setObj(sid), card = s && s.byId.get(cid);
+    var name = esc(card ? card.name : (cid || 'card'));
     var extra = '';
     if (c.tier) extra = ' <span class="pill r-' + esc((card && card.rarity) || '') + '">' + esc(variantLabel(c.tier, c.serial)) + '</span>';
     else if (c.holo) extra = ' ✦ holo';
     return '<span class="trade-offer-line">🃏 <b>' + name + '</b>' + extra +
-      ' <span class="muted">(' + esc(s ? s.name : c.set_id) + ')</span></span>';
+      ' <span class="muted">(' + esc(s ? s.name : sid) + ')</span></span>';
   }
 
   function offerLines(o) {
