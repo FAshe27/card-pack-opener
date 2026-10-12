@@ -123,18 +123,22 @@
     return { a0: 0, a1: TAU };
   }
 
-  function draw(canvas, wheel, rotation, highlightKey) {
-    var ctx = canvas.getContext('2d');
+  /* Paint the wheel face (segments + labels + rim + hub) once at rotation 0
+     into an offscreen canvas. Spins then just rotate this bitmap per frame
+     instead of re-rendering ~30 shadowed text labels 60x/second. */
+  function paintFace(canvas, wheel) {
     var W = canvas.width, H = canvas.height, cx = W / 2, cy = H / 2;
     var R = Math.min(W, H) / 2 - 10;
-    ctx.clearRect(0, 0, W, H);
+    var off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    var ctx = off.getContext('2d');
     var segs = wheel.segments;
     var total = segs.reduce(function (a, s) { return a + s.weight; }, 0) || 1;
     var acc = 0;
     segs.forEach(function (sg) {
-      var a0 = rotation + (acc / total) * TAU - Math.PI / 2;
+      var a0 = (acc / total) * TAU - Math.PI / 2;
       acc += sg.weight;
-      var a1 = rotation + (acc / total) * TAU - Math.PI / 2;
+      var a1 = (acc / total) * TAU - Math.PI / 2;
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, R, a0, a1);
@@ -166,11 +170,35 @@
     ctx.fillStyle = '#ffe08a';
     ctx.font = '700 22px system-ui, sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('★', cx, cy + 1);
+    ctx.fillText('\u2605', cx, cy + 1);
+    return off;
+  }
+
+  function faceFor(canvas, wheel) {
+    if (canvas._faceCvs && canvas._faceWheel === wheel &&
+        canvas._faceW === canvas.width && canvas._faceH === canvas.height) {
+      return canvas._faceCvs;
+    }
+    var off = paintFace(canvas, wheel);
+    canvas._faceCvs = off; canvas._faceWheel = wheel;
+    canvas._faceW = canvas.width; canvas._faceH = canvas.height;
+    return off;
+  }
+
+  function draw(canvas, wheel, rotation, highlightKey) {
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height, cx = W / 2, cy = H / 2;
+    var R = Math.min(W, H) / 2 - 10;
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rotation || 0);
+    ctx.drawImage(faceFor(canvas, wheel), -cx, -cy);
+    ctx.restore();
     if (highlightKey) {
       var sp = segSpan(wheel, highlightKey);
       var ha0 = rotation + sp.a0 - Math.PI / 2, ha1 = rotation + sp.a1 - Math.PI / 2;
-      var hubR = 34; /* must match the hub drawn above: stroke the wedge from the hub edge out */
+      var hubR = 34; /* must match the hub drawn in paintFace: stroke the wedge from the hub edge out */
       ctx.beginPath();
       ctx.moveTo(cx + Math.cos(ha0) * hubR, cy + Math.sin(ha0) * hubR);
       ctx.arc(cx, cy, R, ha0, ha1);
