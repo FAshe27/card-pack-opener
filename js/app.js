@@ -10,7 +10,7 @@
 
   var S = {
     player: null, set: null, view: 'packs', opening: null, dev: false,
-    coll: { own: 'all', rarity: '', q: '', sort: 'rarity', allSets: false },
+    coll: { own: 'all', rarity: '', q: '', sort: 'rarity' },
     loadWarnings: [],
     mode: 'locked',         // 'cloud' (logged in), 'locked' (login screen) or 'guest' (only when online play is off in js/config.js)
     account: null,          // cloud: {id, display_name, is_admin}
@@ -602,10 +602,6 @@
   /* --- collection */
   function renderCollection() {
     var set = S.set, st = ps(), f = S.coll;
-    var asbC = $('#allSetsChasesBtn'), asbN = $('#allSetsNumberedBtn');
-    if (asbC) asbC.classList.toggle('active', f.allSets === 'chases');
-    if (asbN) asbN.classList.toggle('active', f.allSets === 'numbered');
-    if (f.allSets && CPS.allsets) { CPS.allsets.render(f.allSets); return; }
 
     if (set.id === 'jumbled') {
       $('#compTitle').textContent = 'Jumbled Mess';
@@ -2115,9 +2111,6 @@
       var c = e.target.closest('[data-trade-cancel]');
       if (c) cancelTrade(c.dataset.tradeCancel);
     });
-    var asbC2 = $('#allSetsChasesBtn'), asbN2 = $('#allSetsNumberedBtn');
-    if (asbC2) asbC2.addEventListener('click', function () { S.coll.allSets = S.coll.allSets === 'chases' ? false : 'chases'; renderCollection(); });
-    if (asbN2) asbN2.addEventListener('click', function () { S.coll.allSets = S.coll.allSets === 'numbered' ? false : 'numbered'; renderCollection(); });
     $('#collOwn').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       S.coll.own = b.dataset.own;
@@ -2300,6 +2293,6 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, isFav: isFav };
+    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
