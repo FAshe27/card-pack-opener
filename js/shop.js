@@ -168,7 +168,7 @@
     var box = $('#shopDupeSell', el);
     if (box) {
       box.innerHTML = '<h3>💰 Sell your dupes to the shop</h3>' +
-        '<p class="muted small">Trade duplicate cards for Store Credit. Rates are the same across all sets.</p>' +
+        '<p class="muted small">Sell full batches of duplicates for Store Credit: 20 Commons = $1 \u00b7 12 Uncommons = $1 \u00b7 6 Rares = $1 \u00b7 4 Epic or better = $1. The counter shows dupes you have / dupes per $1.</p>' +
         '<div class="tradein-rows">' + rows + '</div>';
       box.querySelectorAll('[data-dupe-sell]').forEach(function (btn) {
         btn.addEventListener('click', async function () {
