@@ -534,53 +534,6 @@
     renderPacksSide();
   }
 
-  async function redeem(e) {
-    e.preventDefault();
-    var input = $('#codeInput'), raw = input.value.trim();
-    if (!raw) return;
-    if (isLocked()) { showGate({}); return; }
-    if (isCloud()) {
-      var btn = $('#redeemForm button'); btn.disabled = true;
-      try {
-        var r = await CPS.cloud.call('redeem_code', { p_code: raw });
-        var rs = window.CardSets.get(r.set_id);
-        if (rs) ps(rs).packs = r.packs_now;
-        input.value = ''; audio.coin();
-        var otherSet = r.set_id !== S.set.id, busyOpen = S.opening && !S.opening.finished;
-        toast('+' + r.packs + ' pack' + (r.packs === 1 ? '' : 's') + ' added to ' + (r.set_name || r.set_id) + '!' +
-          (otherSet && rs ? (busyOpen ? ' Switch sets to open them.' : ' Switched to that set.') : ''), 'good', 4500);
-        if (otherSet && rs && !busyOpen) selectSet(r.set_id);
-        renderPacksSide(); if (!S.opening) resetStage();
-        var cc = fx.center($('#invPack'));
-        fx.burst(cc.x, cc.y, { count: 40, colors: ['#ffe08a', '#fff'], speed: 6, shape: 'star', size: 2 });
-      } catch (err) {
-        input.classList.add('bad'); setTimeout(function () { input.classList.remove('bad'); }, 500);
-        cloudError(err);
-      } finally { btn.disabled = false; }
-      return;
-    }
-    var res = window.CPSCodes.validate(raw, window.CardSets.ids());
-    if (!res) {
-      toast("That code isn't valid. Check for typos.", 'error'); audio.error();
-      input.classList.add('bad'); setTimeout(function () { input.classList.remove('bad'); }, 500);
-      return;
-    }
-    if (await Store.isCodeRedeemed(res.code)) { toast('That code was already redeemed.', 'warn'); audio.error(); return; }
-    var set = window.CardSets.get(res.setId);
-    ps(set).packs += res.packs;
-    await Store.markCodeRedeemed(res.code, S.player.id);
-    await save();
-    input.value = '';
-    audio.coin();
-    var other = set.id !== S.set.id, busy = S.opening && !S.opening.finished;
-    toast('+' + res.packs + ' pack' + (res.packs === 1 ? '' : 's') + ' added to ' + set.name + '!' +
-      (other ? (busy ? ' Switch sets to open them.' : ' Switched to that set.') : ''), 'good', 4500);
-    if (other && !busy) selectSet(set.id);
-    renderPacksSide();
-    if (!S.opening) resetStage();
-    var c = fx.center($('#invPack'));
-    fx.burst(c.x, c.y, { count: 40, colors: ['#ffe08a', '#fff', set.theme.primary], speed: 6, shape: 'star', size: 2 });
-  }
 
   async function addFree(n) {
     if (isLocked()) { showGate({}); return; }
@@ -1458,7 +1411,7 @@
 
   /* --- sets & settings */
   function fillGenSet() {
-    var sel = $('#genSet'), keep = sel.value;
+    var sel = $('#genSet'); if (!sel) return; var keep = sel.value;
     sel.innerHTML = window.CardSets.all().map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + (s.source === 'imported' ? ' (imported)' : '') + '</option>';
     }).join('');
@@ -1613,16 +1566,6 @@
   }
 
   /* --- admin (online) */
-  async function generateServerCodes(gset, packs, n, uses) {
-    if (!isAdmin()) { toast('Prize codes for online accounts need an admin login.', 'warn'); return; }
-    if (S.onlineSets.indexOf(gset.id) < 0) { toast('"' + gset.name + '" isn\'t on the server yet. Upload it from the Admin tab first.', 'warn', 5000); return; }
-    try {
-      var codes = await CPS.cloud.call('admin_generate_codes', { p_set: gset.id, p_packs: packs, p_count: n, p_max_uses: uses, p_note: $('#genNote').value.trim() || null });
-      $('#genOut').value = '# ' + codes.length + ' server code' + (codes.length === 1 ? '' : 's') + ' for ' + gset.name + ' (' + packs + ' pack' + (packs === 1 ? '' : 's') + ' each, ' +
-        (uses === 1 ? 'single use' : 'up to ' + uses + ' players') + ')\n' + codes.join('\n');
-      toast('Generated ' + codes.length + ' code' + (codes.length === 1 ? '' : 's') + '.', 'good');
-    } catch (e) { cloudError(e); }
-  }
 
   /* Usernames aren't secret any more: suggest one from the display name. */
   function suggestUsername(name) {
@@ -1660,10 +1603,8 @@
     }).join('');
     $('#gaAllSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
     $('#acctList').innerHTML = '<div class="muted small">Loading…</div>';
-    $('#codeList').innerHTML = '<div class="muted small">Loading…</div>';
     try {
-      var res = await Promise.all([CPS.cloud.call('admin_list_accounts'), CPS.cloud.call('admin_list_codes', { p_limit: 60 })]);
-      var accts = res[0], codes = res[1];
+      var accts = await CPS.cloud.call('admin_list_accounts');
       $('#acctList').innerHTML = accts.map(function (x) {
         var packs = Object.keys(x.packs || {}).map(function (k) { var st = window.CardSets.get(k); return (st ? st.code : k) + ' ' + x.packs[k]; }).join(', ') || '0';
         return '<div class="acct-row' + (x.disabled ? ' disabled' : '') + '" data-acct="' + esc(x.id) + '" data-name="' + esc(x.display_name) + '">' +
@@ -1680,12 +1621,6 @@
           (x.is_me ? '' : '<button class="btn small ghost" data-act="' + (x.disabled ? 'enable' : 'disable') + '">' + (x.disabled ? 'Enable' : 'Disable') + '</button>' +
             '<button class="btn small ghost danger-text" data-act="delete">Delete</button>') + '</div></div>';
       }).join('') || '<div class="empty">No accounts yet.</div>';
-      $('#codeList').innerHTML = codes.length ? '<div class="table-wrap"><table class="odds-table codes-table"><thead><tr><th>Code</th><th>Set</th><th>Packs</th><th>Used</th><th>Redeemed by</th><th>Note</th><th>Created</th></tr></thead><tbody>' +
-        codes.map(function (c) {
-          var st = window.CardSets.get(c.set_id);
-          return '<tr><td><code>' + esc(c.code) + '</code></td><td>' + esc(st ? st.name : c.set_id) + '</td><td>' + c.packs + '</td><td>' + c.uses + ' / ' + c.max_uses + '</td><td>' +
-            esc((c.redeemed_by || []).join(', ') || '—') + '</td><td>' + esc(c.note || '') + '</td><td>' + new Date(c.created_at).toLocaleDateString() + '</td></tr>';
-        }).join('') + '</tbody></table></div>' : '<div class="empty">No codes yet. Make some in Sets &amp; Settings → Prize code generator.</div>';
     } catch (e) { cloudError(e); }
   }
 
@@ -2050,7 +1985,6 @@
       if (!c.classList.contains('flipped')) reveal(+c.dataset.i);
       else if (!c.dataset.ticket && !c.dataset.tokens) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
     });
-    $('#redeemForm').addEventListener('submit', redeem);
     $('#freePackBtn').addEventListener('click', function () { addFree(1); });
     $('#adminUnlockBtn').addEventListener('click', requestDevUnlock);
     $('#invPack').addEventListener('click', openFromPack);
@@ -2191,19 +2125,11 @@
     });
     $('#exportBtn').addEventListener('click', exportData);
     $('#importDataFile').addEventListener('change', function (e) { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
-    $('#genBtn').addEventListener('click', function () {
-      var n = Math.min(100, Math.max(1, +$('#genCount').value || 1)), packs = Math.min(99, Math.max(1, +$('#genPacks').value || 1)), out = [];
-      var gset = window.CardSets.get($('#genSet').value) || S.set;
-      if (isCloud()) { generateServerCodes(gset, packs, n, Math.max(1, +$('#genUses').value || 1)); return; }
-      for (var i = 0; i < n; i++) out.push(window.CPSCodes.make(gset.id, packs));
-      $('#genOut').value = '# ' + n + ' code' + (n === 1 ? '' : 's') + ' for ' + gset.name + ' (' + packs + ' pack' + (packs === 1 ? '' : 's') + ' each)\n' + out.join('\n');
-    });
     $('#resetSetBtn').addEventListener('click', function () {
       if (isCloud()) { toast('Online progress can\'t be reset from here.', 'warn'); return; }
       if (!confirm('Reset all your packs, cards and stats in "' + S.set.name + '"?')) return;
       delete S.player.sets[S.set.id]; save(); resetStage(); renderView(); toast('Progress reset.', 'warn');
     });
-    $('#genSet').addEventListener('change', function () { S.genSetTouched = true; });
     $('#playerBtn').addEventListener('click', openPlayerModal);
     $('#newAcctForm').addEventListener('submit', createAccount);
     $('#naSuggest').addEventListener('click', function () { $('#naUser').value = suggestUsername($('#naName').value); });
