@@ -27,7 +27,7 @@
   function packVisual(setId) {
     var s = window.CardSets.get(setId);
     if (!s || !CPS.cards.pack) return '<div class="shop-pack"><span>' + esc(setId) + '</span></div>';
-    return CPS.cards.pack(s, 'shop-pack-size');
+    return '<div class="shop-pack-wrap">' + CPS.cards.pack(s, 'mini') + '</div>';
   }
 
   async function render(el) {
@@ -70,14 +70,7 @@
       '<div class="shop-restock muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
-      '<div class="panel shop-info-box"><h3>ℹ️ How it works</h3>' +
-      '<ul class="shop-info-list">' +
-      '<li>Restocks at <b>midnight</b> and <b>noon</b> (Chicago time).</li>' +
-      '<li>Everyone sees the <b>same 3 packs</b> — limits are per-player.</li>' +
-      '<li>Slots 1 & 2: <b>$5</b>, unlimited buys, never Jumbled.</li>' +
-      '<li>Slot 3 (Deal): <b>$2</b>, max 3 per restock, can be Jumbled.</li>' +
-      '<li>Mystery: <b>$1</b>, 1 per restock, revealed when you buy.</li>' +
-      '</ul></div>' +
+
       '<div class="panel shop-hist-box" id="shopHistBox"><h3>🧾 Purchase history</h3><span class="muted small">Tap to view</span></div>';
 
     $('#shopHistBox', el).addEventListener('click', function () {
