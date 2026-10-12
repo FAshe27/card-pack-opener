@@ -45,12 +45,21 @@
     btn.dataset.bound = '1';
     btn.addEventListener('click', async function () {
       var n = parseInt(ctx.$('#gaTokenAllN').value, 10);
+      var whoSel = ctx.$('#grantTokensWho');
+      var who = whoSel ? whoSel.value : 'everyone';
       if (!(n >= 1)) { ctx.toast('Pick a number of game tokens.', 'warn'); return; }
-      if (!confirm('Give ' + n + ' game token' + (n === 1 ? '' : 's') + ' to every non-admin player?')) return;
+      var whoName = who === 'everyone' ? 'every non-admin player' : (whoSel.selectedOptions[0].textContent || 'player');
+      if (!confirm('Give ' + n + ' game token' + (n === 1 ? '' : 's') + ' to ' + whoName + '?')) return;
       btn.disabled = true;
       try {
-        var r = await CPS.cloud.call('admin_grant_tokens_all', { p_tokens: n });
-        ctx.toast('Gave ' + n + ' game token' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        var r;
+        if (who === 'everyone') {
+          r = await CPS.cloud.call('admin_grant_tokens_all', { p_tokens: n });
+          ctx.toast('Gave ' + n + ' game token' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        } else {
+          r = await CPS.cloud.call('admin_grant_tokens', { p_account: who, p_tokens: n });
+          ctx.toast('Gave ' + n + ' game token' + (n === 1 ? '' : 's') + ' to ' + whoName + '.', 'good');
+        }
         ctx.renderAdmin();
       } catch (e) { ctx.cloudError(e); btn.disabled = false; }
     });
@@ -62,12 +71,21 @@
     btn.dataset.bound = '1';
     btn.addEventListener('click', async function () {
       var n = parseInt(ctx.$('#gaCreditAllN').value, 10);
+      var whoSel = ctx.$('#grantCreditWho');
+      var who = whoSel ? whoSel.value : 'everyone';
       if (!(n >= 1)) { ctx.toast('Pick an amount of Store Credit.', 'warn'); return; }
-      if (!confirm('Give $' + n + ' Store Credit to every non-admin player?')) return;
+      var whoName = who === 'everyone' ? 'every non-admin player' : (whoSel.selectedOptions[0].textContent || 'player');
+      if (!confirm('Give $' + n + ' Store Credit to ' + whoName + '?')) return;
       btn.disabled = true;
       try {
-        var r = await CPS.cloud.call('admin_grant_credit_all', { p_credit: n });
-        ctx.toast('Gave $' + n + ' Store Credit to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        var r;
+        if (who === 'everyone') {
+          r = await CPS.cloud.call('admin_grant_credit_all', { p_credit: n });
+          ctx.toast('Gave $' + n + ' Store Credit to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        } else {
+          r = await CPS.cloud.call('admin_grant_credit', { p_account: who, p_credit: n });
+          ctx.toast('Gave $' + n + ' Store Credit to ' + whoName + '.', 'good');
+        }
         ctx.renderAdmin();
       } catch (e) { ctx.cloudError(e); btn.disabled = false; }
     });
