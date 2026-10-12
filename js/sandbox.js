@@ -29,7 +29,7 @@
 
   var ITEMS = [
     { id: 'shop', title: 'Shop', blurb: 'Rotating pack stock for Store Credit. Restocks at midnight/noon.',
-      status: 'testing',
+      status: 'public', after: 'collection',
       render: function (el) { CPS.shop.render(el); },
       teardown: function () { CPS.shop.teardown(); } },
   ];
@@ -131,7 +131,11 @@
       b.addEventListener('click', function () {
         if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView(view);
       });
-      nav.insertBefore(b, sandboxBtn); // public tabs sit ahead of the Sandbox tab
+      // position: 'after' places the tab after a specific view; default is ahead of Sandbox
+      var afterBtn = it.after ? nav.querySelector('[data-view="' + it.after + '"]') : null;
+      if (afterBtn && afterBtn.nextSibling) nav.insertBefore(b, afterBtn.nextSibling);
+      else if (afterBtn) nav.appendChild(b);
+      else nav.insertBefore(b, sandboxBtn); // public tabs sit ahead of the Sandbox tab
     }
     if (main && !document.getElementById('view-' + view)) {
       var sec = document.createElement('section');
