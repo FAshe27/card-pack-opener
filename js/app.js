@@ -2222,6 +2222,7 @@
       } catch (e) { cloudError(e); btn.disabled = false; }
     });
     CPS.admintokens.bindAll();
+    CPS.admintokens.bindCreditAll();
     $('#gaAllBtn').addEventListener('click', async function () {
       var sid = $('#gaAllSet').value, n = parseInt($('#gaAllN').value, 10);
       if (!sid || !(n >= 1)) { toast('Pick a set and a number of packs.', 'warn'); return; }
