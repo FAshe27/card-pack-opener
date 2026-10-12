@@ -233,29 +233,50 @@
     sets.sort(function (a, b) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     });
-    function opt(s) {
-      var n = packCount(s), cur = s.id === S.set.id, cls = (n > 0 ? 'has-packs' : '') + (cur ? ' is-current' : '');
-      var mark = (cur ? '\u2192 ' : '') + (n > 0 ? '\u25CF ' : '');
-      return '<option value="' + esc(s.id) + '"' + (cur ? ' selected' : '') + (cls ? ' class="' + cls.trim() + '"' : '') + '>' +
-        mark + esc(s.name) + (n > 0 ? ' (' + n + ')' : '') + '</option>';
+    function item(s) {
+      var n = packCount(s), cur = s.id === S.set.id;
+      return '<button type="button" class="set-dd-item' + (cur ? ' is-current' : '') + (n > 0 ? ' has-packs' : '') + '" role="option" aria-selected="' + cur + '" data-set-id="' + esc(s.id) + '">' +
+        '<span class="set-dd-name">' + (cur ? '\u2192 ' : '') + esc(s.name) + '</span>' +
+        (n > 0 ? '<span class="set-dd-count">\u25CF ' + n + '</span>' : '') + '</button>';
     }
     var withPacks = sets.filter(function (s) { return packCount(s) > 0; });
     var without = sets.filter(function (s) { return packCount(s) <= 0; });
-    var html;
-    if (withPacks.length && without.length) {
-      html = '<optgroup label="Available Packs">' + withPacks.map(opt).join('') + '</optgroup>' +
-             '<optgroup label="No packs">' + without.map(opt).join('') + '</optgroup>';
-    } else {
-      html = sets.map(opt).join('');
+    var html = '';
+    if (withPacks.length) html += '<div class="set-dd-group">Available Packs</div>' + withPacks.map(item).join('');
+    if (without.length) html += '<div class="set-dd-group">No packs</div>' + without.map(item).join('');
+    if (!html) html = sets.map(item).join('');
+    var list = $('#setDDList'); if (list) list.innerHTML = html;
+    var lbl = $('#setDDLabel');
+    if (lbl && S.set) {
+      var cn = packCount(S.set);
+      lbl.textContent = S.set.name + (cn > 0 ? ' (' + cn + ')' : '');
     }
-    $('#setSelect').innerHTML = html;
+  }
+
+  function closeSetDD() {
+    var list = $('#setDDList'), btn = $('#setDDBtn');
+    if (list) list.classList.add('hidden');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  }
+  function toggleSetDD() {
+    var list = $('#setDDList'), btn = $('#setDDBtn');
+    if (!list || !btn) return;
+    var opening = list.classList.contains('hidden');
+    if (opening) {
+      fillSetSelect(); // fresh counts, always rendered from the top
+      list.classList.remove('hidden');
+      list.scrollTop = 0;
+      btn.setAttribute('aria-expanded', 'true');
+      var cur = list.querySelector('.set-dd-item.is-current');
+      if (cur) { cur.focus({ preventScroll: true }); list.scrollTop = 0; }
+    } else closeSetDD();
   }
 
   function selectSet(id) {
     var set = id === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : window.CardSets.get(id);
     if (!set) return;
     S.set = set; Store.setPref('set', id);
-    $('#setSelect').value = id;
+    closeSetDD();
     S.coll.rarity = '';
     resetStage(); renderPacksSide(); renderView();
   }
@@ -1941,7 +1962,13 @@
     if (CPS.market) CPS.market.init();
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
-    $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
+    var _ddBtn = $('#setDDBtn'); if (_ddBtn) _ddBtn.addEventListener('click', function (e) { e.stopPropagation(); toggleSetDD(); });
+    var _ddList = $('#setDDList'); if (_ddList) _ddList.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-set-id]'); if (!b) return;
+      selectSet(b.getAttribute('data-set-id'));
+    });
+    document.addEventListener('click', function (e) { if (!e.target.closest('#setDD')) closeSetDD(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSetDD(); });
     $('#openBtn').addEventListener('click', startOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
     $('#autoSpinBtn').addEventListener('click', function () {
