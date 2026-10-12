@@ -182,7 +182,7 @@
       '<div class="pack-body"><div class="pack-shine"></div>' +
       '<div class="pack-emblem">' + esc(set.pack.emblem || '✦') + '</div>' +
       '<div class="pack-name">' + esc(set.name) + '</div>' +
-      '<div class="pack-sub">' + esc(set.pack.name) + ' · ' + set.pack.size + ' cards</div>' +
+      '<div class="pack-sub">' + set.pack.size + ' cards</div>' +
       '<div class="crimp bottom"></div></div></div>';
   }
 
