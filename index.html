@@ -105,19 +105,13 @@
         </div>
         <div class="rarity-progress" id="rarityProgress"></div>
       </div>
-      <div class="panel tradein collapsible" id="tradeinPanel">
-        <h2 class="tradein-head"><span>🔁 Trade duplicates from this set for a pack of this set</span><span class="muted small">Keeps one copy · numbered cards never traded</span></h2>
-        <div class="tradein-rows" id="tradeinRows"></div>
-      </div>
-      <div class="panel tradein collapsible" id="ticketPanel">
-        <h2 class="tradein-head"><span>🎟️ Trade duplicates from across all sets for spin tickets</span><span class="muted small">Numbered cards never traded</span></h2>
-        <div class="tradein-rows" id="ticketRows"></div>
-      </div>
+
       <div class="panel filters">
         <input id="collSearch" type="search" placeholder="Search name, number, details…">
         <select id="collRarity"><option value="">All rarities</option></select>
         <div class="seg" id="collOwn">
           <button data-own="all" class="active">All</button>
+          <button id="allSetsBtn">All sets</button>
           <button data-own="owned">Owned</button>
           <button data-own="missing">Missing</button>
           <button data-own="dupes">Duplicates</button>
@@ -137,6 +131,14 @@
       <div class="panel variants-panel hidden" id="variantsPanel">
         <div class="tradein-head"><h3>🌈 Numbered variants</h3><span class="muted small" id="variantsCount"></span></div>
         <div class="coll-grid variants-grid" id="variantsGrid"></div>
+      </div>
+      <div class="panel tradein collapsible collapsed" id="tradeinPanel">
+        <h2 class="tradein-head"><span>🔁 Trade duplicates from this set for a pack of this set</span><span class="muted small">Keeps one copy · numbered cards never traded</span></h2>
+        <div class="tradein-rows" id="tradeinRows"></div>
+      </div>
+      <div class="panel tradein collapsible collapsed" id="ticketPanel">
+        <h2 class="tradein-head"><span>🎟️ Trade duplicates from across all sets for spin tickets</span><span class="muted small">Numbered cards never traded</span></h2>
+        <div class="tradein-rows" id="ticketRows"></div>
       </div>
     </section>
 
@@ -408,6 +410,7 @@
   <script src="js/bounties.js"></script>
   <script src="js/trading.js"></script>
   <script src="js/market.js"></script>
+  <script src="js/allsets.js"></script>
   <script src="js/sandbox.js"></script>
   <script src="js/slots.js"></script>
 </body>
