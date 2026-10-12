@@ -1477,7 +1477,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .vault-title { width: 100%; font-weight: 800; font-size: .85rem; color: #f5b942; }
 .turnin-btn { margin-top: 10px; border-color: rgba(52,211,153,.5); color: #4ade80; }
 .confirm-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
-.coll-actions { text-align: right; margin: 0 0 10px; }
+.coll-actions { text-align: right; margin: 0 0 10px; gap: 8px; }
 
 /* --- account menu (header chip dropdown) --- */
 .acct-menu { position: fixed; z-index: 300; min-width: 196px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 6px; box-shadow: 0 14px 34px rgba(0,0,0,.45); display: flex; flex-direction: column; gap: 2px; }
