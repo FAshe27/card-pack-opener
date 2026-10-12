@@ -14,8 +14,8 @@
     var pct = total ? owned / total : 0;
     $('#compRing').style.setProperty('--p', (pct * 100).toFixed(1));
     $('#compPct').textContent = (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%';
-    $('#compTitle').textContent = 'All Sets';
-    $('#compSub').textContent = owned + ' / ' + total + ' unique · ' + copies + ' copies · ' + holoU + ' holo';
+    $('#compTitle').textContent = 'Owned Across All Sets';
+    $('#compSub').textContent = owned + ' unique cards · ' + copies + ' total copies · ' + holoU + ' holo';
     $('#rarityProgress').innerHTML = '';
     var sel = $('#collRarity');
     sel.innerHTML = '<option value="">All rarities</option>' + R.RARITIES.map(function (r) { return '<option value="' + r.key + '">' + r.label + '</option>'; }).join('');
@@ -25,16 +25,11 @@
     sets.forEach(function (s) {
       s.cards.forEach(function (c) {
         var e = st.cards[c.id], has = e && e.n > 0;
+        if (!has) return; // owned only
         if (f.rarity && c.rarity !== f.rarity) return;
-        if (f.own === 'owned' && !has) return;
-        if (f.own === 'missing' && has) return;
-        if (f.own === 'dupes' && !(e && e.n > 1)) return;
-        if (f.own === 'holo' && !(e && e.h > 0)) return;
+        if (f.own === 'dupes' && !(e.n > 1)) return;
+        if (f.own === 'holo' && !(e.h > 0)) return;
         if (f.own === 'fav' && !ctx.isFav(s.id, c.id)) return;
-        if (f.own === 'numbered') {
-          var hasV = (S.myVariants || []).some(function (v) { return v.set_id === s.id && v.card_id === c.id; });
-          if (!hasV) return;
-        }
         if (q) {
           var hay = c.name + ' ' + c.subtitle + ' ' + c.details + ' #' + c.num + ' ' + c.rarity + ' ' + s.name;
           if (hay.toLowerCase().indexOf(q) < 0) return;
