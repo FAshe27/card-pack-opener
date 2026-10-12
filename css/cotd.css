@@ -16,4 +16,7 @@
 .cotd-unfound { margin: 8px 0 0; color: var(--muted); font-style: italic; }
 .cotd-claimed { margin: 10px 0 0; color: #38c97f; font-weight: 700; }
 
+/* Constrain the modal box width for CotD — otherwise it stretches to 760px */
+.modal-box:has(.cotd-modal) { max-width: 440px; }
+
 /* The button is a fixed-size icon-btn, so no narrow-screen overrides are needed. */
