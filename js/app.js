@@ -199,8 +199,8 @@
   function applyPrefsUI() {
     document.body.classList.toggle('dev', devOn());
     $('#adminTabBtn').textContent = S.mode === 'guest' ? 'Sets & Settings' : 'Admin';
-    $('#devToggle').checked = S.dev;
-    $('#soundToggle').checked = audio.enabled;
+    var dt = $('#devToggle'); if (dt) dt.checked = S.dev;
+    var st = $('#soundToggle'); if (st) st.checked = audio.enabled;
     $('#soundBtn').textContent = audio.enabled ? '🔊' : '🔇';
     $('#playerName').textContent = S.player.name;
     $('#playerAvatar').textContent = (S.player.name.trim()[0] || 'P').toUpperCase();
@@ -2110,7 +2110,7 @@
         } catch (err) { cloudError(err); sy.disabled = false; sy.textContent = 'Retry'; }
       }
     });
-    $('#impFile').addEventListener('change', function (e) {
+    var _impFile = $('#impFile'); if (_impFile) _impFile.addEventListener('change', function (e) {
       var f = e.target.files[0]; if (!f) return;
       var fr = new FileReader();
       fr.onload = function () {
@@ -2120,32 +2120,32 @@
       };
       fr.readAsText(f);
     });
-    $('#impPreview').addEventListener('click', importPreview);
-    $('#impAdd').addEventListener('click', async function () {
+    var _impPreview = $('#impPreview'); if (_impPreview) _impPreview.addEventListener('click', importPreview);
+    var _impAdd = $('#impAdd'); if (_impAdd) _impAdd.addEventListener('click', async function () {
       var res = importPreview(); if (!res || !res.preview) return;
       await Store.saveCustomSet(res.set);
       window.CardSets.register(res.set, 'imported');
       fillSetSelect(); selectSet(res.set.id); renderSets();
       toast('Added "' + res.set.name + '" (' + res.set.cards.length + ' cards).', 'good');
     });
-    $('#impDownload').addEventListener('click', function () {
+    var _impDownload = $('#impDownload'); if (_impDownload) _impDownload.addEventListener('click', function () {
       var res = importPreview(); if (!res || !res.preview) return;
       U.download(res.set.id + '.js', window.CPSCsv.toJsFile(res.set), 'text/javascript');
       toast('Saved ' + res.set.id + '.js. Put it in sets/ and add it to sets/manifest.js.', 'good', 6000);
     });
-    $('#soundToggle').addEventListener('change', function (e) { audio.enabled = e.target.checked; Store.setPref('sound', audio.enabled); applyPrefsUI(); });
+    var _soundToggle = $('#soundToggle'); if (_soundToggle) _soundToggle.addEventListener('change', function (e) { audio.enabled = e.target.checked; Store.setPref('sound', audio.enabled); applyPrefsUI(); });
     $('#soundBtn').addEventListener('click', function () { audio.enabled = !audio.enabled; Store.setPref('sound', audio.enabled); applyPrefsUI(); if (audio.enabled) audio.click(); });
     $('#notifBtn').addEventListener('click', openNotifications);
     refreshNotifBadge();
     setInterval(function () { if (!document.hidden) refreshNotifBadge(); }, 60000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshNotifBadge(); });
-    $('#devToggle').addEventListener('change', function (e) {
+    var _devToggle = $('#devToggle'); if (_devToggle) _devToggle.addEventListener('change', function (e) {
       if (e.target.checked) { e.target.checked = S.dev; if (!S.dev) requestDevUnlock(); return; }
       S.dev = false; Store.setPref('dev', false); applyPrefsUI(); if (S.view === 'admin') renderView(); toast('Dev mode off. The password is needed to turn it back on.', '', 2500);
     });
-    $('#exportBtn').addEventListener('click', exportData);
-    $('#importDataFile').addEventListener('change', function (e) { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
-    $('#resetSetBtn').addEventListener('click', function () {
+    var _exportBtn = $('#exportBtn'); if (_exportBtn) _exportBtn.addEventListener('click', exportData);
+    var _importDataFile = $('#importDataFile'); if (_importDataFile) _importDataFile.addEventListener('change', function (e) { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
+    var _resetSetBtn = $('#resetSetBtn'); if (_resetSetBtn) _resetSetBtn.addEventListener('click', function () {
       if (isCloud()) { toast('Online progress can\'t be reset from here.', 'warn'); return; }
       if (!confirm('Reset all your packs, cards and stats in "' + S.set.name + '"?')) return;
       delete S.player.sets[S.set.id]; save(); resetStage(); renderView(); toast('Progress reset.', 'warn');
