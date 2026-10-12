@@ -141,7 +141,7 @@
   }
 
   async function refreshCloud() {
-    try { enterCloud(await CPS.cloud.call('get_state')); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); refreshQuests(); }
+    try { enterCloud(await CPS.cloud.call('get_state')); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); refreshQuests(); refreshNotifBadge(); }
     catch (e) { cloudError(e); }
   }
 
@@ -172,7 +172,7 @@
 
   function afterEnter() {
     S._wheelEnd = null;
-    applyPrefsUI(); fillSetSelect(); renderPacksSide(); resetStage(); renderView(); refreshQuests();
+    applyPrefsUI(); fillSetSelect(); renderPacksSide(); resetStage(); renderView(); refreshQuests(); refreshNotifBadge();
   }
 
   /* What the server needs to know about a set: cards + the resolved pack odds. */
