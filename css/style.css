@@ -1367,16 +1367,21 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .market-toggle-btn.active { border-color: #f5b942; background: #1d1a12; color: #f5b942; }
 .market-toggle-btn .tab-badge { position: absolute; top: 8px; right: 12px; }
 
-/* Shop tab */
+/* Shop tab — Balatro-style booth */
 .shop-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .shop-head h2 { margin: 0; }
 .shop-balance { font-size: 1.2rem; }
-.shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
-.shop-slot { text-align: center; }
-.shop-slot-head { display: flex; justify-content: center; gap: 8px; align-items: center; margin-bottom: 8px; }
-.shop-slot-num { font-weight: 700; color: var(--muted); font-size: .85rem; }
-.shop-packname { font-size: 1.1rem; margin: 8px 0 4px; }
-.shop-price { font-size: 1.4rem; font-weight: 800; margin: 12px 0 8px; }
-.shop-slot .btn { margin-top: 12px; width: 100%; }
+.shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 16px 0; }
+.shop-booth { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; }
+.shop-deal-tag { position: absolute; top: -10px; right: 12px; background: linear-gradient(135deg, #ffd700, #ffb700); color: #1a1a1a; font-weight: 800; font-size: .75rem; padding: 4px 12px; border-radius: 999px; letter-spacing: .05em; }
+.shop-pack { width: 120px; height: 168px; margin: 0 auto 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.4); border: 2px solid rgba(255,255,255,.15); }
+.shop-pack-code { font-size: 1.6rem; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.6); letter-spacing: .05em; }
+.shop-pack-name { font-size: .8rem; font-weight: 700; color: rgba(255,255,255,.9); text-shadow: 0 1px 4px rgba(0,0,0,.6); padding: 0 8px; }
+.shop-pack-sub { font-size: .7rem; color: rgba(255,255,255,.6); }
+.shop-info .shop-packname { font-size: 1rem; margin: 0 0 4px; }
+.shop-price { font-size: 1.3rem; font-weight: 800; margin: 8px 0; }
+.shop-info .btn { width: 100%; margin-top: 8px; }
 .shop-hist-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .shop-hist-row:last-child { border-bottom: none; }
+.shop-hist-box { cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+.shop-hist-box:hover { background: var(--panel2); }
