@@ -139,6 +139,7 @@
     (state.turn_ins || []).forEach(function (f) { S.turnedIn[f[0] + ':' + f[1]] = true; });
     S.guestImported = !!state.guest_imported;
     S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
+    if (CPS.milestones) CPS.milestones.check();
   }
 
   async function refreshCloud() {
@@ -589,8 +590,9 @@
     $('#compRing').style.setProperty('--g', total ? (turnedN / total * 100).toFixed(1) : 0);
     $('#compPct').textContent = (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%';
     $('#compTitle').textContent = set.name;
-    $('#compSub').innerHTML = complete + ' / ' + total + ' unique cards · ' + copies + ' total copies · ' + holoU + ' holo' +
-      (turnedN ? ' · <span class="turned-note">' + turnedN + ' turned in</span>' : '');
+    $('#compSub').innerHTML = complete + ' / ' + total + ' unique cards (' + (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%)' +
+      (turnedN ? ' · <span class="turned-note">' + turnedN + ' turned in (' + (total ? (turnedN / total * 100).toFixed(1) : '0.0') + '%)</span>' : '') +
+      ' · ' + copies + ' total copies · ' + holoU + ' holo';
 
     $('#rarityProgress').innerHTML = R.RARITIES.filter(function (r) { return set.pools[r.key].length; }).map(function (r) {
       var pool = set.pools[r.key], have = pool.filter(function (c) { return (st.cards[c.id] && st.cards[c.id].n) || isTurned(set.id, c.id); }).length;
@@ -2278,7 +2280,7 @@
     renderCollection: renderCollection, renderPacksSide: renderPacksSide,
     updateWheelBadge: updateWheelBadge, spinCount: spinCount, refreshQuests: refreshQuests,
     renderAdmin: renderAdmin,
-    dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
+    dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
     openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
