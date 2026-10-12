@@ -1,8 +1,6 @@
 /* pack skin "countries": vintage atlas — deep ocean blue with a gold graticule, compass-rose glow (class pack-skin-countries) */
 .pack-skin-countries .pack-top {
   background:
-    radial-gradient(circle 52px at 50% 46%, rgba(255,215,130,.28), rgba(255,215,130,.08) 55%, transparent 72%),
-    radial-gradient(circle 40px at 50% 46%, transparent 62%, rgba(255,225,150,.5) 64%, transparent 70%),
     repeating-linear-gradient(0deg, transparent 0 34px, rgba(255,255,255,.07) 34px 36px),
     repeating-linear-gradient(90deg, transparent 0 34px, rgba(255,255,255,.07) 34px 36px),
     linear-gradient(180deg, #16355e 0%, #0e2547 55%, #081a36 100%);
