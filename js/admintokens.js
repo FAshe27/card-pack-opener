@@ -10,7 +10,19 @@
       '<input class="ga-sp" type="number" value="1" min="-99" max="999" aria-label="Spins">' +
       '<button class="btn small" data-act="grantspins">Give spins</button>' +
       '<input class="ga-tk" type="number" value="3" min="-99" max="999" aria-label="Tokens">' +
-      '<button class="btn small" data-act="granttokens">Give tokens</button>';
+      '<button class="btn small" data-act="granttokens">Give tokens</button>' +
+      '<input class="ga-cr" type="number" value="5" min="-99" max="999" aria-label="Store Credit">' +
+      '<button class="btn small" data-act="grantcredit">Give credit</button>';
+  }
+
+  async function grantCredit(row, id, name) {
+    var cn = parseInt(ctx.$('.ga-cr', row).value, 10);
+    if (!cn) { ctx.toast('Enter an amount of Store Credit.', 'warn'); return; }
+    try {
+      var r = await CPS.cloud.call('admin_grant_credit', { p_account: id, p_credit: cn });
+      ctx.toast((cn > 0 ? 'Gave $' : 'Removed $') + Math.abs(cn) + ' Store Credit' + (cn > 0 ? ' to ' : ' from ') + name + ' (now $' + r.credit_now + ').', 'good');
+      ctx.renderAdmin();
+    } catch (e) { ctx.cloudError(e); }
   }
 
   async function grant(row, id, name) {
@@ -44,6 +56,6 @@
     });
   }
 
-  CPS.admintokens = { rowHTML: rowHTML, grant: grant, bindAll: bindAll };
+  CPS.admintokens = { rowHTML: rowHTML, grant: grant, grantCredit: grantCredit, bindAll: bindAll };
   // rowHTML(setOpts) renders the full grant-buttons block for an account row.
 })(window.CPS);
