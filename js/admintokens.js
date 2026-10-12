@@ -61,7 +61,8 @@
           ctx.toast('Gave ' + n + ' game token' + (n === 1 ? '' : 's') + ' to ' + whoName + '.', 'good');
         }
         ctx.renderAdmin();
-      } catch (e) { ctx.cloudError(e); btn.disabled = false; }
+      } catch (e) { ctx.cloudError(e); }
+      btn.disabled = false;
     });
   }
 
@@ -87,7 +88,8 @@
           ctx.toast('Gave $' + n + ' Store Credit to ' + whoName + '.', 'good');
         }
         ctx.renderAdmin();
-      } catch (e) { ctx.cloudError(e); btn.disabled = false; }
+      } catch (e) { ctx.cloudError(e); }
+      btn.disabled = false;
     });
   }
 
