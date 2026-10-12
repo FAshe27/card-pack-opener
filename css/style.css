@@ -1384,11 +1384,15 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .shop-hist-row:last-child { border-bottom: none; }
 .shop-hist-box { cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
 .shop-hist-box:hover { background: var(--panel2); }
-.shop-pack-wrap { width: 100%; max-width: 200px; margin: 0 auto 12px; }
-/* scale the pack to fit the booth — keeps 5/8 aspect via .pack's own ratio */
-.shop-pack-wrap .pack { --pw: 100%; width: 100%; }
-/* mystery matches: full width, 5/8 aspect */
-.shop-mystery { width: 100%; max-width: 200px; aspect-ratio: 5/8; margin: 0 auto 12px; }
+.shop-pack-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+/* fixed pixel --pw so the emblem font-size calc works; 140px fits mobile 2-col */
+.shop-pack-wrap .pack { --pw: 140px; }
+/* mystery matches the pack size */
+.shop-mystery { width: 140px; height: 224px; margin: 0 auto 12px; }
+@media (min-width: 600px) {
+  .shop-pack-wrap .pack { --pw: 200px; }
+  .shop-mystery { width: 200px; height: 320px; }
+}
 
 .shop-mystery { width: 140px; height: 180px; margin: 0 auto 12px; border-radius: 12px; background: linear-gradient(135deg, #1a1a2e, #0f0f1a); border: 2px dashed var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
 .shop-mystery-q { font-size: 3rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,.4); }
