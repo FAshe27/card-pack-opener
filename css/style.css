@@ -1388,12 +1388,18 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 /* fixed pixel --pw so the emblem font-size calc works; 140px fits mobile 2-col */
 .shop-pack-wrap .pack { --pw: 140px; }
 /* mystery matches the pack size */
-.shop-mystery { width: 140px; height: 224px; margin: 0 auto 12px; }
+.shop-mystery {
+  width: 140px; height: 224px; margin: 0 auto 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+  border: 2px dashed var(--line);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.4);
+}
 @media (min-width: 600px) {
   .shop-pack-wrap .pack { --pw: 200px; }
   .shop-mystery { width: 200px; height: 320px; }
 }
 
-.shop-mystery { width: 140px; height: 180px; margin: 0 auto 12px; border-radius: 12px; background: linear-gradient(135deg, #1a1a2e, #0f0f1a); border: 2px dashed var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
 .shop-mystery-q { font-size: 3rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,.4); }
 .shop-deal-tag.mystery { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; }
