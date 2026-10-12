@@ -1079,6 +1079,8 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 .cloud-only { display: none !important; }
 body.cloud .cloud-only { display: inline-flex !important; }
 body.cloud p.cloud-only { display: block !important; }
+/* Tabs keep the same inline-block layout as the other tabs: as flex items their badges ride at the top of the button instead of centering (Daily/Market are the cloud-only tabs). */
+body.cloud .tab.cloud-only { display: inline-block !important; }
 body.cloud .guest-only { display: none !important; }
 .tab.admin-tab { display: none; color: var(--warn); }
 body.admin .tab.admin-tab, body.guest .tab.admin-tab { display: inline-block; }
