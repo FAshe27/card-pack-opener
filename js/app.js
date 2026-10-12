@@ -1526,7 +1526,7 @@
   }
 
   function openPlayerModal() {
-    if (isCloud()) return openAccountModal();
+    if (isCloud()) return toggleAccountMenu();
     if (isLocked()) return showGate({});
     Store.listPlayers().then(function (list) {
       var html = '<button class="modal-x" data-close aria-label="Close">×</button>' +
@@ -1607,26 +1607,17 @@
     });
   }
 
-  function openAccountModal() {
-    var a = S.account;
-    var html = '<button class="modal-x" data-close aria-label="Close">×</button>' +
-      '<h2>Your account</h2>' +
-      '<div class="player-row current"><span class="avatar">' + esc((a.display_name[0] || 'P').toUpperCase()) + '</span><b>' + esc(a.display_name) + '</b>' +
-      (a.is_admin ? '<span class="pill r-legendary">Admin</span>' : '') + '<span class="pill r-uncommon">Online</span></div>' +
-      '<p class="muted small">Your packs, cards and stats are saved on the server, so they follow you to any device where you log in with your username.</p>' +
-      '<form class="row" id="dnForm"><input id="dnInput" value="' + esc(a.display_name) + '" maxlength="32" aria-label="Display name"><button class="btn small">Change display name</button></form>' +
-      '<div class="row wrap acct-actions"><button class="btn" id="logoutBtn">Log out</button><button class="btn ghost" id="acctExport" type="button">Export my collection</button></div>';
-    openModal(html, function (box) {
-      $('#dnForm', box).addEventListener('submit', async function (e) {
-        e.preventDefault(); var v = $('#dnInput', box).value.trim(); if (!v) return;
-        try { var r = await CPS.cloud.call('set_display_name', { p_name: v }); S.account.display_name = r.display_name; S.player.name = r.display_name; applyPrefsUI(); toast('Name updated.', 'good'); openAccountModal(); }
-        catch (err) { cloudError(err); }
-      });
-      $('#acctExport', box).addEventListener('click', exportData);
-      $('#logoutBtn', box).addEventListener('click', async function () {
-        await CPS.cloud.logout(); closeModal(true); lockOut('You are logged out.');
-      });
-    });
+  function closeAccountMenu() {
+    var m = $('#acctMenu'); if (m) m.classList.add('hidden');
+  }
+  function toggleAccountMenu() {
+    var m = $('#acctMenu'), btn = $('#playerBtn');
+    if (!m || !btn) return;
+    if (!m.classList.contains('hidden')) { closeAccountMenu(); return; }
+    var r = btn.getBoundingClientRect();
+    m.style.top = (r.bottom + 6) + 'px';
+    m.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
+    m.classList.remove('hidden');
   }
 
   /* --- admin (online) */
@@ -2196,6 +2187,23 @@
       delete S.player.sets[S.set.id]; save(); resetStage(); renderView(); toast('Progress reset.', 'warn');
     });
     $('#playerBtn').addEventListener('click', openPlayerModal);
+    var _acctProfile = $('#acctProfileBtn');
+    if (_acctProfile) _acctProfile.addEventListener('click', function () {
+      closeAccountMenu();
+      if (S.account && CPS.profile) CPS.profile.openProfile(S.account.id);
+    });
+    var _acctLogout = $('#acctLogoutBtn');
+    if (_acctLogout) _acctLogout.addEventListener('click', async function () {
+      closeAccountMenu();
+      await CPS.cloud.logout(); lockOut('You are logged out.');
+    });
+    document.addEventListener('pointerdown', function (e) {
+      var m = $('#acctMenu');
+      if (!m || m.classList.contains('hidden')) return;
+      if (e.target.closest('#acctMenu') || e.target.closest('#playerBtn')) return;
+      closeAccountMenu();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAccountMenu(); });
     $('#newAcctForm').addEventListener('submit', createAccount);
     $('#naSuggest').addEventListener('click', function () { $('#naUser').value = suggestUsername($('#naName').value); });
     $('#naPinRandom').addEventListener('click', function () { $('#naPin').value = randomPin(); });
