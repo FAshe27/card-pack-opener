@@ -27,7 +27,7 @@
   }
   function isCloud() { return S.mode === 'cloud'; }
   function isLocked() { return S.mode === 'locked'; }
-  /* Admin area: admin accounts (server-checked); "Sets & Settings" for everyone when online play is off. */
+  
   function canAdminArea() { return isAdmin() || S.mode === 'guest'; }
   function devOn() { return !!S.dev && canAdminArea(); } // Dev tools only ever show for admins (or offline mode)
   function isAdmin() { return isCloud() && S.account && S.account.is_admin; }
@@ -106,20 +106,20 @@
     }
   }
 
-  /* Not logged in: an empty, never-saved placeholder profile behind the login screen. */
+  
   function setLocked() {
     S.mode = 'locked'; S.account = null; S.onlineSets = [];
     S.player = { id: '', name: 'Log in', sets: {} };
   }
 
-  /* Turn the server snapshot into the same shape the guest profile uses. */
+  
   function enterCloud(state) {
     var sets = {};
     function get(id) {
       return sets[id] || (sets[id] = { packs: 0, cards: {}, recent: [], stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } });
     }
     Object.keys(state.inventory || {}).forEach(function (id) { get(id).packs = state.inventory[id]; });
-    (state.collection || []).forEach(function (r) { get(r[0]).cards[r[1]] = { n: r[2], h: r[3] }; });
+    (state.collection || []).forEach(function (r) { get(r[0]).cards[r[1]] = { n: r[2], h: r[3], v: r[4] || 0, vh: r[5] || 0 }; });
     Object.keys(state.stats || {}).forEach(function (id) {
       var x = state.stats[id], st = get(id).stats;
       st.opened = x.opened; st.pulled = x.pulled; st.holos = x.holos; st.byRarity = x.by_rarity || {};
@@ -136,6 +136,8 @@
     S.wheelCfg = state.wheel || null;
     S.favorites = {};
     (state.favorites || []).forEach(function (f) { S.favorites[f[0] + ':' + f[1]] = true; });
+    S.turnedIn = {};
+    (state.turn_ins || []).forEach(function (f) { S.turnedIn[f[0] + ':' + f[1]] = true; });
     S.guestImported = !!state.guest_imported;
     S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
   }
@@ -151,7 +153,7 @@
     audio.error();
   }
 
-  /* Back to the login screen (session ended or logged out). */
+  
   function lockOut(msg) {
     CPS.cloud.clearToken();
     S.opening = null;
@@ -175,7 +177,7 @@
     applyPrefsUI(); fillSetSelect(); renderPacksSide(); resetStage(); renderView(); refreshQuests(); refreshNotifBadge();
   }
 
-  /* What the server needs to know about a set: cards + the resolved pack odds. */
+  
   function setPayload(set) {
     return {
       id: set.id, name: set.name, code: set.code,
@@ -218,7 +220,7 @@
     if (typeof CPS !== 'undefined' && CPS.games) CPS.games.updateBadge();
   }
 
-  /* Packs the player currently holds for a set. Side-effect-free (unlike ps()). */
+  
   function packCount(set) {
     var sets = (S.player && S.player.sets) || {};
     var st = sets[set.id];
@@ -421,7 +423,7 @@
     return true;
   }
 
-  /* Click a pack (the big one in the middle or the one in "Your packs"): open it and tear it in one go. */
+  
   async function openFromPack() {
     var o = S.opening;
     if (S.busy) return;
@@ -591,16 +593,20 @@
       return;
     }
     var owned = ownedCount(set, st), total = set.cards.length;
+    var turnedN = 0, complete = 0;
+    set.cards.forEach(function (c) { var t = isTurned(set.id, c.id); if (t) turnedN++; if (t || (st.cards[c.id] && st.cards[c.id].n > 0)) complete++; });
     var copies = 0, holoU = 0;
     set.cards.forEach(function (c) { var e = st.cards[c.id]; if (e) { copies += e.n; if (e.h) holoU++; } });
-    var pct = total ? owned / total : 0;
+    var pct = total ? complete / total : 0;
     $('#compRing').style.setProperty('--p', (pct * 100).toFixed(1));
+    $('#compRing').style.setProperty('--g', total ? (turnedN / total * 100).toFixed(1) : 0);
     $('#compPct').textContent = (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%';
     $('#compTitle').textContent = set.name;
-    $('#compSub').textContent = owned + ' / ' + total + ' unique cards · ' + copies + ' total copies · ' + holoU + ' holo';
+    $('#compSub').innerHTML = complete + ' / ' + total + ' unique cards · ' + copies + ' total copies · ' + holoU + ' holo' +
+      (turnedN ? ' · <span class="turned-note">' + turnedN + ' turned in</span>' : '');
 
     $('#rarityProgress').innerHTML = R.RARITIES.filter(function (r) { return set.pools[r.key].length; }).map(function (r) {
-      var pool = set.pools[r.key], have = pool.filter(function (c) { return st.cards[c.id] && st.cards[c.id].n; }).length;
+      var pool = set.pools[r.key], have = pool.filter(function (c) { return (st.cards[c.id] && st.cards[c.id].n) || isTurned(set.id, c.id); }).length;
       return '<button class="rp r-' + r.key + (f.rarity === r.key ? ' active' : '') + '" data-r="' + r.key + '">' +
         '<span class="rp-top"><span class="rp-name">' + r.label + '</span><span>' + have + '/' + pool.length + '</span></span>' +
         '<span class="bar"><i style="width:' + (have / pool.length * 100).toFixed(1) + '%"></i></span></button>';
@@ -624,21 +630,23 @@
       (S.myVariants || []).forEach(function (v) { if (v.set_id === set.id) numberedIds[v.card_id] = 1; });
     }
     var list = set.cards.filter(function (c) {
-      var e = st.cards[c.id], has = e && e.n > 0;
+      var e = st.cards[c.id], has = onHand(e) > 0;
       if (f.rarity && c.rarity !== f.rarity) return false;
       if (f.own === 'numbered' && !numberedIds[c.id]) return false;
       if (f.own === 'owned' && !has) return false;
       if (f.own === 'missing' && has) return false;
-      if (f.own === 'dupes' && !(e && e.n > 1)) return false;
-      if (f.own === 'holo' && !(e && e.h > 0)) return false;
+      if (f.own === 'dupes' && !(onHand(e) > 1)) return false;
+      if (f.own === 'holo' && !(onHandHolo(e) > 0)) return false;
       if (f.own === 'fav' && !isFav(set.id, c.id)) return false;
+      if (f.own === 'turned' && !isTurned(set.id, c.id)) return false;
+      if (f.own === 'notturned' && isTurned(set.id, c.id)) return false;
       if (q) {
         var hay = c.name + ' ' + c.subtitle + ' ' + c.details + ' #' + U.pad(c.num, set.numWidth) + ' ' + c.num + ' ' + c.rarity;
         if (hay.toLowerCase().indexOf(q) < 0) return false;
       }
       return true;
     });
-    var cnt = function (c) { var e = st.cards[c.id]; return e ? e.n : 0; };
+    var cnt = function (c) { return onHand(st.cards[c.id]); };
     if (f.sort === 'rarity') list.sort(function (a, b) { return R.INDEX[b.rarity] - R.INDEX[a.rarity] || a.num - b.num; });
     else if (f.sort === 'count') list.sort(function (a, b) { return cnt(b) - cnt(a) || a.num - b.num; });
     else if (f.sort === 'name') list.sort(function (a, b) { return a.name.localeCompare(b.name, undefined, { numeric: true }); });
@@ -647,9 +655,75 @@
     $('#collCount').textContent = list.length + ' shown';
     $('#collGrid').innerHTML = list.length ? list.map(function (c) {
       var e = st.cards[c.id];
-      return CPS.cards.collected(set, c, e ? e.n : 0, e ? e.h : 0);   // card + count pills below it
+      return CPS.cards.collected(set, c, onHand(e), onHandHolo(e), { v: e ? (e.v || 0) : 0, vh: e ? (e.vh || 0) : 0, turned: isTurned(set.id, c.id), total: e ? e.n : 0 });   // card + count pills below it
     }).join('') : '<div class="empty">No cards match these filters.</div>';
     renderVariantsSection(set);
+    var tb = $('#turnInAllBtn');
+    if (tb) {
+      var elig = isCloud() ? turnInPreview(set, st).eligible : 0;
+      tb.classList.toggle('hidden', !elig);
+      tb.textContent = 'Turn in all in this set (' + elig + ' eligible)';
+    }
+  }
+
+  
+  function turnInPreview(set, st) {
+    var vmap = variantCountMap(), p = { eligible: 0, holoOnly: 0, onlyCopy: 0, locked: 0 };
+    set.cards.forEach(function (c) {
+      if (isTurned(set.id, c.id)) return;
+      var e = st.cards[c.id]; if (!e || !e.n) return;
+      var vn = vmap[set.id + ':' + c.id] || 0;
+      if (e.n - (e.v || 0) - vn < 1) { p.locked++; return; }
+      p.eligible++;
+      if ((e.n - e.h) - ((e.v || 0) - (e.vh || 0)) < 1) p.holoOnly++;
+      if (e.n - (e.v || 0) === 1) p.onlyCopy++;
+    });
+    return p;
+  }
+
+  function confirmDialog(title, bodyHtml, okLabel, cancelLabel) {
+    return new Promise(function (resolve) {
+      var done = false;
+      openModal('<button class="modal-x" data-close aria-label="Close">×</button><h2>' + esc(title) + '</h2>' +
+        '<div class="confirm-body">' + bodyHtml + '</div>' +
+        '<div class="confirm-btns"><button class="btn" data-cx>' + esc(cancelLabel || 'Cancel') + '</button>' +
+        '<button class="btn primary" data-ok>' + esc(okLabel || 'Confirm') + '</button></div>',
+        function (box) {
+          function fin(v) { if (done) return; done = true; closeModal(); resolve(v); }
+          box.querySelector('[data-ok]').addEventListener('click', function () { fin(true); });
+          box.querySelector('[data-cx]').addEventListener('click', function () { fin(false); });
+          box.querySelector('[data-close]').addEventListener('click', function () { fin(false); });
+        });
+    });
+  }
+
+  async function turnInAllFlow() {
+    var set = S.set, st = ps();
+    if (!isCloud() || !set || set.id === 'jumbled') return;
+    await ensureVariants();
+    var p = turnInPreview(set, st);
+    if (!p.eligible) { toast('Nothing to turn in — everything owned here is already turned in, vaulted, or numbered.', 'warn'); return; }
+    var ok = await confirmDialog('Turn in cards from ' + set.name,
+      '<p>Turn in <b>' + p.eligible + '</b> card' + (p.eligible === 1 ? '' : 's') + ' — one copy of each?</p>' +
+      '<p class="muted">Turning in destroys a copy and marks the card <b>permanently collected</b>: it counts toward your completion forever, even if you never own it again. <b>There is no undo.</b></p>' +
+      (p.onlyCopy ? '<p class="muted">' + p.onlyCopy + ' of these ' + (p.onlyCopy === 1 ? 'is' : 'are') + ' your <b>only on-hand copy</b>.</p>' : '') +
+      (p.locked ? '<p class="muted">' + p.locked + ' card' + (p.locked === 1 ? '' : 's') + ' skipped — only vaulted or numbered copies on hand.</p>' : ''),
+      'Turn them in');
+    if (!ok) return;
+    var includeHolos = false;
+    if (p.holoOnly > 0) {
+      includeHolos = await confirmDialog('Holographic cards',
+        '<p>Some of these cards are holographic — for <b>' + p.holoOnly + '</b> of them, the only copy that can be turned in is a holo.</p>' +
+        '<p class="muted">Do you still want to turn these in?</p>',
+        'Yes, turn in the holos too', 'Skip the holos');
+    }
+    try {
+      var r = await CPS.cloud.call('turn_in_all', { p_set: set.id, p_include_holos: includeHolos });
+      await refreshCloud();
+      toast('✓ Turned in ' + r.turned + ' card' + (r.turned === 1 ? '' : 's') + '!' +
+        (r.skipped_holo ? ' Skipped ' + r.skipped_holo + ' holo-only.' : '') +
+        (r.skipped_locked ? ' Skipped ' + r.skipped_locked + ' locked.' : ''), 'good', 5000);
+    } catch (e) { cloudError(e); }
   }
 
   async function renderVariantsSection(set) {
@@ -666,18 +740,19 @@
       if (!card) return '';
       return '<div class="coll-item" data-variant-card="' + esc(v.card_id) + '">' +
         CPS.cards.render(set, card, { variant: { tier: v.tier, serial: v.serial } }) +
-        '<div class="vserial-cap"><b>' + esc(CPS.cards.VARIANTS[v.tier].name) + ' #' + v.serial + '/' + CPS.cards.VARIANTS[v.tier].run + '</b></div></div>';
+        '<div class="vserial-cap"><b>' + esc(CPS.cards.VARIANTS[v.tier].name) + ' #' + v.serial + '/' + CPS.cards.VARIANTS[v.tier].run + '</b>' + (v.vaulted ? ' <span class="vault-tag">🔒 Vault</span>' : '') + '</div></div>';
     }).join('');
     grid.querySelectorAll('[data-variant-card]').forEach(function (el) { el.addEventListener('click', function () { var v = mine.filter(function (x) { return x.card_id === el.dataset.variantCard; })[0]; openCardModal(set.id, el.dataset.variantCard, null, v ? { tier: v.tier, serial: v.serial } : null); }); });
   }
 
   /* --- dupe trade-in */
   var DUPE_RARS = { common: ['common'], uncommon: ['uncommon'], rare: ['rare'], epic: ['epic', 'legendary', 'chase'] };
-  /* Tradable dupes per tier: every copy beyond the first of each card. */
-  /* Numbered variant copies are never tradable (cloud only; guests have none). */
+  
+  
   function variantCountMap() {
     var m = {};
     (S.myVariants || []).forEach(function (v) {
+      if (v.vaulted) return;
       var k = v.set_id + ':' + v.card_id;
       m[k] = (m[k] || 0) + 1;
     });
@@ -690,7 +765,7 @@
       if (!e || !e.n) return;
       var t = c.rarity === 'common' ? 'common' : c.rarity === 'uncommon' ? 'uncommon' : c.rarity === 'rare' ? 'rare' : 'epic';
       var v = vmap ? (vmap[set.id + ':' + c.id] || 0) : 0;
-      out[t] += Math.max(0, e.n - Math.max(1, v));
+      out[t] += Math.max(0, (e.n - (e.v || 0)) - Math.max(1, v));
     });
     return out;
   }
@@ -712,6 +787,11 @@
     });
   }
 
+  /* --- turn-ins + the Vault */
+  function isTurned(setId, cardId) { return !!(S.turnedIn && S.turnedIn[setId + ':' + cardId]); }
+  function onHand(e) { return e ? Math.max(0, e.n - (e.v || 0)) : 0; }
+  function onHandHolo(e) { return e ? Math.max(0, e.h - (e.vh || 0)) : 0; }
+
   /* --- favorites */
   var FAV_MAX = 20;
   function favKey(setId, cardId) { return setId + ':' + cardId; }
@@ -725,12 +805,12 @@
   }
   async function toggleFavorite(setId, cardId, holo) {
     var k = favKey(setId, cardId), already = isFav(setId, cardId);
-    if (!already && favCount() >= FAV_MAX) { toast('You can only favorite ' + FAV_MAX + ' cards.', 'warn'); return; }
+    if (!isCloud() && !already && favCount() >= FAV_MAX) { toast('You can only favorite ' + FAV_MAX + ' cards.', 'warn'); return; }
     if (isCloud()) {
       try {
         var r = await CPS.cloud.call('toggle_favorite', { p_set: setId, p_card: cardId });
         if (r.favorited) S.favorites[k] = true; else delete S.favorites[k];
-        toast(r.favorited ? 'Added to favorites (' + r.count + '/' + FAV_MAX + ').' : 'Removed from favorites.', 'good');
+        toast(r.favorited ? 'Vaulted a copy — it is protected now. 🔒' : 'Released a copy from your Vault.', 'good');
       } catch (e) { cloudError(e); return; }
     } else {
       var p = S.player; p.favs = p.favs || [];
@@ -779,7 +859,7 @@
       var b = $('#notifBadge');
       b.textContent = n.unread > 99 ? '99+' : n.unread;
       b.classList.toggle('hidden', !n.unread);
-    } catch (e) { /* silent: badge just stays as-is */ }
+    } catch (e) {  }
   }
 
   function notifTime(iso) {
@@ -835,87 +915,6 @@
           });
         });
     } catch (e) { closeModal(true); cloudError(e); }
-  }
-
-  /* --- gifting */
-  async function openGiftModal(setId, cardId) {
-    var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
-    if (!set || !card) return;
-    var st = tbStateOf(set), e = st.cards[card.id];
-    if (!e || !e.n) return;
-    openModal('<div class="muted" style="padding:24px">Loading…</div>');
-    try {
-      var players = await CPS.cloud.call('list_players');
-      var others = players.filter(function (p) { return !p.is_me; });
-      if (!others.length) {
-        openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="empty" style="padding:24px">No other players to gift to yet.</div>');
-        return;
-      }
-      var holoOnly = e.h >= e.n;            // every owned copy is holo
-      var canChoose = e.h > 0 && e.h < e.n;  // owns both kinds
-      var holo = holoOnly;
-      await ensureVariants();
-      var serials = myVariantSerials(setId, cardId);
-      var regulars = e.n - serials.length;
-      function copyPickerHtml() {
-        if (!serials.length) return '';
-        var opts = serials.map(function (v, i) {
-          var vt = CPS.cards.VARIANTS[v.tier];
-          return '<label class="check"><input type="radio" name="giftCopy" value="' + v.id + '"' +
-            (regulars <= 0 && i === 0 ? ' checked' : '') + '> ' + vt.name + ' #' + v.serial + '/' + vt.run + '</label>';
-        }).join('');
-        if (regulars > 0) opts = '<label class="check"><input type="radio" name="giftCopy" value="" checked> Regular copy</label>' + opts;
-        return '<div class="gift-copies"><span class="fld-label">Which copy?</span>' + opts + '</div>';
-      }
-      function showForm() {
-        openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="gift-modal">' +
-          '<h2>🎁 Gift card</h2>' +
-          '<div class="trade-card">' + CPS.cards.render(set, card, { holo: holoOnly }) +
-          '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
-          ' · you own ' + e.n + (e.h ? ' (' + e.h + ' holo)' : '') + '</span></div></div>' +
-          '<label>To<select id="giftTo">' + others.map(function (p) {
-            return '<option value="' + esc(p.id) + '">' + esc(p.display_name) + '</option>';
-          }).join('') + '</select></label>' +
-          (canChoose ? '<label class="inline"><input type="checkbox" id="giftHolo"> Holographic copy</label>' :
-           holoOnly ? '<div class="muted small">Holographic copy</div>' : '') +
-          (e.n === 1 ? '<div class="warn-box">This is your last copy — you’ll no longer own this card.</div>' : '') +
-          copyPickerHtml() +
-          '<div class="gift-actions"><button class="btn primary" id="giftNextBtn">Continue</button></div></div>');
-        var hb = $('#giftHolo');
-        if (hb) hb.addEventListener('change', function () { holo = this.checked; });
-        $('#giftNextBtn').addEventListener('click', function () {
-          var toId = $('#giftTo').value;
-          var to = others.filter(function (p) { return p.id === toId; })[0];
-          var picked = box_query('input[name=giftCopy]:checked');
-          var vid = picked ? picked.value || null : null;
-          var vtext = null;
-          if (vid) { var vv = serials.filter(function (s) { return s.id === vid; })[0];
-            if (vv) vtext = CPS.cards.VARIANTS[vv.tier].name + ' #' + vv.serial + '/' + CPS.cards.VARIANTS[vv.tier].run; }
-          showConfirm(toId, to ? to.display_name : '', holo, vid, vtext);
-        });
-        function box_query(sel) { return document.querySelector('#modal ' + sel); }
-      }
-      function showConfirm(toId, toName, isHolo, variantId, variantText) {
-        openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="gift-modal">' +
-          '<h2>Confirm gift</h2>' +
-          '<p>Gift <b>' + esc(card.name) + '</b>' + (variantText ? ' (' + esc(variantText) + ')' : (isHolo ? ' ✦ holo' : '')) +
-          ' to <b>' + esc(toName) + '</b>?</p>' +
-          '<div class="gift-actions"><button class="btn" id="giftBackBtn">Back</button>' +
-          '<button class="btn primary" id="giftConfirmBtn">Send gift</button></div></div>');
-        $('#giftBackBtn').addEventListener('click', showForm);
-        $('#giftConfirmBtn').addEventListener('click', async function () {
-          var btn = this; btn.disabled = true;
-          try {
-            await CPS.cloud.call('gift_card', { p_to: toId, p_set: setId, p_card: cardId, p_holo: isHolo, p_variant_id: variantId || null });
-            S.myVariants = null; refreshQuests();
-            closeModal();
-            toast('🎁 Gift sent to ' + toName + '!');
-            if (S.view === 'collection') renderCollection();
-          } catch (err) { cloudError(err); btn.disabled = false; }
-        });
-      }
-      showForm();
-    } catch (e2) { closeModal(true); cloudError(e2); }
   }
 
   /* --- variants */
@@ -979,7 +978,7 @@
       var st = tbStateOf(set);
       set.cards.forEach(function (card) {
         var e = st.cards[card.id];
-        if (e && e.n > 0) out.push({ set_id: set.id, card_id: card.id, n: e.n, h: e.h || 0 });
+        if (e && onHand(e) > 0) out.push({ set_id: set.id, card_id: card.id, n: onHand(e), h: onHandHolo(e) });
       });
     });
     return out;
@@ -1183,7 +1182,7 @@
   }
 
   function pickTravelVariant(p) {
-    var s = myVariantSerials(p.setId, p.cardId);
+    var s = myVariantSerials(p.setId, p.cardId).filter(function (v) { return !v.vaulted; });
     return s.length ? { tier: s[0].tier, serial: s[0].serial } : null;
   }
   function tbRenderDock() {
@@ -1256,6 +1255,48 @@
 
 
 
+  function vaultButtonsHtml(set, card, e, variant) {
+    if (!isCloud() || !e || !(e.n > 0)) return '';
+    var v = e.v || 0, vh = e.vh || 0;
+    var plainOn = (e.n - e.h) - (v - vh), holoOn = e.h - vh, plainV = v - vh;
+    var h = '<div class="vault-box"><div class="vault-title">🔒 The Vault</div>';
+    if (plainOn > 0) h += '<button class="btn small" data-vault="plain">Vault a plain copy</button>';
+    if (plainV > 0) h += '<button class="btn small" data-unvault="plain">Release plain (' + plainV + ' vaulted)</button>';
+    if (holoOn > 0) h += '<button class="btn small" data-vault="holo">Vault a holo copy</button>';
+    if (vh > 0) h += '<button class="btn small" data-unvault="holo">Release holo (' + vh + ' vaulted)</button>';
+    if (variant) {
+      var inst = (S.myVariants || []).filter(function (x) { return x.set_id === set.id && x.card_id === card.id && x.tier === variant.tier && x.serial === variant.serial; })[0];
+      if (inst) h += '<button class="btn small" data-vault-variant="' + inst.id + '" data-von="' + (inst.vaulted ? '0' : '1') + '">' + (inst.vaulted ? 'Release this numbered copy' : 'Vault this numbered copy') + '</button>';
+    }
+    h += '<div class="muted small">Vaulted copies are protected — they can\'t be traded, gifted, sold, or turned in until released.</div></div>';
+    if (!isTurned(set.id, card.id)) {
+      var vn = (S.myVariants || []).filter(function (x) { return x.set_id === set.id && x.card_id === card.id; }).length;
+      if (e.n - v - vn > 0) h += '<button class="btn small turnin-btn" data-turnin>✓ Turn in this card</button>';
+      else h += '<div class="muted small">No copy can be turned in — the rest are vaulted or numbered.</div>';
+    }
+    return h;
+  }
+
+  async function turnInFlow(setId, cardId, forceHolo, variant) {
+    var set = window.CardSets.get(setId); if (!set) return;
+    var card = set.byId.get(cardId); if (!card) return;
+    var st = ps(set), e = st.cards[cardId]; if (!e) return;
+    await ensureVariants();
+    var plainOn = (e.n - e.h) - ((e.v || 0) - (e.vh || 0));
+    var willHolo = plainOn < 1;
+    var ok = await confirmDialog('Turn in ' + card.name + '?',
+      '<p>Turning in destroys one copy of this card' + (willHolo ? ' — your <b>holo</b> copy, since no plain copy is on hand' : '') + ' and marks it <b>permanently collected</b>.</p>' +
+      '<p class="muted">It counts toward your completion forever, even if you never own it again. The copy itself is gone. <b>There is no undo.</b></p>',
+      'Turn it in');
+    if (!ok) return;
+    try {
+      await CPS.cloud.call('turn_in', { p_set: setId, p_card: cardId });
+      await refreshCloud();
+      toast('✓ ' + card.name + ' turned in — permanently collected!', 'good');
+      openCardModal(setId, cardId, forceHolo, variant);
+    } catch (e2) { cloudError(e2); }
+  }
+
   function openCardModal(setId, cardId, forceHolo, variant) {
     var set = window.CardSets.get(setId); if (!set) return;
     var card = set.byId.get(cardId); if (!card) return;
@@ -1271,15 +1312,17 @@
       (card.subtitle ? '<div class="muted">' + esc(card.subtitle) + '</div>' : '') +
       '<dl><dt>Number</dt><dd>#' + U.pad(card.num, set.numWidth) + ' of ' + set.cards.length + '</dd>' +
       '<dt>Set</dt><dd>' + esc(set.name) + '</dd>' +
-      '<dt>You own</dt><dd>' + (owned ? e.n + (e.h ? ' (' + e.h + ' holo)' : '') : '0') + '</dd>' +
+      '<dt>You own</dt><dd>' + (owned ? e.n + ' total · ' + onHand(e) + ' on hand' + (e.h ? ' · ' + e.h + ' holo' : '') + ((e.v || 0) ? ' · ' + e.v + ' in Vault' : '') : '0') + '</dd>' +
       (variant ? '<dt>Variant</dt><dd>'+esc(CPS.cards.VARIANTS[variant.tier].name)+' #'+variant.serial+'/'+CPS.cards.VARIANTS[variant.tier].run+'</dd>' : '') +
+      (isTurned(set.id, card.id) ? '<dt>Turned in</dt><dd class="turned-note">✓ Permanently collected</dd>' : '') +
       '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd>' +
       '<dt>In the wild</dt><dd id="cardPop">…</dd></dl>' +
       '<div class="variant-census" id="vcensus" style="display:none"></div>' +
       (card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
-      (owned ? '<button class="btn small fav-btn' + (isFav(set.id, card.id) ? ' active' : '') + '" data-fav>' + (isFav(set.id, card.id) ? '★' : '☆') + ' Favorite <span class="muted">' + favCount() + '/' + FAV_MAX + '</span></button>' : '') +
+      (owned ? '<button class="btn small fav-btn' + (isFav(set.id, card.id) ? ' active' : '') + '" data-fav>' + (isFav(set.id, card.id) ? '★ In your Vault' : '☆ Vault a copy') + '</button>' : '') +
       (owned && isCloud() ? '<button class="btn small" data-gift>🎁 Gift</button>' : '') +
+      vaultButtonsHtml(set, card, e, variant) +
       '</div></div>';
     openModal(html, function (box) {
       var bk = box.querySelector('[data-gallery-back]');
@@ -1289,7 +1332,33 @@
       var f = box.querySelector('[data-fav]');
       if (f) f.addEventListener('click', function () { toggleFavorite(setId, cardId, holo); });
       var g = box.querySelector('[data-gift]');
-      if (g) g.addEventListener('click', function () { openGiftModal(setId, cardId); });
+      if (g) g.addEventListener('click', function () { if (CPS.gift) CPS.gift.open(setId, cardId); });
+      box.querySelectorAll('[data-vault],[data-unvault]').forEach(function (b2) {
+        b2.addEventListener('click', async function () {
+          var on = b2.hasAttribute('data-vault');
+          var holo2 = (on ? b2.dataset.vault : b2.dataset.unvault) === 'holo';
+          b2.disabled = true;
+          try {
+            await CPS.cloud.call('vault_copy', { p_set: setId, p_card: cardId, p_holo: holo2, p_on: on });
+            await refreshCloud();
+            toast(on ? 'Copy vaulted 🔒' : 'Copy released from the Vault.', 'good');
+            openCardModal(setId, cardId, forceHolo, variant);
+          } catch (e) { cloudError(e); b2.disabled = false; }
+        });
+      });
+      var vb = box.querySelector('[data-vault-variant]');
+      if (vb) vb.addEventListener('click', async function () {
+        vb.disabled = true;
+        try {
+          await CPS.cloud.call('vault_variant', { p_variant_id: vb.dataset.vaultVariant, p_on: vb.dataset.von === '1' });
+          S.myVariants = null;
+          await refreshCloud();
+          toast(vb.dataset.von === '1' ? 'Numbered copy vaulted 🔒' : 'Numbered copy released.', 'good');
+          openCardModal(setId, cardId, forceHolo, variant);
+        } catch (e) { cloudError(e); vb.disabled = false; }
+      });
+      var ti = box.querySelector('[data-turnin]');
+      if (ti) ti.addEventListener('click', function () { turnInFlow(setId, cardId, forceHolo, variant); });
       fillCensus(box, set, card);
       fillPopulation(box, set, card);
     });
@@ -1325,8 +1394,8 @@
         sd.cards.forEach(function (c) {
           if (c.rarity !== kind) return;
           var e = pst.cards[c.id];
-          if (!e || !(e.n > 0)) return;
-          var holo = !!(e.h > 0);
+          if (!(e && e.n > 0) && !isTurned(sd.id, c.id)) return;
+          var holo = !!(e && e.h > 0);
           items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { holo: holo }), variant: null, holo: holo });
         });
       });
@@ -1367,12 +1436,12 @@
       agg.opened += psd ? psd.opened || 0 : 0;
       agg.pulled += psd ? psd.pulled || 0 : 0;
       agg.holos += psd ? psd.holos || 0 : 0;
-      agg.unique += pst ? ownedCount(sd, pst) : 0;
+      agg.unique += pst ? sd.cards.filter(function (c) { return (pst.cards[c.id] && pst.cards[c.id].n > 0) || isTurned(sd.id, c.id); }).length : 0;
       agg.total += sd.cards.length; agg.packs += pst ? pst.packs || 0 : 0;
       R.RARITIES.forEach(function (r) { agg.byRarity[r.key] = (agg.byRarity[r.key] || 0) + (psd && psd.byRarity[r.key] || 0); });
       if (pst) sd.cards.forEach(function (c) {
         var e = pst.cards[c.id];
-        if (e && e.n > 0) agg.ownedByRarity[c.rarity] = (agg.ownedByRarity[c.rarity] || 0) + 1;
+        if ((e && e.n > 0) || isTurned(sd.id, c.id)) agg.ownedByRarity[c.rarity] = (agg.ownedByRarity[c.rarity] || 0) + 1;
       });
     });
     var numberedEarly = (S.myVariants || []).length;
@@ -1491,7 +1560,7 @@
     });
   }
 
-  /* The login screen. It can't be dismissed: the site is accounts-only. */
+  
   function showGate(opts) {
     opts = opts || {};
     var html = '<div class="login-box gate">' +
@@ -1565,7 +1634,7 @@
 
   /* --- admin (online) */
 
-  /* Usernames aren't secret any more: suggest one from the display name. */
+  
   function suggestUsername(name) {
     return String(name || '').replace(/[^A-Za-z0-9_.-]+/g, '').slice(0, 32) || 'Player' + (1 + Math.floor(Math.random() * 99));
   }
@@ -1786,7 +1855,7 @@
     try { return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); }
     catch (e) { return new Date().toDateString(); }
   }
-  /* Guest mode: one free spin per America/Chicago day, stored on the player. */
+  
   function grantGuestDailySpin() {
     var p = S.player;
     if (!p) return;
@@ -1800,7 +1869,7 @@
   function spinCount() {
     return isCloud() ? (S.spins || 0) : ((S.player && S.player.spins) || 0);
   }
-  /* The wheel tab lights up while the player holds at least one spin. */
+  
   function updateWheelBadge() {
     var b = $('#wheelBadge');
     if (b) { var n = spinCount(); b.textContent = n; b.classList.toggle('hidden', !(n > 0)); }
@@ -1933,7 +2002,7 @@
       return false;
     }
     renderWheel(); // show the consumed ticket now, not after the animation
-    /* The outcome was rolled above; the animation below is just theater. */
+    
     var endState = await CPS.wheel.playHops(canvas, cfg, out.hops || [], speed);
     var prize = out.prize || {}, isTok = prize.kind === 'tokens', isCred = prize.kind === 'credit';
     var pset = !isTok && !isCred && prize.set_id ? window.CardSets.get(prize.set_id) : null;
@@ -2056,6 +2125,8 @@
       if (b.dataset.own === 'numbered') ensureVariants().then(function () { renderCollection(); });
       else renderCollection();
     });
+    var tib = $('#turnInAllBtn');
+    if (tib) tib.addEventListener('click', function () { turnInAllFlow(); });
     $('#questList').addEventListener('click', function (e) {
       var b = e.target.closest('[data-claim]'); if (!b || b.disabled) return;
       b.disabled = true;
