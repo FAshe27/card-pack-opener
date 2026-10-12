@@ -128,10 +128,10 @@
 
   /* Numbered variant tiers: print run + display name. */
   var VARIANTS = {
-    rainbow:  { name: 'Rainbow',    run: 50 },
-    prism:    { name: 'Prism',      run: 10 },
-    obsidian: { name: 'Obsidian',   run: 5 },
-    oneofone: { name: 'One-of-One', run: 1 }
+    rainbow:  { name: 'Rainbow',    run: 50, emoji: '🌈' },
+    prism:    { name: 'Prism',      run: 10, emoji: '💠' },
+    obsidian: { name: 'Obsidian',   run: 5,  emoji: '🌑' },
+    oneofone: { name: 'One-of-One', run: 1,  emoji: '👑' }
   };
   function variantLabel(tier, serial) {
     var t = VARIANTS[tier]; if (!t) return '';
@@ -151,7 +151,7 @@
     if (opts.count > 1) badges += '<span class="badge-count">×' + opts.count + '</span>';
     if (opts.holoCount > 0) badges += '<span class="badge-holo" title="' + opts.holoCount + ' holo">✦' + (opts.holoCount > 1 ? opts.holoCount : '') + '</span>';
     if (opts.variant && VARIANTS[opts.variant.tier])
-      badges += '<span class="badge-variant" title="' + variantLabel(opts.variant.tier, opts.variant.serial) + '">🌈 ' + opts.variant.serial + '/' + VARIANTS[opts.variant.tier].run + '</span>';
+      badges += '<span class="badge-variant" title="' + variantLabel(opts.variant.tier, opts.variant.serial) + '">' + VARIANTS[opts.variant.tier].emoji + ' ' + opts.variant.serial + '/' + VARIANTS[opts.variant.tier].run + '</span>';
     return '<div class="' + cls.join(' ') + '" data-set="' + esc(set.id) + '" data-card="' + esc(card.id) + '" style="' + themeStyle(set) + '">' +
       '<div class="card-inner">' + front(set, card, opts.holo) + (opts.flippable ? back(set) : '') + '</div>' + badges + '</div>';
   }
