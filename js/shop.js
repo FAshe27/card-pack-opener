@@ -26,14 +26,8 @@
   }
   function packVisual(setId) {
     var s = window.CardSets.get(setId);
-    if (!s) return '<div class="shop-pack"><span>' + esc(setId) + '</span></div>';
-    var t = s.theme || {};
-    var style = 'background:linear-gradient(135deg,' + (t.primary || '#333') + ',' + (t.secondary || '#111') + ');';
-    return '<div class="shop-pack" style="' + style + '">' +
-      '<div class="shop-pack-code">' + esc(s.code || setId) + '</div>' +
-      '<div class="shop-pack-name">' + esc(s.name) + '</div>' +
-      '<div class="shop-pack-sub">9 cards</div>' +
-      '</div>';
+    if (!s || !CPS.cards.pack) return '<div class="shop-pack"><span>' + esc(setId) + '</span></div>';
+    return CPS.cards.pack(s, 'shop-pack-size');
   }
 
   async function render(el) {
@@ -70,9 +64,9 @@
 
     el.innerHTML =
       '<div class="panel shop-head">' +
-      '<h2>🏪 Shop</h2>' +
-      '<div class="shop-balance">💵 <b>$' + data.store_credit + '</b> <span class="muted small">Store Credit</span></div>' +
-      '<div class="muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
+      '<div class="shop-title-row"><h2>🏪 Shop</h2>' +
+      '<div class="shop-balance">💵 <b>$' + data.store_credit + '</b></div></div>' +
+      '<div class="shop-restock muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
       '<div class="panel shop-hist-box" id="shopHistBox"><h3>🧾 Purchase history</h3><span class="muted small">Tap to view</span></div>';
