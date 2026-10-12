@@ -36,6 +36,7 @@
     var data = await load();
     if (!data) { el.innerHTML = '<div class="panel"><p class="muted">Shop unavailable.</p></div>'; return; }
     draw(el, data);
+    renderDupeSell(el);
     // countdown timer
     var secs = data.seconds_to_restock;
     var cdEl = $('#shopCountdown', el);
@@ -70,6 +71,7 @@
       '<div class="shop-restock muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
+      '<div class="panel" id="shopDupeSell"></div>' +
 
 '';
 
@@ -106,6 +108,62 @@
         } catch (e) { btn.disabled = false; ctx.cloudError(e); }
       });
     });
+  }
+
+  var DUPE_CREDIT_TIERS = [
+    { tier: 'common', rate: 20, label: 'Common' },
+    { tier: 'uncommon', rate: 12, label: 'Uncommon' },
+    { tier: 'rare', rate: 6, label: 'Rare' },
+    { tier: 'epic', rate: 4, label: 'Epic+' }
+  ];
+
+  function dupeCounts() {
+    // pooled across all sets, mirrors CPS.tickets.ticketDupeCounts
+    var out = { common: 0, uncommon: 0, rare: 0, epic: 0 };
+    if (!ctx.S || !ctx.S.player) return out;
+    var vmap = null;
+    try { vmap = ctx.variantCountMap ? ctx.variantCountMap() : null; } catch (e) {}
+    window.CardSets.all().forEach(function (set) {
+      var st = ctx.S.player.sets[set.id];
+      if (!st || !ctx.dupeCounts) return;
+      var c = ctx.dupeCounts(set, st, vmap);
+      out.common += c.common || 0; out.uncommon += c.uncommon || 0;
+      out.rare += c.rare || 0; out.epic += c.epic || 0;
+    });
+    return out;
+  }
+
+  function renderDupeSell(el) {
+    var counts = dupeCounts();
+    var rows = DUPE_CREDIT_TIERS.map(function (t) {
+      var n = counts[t.tier], credit = Math.floor(n / t.rate);
+      return '<div class="tradein-row">' +
+        '<span class="pill r-' + (t.tier === 'epic' ? 'epic' : t.tier) + '">' + t.label + '</span>' +
+        '<span class="tradein-mid"><b>' + n + '</b><span class="muted">/' + t.rate + '</span> dupes <span class="muted">&rarr;</span> <b>$' + credit + '</b></span>' +
+        '<button class="btn small" data-dupe-sell="' + t.tier + '"' + (credit < 1 ? ' disabled' : '') + '>Sell</button>' +
+        '</div>';
+    }).join('');
+    var box = $('#shopDupeSell', el);
+    if (box) {
+      box.innerHTML = '<h3>💰 Sell your dupes to the shop</h3>' +
+        '<p class="muted small">Trade duplicate cards for Store Credit. Rates are the same across all sets.</p>' +
+        '<div class="tradein-rows">' + rows + '</div>';
+      box.querySelectorAll('[data-dupe-sell]').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          btn.disabled = true;
+          try {
+            var r = await CPS.cloud.call('trade_dupes_credit', { p_tier: btn.getAttribute('data-dupe-sell') });
+            ctx.toast('Sold ' + r.dupes_used + ' dupes for $' + r.credit + ' Store Credit!', 'good');
+            ctx.audio.coin();
+            data.store_credit = r.credit_now;
+            var balEl = $('#shopBalance', el);
+            if (balEl) balEl.innerHTML = '💵 <b>$' + data.store_credit + '</b>';
+            await ctx.refreshCloud();
+            renderDupeSell(el);
+          } catch (e) { btn.disabled = false; ctx.cloudError(e); }
+        });
+      });
+    }
   }
 
   function teardown() {
