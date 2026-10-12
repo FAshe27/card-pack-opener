@@ -103,6 +103,17 @@
           } else {
             btn.disabled = data.store_credit < sl.price;
           }
+          // Update local pack inventory so Open Packs + set dropdown reflect the purchase
+          // without a full refresh (which would restart the shop timer).
+          if (r.set_id != null && r.packs_now != null && ctx.S && ctx.S.sets) {
+            var st = ctx.S.sets[r.set_id];
+            if (!st) {
+              // Set not in local state yet (e.g. first pack of a set) — create the entry
+              st = ctx.S.sets[r.set_id] = { packs: 0, cards: {}, recent: [], stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
+            }
+            st.packs = r.packs_now;
+            if (ctx.renderPacksSide) ctx.renderPacksSide();
+          }
           // Note: no refreshCloud() here — in-place update above is sufficient.
           // refreshCloud() would re-render the shop and restart the timer.
         } catch (e) { btn.disabled = false; ctx.cloudError(e); }
