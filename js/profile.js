@@ -25,8 +25,8 @@ async function openProfile(accountId) {
   try {
     var p = await CPS.cloud.call('get_profile', { p_account: accountId });
     var sets = p.sets || [], collection = p.collection || [];
-    var totU = 0, totT = 0, holos = 0;
-    sets.forEach(function (s) { totU += s.unique || 0; totT += s.total || 0; });
+    var totU = 0, totT = 0, totTi = 0, holos = 0;
+    sets.forEach(function (s) { totU += s.unique || 0; totT += s.total || 0; totTi += s.turned || 0; });
     collection.forEach(function (c) { holos += c.h || 0; });
     var pct = totT ? (totU / totT * 100) : 0;
     var best = bestPull(collection);
@@ -40,6 +40,7 @@ async function openProfile(accountId) {
       '<div class="prof-stat"><b>' + totU.toLocaleString() + '</b><span>cards</span></div>' +
       '<div class="prof-stat"><b>' + pct.toFixed(1) + '%</b><span>complete</span></div>' +
       '<div class="prof-stat"><b>' + holos + '</b><span>holos</span></div>' +
+      '<div class="prof-stat"><b>' + totTi.toLocaleString() + '</b><span>turned in</span></div>' +
       '</div>' +
       (best ? '<div class="prof-best"><span class="pb-top">★ Best pull</span>' +
         '<b class="rt-' + best.card.rarity + '">' + ctx.esc(best.card.name) + '</b>' +
@@ -57,10 +58,12 @@ async function openProfile(accountId) {
       var el = box.querySelector('.prof-sets');
       el.innerHTML = arr.map(function (s) {
         var pc = s.total ? (s.unique / s.total * 100) : 0;
+        var tp = s.total ? ((s.turned || 0) / s.total * 100) : 0;
         return '<div class="prof-set" data-pset="' + ctx.esc(s.set_id) + '">' +
           '<div class="prof-set-top"><span>' + ctx.esc(s.set_name) + '</span>' +
-          '<span class="muted small">' + s.unique + '/' + s.total + ' · ' + pc.toFixed(0) + '%</span></div>' +
-          '<span class="bar"><i style="width:' + pc.toFixed(1) + '%"></i></span></div>';
+          '<span class="muted small">' + s.unique + '/' + s.total + ' · ' + pc.toFixed(1) + '% collected</span></div>' +
+          '<span class="bar"><i style="width:' + pc.toFixed(1) + '%"></i></span>' +
+          (s.turned ? '<div class="muted small turned-note">' + s.turned + ' turned in · ' + tp.toFixed(1) + '%</div>' : '') + '</div>';
       }).join('') || '<div class="empty">—</div>';
       el.querySelectorAll('.prof-set').forEach(function (elm) {
         elm.addEventListener('click', function () {
