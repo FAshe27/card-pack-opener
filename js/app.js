@@ -585,10 +585,9 @@
       .map(function (r) { return '<option value="' + r.key + '">' + r.label + '</option>'; }).join('');
     sel.value = f.rarity;
 
-    renderTradein(set, st);
     if (CPS.tickets) CPS.tickets.render();
     if (isCloud() && !S.myVariants) ensureVariants().then(function () {
-      if (S.view === 'collection') { renderTradein(set, st); if (CPS.tickets) CPS.tickets.render(); }
+      if (S.view === 'collection') { if (CPS.tickets) CPS.tickets.render(); }
     });
 
     var q = f.q.trim().toLowerCase();
@@ -646,12 +645,6 @@
   }
 
   /* --- dupe trade-in */
-  var DUPE_TIERS = [
-    { tier: 'common', rate: 15, label: 'Common' },
-    { tier: 'uncommon', rate: 10, label: 'Uncommon' },
-    { tier: 'rare', rate: 5, label: 'Rare' },
-    { tier: 'epic', rate: 3, label: 'Epic+' }
-  ];
   var DUPE_RARS = { common: ['common'], uncommon: ['uncommon'], rare: ['rare'], epic: ['epic', 'legendary', 'chase'] };
   /* Tradable dupes per tier: every copy beyond the first of each card. */
   /* Numbered variant copies are never tradable (cloud only; guests have none). */
@@ -673,58 +666,6 @@
       out[t] += Math.max(0, e.n - Math.max(1, v));
     });
     return out;
-  }
-  function renderTradein(set, st) {
-    var el = $('#tradeinRows'); if (!el) return;
-    var counts = dupeCounts(set, st, isCloud() ? variantCountMap() : null);
-    el.innerHTML = DUPE_TIERS.map(function (t) {
-      var n = counts[t.tier], trades = Math.floor(n / t.rate);
-      return '<div class="tradein-row">' +
-        '<span class="pill r-' + (t.tier === 'epic' ? 'epic' : t.tier) + '">' + t.label + '</span>' +
-        '<span class="tradein-mid"><b>' + n + '</b><span class="muted">/' + t.rate + '</span> dupes <span class="muted">&rarr;</span> <b>' + trades + '</b> pack' + (trades === 1 ? '' : 's') + '</span>' +
-        '<button class="btn small" data-trade="' + t.tier + '"' + (trades < 1 ? ' disabled' : '') + '>Trade</button>' +
-        '</div>';
-    }).join('');
-  }
-  async function tradeDupes(tier) {
-    var set = S.set, t = null;
-    DUPE_TIERS.forEach(function (x) { if (x.tier === tier) t = x; });
-    if (!t) return;
-    var msg = function (used, trades) {
-      toast('Traded ' + used + ' dupes for ' + trades + ' pack' + (trades === 1 ? '' : 's') + '!', 'good');
-      audio.coin();
-    };
-    if (isCloud()) {
-      try {
-        var r = await CPS.cloud.call('trade_dupes', { p_set: set.id, p_tier: tier });
-        msg(r.dupes_used, r.trades);
-        await refreshCloud();
-      } catch (e) { cloudError(e); }
-      return;
-    }
-    var st = ps(set), trades = Math.floor(dupeCounts(set, st)[tier] / t.rate);
-    if (trades < 1) { toast('Not enough duplicate cards.', 'warn'); return; }
-    var need = trades * t.rate, rars = DUPE_RARS[tier];
-    set.cards.forEach(function (c) {
-      if (need <= 0 || rars.indexOf(c.rarity) < 0) return;
-      var e = st.cards[c.id];
-      if (!e || e.n <= 1) return;
-      var h = e.h || 0, takeNh, takeH;
-      if (h > 0) takeNh = Math.min(e.n - h, need);            /* all non-holos expendable */
-      else takeNh = Math.min(Math.max(e.n - 1, 0), need);     /* keep one */
-      need -= takeNh;
-      takeH = h > 0 ? Math.min(h - 1, need) : 0;               /* keep one holo */
-      need -= takeH;
-      e.n -= (takeNh + takeH);
-      e.h = h - takeH;
-      if (e.n <= 0) delete st.cards[c.id];
-    });
-    st.packs += trades;
-    await save();
-    msg(trades * t.rate, trades);
-    refreshQuests();
-    renderCollection();
-    renderPacksSide();
   }
 
   /* --- collapsible panels */
@@ -1998,7 +1939,6 @@
     $('#collSort').addEventListener('change', function (e) { S.coll.sort = e.target.value; renderCollection(); });
     var tir = $('#tradeinRows'); if (tir) tir.addEventListener('click', function (e) {
       var b = e.target.closest('[data-trade]');
-      if (b && !b.disabled) tradeDupes(b.dataset.trade);
     });
     $('#playerList').addEventListener('click', function (e) {
       var b = e.target.closest('[data-player]');
