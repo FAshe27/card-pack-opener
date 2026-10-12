@@ -88,8 +88,10 @@
           var msg = 'Pack purchased! Check your packs.';
           if (r.kind === 'ticket') {
             msg = '\uD83C\uDFAB Spin Ticket purchased!';
-            if (r.spins_now != null && S && S.player) {
-              S.player.spins = r.spins_now;
+            if (r.spins_now != null && S) {
+              // Cloud mode reads S.spins (spinsAvail); S.player.spins is the local-mode field.
+              S.spins = r.spins_now;
+              if (S.player) S.player.spins = r.spins_now;
               if (ctx.updateWheelBadge) ctx.updateWheelBadge();
             }
           }
