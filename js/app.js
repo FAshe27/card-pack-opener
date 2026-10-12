@@ -1241,7 +1241,8 @@
     var st = ps(set), e = st.cards[card.id], owned = e && e.n > 0, r = rarityOf(card.rarity);
     var row = window.CardSets.oddsTable(set).filter(function (x) { return x.rarity.key === card.rarity; })[0];
     var holo = forceHolo != null ? forceHolo : !!(e && e.h);
-    var html = '<button class="modal-x" data-close aria-label="Close">×</button><div class="zoom">' +
+    var html = (galleryReturnKind ? '<button class="btn small gallery-back" data-gallery-back>← Back to list</button>' : '') +
+      '<button class="modal-x" data-close aria-label="Close">×</button><div class="zoom">' +
       '<div class="zoom-card">'+(owned?CPS.cards.render(set,card,variant?{variant:variant}:{holo:holo}):CPS.cards.render(set,card,{cls:'unowned'}))+'</div>' +
       '<div class="zoom-info"><div class="pill r-' + card.rarity + '">' + r.label + '</div>' +
       '<h3>' + esc(card.name) + '</h3>' +
@@ -1260,6 +1261,8 @@
       (owned && isCloud() ? '<button class="btn small" data-gift>🎁 Gift</button>' : '') +
       '</div></div>';
     openModal(html, function (box) {
+      var bk = box.querySelector('[data-gallery-back]');
+      if (bk) bk.addEventListener('click', function () { showStatGallery(galleryReturnKind, true); });
       var t = box.querySelector('[data-toggle-holo]');
       if (t) t.addEventListener('click', function () { openCardModal(setId, cardId, t.dataset.toggleHolo === '1'); });
       var f = box.querySelector('[data-fav]');
@@ -1282,7 +1285,8 @@
   }
 
   /* --- stats */
-  function showStatGallery(kind) {
+  var galleryReturnKind = null, galleryScrollTop = 0;
+  function showStatGallery(kind, restoreScroll) {
     var title, items = [];
     if (kind === 'numbered') {
       title = 'Your Numbered Cards';
@@ -1292,7 +1296,7 @@
         items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { variant: { tier: v.tier, serial: v.serial } }),
                      variant: { tier: v.tier, serial: v.serial }, holo: false });
       });
-      items.sort(function (a, b) { return (R.INDEX[b.c.rarity] - R.INDEX[a.c.rarity]) || (a.sd.name + a.c.name).localeCompare(b.sd.name + b.c.name); });
+      items.sort(function (a, b) { return a.c.name.localeCompare(b.c.name) || a.sd.name.localeCompare(b.sd.name); });
     } else {
       title = 'Your ' + rarityOf(kind).label + ' Cards';
       window.CardSets.all().forEach(function (sd) {
@@ -1305,7 +1309,7 @@
           items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { holo: holo }), variant: null, holo: holo });
         });
       });
-      items.sort(function (a, b) { return (a.sd.name + a.c.name).localeCompare(b.sd.name + b.c.name); });
+      items.sort(function (a, b) { return a.c.name.localeCompare(b.c.name) || a.sd.name.localeCompare(b.sd.name); });
     }
     var body = items.length
       ? '<div class="stat-gallery">' + items.map(function (x) {
@@ -1317,8 +1321,15 @@
     openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h2>' + esc(title) + ' <span class="muted small">(' + items.length + ')</span></h2>' + body,
       function (box) {
+        if (restoreScroll) {
+          var g0 = box.querySelector('.stat-gallery');
+          if (g0) g0.scrollTop = galleryScrollTop;
+        }
         box.querySelectorAll('.stat-gallery-item').forEach(function (el) {
           el.addEventListener('click', function () {
+            var g = box.querySelector('.stat-gallery');
+            galleryScrollTop = g ? g.scrollTop : 0;
+            galleryReturnKind = kind;
             var vt = el.getAttribute('data-vtier');
             var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-vserial'), 10) } : null;
             openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
@@ -1729,6 +1740,7 @@
     if (after) after(fresh);
   }
   function closeModal(force) {
+    galleryReturnKind = null;
     if (S.gateOpen && !force) return; // the login screen stays until you log in
     S.gateOpen = false;
     $('#modal').classList.add('hidden'); $('#modalBox').innerHTML = '';
