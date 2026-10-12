@@ -722,8 +722,9 @@
     return out;
   }
   function renderTradein(set, st) {
+    var el = $('#tradeinRows'); if (!el) return;
     var counts = dupeCounts(set, st, isCloud() ? variantCountMap() : null);
-    $('#tradeinRows').innerHTML = DUPE_TIERS.map(function (t) {
+    el.innerHTML = DUPE_TIERS.map(function (t) {
       var n = counts[t.tier], trades = Math.floor(n / t.rate);
       return '<div class="tradein-row">' +
         '<span class="pill r-' + (t.tier === 'epic' ? 'epic' : t.tier) + '">' + t.label + '</span>' +
@@ -2058,7 +2059,7 @@
     $('#collSearch').addEventListener('input', function (e) { S.coll.q = e.target.value; renderCollection(); });
     $('#collRarity').addEventListener('change', function (e) { S.coll.rarity = e.target.value; renderCollection(); });
     $('#collSort').addEventListener('change', function (e) { S.coll.sort = e.target.value; renderCollection(); });
-    $('#tradeinRows').addEventListener('click', function (e) {
+    var tir = $('#tradeinRows'); if (tir) tir.addEventListener('click', function (e) {
       var b = e.target.closest('[data-trade]');
       if (b && !b.disabled) tradeDupes(b.dataset.trade);
     });
