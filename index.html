@@ -300,6 +300,12 @@
             <input id="gaCreditAllN" type="number" value="5" min="1" max="999" aria-label="Store Credit">
             <button class="btn small primary" id="gaCreditAllBtn" type="button">Grant</button>
           </div>
+          <div class="grant-all row wrap">
+            <b>Send notification to:</b>
+            <select id="notifyWho" aria-label="Recipient"></select>
+            <input id="notifyText" type="text" maxlength="500" placeholder="Message to players…" style="flex:1;min-width:200px;" aria-label="Message">
+            <button class="btn small primary" id="notifyBtn" type="button">Send</button>
+          </div>
           <div id="acctList" class="acct-list"></div>
         </div>
       </div>
