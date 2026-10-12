@@ -3031,6 +3031,14 @@ CardSets.register({
       "subtitle": "Driver",
       "details": "Richmond short-track legend; the intimidator before The Intimidator.",
       "image": "assets/sets/NASCAR-images/Sonny-Hutchins.svg"
+    },
+    {
+      "name": "Chad Finchum",
+      "rarity": "uncommon",
+      "id": "chad-finchum",
+      "subtitle": "Driver",
+      "details": "Knoxville native; part-time Cup and O'Reilly Series driver. Won the 2016 K&N East PittLite 125 at Bristol.",
+      "image": "assets/sets/NASCAR-images/Chad-Finchum.svg"
     }
   ]
 });
