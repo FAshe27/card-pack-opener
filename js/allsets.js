@@ -2,9 +2,10 @@
    Split out of js/app.js. Uses CPS.appCtx; registers as CPS.allsets. */
 (function (CPS) {
   var ctx = CPS.appCtx, PAGE = 48, shown = PAGE, fullList = [];
-  function render() {
+  function render(mode) {
     var S = ctx.S, st = ctx.ps(), f = S.coll, esc = ctx.esc, R = ctx.R;
     shown = PAGE;
+    var modeTitle = mode === 'chases' ? 'Owned Chases' : 'Owned Numbered';
     var sets = window.CardSets.all().filter(function (s) { return s.id !== 'jumbled'; });
     var total = 0, owned = 0, copies = 0, holoU = 0;
     sets.forEach(function (s) {
@@ -14,7 +15,7 @@
     var pct = total ? owned / total : 0;
     $('#compRing').style.setProperty('--p', (pct * 100).toFixed(1));
     $('#compPct').textContent = (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%';
-    $('#compTitle').textContent = 'Owned Across All Sets';
+    $('#compTitle').textContent = modeTitle + ' — All Sets';
     $('#compSub').textContent = owned + ' unique cards · ' + copies + ' total copies · ' + holoU + ' holo';
     $('#rarityProgress').innerHTML = '';
     var sel = $('#collRarity');
@@ -26,6 +27,11 @@
       s.cards.forEach(function (c) {
         var e = st.cards[c.id], has = e && e.n > 0;
         if (!has) return; // owned only
+        if (mode === 'chases' && c.rarity !== 'chase') return;
+        if (mode === 'numbered') {
+          var hasV = (S.myVariants || []).some(function (v) { return v.set_id === s.id && v.card_id === c.id; });
+          if (!hasV) return;
+        }
         if (f.rarity && c.rarity !== f.rarity) return;
         if (f.own === 'dupes' && !(e.n > 1)) return;
         if (f.own === 'holo' && !(e.h > 0)) return;
