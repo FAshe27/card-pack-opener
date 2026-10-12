@@ -1365,35 +1365,6 @@
       ? '<div class="warn-box">' + S.loadWarnings.concat(window.CardSets.errors).map(esc).join('<br>') + '</div>' : '');
   }
 
-  function importBuild() {
-    var text = $('#impText').value;
-    var name = $('#impName').value.trim() || 'My Set';
-    var res = window.CPSCsv.toSet(text, { name: name, code: $('#impCode').value.trim(), primary: $('#impC1').value, secondary: $('#impC2').value });
-    if (res.set) {
-      var existing = window.CardSets.get(res.set.id);
-      if (existing && existing.source !== 'imported') res.set.id += '-custom';
-      try { res.preview = window.CardSets.validate(res.set); } catch (e) { res.errors.push(e.message); res.preview = null; }
-      // a browser can't read files off your disk: point out paths that look local
-      var local = /^(\/|[A-Za-z]:[\\/]|file:|~)/, bad = 0;
-      res.set.cards.forEach(function (c) { ['image', 'logo'].forEach(function (k) { if (c[k] && local.test(c[k])) bad++; }); });
-      if (bad) res.errors.push(bad + ' image/logo path' + (bad === 1 ? ' looks' : 's look') + ' like a file on your computer, which a website can\'t load. Use web addresses or paths inside the site, or convert the CSV with tools/csv-to-set.js, which copies those files into the site for you.');
-    }
-    return res;
-  }
-  function importPreview() {
-    var res = importBuild(), out = $('#impResult');
-    if (!res.set || !res.set.cards.length) { out.innerHTML = '<div class="warn-box">' + res.errors.map(esc).join('<br>') + '</div>'; return null; }
-    var counts = R.RARITIES.filter(function (r) { return res.counts[r.key]; }).map(function (r) {
-      return '<span class="pill r-' + r.key + '">' + r.label + ': ' + res.counts[r.key] + '</span>';
-    }).join(' ');
-    var missing = R.RARITIES.filter(function (r) { return !res.counts[r.key]; }).map(function (r) { return r.label; });
-    out.innerHTML = '<div><b>' + res.set.cards.length + ' cards</b> · id <code>' + esc(res.set.id) + '</code></div><div class="pills">' + counts + '</div>' +
-      (missing.length ? '<div class="muted small">No ' + missing.join(' / ') + ' cards: those pack slots fall back to the nearest rarity you do have.</div>' : '') +
-      (res.errors.length ? '<div class="warn-box">' + res.errors.slice(0, 12).map(esc).join('<br>') + (res.errors.length > 12 ? '<br>…and ' + (res.errors.length - 12) + ' more' : '') + '</div>' : '') +
-      (res.preview ? '<div class="imp-cards">' + res.preview.cards.slice(0, 3).map(function (c) { return CPS.cards.render(res.preview, c, {}); }).join('') + '</div>' : '');
-    return res;
-  }
-
   function openPlayerModal() {
     if (isCloud()) return openAccountModal();
     if (isLocked()) return showGate({});
@@ -2040,29 +2011,6 @@
           renderSets();
         } catch (err) { cloudError(err); sy.disabled = false; sy.textContent = 'Retry'; }
       }
-    });
-    var _impFile = $('#impFile'); if (_impFile) _impFile.addEventListener('change', function (e) {
-      var f = e.target.files[0]; if (!f) return;
-      var fr = new FileReader();
-      fr.onload = function () {
-        $('#impText').value = fr.result;
-        if (!$('#impName').value.trim()) $('#impName').value = f.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
-        importPreview();
-      };
-      fr.readAsText(f);
-    });
-    var _impPreview = $('#impPreview'); if (_impPreview) _impPreview.addEventListener('click', importPreview);
-    var _impAdd = $('#impAdd'); if (_impAdd) _impAdd.addEventListener('click', async function () {
-      var res = importPreview(); if (!res || !res.preview) return;
-      await Store.saveCustomSet(res.set);
-      window.CardSets.register(res.set, 'imported');
-      fillSetSelect(); selectSet(res.set.id); renderSets();
-      toast('Added "' + res.set.name + '" (' + res.set.cards.length + ' cards).', 'good');
-    });
-    var _impDownload = $('#impDownload'); if (_impDownload) _impDownload.addEventListener('click', function () {
-      var res = importPreview(); if (!res || !res.preview) return;
-      U.download(res.set.id + '.js', window.CPSCsv.toJsFile(res.set), 'text/javascript');
-      toast('Saved ' + res.set.id + '.js. Put it in sets/ and add it to sets/manifest.js.', 'good', 6000);
     });
     var _soundToggle = $('#soundToggle'); if (_soundToggle) _soundToggle.addEventListener('change', function (e) { audio.enabled = e.target.checked; Store.setPref('sound', audio.enabled); applyPrefsUI(); });
     $('#soundBtn').addEventListener('click', function () { audio.enabled = !audio.enabled; Store.setPref('sound', audio.enabled); applyPrefsUI(); if (audio.enabled) audio.click(); });
