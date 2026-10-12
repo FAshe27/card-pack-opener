@@ -377,7 +377,7 @@
     }
     save();
 
-    S.opening = { set: set, pulls: pulls, torn: false, revealed: pulls.map(function () { return false; }), finished: false, auto: false };
+    S.opening = { set: set, pulls: pulls, torn: false, revealed: pulls.map(function () { return false; }), finished: false, auto: false, hero: !!(server && server.hero) };
     refreshQuests();
     $('#stageIdle').classList.add('hidden');
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
@@ -417,6 +417,7 @@
     pk.classList.add('gone');
     await U.sleep(260);
     if (S.opening !== o) return;
+    if (o.hero) fx.banner('HERO PACK!', 'hero');
     $('#stagePack').classList.add('hidden');
     buildGrid(o);
   }
