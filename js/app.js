@@ -1528,7 +1528,7 @@
         accts.filter(function(x) { return !x.is_admin; }).map(function(x) {
           return '<option value="' + esc(x.id) + '">' + esc(x.display_name) + '</option>';
         }).join('');
-      ['grantPacksWho', 'grantSpinsWho', 'grantTokensWho', 'grantCreditWho'].forEach(function(id) {
+      ['grantPacksWho', 'grantSpinsWho', 'grantTokensWho', 'grantCreditWho', 'notifyWho'].forEach(function(id) {
         var sel = document.getElementById(id);
         if (sel) sel.innerHTML = grantOpts;
       });
@@ -2062,6 +2062,7 @@
     });
     CPS.admintokens.bindAll();
     CPS.admintokens.bindCreditAll();
+    CPS.admintokens.bindNotify();
     $('#gaAllBtn').addEventListener('click', async function () {
       var sid = $('#gaAllSet').value, n = parseInt($('#gaAllN').value, 10);
       var who = $('#grantPacksWho').value;

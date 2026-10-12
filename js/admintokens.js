@@ -91,6 +91,33 @@
     });
   }
 
-  CPS.admintokens = { rowHTML: rowHTML, grant: grant, grantCredit: grantCredit, bindAll: bindAll, bindCreditAll: bindCreditAll };
+  function bindNotify() {
+    var btn = ctx.$('#notifyBtn');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', async function () {
+      var whoSel = ctx.$('#notifyWho');
+      var who = whoSel ? whoSel.value : 'everyone';
+      var text = ctx.$('#notifyText').value.trim();
+      if (!text) { ctx.toast('Type a message first.', 'warn'); return; }
+      var whoName = who === 'everyone' ? 'every non-admin player' : (whoSel.selectedOptions[0].textContent || 'player');
+      if (!confirm('Send this notification to ' + whoName + '?\n\n"' + text + '"')) return;
+      btn.disabled = true;
+      try {
+        var r;
+        if (who === 'everyone') {
+          r = await CPS.cloud.call('admin_notify_all', { p_text: text });
+          ctx.toast('Notification sent to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        } else {
+          r = await CPS.cloud.call('admin_notify', { p_account: who, p_text: text });
+          ctx.toast('Notification sent to ' + whoName + '.', 'good');
+        }
+        ctx.$('#notifyText').value = '';
+      } catch (e) { ctx.cloudError(e); }
+      btn.disabled = false;
+    });
+  }
+
+  CPS.admintokens = { rowHTML: rowHTML, grant: grant, grantCredit: grantCredit, bindAll: bindAll, bindCreditAll: bindCreditAll, bindNotify: bindNotify };
   // rowHTML(setOpts) renders the full grant-buttons block for an account row.
 })(window.CPS);
