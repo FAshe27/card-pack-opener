@@ -174,7 +174,7 @@
       (x.turned ? '<span class="badge-turned" title="Turned in — permanently collected">✓</span>' : '') +
       (x.v > 0 ? '<span class="badge-vault" title="' + x.v + ' in your Vault">🔒' + (x.v > 1 ? x.v : '') + '</span>' : '');
     var cls = 'coll-item' + (x.turned ? ' turned' : '') + ((x.total || 0) > 0 && n === 0 ? ' vaulted' : '');
-    return '<div class="' + cls + '"><div class="coll-card">' + ((n > 0 || x.turned) ? render(set, card, { holo: h > 0 }) : render(set, card, { cls: 'unowned' })) +
+    return '<div class="' + cls + '"><div class="coll-card">' + (n > 0 ? render(set, card, { holo: h > 0 }) : render(set, card, { cls: 'unowned' })) +
       (b ? '<div class="coll-badges">' + b + '</div>' : '') + '</div></div>';
   }
 
