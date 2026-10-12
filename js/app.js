@@ -1348,7 +1348,7 @@
       ['Epic Cards',agg.ownedByRarity.epic||0,'epic'],['Legendary Cards',agg.ownedByRarity.legendary||0,'legendary'],
       ['Chase Cards',agg.ownedByRarity.chase||0,'chase'],['Numbered Cards',numberedEarly,'numbered']];
     $('#statTiles').innerHTML=tiles.map(function(t){
-      return '<div class="tile' + (t[2] ? ' clickable' : '') + '"' + (t[2] ? ' data-stat-gallery="' + t[2] + '" title="Click to see your ' + t[0].toLowerCase() + '"' : '') + '><span>'+t[0]+'</span><b>'+t[1]+'</b></div>';
+      return '<div class="tile' + (t[2] ? ' clickable' : '') + '"' + (t[2] ? ' data-stat-gallery="' + t[2] + '" title="Click to see your ' + t[0].toLowerCase() + '"' : '') + '><span>'+t[0]+'</span><b>'+t[1]+'</b>' + (t[2] ? '<span class="tile-hint">Click to view ›</span>' : '') + '</div>';
     }).join('');
     $$('#statTiles [data-stat-gallery]').forEach(function (el) {
       el.addEventListener('click', function () { showStatGallery(el.getAttribute('data-stat-gallery')); });
