@@ -1,0 +1,70 @@
+/* pack skin "minecraft": grass strip on top over a dirt-block body, with the
+   pixel-noise of dirt and grass-green lettering (class pack-skin-minecraft).
+   Scoped set CSS only — no shared stylesheet changes. Card art for this set
+   renders (transparent PNGs) sits in an inventory-slot frame, see section 2. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-minecraft .pack-top {
+  background:
+    /* grass strip at the tear edge: bright grass green with a ragged lower edge */
+    linear-gradient(180deg, #79c25f 0%, #5da344 34%, #4a8a35 62%, #3c702a 100%);
+}
+.pack-skin-minecraft .pack-body {
+  background:
+    /* dirt pixel noise (hard-stop speckles, minecraft-dirt palette) */
+    radial-gradient(circle 3px at 18% 22%, rgba(134,96,67,.9), transparent 70%),
+    radial-gradient(circle 4px at 74% 14%, rgba(104,72,46,.9), transparent 70%),
+    radial-gradient(circle 3px at 42% 58%, rgba(150,110,76,.85), transparent 70%),
+    radial-gradient(circle 5px at 86% 66%, rgba(96,66,40,.9), transparent 70%),
+    radial-gradient(circle 3px at 28% 84%, rgba(140,102,70,.85), transparent 70%),
+    radial-gradient(circle 4px at 60% 38%, rgba(116,82,54,.8), transparent 70%),
+    /* a grass fringe bleeding down from the tear */
+    linear-gradient(180deg, #5da344 0%, #5da344 2.5%, rgba(93,163,68,0) 7%),
+    linear-gradient(180deg, #8a5f3c 0%, #79532f 52%, #5d3f22 100%);
+}
+.pack-skin-minecraft .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(190,255,170,.16), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-minecraft .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(74,138,53,.55) 4px 6px, rgba(230,255,210,.16) 6px 9px); }
+.pack-skin-minecraft .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(70,48,26,.5) 4px 6px, rgba(255,240,210,.08) 6px 9px); }
+.pack-skin-minecraft .pack-top::after { border-bottom-color: rgba(230,255,205,.65); }
+.pack-skin-minecraft .pack-code { color: #e6ffcf; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(121,194,95,.9); }
+.pack-skin-minecraft .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(235,255,215,.5), rgba(61,43,24,.94) 72%);
+  border-color: rgba(220,255,190,.85); box-shadow: 0 0 26px rgba(121,194,95,.55), inset 0 0 18px rgba(160,220,120,.22); text-shadow: 0 0 16px rgba(240,255,220,.9); }
+.pack-skin-minecraft .pack-name { color: #f4ffe8; text-shadow: 0 0 14px rgba(93,163,68,.9), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-minecraft .pack-sub { color: #d7efc3; }
+
+/* ---------- 2. Inventory-slot card frame (scoped to this set's cards) ----------
+   The art window becomes a Minecraft inventory slot: flat slot-grey panel with
+   the chunky bevel (dark top/left, light bottom/right) instead of the stock
+   translucent border. Item/block/mob renders use object-fit: contain via the
+   set theme (--art-fit), so a render sits IN the slot like an inventory icon. */
+.card[data-set="minecraft"] .cf-art {
+  background: #8b8b8b;
+  border: 0;
+  border-radius: 0;
+  box-shadow:
+    inset 3px 3px 0 rgba(0,0,0,.42),
+    inset -3px -3px 0 rgba(255,255,255,.48),
+    inset 6px 6px 0 rgba(0,0,0,.14);
+}
+.card[data-set="minecraft"] .cf-art img,
+.card[data-set="minecraft"] .cf-art svg {
+  padding: 4.5cqw;
+  box-sizing: border-box;
+  image-rendering: pixelated; /* keep the blocky look when small renders scale up */
+}
+/* Slips (ticket/token/credit cards borrowed into a minecraft pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="minecraft"].ticket-card .cf-art,
+.card[data-set="minecraft"].token-card .cf-art,
+.card[data-set="minecraft"].credit-card .cf-art {
+  background: var(--art-bg, #000);
+  border: .9cqw solid rgba(255,255,255,.16);
+  border-radius: 2.4cqw;
+  box-shadow: none;
+}
+.card[data-set="minecraft"].ticket-card .cf-art img,
+.card[data-set="minecraft"].token-card .cf-art img,
+.card[data-set="minecraft"].credit-card .cf-art img { padding: 0; image-rendering: auto; }
