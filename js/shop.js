@@ -103,8 +103,8 @@
           } else {
             btn.disabled = data.store_credit < sl.price;
           }
-
-          await ctx.refreshCloud();
+          // Note: no refreshCloud() here — in-place update above is sufficient.
+          // refreshCloud() would re-render the shop and restart the timer.
         } catch (e) { btn.disabled = false; ctx.cloudError(e); }
       });
     });
