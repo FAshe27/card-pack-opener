@@ -1,0 +1,28 @@
+/* pack skin "countries": vintage atlas — deep ocean blue with a gold graticule, compass-rose glow (class pack-skin-countries) */
+.pack-skin-countries .pack-top {
+  background:
+    radial-gradient(circle 52px at 50% 46%, rgba(255,215,130,.28), rgba(255,215,130,.08) 55%, transparent 72%),
+    radial-gradient(circle 40px at 50% 46%, transparent 62%, rgba(255,225,150,.5) 64%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 34px, rgba(255,255,255,.07) 34px 36px),
+    repeating-linear-gradient(90deg, transparent 0 34px, rgba(255,255,255,.07) 34px 36px),
+    linear-gradient(180deg, #16355e 0%, #0e2547 55%, #081a36 100%);
+}
+.pack-skin-countries .pack-body {
+  background:
+    radial-gradient(ellipse 70% 26% at 50% 112%, rgba(255,215,130,.20), transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 30px, rgba(255,255,255,.05) 30px 32px),
+    repeating-linear-gradient(90deg, transparent 0 30px, rgba(255,255,255,.05) 30px 32px),
+    linear-gradient(180deg, #0d2342 0%, #071a33 60%, #04101f 100%);
+}
+.pack-skin-countries .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(160,200,255,.22), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-countries .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(212,175,55,.42) 4px 6px, rgba(255,255,255,.14) 6px 9px); }
+.pack-skin-countries .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(120,90,20,.5) 4px 6px, rgba(255,255,255,.08) 6px 9px); }
+.pack-skin-countries .pack-top::after { border-bottom-color: rgba(255,220,140,.6); }
+.pack-skin-countries .pack-code { color: #ffe9b0; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(212,175,55,.85); }
+.pack-skin-countries .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,240,200,.55), rgba(20,40,80,.94) 72%);
+  border-color: rgba(255,220,140,.85); box-shadow: 0 0 26px rgba(212,175,55,.6), inset 0 0 18px rgba(160,200,255,.28); text-shadow: 0 0 16px rgba(255,220,140,.9); }
+.pack-skin-countries .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(212,175,55,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-countries .pack-sub { color: #cfe0f5; }
