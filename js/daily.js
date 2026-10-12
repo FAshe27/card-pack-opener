@@ -2,6 +2,7 @@
    Adds a "Claim all (N)" button when 2+ quests are claimable.
    Registers as CPS.daily. */
 (function (CPS) {
+  var claiming = false;
   function getClaimable() {
     var C = window.CPS && CPS.appCtx;
     if (!C || !C.S) return [];
@@ -9,6 +10,8 @@
   }
 
   async function claimAll() {
+    if (claiming) return;
+    claiming = true;
     var btn = document.getElementById('claimAllBtn');
     if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
     var claimable = getClaimable();
@@ -23,18 +26,16 @@
     }
     if (C && C.toast) C.toast('Claimed ' + count + ' quest' + (count === 1 ? '' : 's') + ' for ' + total + ' ticket' + (total === 1 ? '' : 's') + '!', 'good');
     if (C && C.audio) C.audio.coin();
-    // Refresh quests via appCtx
-    if (C && C.refreshQuests) {
-      await C.refreshQuests();
-      // Re-render the current view (renderDaily isn't exposed, but renderView is)
-      if (C.renderView) C.renderView();
-    }
+    // Re-render the current view (renderDaily isn't exposed, but renderView is).
+    // renderView -> renderDaily -> refreshQuests, so no explicit refresh needed.
+    if (C && C.renderView) C.renderView();
+    claiming = false;
     updateBtn();
   }
 
   function updateBtn() {
     var btn = document.getElementById('claimAllBtn');
-    if (!btn) return;
+    if (!btn || claiming) return;
     var claimable = getClaimable();
     if (claimable.length > 1) {
       btn.classList.remove('hidden');
