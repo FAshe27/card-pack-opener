@@ -19,7 +19,7 @@
     busy: false
   };
 
-  /* ---------------------------------------------------------- helpers */
+  /* --- helpers */
   function rarityOf(key) { return R.RARITIES[R.INDEX[key]]; }
   function save() {
     if (S.mode === 'cloud') return Promise.resolve(); // the server is the source of truth
@@ -59,7 +59,7 @@
     });
   }
 
-  /* ---------------------------------------------------------- boot */
+  /* --- boot */
   async function boot() {
     var files = window.CardSets.manifest || [];
     for (var i = 0; i < files.length; i++) {
@@ -93,7 +93,7 @@
     else if (wantDev && !S.dev && canAdminArea()) requestDevUnlock();
   }
 
-  /* ---------------------------------------------------------- online accounts */
+  /* --- online accounts */
   async function initAccount() {
     if (!CPS.cloud.enabled) { await ensurePlayer(); S.mode = 'guest'; grantGuestDailySpin(); return; } // online play turned off in js/config.js
     setLocked();
@@ -260,7 +260,7 @@
     resetStage(); renderPacksSide(); renderView();
   }
 
-  /* ---------------------------------------------------------- views */
+  /* --- views */
   function showView(name, quiet) {
     if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'bounties' || name === 'trading') name = 'market';
@@ -295,7 +295,7 @@
 
 
 
-  /* ---------------------------------------------------------- packs view */
+  /* --- packs view */
   function renderPacksSide() {
     fillSetSelect(); // keep the set dropdown's pack counts live
     var set = S.set, st = ps();
@@ -599,7 +599,7 @@
     if (!S.opening) resetStage();
   }
 
-  /* ---------------------------------------------------------- collection */
+  /* --- collection */
   function renderCollection() {
     var set = S.set, st = ps(), f = S.coll;
     if (set.id === 'jumbled') {
@@ -687,12 +687,10 @@
         CPS.cards.render(set, card, { variant: { tier: v.tier, serial: v.serial } }) +
         '<div class="vserial-cap"><b>' + esc(CPS.cards.VARIANTS[v.tier].name) + ' #' + v.serial + '/' + CPS.cards.VARIANTS[v.tier].run + '</b></div></div>';
     }).join('');
-    grid.querySelectorAll('[data-variant-card]').forEach(function (el) {
-      el.addEventListener('click', function () { openCardModal(set.id, el.dataset.variantCard); });
-    });
+    grid.querySelectorAll('[data-variant-card]').forEach(function (el) { el.addEventListener('click', function () { var v = mine.filter(function (x) { return x.card_id === el.dataset.variantCard; })[0]; openCardModal(set.id, el.dataset.variantCard, null, v ? { tier: v.tier, serial: v.serial } : null); }); });
   }
 
-  /* ---------------------------------------------------- dupe trade-in */
+  /* --- dupe trade-in */
   var DUPE_TIERS = [
     { tier: 'common', rate: 15, label: 'Common' },
     { tier: 'uncommon', rate: 10, label: 'Uncommon' },
@@ -773,7 +771,7 @@
     renderPacksSide();
   }
 
-  /* ---------------------------------------------------- collapsible panels */
+  /* --- collapsible panels */
   var COLLAPSE_KEY = 'cps_collapsed_panels';
   function collapsedPanels() {
     try { return JSON.parse(localStorage.getItem(COLLAPSE_KEY) || '{}'); } catch (e) { return {}; }
@@ -790,7 +788,7 @@
     });
   }
 
-  /* ---------------------------------------------------------- favorites */
+  /* --- favorites */
   var FAV_MAX = 20;
   function favKey(setId, cardId) { return setId + ':' + cardId; }
   function isFav(setId, cardId) {
@@ -821,7 +819,7 @@
     if (S.view === 'collection') renderCollection();
   }
 
-  /* ---------------------------------------------------------- players */
+  /* --- players */
   async function renderPlayers() {
     var box = $('#playerList');
     if (!isCloud()) {
@@ -846,7 +844,7 @@
       }).join('') || '<div class="empty">No players yet.</div>';
     } catch (e) { cloudError(e); }
   }
-  /* ---------------------------------------------------------- notifications */
+  /* --- notifications */
   var NOTIF_KIND_ICON = { gift_card: '🎁', gift_pack: '📦', gift_spin: '🎟️',
     trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌', variant_pull: '🌈', chase_pull: '🎯' };
 
@@ -915,7 +913,7 @@
     } catch (e) { closeModal(true); cloudError(e); }
   }
 
-  /* ---------------------------------------------------------- gifting */
+  /* --- gifting */
   async function openGiftModal(setId, cardId) {
     var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
     if (!set || !card) return;
@@ -996,7 +994,7 @@
     } catch (e2) { closeModal(true); cloudError(e2); }
   }
 
-  /* ---------------------------------------------------------- variants */
+  /* --- variants */
   var VARIANT_ORDER = ['oneofone', 'obsidian', 'prism', 'rainbow'];
 
   async function ensureVariants() {
@@ -1045,7 +1043,7 @@
     el.style.display = '';
   }
 
-  /* ---------------------------------------------------------- trading */
+  /* --- trading */
   var TB = null; // trade builder state
 
   function tbStateOf(set) { return S.player.sets[set.id] || { cards: {} }; }
@@ -1171,7 +1169,7 @@
     } catch (e) { cloudError(e); }
   }
 
-  /* ------------------------------------------------- trade builder view */
+  /* --- trade builder view */
   async function openTradeBuilder(prefillTo) {
     if (!isCloud()) return;
     openModal('<div class="muted" style="padding:24px">Loading…</div>');
@@ -1334,14 +1332,14 @@
 
 
 
-  function openCardModal(setId, cardId, forceHolo) {
+  function openCardModal(setId, cardId, forceHolo, variant) {
     var set = window.CardSets.get(setId); if (!set) return;
     var card = set.byId.get(cardId); if (!card) return;
     var st = ps(set), e = st.cards[card.id], owned = e && e.n > 0, r = rarityOf(card.rarity);
     var row = window.CardSets.oddsTable(set).filter(function (x) { return x.rarity.key === card.rarity; })[0];
     var holo = forceHolo != null ? forceHolo : !!(e && e.h);
     var html = '<button class="modal-x" data-close aria-label="Close">×</button><div class="zoom">' +
-      '<div class="zoom-card">' + (owned ? CPS.cards.render(set, card, { holo: holo }) : CPS.cards.render(set, card, { cls: 'unowned' })) + '</div>' +
+      '<div class="zoom-card">'+(owned?CPS.cards.render(set,card,variant?{variant:variant}:{holo:holo}):CPS.cards.render(set,card,{cls:'unowned'}))+'</div>' +
       '<div class="zoom-info"><div class="pill r-' + card.rarity + '">' + r.label + '</div>' +
       '<h3>' + esc(card.name) + '</h3>' +
       (!owned ? '<div class="muted">Not collected yet \u2014 pull it from a pack!</div>' : '') +
@@ -1349,6 +1347,7 @@
       '<dl><dt>Number</dt><dd>#' + U.pad(card.num, set.numWidth) + ' of ' + set.cards.length + '</dd>' +
       '<dt>Set</dt><dd>' + esc(set.name) + '</dd>' +
       '<dt>You own</dt><dd>' + (owned ? e.n + (e.h ? ' (' + e.h + ' holo)' : '') : '0') + '</dd>' +
+      (variant ? '<dt>Variant</dt><dd>'+esc(CPS.cards.VARIANTS[variant.tier].name)+' #'+variant.serial+'/'+CPS.cards.VARIANTS[variant.tier].run+'</dd>' : '') +
       '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd>' +
       '<dt>In the wild</dt><dd id="cardPop">…</dd></dl>' +
       '<div class="variant-census" id="vcensus" style="display:none"></div>' +
@@ -1379,7 +1378,7 @@
     } catch (e) { if (el.isConnected) el.textContent = '—'; }
   }
 
-  /* ---------------------------------------------------------- stats */
+  /* --- stats */
   function renderStats() {
     var set = S.set, st = ps();
     var agg = { opened: 0, pulled: 0, holos: 0, byRarity: {}, unique: 0, total: 0, packs: 0 };
@@ -1427,7 +1426,7 @@
     if (CPS.globalStats) CPS.globalStats.render();
   }
 
-  /* ---------------------------------------------------------- odds */
+  /* --- odds */
   function renderOdds() {
     var set = S.set;
     if (set.id === 'jumbled') {
@@ -1454,7 +1453,7 @@
     }).join('');
   }
 
-  /* ---------------------------------------------------------- sets & settings */
+  /* --- sets & settings */
   function fillGenSet() {
     var sel = $('#genSet'), keep = sel.value;
     sel.innerHTML = window.CardSets.all().map(function (s) {
@@ -1610,7 +1609,7 @@
     });
   }
 
-  /* ---------------------------------------------------------- admin (online) */
+  /* --- admin (online) */
   async function generateServerCodes(gset, packs, n, uses) {
     if (!isAdmin()) { toast('Prize codes for online accounts need an admin login.', 'warn'); return; }
     if (S.onlineSets.indexOf(gset.id) < 0) { toast('"' + gset.name + '" isn\'t on the server yet. Upload it from the Admin tab first.', 'warn', 5000); return; }
@@ -1792,7 +1791,7 @@
     fr.readAsText(file);
   }
 
-  /* ---------------------------------------------------------- dev mode lock */
+  /* --- dev mode lock */
   function requestDevUnlock() {
     var html = '<button class="modal-x" data-close aria-label="Close">×</button><h2>🔒 Unlock dev mode</h2>' +
       '<p class="muted small">Dev mode adds free packs and the prize code generator. Enter the password to turn it on in this browser.</p>' +
@@ -1815,7 +1814,7 @@
     });
   }
 
-  /* ---------------------------------------------------------- modal */
+  /* --- modal */
   function openModal(html, after) {
     S.gateOpen = false;
     var m = $('#modal'), box = $('#modalBox');
@@ -1829,7 +1828,7 @@
     $('#modal').classList.add('hidden'); $('#modalBox').innerHTML = '';
   }
 
-  /* ---------------------------------------------------------- tilt */
+  /* --- tilt */
   var tiltEl = null;
   function onTilt(e) {
     var el = e.target.closest && e.target.closest('#revealGrid .card.flipped, .zoom-card .card, .best-pull .card');
@@ -1843,7 +1842,7 @@
   }
 
 
-  /* ---------------------------------------------------------- prize wheel */
+  /* --- prize wheel */
   function chicagoToday() {
     try { return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); }
     catch (e) { return new Date().toDateString(); }
@@ -2018,7 +2017,7 @@
     return true;
   }
 
-  /* ---------------------------------------------------------- events */
+  /* --- events */
   function bind() {
     $$('.tab').forEach(function (t) { t.addEventListener('click', function () { showView(t.dataset.view); }); });
     if (CPS.market) CPS.market.init();
