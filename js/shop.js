@@ -58,7 +58,7 @@
         '<div class="shop-info">' +
         '<div class="shop-packname">' + name + '</div>' +
         '<div class="shop-price">💵 $' + sl.price + '</div>' +
-        (remaining != null ? '<div class="muted small shop-left">' + remaining + ' of ' + sl.limit + ' left</div>' : '') +
+        '<div class="muted small shop-left">' + (remaining != null ? remaining + ' of ' + sl.limit + ' left' : '&nbsp;') + '</div>' +
         '<button class="btn primary" data-buyslot="' + sl.slot + '"' + (canBuy ? '' : ' disabled') + '>Buy</button>' +
         '</div></div>';
     }).join('');
