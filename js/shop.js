@@ -58,7 +58,7 @@
         '<div class="shop-info">' +
         '<div class="shop-packname">' + name + '</div>' +
         '<div class="shop-price">💵 $' + sl.price + '</div>' +
-        (remaining != null ? '<div class="muted small">' + remaining + ' of ' + sl.limit + ' left</div>' : '') +
+        (remaining != null ? '<div class="muted small shop-left">' + remaining + ' of ' + sl.limit + ' left</div>' : '') +
         '<button class="btn primary" data-buyslot="' + sl.slot + '"' + (canBuy ? '' : ' disabled') + '>Buy</button>' +
         '</div></div>';
     }).join('');
@@ -66,7 +66,7 @@
     el.innerHTML =
       '<div class="panel shop-head">' +
       '<div class="shop-title-row"><h2>🏪 Shop</h2>' +
-      '<div class="shop-balance">💵 <b>$' + data.store_credit + '</b></div></div>' +
+      '<div class="shop-balance" id="shopBalance">💵 <b>$' + data.store_credit + '</b></div></div>' +
       '<div class="shop-restock muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
@@ -87,15 +87,33 @@
 
     el.querySelectorAll('[data-buyslot]').forEach(function (btn) {
       btn.addEventListener('click', async function () {
+        var slotNum = parseInt(btn.getAttribute('data-buyslot'), 10);
         btn.disabled = true;
         try {
-          var r = await CPS.cloud.call('shop_buy', { p_slot: parseInt(btn.getAttribute('data-buyslot'), 10) });
+          var r = await CPS.cloud.call('shop_buy', { p_slot: slotNum });
           var msg = 'Pack purchased! Check your packs.';
           if (r.revealed_set) msg = '🎁 Mystery revealed: ' + setName(r.revealed_set) + '! Check your packs.';
           ctx.toast(msg, 'good');
           ctx.audio.coin();
+          // in-place update: no full re-render, timer keeps running
+          data.store_credit = r.store_credit;
+          var sl = data.slots[slotNum - 1];
+          sl.bought = (sl.bought || 0) + 1;
+          var booth = btn.closest('.shop-booth');
+          var balEl = $('#shopBalance', el);
+          if (balEl) balEl.innerHTML = '💵 <b>$' + data.store_credit + '</b>';
+          var leftEl = $('.shop-left', booth);
+          if (sl.limit != null) {
+            var remaining = Math.max(0, sl.limit - sl.bought);
+            if (leftEl) leftEl.textContent = remaining + ' of ' + sl.limit + ' left';
+            if (remaining <= 0) btn.disabled = true;
+            else btn.disabled = data.store_credit < sl.price;
+          } else {
+            btn.disabled = data.store_credit < sl.price;
+          }
+          // prepend to history so the modal stays fresh
+          if (data.history) data.history.unshift({ slot: slotNum, set_id: sl.mystery ? r.revealed_set : sl.set_id, price: sl.price, purchased_at: new Date().toISOString() });
           await ctx.refreshCloud();
-          render(el);
         } catch (e) { btn.disabled = false; ctx.cloudError(e); }
       });
     });
