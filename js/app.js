@@ -43,7 +43,7 @@
   }
   function ownedCount(set, st) {
     var n = 0;
-    set.cards.forEach(function (c) { if (st.cards[c.id] && st.cards[c.id].n > 0) n++; });
+    set.cards.forEach(function (c) { if ((st.cards[c.id] && st.cards[c.id].n > 0) || isTurned(set.id, c.id)) n++; });
     return n;
   }
   function toast(msg, type, ms) {
