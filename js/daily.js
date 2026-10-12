@@ -48,6 +48,9 @@
   function init() {
     var btn = document.getElementById('claimAllBtn');
     if (btn) btn.addEventListener('click', claimAll);
+    // Patch single-claim toast to handle token rewards
+    // (app.js shows "+N spin tickets" — we intercept via MutationObserver on toast container)
+    patchSingleClaim();
     // Watch for quest list changes
     var list = document.getElementById('questList');
     if (list) {
@@ -55,6 +58,36 @@
     }
     // Also check periodically (quests load async)
     setInterval(updateBtn, 2000);
+  }
+
+  /* The server now returns currency/amount. app.js still does
+     toast('+' + r.tickets + ' spin ticket...'). For token quests r.tickets=0.
+     We watch for the toast and correct it if the last claim was tokens. */
+  var lastClaimWasTokens = false;
+  var lastTokenAmount = 0;
+  function patchSingleClaim() {
+    // Intercept CPS.cloud.call for claim_quest to capture the currency
+    if (!CPS.cloud || !CPS.cloud.call || CPS.cloud.call._patched) return;
+    var orig = CPS.cloud.call;
+    var patched = async function (name, args) {
+      var r = await orig(name, args);
+      if (name === 'claim_quest' && r) {
+        if (r.currency === 'token') {
+          lastClaimWasTokens = true;
+          lastTokenAmount = r.tokens || r.amount || 0;
+          // The toast was already shown by app.js; show a correction
+          var C = window.CPS && CPS.appCtx;
+          if (C && C.toast) {
+            setTimeout(function() {
+              C.toast('+' + lastTokenAmount + ' arcade token' + (lastTokenAmount === 1 ? '' : 's') + '!', 'good');
+            }, 100);
+          }
+        }
+      }
+      return r;
+    };
+    patched._patched = true;
+    CPS.cloud.call = patched;
   }
 
   if (document.readyState === 'loading') {
