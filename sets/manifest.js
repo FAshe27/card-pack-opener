@@ -24,5 +24,6 @@ CardSets.manifest = [
   'playing.js',
   'beverages.js',
   'cars.js',
-  'cars-additions.js'
+  'cars-additions.js',
+  'coasters.js'
 ];
