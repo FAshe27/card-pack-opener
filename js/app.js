@@ -10,7 +10,7 @@
 
   var S = {
     player: null, set: null, view: 'packs', opening: null, dev: false,
-    coll: { own: 'all', rarity: '', q: '', sort: 'num', allSets: false },
+    coll: { own: 'all', rarity: '', q: '', sort: 'rarity', allSets: false },
     loadWarnings: [],
     mode: 'locked',         // 'cloud' (logged in), 'locked' (login screen) or 'guest' (only when online play is off in js/config.js)
     account: null,          // cloud: {id, display_name, is_admin}
@@ -628,6 +628,7 @@
         '<span class="bar"><i style="width:' + (have / pool.length * 100).toFixed(1) + '%"></i></span></button>';
     }).join('');
 
+    $('#collSort').value = f.sort;
     var sel = $('#collRarity');
     sel.innerHTML = '<option value="">All rarities</option>' + R.RARITIES.filter(function (r) { return set.pools[r.key].length; })
       .map(function (r) { return '<option value="' + r.key + '">' + r.label + '</option>'; }).join('');
