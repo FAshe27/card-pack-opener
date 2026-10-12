@@ -1424,9 +1424,10 @@
       var st = S.player.sets[s.id], owned = st ? ownedCount(s, st) : 0;
       return '<div class="set-item' + (s.id === S.set.id ? ' current' : '') + '">' +
         CPS.cards.swatch(s) +
-        '<div class="set-meta"><b>' + esc(s.name) + '</b><span>' + s.cards.length + ' cards · ' + (s.source === 'imported' ? 'imported in this browser' : 'sets/ file') +
+        '<div class="set-meta"><b>' + esc(s.name) + '</b><span>' + s.cards.length + ' cards · ' + (S.onlineSets.indexOf(s.id) >= 0 ? 'on the server' : 'not on server') +
         ' · you have ' + owned + '</span></div>' +
         '<div class="set-actions">' + (s.id === S.set.id ? '<span class="pill">Selected</span>' : '<button class="btn small" data-use="' + esc(s.id) + '">Use</button>') +
+        (function(){ var on = S.onlineSets.indexOf(s.id) >= 0; return '<button class="btn small' + (on ? ' ghost' : ' primary') + '" data-sync="' + esc(s.id) + '">' + (on ? 'Re-sync' : 'Upload') + '</button>'; })() +
         (s.source === 'imported' ? '<button class="btn small ghost" data-remove="' + esc(s.id) + '">Remove</button>' : '') + '</div></div>';
     }).join('') + (window.CardSets.errors.length || S.loadWarnings.length
       ? '<div class="warn-box">' + S.loadWarnings.concat(window.CardSets.errors).map(esc).join('<br>') + '</div>' : '');
@@ -2081,13 +2082,32 @@
     });
 
     // sets & settings
+    var setSearch = $('#setSearch');
+    if (setSearch) setSearch.addEventListener('input', function () {
+      var q = setSearch.value.toLowerCase();
+      var items = document.querySelectorAll('#setList .set-item');
+      for (var i = 0; i < items.length; i++) {
+        var txt = items[i].textContent.toLowerCase();
+        items[i].style.display = (!q || txt.indexOf(q) >= 0) ? '' : 'none';
+      }
+    });
     $('#setList').addEventListener('click', async function (e) {
-      var u = e.target.closest('[data-use]'), rm = e.target.closest('[data-remove]');
+      var u = e.target.closest('[data-use]'), rm = e.target.closest('[data-remove]'), sy = e.target.closest('[data-sync]');
       if (u) { selectSet(u.dataset.use); renderSets(); }
       if (rm && confirm('Remove this imported set from this browser? (Your pulled cards stay saved.)')) {
         await Store.deleteCustomSet(rm.dataset.remove); window.CardSets.unregister(rm.dataset.remove);
         if (S.set.id === rm.dataset.remove) S.set = window.CardSets.all()[0];
         fillSetSelect(); selectSet(S.set.id); renderSets();
+      }
+      if (sy) {
+        var set = window.CardSets.get(sy.dataset.sync); if (!set) return;
+        sy.disabled = true; sy.textContent = 'Uploading…';
+        try {
+          var r = await CPS.cloud.call('admin_upsert_set', { p_set: setPayload(set) });
+          if (S.onlineSets.indexOf(set.id) < 0) S.onlineSets.push(set.id);
+          toast('"' + set.name + '" is on the server (' + r.cards + ' cards).', 'good');
+          renderSets();
+        } catch (err) { cloudError(err); sy.disabled = false; sy.textContent = 'Retry'; }
       }
     });
     $('#impFile').addEventListener('change', function (e) {
@@ -2169,17 +2189,7 @@
       var s = collapsedPanels(); s[p.id] = p.classList.contains('collapsed'); saveCollapsed(s);
       e.stopPropagation();
     });
-    $('#serverSets').addEventListener('click', async function (e) {
-      var b = e.target.closest('[data-sync]'); if (!b) return;
-      var set = window.CardSets.get(b.dataset.sync); if (!set) return;
-      b.disabled = true; b.textContent = 'Uploading…';
-      try {
-        var r = await CPS.cloud.call('admin_upsert_set', { p_set: setPayload(set) });
-        if (S.onlineSets.indexOf(set.id) < 0) S.onlineSets.push(set.id);
-        toast('"' + set.name + '" is on the server (' + r.cards + ' cards).', 'good');
-        renderAdmin();
-      } catch (err) { cloudError(err); b.disabled = false; b.textContent = 'Retry'; }
-    });
+
 
     // modal
     $('#modal').addEventListener('click', function (e) { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
