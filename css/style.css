@@ -1469,8 +1469,8 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 /* --- turn-ins + the Vault (108) --- */
 .badge-turned { background: #14532d; color: #86efac; border-radius: 999px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,.35); display: inline-flex; align-items: center; justify-content: center; min-width: 18px; }
 .badge-vault { background: #3a2c07; color: #f5b942; border-radius: 999px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,.35); display: inline-flex; align-items: center; justify-content: center; min-width: 18px; }
-.coll-item.turned .card { box-shadow: 0 0 0 2px #34d399, 0 0 16px rgba(52,211,153,.35); }
 .coll-item.vaulted .card { box-shadow: 0 0 0 1px rgba(245,185,66,.65), 0 0 10px rgba(245,185,66,.18); }
+.coll-item.turned .card { box-shadow: 0 0 0 2px #34d399, 0 0 16px rgba(52,211,153,.35); }
 .turned-note { color: #4ade80; font-weight: 700; }
 .vault-tag { color: #f5b942; font-weight: 700; }
 .vault-box { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
