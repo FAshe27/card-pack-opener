@@ -260,7 +260,7 @@
         <button class="btn primary" id="adminUnlockBtn" type="button">Unlock</button>
       </div>
       <div id="adminBody" class="admin-layout">
-        <div class="panel collapsible" id="panelCreate">
+        <div class="panel wide collapsible" id="panelPlayers">
           <h2>Create a friend's account</h2>
           <p class="muted small">There's no public sign-up: you create each account here. Friends log in with their <b>username</b> and a <b>4-digit PIN</b>. The PIN is shown once after you create the account (you can reset it any time).</p>
           <form id="newAcctForm" class="form-grid" autocomplete="off">
@@ -273,11 +273,6 @@
             <button class="btn primary span2" type="submit">Create account</button>
           </form>
           <div id="naResult"></div>
-        </div>
-        <div class="panel collapsible" id="panelServerSets">
-          <h2>Sets on the server</h2>
-          <p class="muted small">Packs are opened on the server, so each set file must be uploaded there too. Re-sync after editing a set.</p>
-          <div id="serverSets" class="set-list"></div>
         </div>
         <div class="panel wide collapsible" id="panelAccounts">
           <h2>Accounts <button class="btn small ghost" id="adminRefresh" type="button">Refresh</button></h2>
@@ -306,10 +301,12 @@
         </div>
       </div>
       <div id="setsArea">
-        <h2 class="area-title">Sets &amp; settings</h2>
+        <h2 class="area-title">Import &amp; Settings</h2>
       <div class="sets-layout">
-        <div class="panel collapsible" id="panelCardSets">
-          <h2>Card sets</h2>
+        <div class="panel wide collapsible" id="panelSets">
+          <h2>Card Sets</h2>
+          <p class="muted small">Packs open on the server — re-sync a set after editing its file.</p>
+          <div class="row" style="margin-bottom:8px"><input id="setSearch" placeholder="Search sets..." aria-label="Search sets" style="flex:1"></div>
           <div id="setList" class="set-list"></div>
         </div>
         <div class="panel collapsible" id="panelImport">
