@@ -71,19 +71,9 @@
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
 
-      '<div class="panel shop-hist-box" id="shopHistBox"><h3>🧾 Purchase history</h3><span class="muted small">Tap to view</span></div>';
+'';
 
-    $('#shopHistBox', el).addEventListener('click', function () {
-      var hist = (data.history || []).map(function (h) {
-        return '<div class="shop-hist-row"><span>Slot ' + h.slot + ' · ' + esc(setName(h.set_id)) + '</span>' +
-          '<span class="muted small">💵 $' + h.price + ' · ' + new Date(h.purchased_at).toLocaleString() + '</span></div>';
-      }).join('') || '<p class="muted small">No purchases yet.</p>';
-      ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
-        '<h3>🧾 Purchase history</h3><div class="shop-hist">' + hist + '</div>',
-        function (box) {
-          box.querySelector('[data-close]').addEventListener('click', function () { ctx.closeModal(); });
-        });
-    });
+
 
     el.querySelectorAll('[data-buyslot]').forEach(function (btn) {
       btn.addEventListener('click', async function () {
@@ -111,8 +101,7 @@
           } else {
             btn.disabled = data.store_credit < sl.price;
           }
-          // prepend to history so the modal stays fresh
-          if (data.history) data.history.unshift({ slot: slotNum, set_id: sl.mystery ? r.revealed_set : sl.set_id, price: sl.price, purchased_at: new Date().toISOString() });
+
           await ctx.refreshCloud();
         } catch (e) { btn.disabled = false; ctx.cloudError(e); }
       });
