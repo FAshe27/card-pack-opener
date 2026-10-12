@@ -117,8 +117,10 @@
           <button data-own="missing">Missing</button>
           <button data-own="dupes">Duplicates</button>
           <button data-own="holo">Holo</button>
-          <button data-own="fav">Favorites</button>
+          <button data-own="fav">Vault</button>
           <button data-own="numbered">Numbered</button>
+          <button data-own="turned">Turned In</button>
+          <button data-own="notturned">Not Turned In</button>
         </div>
         <select id="collSort">
           <option value="num">Sort: Number</option>
@@ -128,6 +130,7 @@
         </select>
         <span class="filter-count" id="collCount"></span>
       </div>
+      <div class="coll-actions cloud-only"><button class="btn small hidden" id="turnInAllBtn">Turn in all in this set</button></div>
       <div class="coll-grid" id="collGrid"></div>
       <div class="panel variants-panel hidden" id="variantsPanel">
         <div class="tradein-head"><h3>🌈 Numbered variants</h3><span class="muted small" id="variantsCount"></span></div>
@@ -357,6 +360,8 @@
   <script defer src="js/slips.js"></script>
   <script defer src="js/daily.js"></script>
   <script defer src="js/app.js"></script>
+  <script defer src="js/gifting.js"></script>
+  <script defer src="js/tickets.js"></script>
     <script defer src="js/packsbadge.js"></script>
   <script defer src="js/globalstats.js"></script>
   <script defer src="js/jumbled.js"></script>

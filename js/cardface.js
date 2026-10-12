@@ -167,10 +167,14 @@
      card's top-right corner like a notification badge. The badges sit in .coll-card (a plain, non-clipping wrapper
      around the card) rather than inside the card faces (overflow: hidden), sit just above the top edge so they
      never cover the rarity gem or the name, and the cell has room (padding) so its containment never clips them. */
-  function collected(set, card, n, h) {
-    var b = (h > 0 ? '<span class="badge-holo" title="' + h + ' holo">✦' + (h > 1 ? h : '') + '</span>' : '') +
-      (n > 1 ? '<span class="badge-count" title="You have ' + n + ' copies">×' + n + '</span>' : '');
-    return '<div class="coll-item"><div class="coll-card">' + (n ? render(set, card, { holo: h > 0 }) : render(set, card, { cls: 'unowned' })) +
+  function collected(set, card, n, h, x) {
+    x = x || {};
+    var b = (h > 0 ? '<span class="badge-holo" title="' + h + ' holo on hand">✦' + (h > 1 ? h : '') + '</span>' : '') +
+      (n > 1 ? '<span class="badge-count" title="You have ' + n + ' copies on hand">×' + n + '</span>' : '') +
+      (x.turned ? '<span class="badge-turned" title="Turned in — permanently collected">✓</span>' : '') +
+      (x.v > 0 ? '<span class="badge-vault" title="' + x.v + ' in your Vault">🔒' + (x.v > 1 ? x.v : '') + '</span>' : '');
+    var cls = 'coll-item' + (x.turned ? ' turned' : '') + ((x.total || 0) > 0 && n === 0 ? ' vaulted' : '');
+    return '<div class="' + cls + '"><div class="coll-card">' + ((n > 0 || x.turned) ? render(set, card, { holo: h > 0 }) : render(set, card, { cls: 'unowned' })) +
       (b ? '<div class="coll-badges">' + b + '</div>' : '') + '</div></div>';
   }
 

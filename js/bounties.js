@@ -258,7 +258,7 @@
       var vmap = variantCountMap();
       var any = s.cards.some(function (c) {
         var e = st.cards[c.id];
-        return e && e.n > 0 && (e.n - (vmap[s.id + ':' + c.id] || 0)) > 0;
+        return e && (e.n - (e.v || 0) - (vmap[s.id + ':' + c.id] || 0)) > 0;
       });
       if (any) out.push(s);
     });
@@ -445,7 +445,7 @@
     var vmap = variantCountMap(), st = ctx.ps({ id: s.id }), list = [];
     s.cards.forEach(function (c) {
       var e = st.cards[c.id];
-      var avail = e ? e.n - (vmap[s.id + ':' + c.id] || 0) : 0;
+      var avail = e ? e.n - (e.v || 0) - (vmap[s.id + ':' + c.id] || 0) : 0;
       if (avail <= 0) return;
       var used = PB.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id; }).length;
       if (avail - used <= 0) return;
@@ -453,7 +453,7 @@
         var hay = ('#' + c.num + ' ' + c.num + ' ' + c.name + ' ' + (c.subtitle || '')).toLowerCase();
         if (hay.indexOf(q) < 0) return;
       }
-      list.push({ card: c, left: avail - used, holo: (e.h || 0) > 0 });
+      list.push({ card: c, left: avail - used, holo: (e.h || 0) - (e.vh || 0) > 0 });
     });
     list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
     list = list.slice(0, 40);
@@ -472,13 +472,13 @@
     if (PB.offerCards.length >= 5) { ctx.toast('At most 5 cards per bounty.', 'warn'); return; }
     var st = ctx.ps({ id: sid }), e = st.cards[cid] || { n: 0, h: 0 };
     var vmap = variantCountMap();
-    var avail = e.n - (vmap[sid + ':' + cid] || 0);
+    var avail = e.n - (e.v || 0) - (vmap[sid + ':' + cid] || 0);
     var used = PB.offerCards.filter(function (o) { return o.set === sid && o.card === cid; }).length;
     if (used >= avail) { ctx.toast('No more copies to offer.', 'warn'); return; }
     var wantHolo = box.querySelector('#pbCardHolo').checked;
     var holoUsed = PB.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo; }).length;
-    if (wantHolo && holoUsed >= (e.h || 0)) { ctx.toast('You don\'t have another holo copy.', 'warn'); return; }
-    PB.offerCards.push({ set: sid, card: cid, holo: wantHolo && (e.h || 0) > 0 });
+    if (wantHolo && holoUsed >= (e.h || 0) - (e.vh || 0)) { ctx.toast('You don\'t have another holo copy on hand.', 'warn'); return; }
+    PB.offerCards.push({ set: sid, card: cid, holo: wantHolo && (e.h || 0) - (e.vh || 0) > 0 });
     pbRenderOfferCards(box);
     pbRenderOfferGrid(box);
   }

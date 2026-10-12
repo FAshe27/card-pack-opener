@@ -26,7 +26,7 @@
     var n = (a.name || '').toLowerCase(), m = (b.name || '').toLowerCase();
     return n < m ? -1 : (n > m ? 1 : 0);
   }
-  function myVariants() { return ctx.S.myVariants || []; }
+  function myVariants() { return (ctx.S.myVariants || []).filter(function (v) { return !v.vaulted; }); }
   function variantLabel(tier, serial) {
     var v = CPS.cards.VARIANTS[tier];
     return v ? v.name + ' #' + serial + '/' + v.run : tier + ' #' + serial;
@@ -348,12 +348,12 @@
     var q = PL.q.trim().toLowerCase(), st = ctx.ps({ id: s.id }), list = [];
     s.cards.forEach(function (c) {
       var e = st.cards[c.id];
-      if (!e || e.n <= 0) return;
+      if (!e || e.n - (e.v || 0) <= 0) return;
       if (q) {
         var hay = ('#' + c.num + ' ' + c.num + ' ' + c.name + ' ' + (c.subtitle || '')).toLowerCase();
         if (hay.indexOf(q) < 0) return;
       }
-      list.push({ card: c, left: e.n });
+      list.push({ card: c, left: e.n - (e.v || 0) });
     });
     list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
     list = list.slice(0, 40);
@@ -387,7 +387,7 @@
       }
     });
     var vcount = Object.keys(vmap).length;
-    if (e.n - vcount > 0) out.unshift({ key: 'regular', label: 'Regular copy (×' + (e.n - vcount) + ')', tier: null, serial: null });
+    if (e.n - (e.v || 0) - vcount > 0) out.unshift({ key: 'regular', label: 'Regular copy (×' + (e.n - (e.v || 0) - vcount) + ')', tier: null, serial: null });
     return out;
   }
 
@@ -517,24 +517,24 @@
     });
     s.cards.forEach(function (c) {
       var e = st.cards[c.id];
-      if (!e || e.n <= 0) return;
+      if (!e || e.n - (e.v || 0) <= 0) return;
       if (q) {
         var hay = ('#' + c.num + ' ' + c.num + ' ' + c.name + ' ' + (c.subtitle || '')).toLowerCase();
         if (hay.indexOf(q) < 0) return;
       }
       var vs = vmap[c.id] || [];
-      var plainLeft = e.n - vs.length;
+      var plainLeft = e.n - (e.v || 0) - vs.length;
       // used counts
       var usedPlain = OF.cards.filter(function (o) { return o.set === s.id && o.card === c.id && !o.tier; }).length;
       if (plainLeft - usedPlain > 0) {
         rows.push({ set: s.id, card: c, kind: 'plain', left: plainLeft - usedPlain,
-                    holo: (e.h || 0) > 0, label: c.name, tier: null, serial: null });
+                    holo: (e.h || 0) - (e.vh || 0) > 0, label: c.name, tier: null, serial: null });
       }
       vs.forEach(function (v) {
         var usedV = OF.cards.some(function (o) { return o.set === s.id && o.card === c.id && o.tier === v.tier && o.serial === v.serial; });
         if (!usedV) {
           rows.push({ set: s.id, card: c, kind: 'variant', left: 1,
-                      holo: (e.h || 0) > 0, label: c.name + ' — ' + variantLabel(v.tier, v.serial),
+                      holo: (e.h || 0) - (e.vh || 0) > 0, label: c.name + ' — ' + variantLabel(v.tier, v.serial),
                       tier: v.tier, serial: v.serial });
         }
       });
