@@ -136,7 +136,7 @@
         '<div class="trade-mid">' +
           '<div class="trade-cardname">' + listingTitle(l) + '</div>' +
           '<div class="muted small">' + esc(l.set_name || l.set_id) + ' · ' + esc(l.rarity || '') + '</div>' +
-          (l.note ? '<div class="trade-note">“' + esc(l.note) + '”</div>' : '') +
+          (l.note ? '<div class="trade-note"><span class="muted small">Looking for: </span>“' + esc(l.note) + '”</div>' : '') +
           '<div class="muted small">listed by <b>' + esc(l.lister) + '</b> · expires in ' + esc(expiresIn(l.expires_at)) + '</div>' +
           '<div class="trade-offercount">' + (l.offer_count === 1 ? '1 offer' : l.offer_count + ' offers') +
             (l.my_offer ? ' · <b>you offered</b>' : '') + '</div>' +
@@ -198,7 +198,7 @@
         '<div class="trade-face">' + listingFace(l) + '</div>' +
         '<div><div class="trade-cardname">' + listingTitle(l) + '</div>' +
         '<div class="muted small">' + esc(l.set_name || l.set_id) + ' · ' + esc(l.rarity || '') + '</div>' +
-        (l.note ? '<div class="trade-note">“' + esc(l.note) + '”</div>' : '') +
+        (l.note ? '<div class="trade-note"><span class="muted small">Looking for: </span>“' + esc(l.note) + '”</div>' : '') +
         '<div class="muted small">listed by <b>' + esc(l.lister) + '</b> · expires in ' + esc(expiresIn(l.expires_at)) + '</div></div>' +
       '</div>' +
       '<h4>Offers (' + (l.offers || []).length + ')</h4>' +
@@ -297,7 +297,7 @@
       '<div id="tpCardSel" class="muted small"></div>' +
       '<div class="row wrap"><label class="inline"><input type="checkbox" id="tpHolo"> list as holo</label>' +
       '<label>Which copy <select id="tpCopy"></select></label></div>' +
-      '<div class="row wrap"><label>Note (optional) <input id="tpNote" placeholder="what are you hunting for?" size="30" maxlength="140"></label></div>' +
+      '<div class="row wrap"><label>What are you looking for? (optional) <input id="tpNote" placeholder="e.g. Detroit Tigers cards" size="30" maxlength="140"></label></div>' +
       '<div class="row wrap"><button class="btn primary big" id="tpGo">List it</button>' +
       '<button class="btn" data-close>Cancel</button></div>' +
       '<p class="muted small">Your card is escrowed until the listing is accepted, cancelled, or expires (7 days).</p>' +
