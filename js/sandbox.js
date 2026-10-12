@@ -29,7 +29,7 @@
 
   var ITEMS = [
     { id: 'shop', title: 'Shop', blurb: 'Rotating pack stock for Store Credit. Restocks at midnight/noon.',
-      status: 'public',
+      status: 'testing',
       render: function (el) { CPS.shop.render(el); },
       teardown: function () { CPS.shop.teardown(); } },
   ];
