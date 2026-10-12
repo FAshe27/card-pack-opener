@@ -52,9 +52,11 @@
     var slots = data.slots.map(function (sl) {
       var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
       var canBuy = data.store_credit >= sl.price && (remaining == null || remaining > 0);
-      var visual = sl.mystery ? '<div class="shop-mystery"><div class="shop-mystery-q">?</div><div class="muted small">Mystery Pack</div></div>' : packVisual(sl.set_id);
-      var name = sl.mystery ? '<b>???</b>' : '<b>' + esc(setName(sl.set_id)) + '</b>';
-      var tag = sl.slot === 3 ? '<div class="shop-deal-tag">DEAL</div>' : (sl.mystery ? '<div class="shop-deal-tag mystery">MYSTERY</div>' : '');
+      var isTicket = sl.kind === 'ticket';
+      var visual = isTicket ? '<div class="shop-ticket"><div class="shop-ticket-icon">\uD83C\uDFAB</div><div class="muted small">Spin Ticket</div></div>'
+        : sl.mystery ? '<div class="shop-mystery"><div class="shop-mystery-q">?</div><div class="muted small">Mystery Pack</div></div>' : packVisual(sl.set_id);
+      var name = isTicket ? '<b>Spin Ticket</b>' : sl.mystery ? '<b>???</b>' : '<b>' + esc(setName(sl.set_id)) + '</b>';
+      var tag = sl.slot === 3 ? '<div class="shop-deal-tag">DEAL</div>' : (sl.mystery ? '<div class="shop-deal-tag mystery">MYSTERY</div>' : (isTicket ? '<div class="shop-deal-tag ticket">WHEEL</div>' : ''));
       return '<div class="shop-booth">' + tag + visual +
         '<div class="shop-info">' +
         '<div class="shop-packname">' + name + '</div>' +
@@ -84,6 +86,13 @@
         try {
           var r = await CPS.cloud.call('shop_buy', { p_slot: slotNum });
           var msg = 'Pack purchased! Check your packs.';
+          if (r.kind === 'ticket') {
+            msg = '\uD83C\uDFAB Spin Ticket purchased!';
+            if (r.spins_now != null && S && S.player) {
+              S.player.spins = r.spins_now;
+              if (ctx.updateWheelBadge) ctx.updateWheelBadge();
+            }
+          }
           if (r.revealed_set) msg = '🎁 Mystery revealed: ' + setName(r.revealed_set) + '! Check your packs.';
           ctx.toast(msg, 'good');
           ctx.audio.coin();
