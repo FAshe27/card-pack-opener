@@ -458,7 +458,7 @@
       (holos ? ' · <b>' + holos + '</b> holo' : '') +
       slipBits +
       ' · Top pull: <b class="rt-' + best.card.rarity + '">' + esc(best.card.name) + (best.holo ? ' ✦' : '') +
-      (best.variant ? ' 🌈 #' + best.serial + '/' + CPS.cards.VARIANTS[best.variant].run : '') + '</b> (' + rarityOf(best.card.rarity).label + ')';
+      (best.variant ? ' ' + CPS.cards.VARIANTS[best.variant].emoji + ' #' + best.serial + '/' + CPS.cards.VARIANTS[best.variant].run : '') + '</b> (' + rarityOf(best.card.rarity).label + ')';
   }
 
   function reveal(i) {
@@ -484,7 +484,7 @@
       fx.flash('rgba(255,255,255,.4)', 1000);
       fx.burst(c.x, c.y, { count: 150, colors: ['#ff5f5f', '#ffb21e', '#f7f75f', '#38c97f', '#3f8cff', '#b35cff', '#fff'], speed: 12, shape: 'star', size: 3, life: 90 });
       fx.confetti(220);
-      fx.banner('🌈 ' + vt.name.toUpperCase() + ' #' + p.serial + '/' + vt.run + ' 🌈', 'variant', 3200);
+      fx.banner(CPS.cards.VARIANTS[p.variant].emoji + ' ' + vt.name.toUpperCase() + ' #' + p.serial + '/' + vt.run + ' ' + CPS.cards.VARIANTS[p.variant].emoji, 'variant', 3200);
       $('#stage').classList.add('shake'); setTimeout(function () { $('#stage').classList.remove('shake'); }, 700);
     }
     if (r === 'rare') fx.burst(c.x, c.y, { count: 22, colors: [col, '#fff'], speed: 5, size: 2.2 });
