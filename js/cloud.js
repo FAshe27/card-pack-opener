@@ -3,7 +3,7 @@
    the server returns a random session token, and every call sends that token. */
 (function (CPS) {
   var cfg = window.CPS_CONFIG || {};
-  var enabled = !!(cfg.onlineEnabled && cfg.supabaseUrl && cfg.supabaseKey && window.fetch);
+  var enabled = !!(cfg.supabaseUrl && cfg.supabaseKey && window.fetch);
   var KEY = 'cps:v1:token';
   var NET_MSG = "Can't reach the server right now. Please try again later.";
 
