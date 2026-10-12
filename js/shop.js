@@ -51,11 +51,12 @@
     var slots = data.slots.map(function (sl) {
       var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
       var canBuy = data.store_credit >= sl.price && (remaining == null || remaining > 0);
-      return '<div class="shop-booth">' +
-        (sl.slot === 3 ? '<div class="shop-deal-tag">DEAL</div>' : '') +
-        packVisual(sl.set_id) +
+      var visual = sl.mystery ? '<div class="shop-mystery"><div class="shop-mystery-q">?</div><div class="muted small">Mystery Pack</div></div>' : packVisual(sl.set_id);
+      var name = sl.mystery ? '<b>???</b>' : '<b>' + esc(setName(sl.set_id)) + '</b>';
+      var tag = sl.slot === 3 ? '<div class="shop-deal-tag">DEAL</div>' : (sl.mystery ? '<div class="shop-deal-tag mystery">MYSTERY</div>' : '');
+      return '<div class="shop-booth">' + tag + visual +
         '<div class="shop-info">' +
-        '<div class="shop-packname"><b>' + esc(setName(sl.set_id)) + '</b></div>' +
+        '<div class="shop-packname">' + name + '</div>' +
         '<div class="shop-price">💵 $' + sl.price + '</div>' +
         (remaining != null ? '<div class="muted small">' + remaining + ' of ' + sl.limit + ' left</div>' : '') +
         '<button class="btn primary" data-buyslot="' + sl.slot + '"' + (canBuy ? '' : ' disabled') + '>Buy</button>' +
@@ -69,6 +70,14 @@
       '<div class="shop-restock muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
+      '<div class="panel shop-info-box"><h3>ℹ️ How it works</h3>' +
+      '<ul class="shop-info-list">' +
+      '<li>Restocks at <b>midnight</b> and <b>noon</b> (Chicago time).</li>' +
+      '<li>Everyone sees the <b>same 3 packs</b> — limits are per-player.</li>' +
+      '<li>Slots 1 & 2: <b>$5</b>, unlimited buys, never Jumbled.</li>' +
+      '<li>Slot 3 (Deal): <b>$2</b>, max 3 per restock, can be Jumbled.</li>' +
+      '<li>Mystery: <b>$1</b>, 1 per restock, revealed when you buy.</li>' +
+      '</ul></div>' +
       '<div class="panel shop-hist-box" id="shopHistBox"><h3>🧾 Purchase history</h3><span class="muted small">Tap to view</span></div>';
 
     $('#shopHistBox', el).addEventListener('click', function () {
@@ -88,7 +97,9 @@
         btn.disabled = true;
         try {
           var r = await CPS.cloud.call('shop_buy', { p_slot: parseInt(btn.getAttribute('data-buyslot'), 10) });
-          ctx.toast('Pack purchased! Check your packs.', 'good');
+          var msg = 'Pack purchased! Check your packs.';
+          if (r.revealed_set) msg = '🎁 Mystery revealed: ' + setName(r.revealed_set) + '! Check your packs.';
+          ctx.toast(msg, 'good');
           ctx.audio.coin();
           await ctx.refreshCloud();
           render(el);
