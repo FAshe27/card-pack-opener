@@ -58,14 +58,6 @@
           <div class="inv-count"><span id="packCount">0</span> <span id="packCountLabel">unopened packs</span></div>
           <button id="openBtn" class="btn primary big">Open a pack</button>
 
-          <form id="redeemForm" class="redeem" autocomplete="off">
-            <label for="codeInput">Have a prize code?</label>
-            <div class="row">
-              <input id="codeInput" placeholder="PACK-3-XXXXX-XXXXX" spellcheck="false">
-              <button class="btn" type="submit">Redeem</button>
-            </div>
-          </form>
-
           <div class="dev-only dev-box">
             <div class="dev-title">Dev tools</div>
             <div class="row">
@@ -312,11 +304,6 @@
           </div>
           <div id="acctList" class="acct-list"></div>
         </div>
-        <div class="panel wide collapsible" id="panelCodes">
-          <h2>Prize codes</h2>
-          <p class="muted small">Make new codes with the Prize code generator under Sets &amp; settings below.</p>
-          <div id="codeList"></div>
-        </div>
       </div>
       <div id="setsArea">
         <h2 class="area-title">Sets &amp; settings</h2>
@@ -346,7 +333,7 @@
         <div class="panel collapsible" id="panelSettings">
           <h2>Settings</h2>
           <label class="toggle"><input type="checkbox" id="soundToggle"> Sound effects</label>
-          <label class="toggle"><input type="checkbox" id="devToggle"> <span class="cloud-only">Admin tools unlocked (Dev mode)</span><span class="guest-only">Dev mode (free packs, code generator)</span> <span class="lock" aria-hidden="true">🔒</span></label>
+          <label class="toggle"><input type="checkbox" id="devToggle"> <span class="cloud-only">Admin tools unlocked (Dev mode)</span><span class="guest-only">Dev mode (free packs)</span> <span class="lock" aria-hidden="true">🔒</span></label>
           <div class="row wrap">
             <button id="exportBtn" class="btn">Export my data</button>
             <label class="btn file-btn guest-only">Import data<input id="importDataFile" type="file" accept=".json,application/json"></label>
@@ -354,18 +341,6 @@
           <p class="muted small guest-only">Online play is turned off (js/config.js), so collections are saved in this browser only. Export to back up.</p>
           <p class="muted small cloud-only">You're logged in: your collection is saved online and follows you to any device.</p>
           <div class="dev-only dev-box">
-            <div class="dev-title">Prize code generator</div>
-            <p class="muted small cloud-only">Logged in as admin: codes are stored on the server and can only be redeemed the number of times you allow (one redemption per player).</p>
-            <p class="muted small guest-only">Each code grants packs of the set you pick here. They're checked in the browser, so anyone savvy could make their own; real prizes need a server (see README).</p>
-            <div class="row wrap">
-              <label class="inline">Set <select id="genSet" aria-label="Set the codes are for"></select></label>
-              <label class="inline cloud-only">Max uses <input id="genUses" type="number" min="1" max="1000" value="1" title="How many different players can redeem each code"></label>
-              <label class="inline cloud-only">Note <input id="genNote" maxlength="60" placeholder="e.g. Oct game night"></label>
-              <label class="inline">Packs per code <input id="genPacks" type="number" min="1" max="99" value="3"></label>
-              <label class="inline">How many <input id="genCount" type="number" min="1" max="100" value="5"></label>
-              <button id="genBtn" class="btn small">Generate</button>
-            </div>
-            <textarea id="genOut" rows="5" readonly></textarea>
             <button id="resetSetBtn" class="btn small danger guest-only">Reset my progress in this set</button>
           </div>
         </div>
