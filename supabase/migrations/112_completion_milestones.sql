@@ -1,3 +1,5 @@
+-- *** SUPERSEDED 2026-10-12 — DO NOT RUN *** Renumbered to 113_completion_milestones.sql
+-- at Franklin's request (identical body). Run 113 instead.
 -- =====================================================================
 -- PackRipper — migration 112: completion milestones + profile turn-ins
 -- Run AFTER 108_turn_ins_vault.sql and 111_turn_in_dupes.sql.
