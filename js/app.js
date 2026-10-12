@@ -10,7 +10,7 @@
 
   var S = {
     player: null, set: null, view: 'packs', opening: null, dev: false,
-    coll: { own: 'all', rarity: '', q: '', sort: 'num', allSets: false },
+    coll: { own: 'all', rarity: '', q: '', sort: 'num' },
     loadWarnings: [],
     mode: 'locked',         // 'cloud' (logged in), 'locked' (login screen) or 'guest' (only when online play is off in js/config.js)
     account: null,          // cloud: {id, display_name, is_admin}
@@ -602,8 +602,7 @@
   /* --- collection */
   function renderCollection() {
     var set = S.set, st = ps(), f = S.coll;
-    var asb2 = $('#allSetsBtn'); if (asb2) asb2.classList.toggle('active', !!f.allSets);
-    if (f.allSets && CPS.allsets) { CPS.allsets.render(); return; }
+
     if (set.id === 'jumbled') {
       $('#compTitle').textContent = 'Jumbled Mess';
       $('#compSub').textContent = 'Cards land in their home sets \u2014 no collection here.';
@@ -2118,12 +2117,6 @@
       if (b.dataset.own === 'numbered') ensureVariants().then(function () { renderCollection(); });
       else renderCollection();
     });
-    var asb = $('#allSetsBtn');
-    if (asb) asb.addEventListener('click', function () {
-      S.coll.allSets = !S.coll.allSets;
-      asb.classList.toggle('active', S.coll.allSets);
-      renderCollection();
-    });
     $('#questList').addEventListener('click', function (e) {
       var b = e.target.closest('[data-claim]'); if (!b || b.disabled) return;
       b.disabled = true;
@@ -2299,6 +2292,6 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, isFav: isFav };
+    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
