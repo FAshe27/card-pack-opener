@@ -1320,7 +1320,6 @@
       '<div class="variant-census" id="vcensus" style="display:none"></div>' +
       (card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
-      (owned ? '<button class="btn small fav-btn' + (isFav(set.id, card.id) ? ' active' : '') + '" data-fav>' + (isFav(set.id, card.id) ? '★ In your Vault' : '☆ Vault a copy') + '</button>' : '') +
       (owned && isCloud() ? '<button class="btn small" data-gift>🎁 Gift</button>' : '') +
       vaultButtonsHtml(set, card, e, variant) +
       '</div></div>';
@@ -1329,8 +1328,6 @@
       if (bk) bk.addEventListener('click', function () { showStatGallery(galleryReturnKind, true); });
       var t = box.querySelector('[data-toggle-holo]');
       if (t) t.addEventListener('click', function () { openCardModal(setId, cardId, t.dataset.toggleHolo === '1'); });
-      var f = box.querySelector('[data-fav]');
-      if (f) f.addEventListener('click', function () { toggleFavorite(setId, cardId, holo); });
       var g = box.querySelector('[data-gift]');
       if (g) g.addEventListener('click', function () { if (CPS.gift) CPS.gift.open(setId, cardId); });
       box.querySelectorAll('[data-vault],[data-unvault]').forEach(function (b2) {
