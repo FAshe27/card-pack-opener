@@ -2155,7 +2155,7 @@
     $('#naSuggest').addEventListener('click', function () { $('#naUser').value = suggestUsername($('#naName').value); });
     $('#naPinRandom').addEventListener('click', function () { $('#naPin').value = randomPin(); });
     $('#acctList').addEventListener('click', adminAction);
-    $('#adminRefresh').addEventListener('click', function () { refreshCloud().then(renderAdmin); });
+    $('#adminRefresh').addEventListener('click', function () { refreshCloud(); });
     $('#gaSpinAllBtn').addEventListener('click', async function () {
       var n = parseInt($('#gaSpinAllN').value, 10);
       var who = $('#grantSpinsWho').value;
