@@ -1932,6 +1932,7 @@
       cloudError(e);
       return false;
     }
+    renderWheel(); // show the consumed ticket now, not after the animation
     /* The outcome was rolled above; the animation below is just theater. */
     var endState = await CPS.wheel.playHops(canvas, cfg, out.hops || [], speed);
     var prize = out.prize || {}, isTok = prize.kind === 'tokens', isCred = prize.kind === 'credit';
@@ -1976,7 +1977,7 @@
     });
     $('#doneBtn').addEventListener('click', resetStage);
     $('#revealAllBtn').addEventListener('click', revealAll);
-    $('#stagePack').addEventListener('click', function (e) { if (e.target.closest('.pack')) tear(); });
+    $('#stagePack').addEventListener('pointerdown', function (e) { if (e.button == null || e.button === 0) tear(); });
     $('#stageIdle').addEventListener('click', function (e) { if (e.target.closest('.idle-pack')) openFromPack(); });
     $('#stageIdle').addEventListener('keydown', function (e) {
       if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.idle-pack')) { e.preventDefault(); e.stopPropagation(); openFromPack(); }
