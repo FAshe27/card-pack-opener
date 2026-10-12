@@ -1411,7 +1411,12 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .shop-balance { font-size: 1.3rem; }
 .shop-restock { margin-top: 8px; }
 .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 16px 0; }
-.shop-booth { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; }
+.shop-booth { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; display: flex; flex-direction: column; }
+/* Uniform visual stage: packs come in different aspect ratios (Calendar is square 1/1,
+   most are 5/8), so every booth reserves the same visual height and centers the pack —
+   names, prices and Buy buttons then line up across the row. */
+.shop-info { display: flex; flex-direction: column; flex: 1; }
+.shop-info .shop-left { flex: 1; }
 .shop-deal-tag { position: absolute; top: -10px; right: 12px; background: linear-gradient(135deg, #ffd700, #ffb700); color: #1a1a1a; font-weight: 800; font-size: .75rem; padding: 4px 12px; border-radius: 999px; letter-spacing: .05em; }
 /* pack visuals use CPS.cards.pack with .shop-pack-size */
 .shop-info .shop-packname { font-size: 1rem; margin: 0 0 4px; }
@@ -1421,7 +1426,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .shop-hist-row:last-child { border-bottom: none; }
 .shop-hist-box { cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
 .shop-hist-box:hover { background: var(--panel2); }
-.shop-pack-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+.shop-pack-wrap { display: flex; justify-content: center; align-items: center; height: 224px; margin-bottom: 12px; }
 /* fixed pixel --pw so the emblem font-size calc works; 140px fits mobile 2-col */
 .shop-pack-wrap .pack { --pw: 140px; }
 /* mystery matches the pack size */
@@ -1435,6 +1440,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 }
 @media (min-width: 600px) {
   .shop-pack-wrap .pack { --pw: 200px; }
+  .shop-pack-wrap { height: 320px; }
   .shop-mystery { width: 200px; height: 320px; }
 }
 
