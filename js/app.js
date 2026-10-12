@@ -1282,9 +1282,54 @@
   }
 
   /* --- stats */
+  function showStatGallery(kind) {
+    var title, items = [];
+    if (kind === 'numbered') {
+      title = 'Your Numbered Cards';
+      (S.myVariants || []).forEach(function (v) {
+        var sd = window.CardSets.get(v.set_id), c = sd && sd.byId.get(v.card_id);
+        if (!sd || !c) return;
+        items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { variant: { tier: v.tier, serial: v.serial } }),
+                     variant: { tier: v.tier, serial: v.serial }, holo: false });
+      });
+      items.sort(function (a, b) { return (R.INDEX[b.c.rarity] - R.INDEX[a.c.rarity]) || (a.sd.name + a.c.name).localeCompare(b.sd.name + b.c.name); });
+    } else {
+      title = 'Your ' + rarityOf(kind).label + ' Cards';
+      window.CardSets.all().forEach(function (sd) {
+        var pst = S.player.sets[sd.id]; if (!pst) return;
+        sd.cards.forEach(function (c) {
+          if (c.rarity !== kind) return;
+          var e = pst.cards[c.id];
+          if (!e || !(e.n > 0)) return;
+          var holo = !!(e.h > 0);
+          items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { holo: holo }), variant: null, holo: holo });
+        });
+      });
+      items.sort(function (a, b) { return (a.sd.name + a.c.name).localeCompare(b.sd.name + b.c.name); });
+    }
+    var body = items.length
+      ? '<div class="stat-gallery">' + items.map(function (x) {
+          return '<div class="stat-gallery-item" data-set="' + esc(x.sd.id) + '" data-card="' + esc(x.c.id) + '"' +
+            (x.variant ? ' data-vtier="' + esc(x.variant.tier) + '" data-vserial="' + x.variant.serial + '"' : '') +
+            ' data-holo="' + (x.holo ? '1' : '0') + '">' + x.html + '</div>';
+        }).join('') + '</div>'
+      : '<div class="empty">None yet — keep ripping packs!</div>';
+    openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h2>' + esc(title) + ' <span class="muted small">(' + items.length + ')</span></h2>' + body,
+      function (box) {
+        box.querySelectorAll('.stat-gallery-item').forEach(function (el) {
+          el.addEventListener('click', function () {
+            var vt = el.getAttribute('data-vtier');
+            var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-vserial'), 10) } : null;
+            openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
+              el.getAttribute('data-holo') === '1', variant);
+          });
+        });
+      });
+  }
   function renderStats() {
     var set = S.set, st = ps();
-    var agg = { opened: 0, pulled: 0, holos: 0, byRarity: {}, unique: 0, total: 0, packs: 0 };
+    var agg = { opened: 0, pulled: 0, holos: 0, byRarity: {}, unique: 0, total: 0, packs: 0, ownedByRarity: {} };
     window.CardSets.all().forEach(function (sd) {
       var pst = S.player.sets[sd.id], psd = pst ? pst.stats : null;
       agg.opened += psd ? psd.opened || 0 : 0;
@@ -1293,10 +1338,21 @@
       agg.unique += pst ? ownedCount(sd, pst) : 0;
       agg.total += sd.cards.length; agg.packs += pst ? pst.packs || 0 : 0;
       R.RARITIES.forEach(function (r) { agg.byRarity[r.key] = (agg.byRarity[r.key] || 0) + (psd && psd.byRarity[r.key] || 0); });
+      if (pst) sd.cards.forEach(function (c) {
+        var e = pst.cards[c.id];
+        if (e && e.n > 0) agg.ownedByRarity[c.rarity] = (agg.ownedByRarity[c.rarity] || 0) + 1;
+      });
     });
-    var epicPlus = (agg.byRarity.epic || 0) + (agg.byRarity.legendary || 0) + (agg.byRarity.chase || 0);
-    var tiles=[['Packs opened',agg.opened],['Cards pulled',agg.pulled],['Unique cards',agg.unique+' / '+agg.total],['Completion',U.pct(agg.total?agg.unique/agg.total:0)],['Holo pulls',agg.holos],['Epic or better',epicPlus],['Chase pulls',agg.byRarity.chase||0],['Packs on hand',agg.packs]];
-    $('#statTiles').innerHTML=tiles.map(function(t){return '<div class="tile"><span>'+t[0]+'</span><b>'+t[1]+'</b></div>';}).join('');
+    var numberedEarly = (S.myVariants || []).length;
+    var tiles=[['Packs opened',agg.opened],['Cards pulled',agg.pulled],['Unique cards',agg.unique+' / '+agg.total],['Completion',U.pct(agg.total?agg.unique/agg.total:0)],
+      ['Epic Cards',agg.ownedByRarity.epic||0,'epic'],['Legendary Cards',agg.ownedByRarity.legendary||0,'legendary'],
+      ['Chase Cards',agg.ownedByRarity.chase||0,'chase'],['Numbered Cards',numberedEarly,'numbered']];
+    $('#statTiles').innerHTML=tiles.map(function(t){
+      return '<div class="tile' + (t[2] ? ' clickable' : '') + '"' + (t[2] ? ' data-stat-gallery="' + t[2] + '" title="Click to see your ' + t[0].toLowerCase() + '"' : '') + '><span>'+t[0]+'</span><b>'+t[1]+'</b></div>';
+    }).join('');
+    $$('#statTiles [data-stat-gallery]').forEach(function (el) {
+      el.addEventListener('click', function () { showStatGallery(el.getAttribute('data-stat-gallery')); });
+    });
     var numbered = (S.myVariants || []).length;
     var max = Math.max.apply(null, R.RARITIES.map(function (r) { return agg.byRarity[r.key] || 0; }).concat([numbered, 1]));
     $('#rarityBars').innerHTML = R.RARITIES.map(function (r) {
