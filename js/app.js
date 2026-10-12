@@ -278,7 +278,13 @@
     if (S.view === 'daily') { renderDaily(); return; }
     if (S.view === 'collection') {
       renderCollection();
-      if (isCloud() && !S.myVariants) ensureVariants().then(function () { if (S.view === 'collection') renderCollection(); });
+      if (isCloud() && !S.myVariants) ensureVariants().then(function () {
+        if (S.view !== 'collection') return;
+        // Variants arrived: update the variants panel directly.
+        // Only rebuild the 500-card grid if the numbered filter needs the data.
+        if (S.coll.own === 'numbered') renderCollection();
+        else renderVariantsSection(S.set);
+      });
     }
     else if (S.view === 'players') renderPlayers();
     else if (S.view === 'trade') renderTradeBuilder();
