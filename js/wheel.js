@@ -259,6 +259,10 @@
       var n = prize.tokens || 0;
       return '🎉 You won <b>' + n + ' Arcade token' + (n === 1 ? '' : 's') + '</b>!';
     }
+    if (prize && prize.kind === 'credit') {
+      var c = prize.credit || 0;
+      return '🎉 You won <b>$' + c + ' Store Credit</b>!';
+    }
     var pname = setName || (prize && prize.set_id) || 'packs';
     var pwon = (prize && prize.packs) || 0;
     return '🎉 You won <b>' + pwon + ' ' + escHtml(pname) + ' pack' + (pwon === 1 ? '' : 's') + '</b>!';

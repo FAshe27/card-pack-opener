@@ -41,12 +41,6 @@
     getActivePlayerId: function () { return ls.get('activePlayer', null); },
     setActivePlayerId: function (id) { ls.set('activePlayer', id); },
 
-    /* ---- prize codes (a server should own this later) ---- */
-    isCodeRedeemed: async function (code) { return !!ls.get('redeemed', {})[code]; },
-    markCodeRedeemed: async function (code, playerId) {
-      var r = ls.get('redeemed', {}); r[code] = { by: playerId, at: Date.now() }; ls.set('redeemed', r);
-    },
-
     /* ---- sets imported in the browser from CSV ---- */
     listCustomSets: async function () { return ls.get('customSets', []); },
     saveCustomSet: async function (raw) {

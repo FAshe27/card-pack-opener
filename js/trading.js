@@ -224,7 +224,7 @@
             try {
               await CPS.cloud.call('trade_withdraw', { p_offer: btn.getAttribute('data-withdraw') });
               ctx.closeModal(); ctx.toast('Offer withdrawn — everything refunded.', 'good');
-              ctx.audio.click(); await load(); await ctx.refreshCloud();
+              ctx.audio.click(); await ctx.refreshCloud();
             } catch (e) { btn.disabled = false; ctx.cloudError(e); }
           });
         });
@@ -244,7 +244,7 @@
       ctx.audio.reveal('legendary');
       if (typeof r.game_tokens === 'number') ctx.S.gameTokens = r.game_tokens;
       if (typeof r.spins === 'number') ctx.S.spins = r.spins;
-      await load(); await ctx.refreshCloud();
+      await ctx.refreshCloud();
     } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
 
@@ -266,7 +266,7 @@
             await CPS.cloud.call('trade_cancel', { p_listing: id });
             ctx.closeModal();
             ctx.toast('Listing cancelled — card returned.', 'good');
-            await load(); await ctx.refreshCloud();
+            await ctx.refreshCloud();
           } catch (e) { btn.disabled = false; ctx.cloudError(e); }
         });
       });
@@ -408,7 +408,7 @@
       ctx.closeModal();
       ctx.toast('Card listed!', 'good');
       ctx.audio.coin();
-      await load(); await ctx.refreshCloud();
+      await ctx.refreshCloud();
     } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
 
@@ -588,7 +588,7 @@
       ctx.closeModal();
       ctx.toast('Offer submitted — escrowed until the listing closes.', 'good');
       ctx.audio.coin();
-      await load(); await ctx.refreshCloud();
+      await ctx.refreshCloud();
     } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
 
