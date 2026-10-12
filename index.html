@@ -26,10 +26,15 @@
 <body>
   <header class="topbar">
     <a class="brand" id="brandHome" href="#packs" title="Go to Open Packs" aria-label="PackRipper: go to Open Packs"><span class="logo">✦</span><span class="brand-text">Pack<b>Ripper</b></span></a>
-    <label class="set-picker" title="Choose a card set">
+    <div class="set-picker" title="Choose a card set">
       <span class="set-tag">🃏 Set</span>
-      <select id="setSelect" aria-label="Card set"></select>
-    </label>
+      <div class="set-dd" id="setDD">
+        <button type="button" class="set-dd-btn" id="setDDBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Card set">
+          <span class="set-dd-label" id="setDDLabel">Choose a set</span>
+        </button>
+        <div class="set-dd-list hidden" id="setDDList" role="listbox" aria-label="Card sets"></div>
+      </div>
+    </div>
     <nav class="tabs" role="tablist">
       <button data-view="packs" class="tab active" id="packsTabBtn">Open Packs<span class="tab-badge hidden" id="packsBadge"></span></button>
       <button data-view="wheel" class="tab" id="wheelTabBtn">Prize Wheel<span class="tab-badge hidden" id="wheelBadge"></span></button>
