@@ -1,0 +1,35 @@
+/* Pack skin "states": deep navy field, a ring of 50 gold stars around a
+   large central star, cream STATES banner (class pack-skin-states). */
+.pack-skin-states .pack-top {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(212,175,55,.50) 0 6%, rgba(212,175,55,.12) 18%, transparent 34%),
+    radial-gradient(ellipse 80% 28% at 50% -6%, rgba(255,255,255,.14), transparent 70%),
+    linear-gradient(180deg, #0e2247 0%, #0a1a3c 55%, #060f26 100%);
+}
+.pack-skin-states .pack-top::before {
+  content: ""; position: absolute; inset: 5%; z-index: 0; border-radius: 50%;
+  pointer-events: none;
+  background: repeating-conic-gradient(from -0.6deg, rgba(212,175,55,.95) 0deg 1.5deg, transparent 1.5deg 7.2deg);
+  -webkit-mask-image: radial-gradient(closest-side, transparent 76%, #000 77%, #000 92%, transparent 93%);
+  mask-image: radial-gradient(closest-side, transparent 76%, #000 77%, #000 92%, transparent 93%);
+}
+.pack-skin-states .pack-top > * { position: relative; z-index: 1; }
+.pack-skin-states .pack-body {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(212,175,55,.28) 0 5%, transparent 20%),
+    radial-gradient(rgba(212,175,55,.35) 1px, transparent 1.6px),
+    linear-gradient(180deg, #060f26 0%, #081430 60%, #0a1a3c 100%);
+  background-size: auto, 26px 26px, auto;
+}
+.pack-skin-states .pack-body::before {
+  background: radial-gradient(ellipse 90% 30% at 50% 0%, rgba(255,255,255,.10), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%); mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+}
+.pack-skin-states .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(212,175,55,.45) 4px 6px, rgba(255,255,255,.10) 6px 9px); }
+.pack-skin-states .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.68) 0 4px, rgba(212,175,55,.38) 4px 6px, rgba(255,255,255,.06) 6px 9px); }
+.pack-skin-states .pack-top::after { border-bottom-color: rgba(212,175,55,.55); }
+.pack-skin-states .pack-code { color: #f5edd6; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(212,175,55,.9); }
+.pack-skin-states .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(212,175,55,.45), rgba(6,15,38,.94) 72%);
+  border-color: rgba(212,175,55,.85); box-shadow: 0 0 30px rgba(212,175,55,.65), inset 0 0 18px rgba(255,255,255,.18); text-shadow: 0 0 16px rgba(212,175,55,.95); }
+.pack-skin-states .pack-name { color: #f5edd6; letter-spacing: .18em; text-shadow: 0 0 14px rgba(212,175,55,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-states .pack-sub { color: #c9b98a; }
