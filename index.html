@@ -34,8 +34,7 @@
       <button data-view="arcade" class="tab arcade-tab" id="arcadeTabBtn">Arcade<span class="tab-badge hidden" id="arcadeBadge"></span></button>
       <button data-view="daily" class="tab cloud-only" id="dailyTabBtn">Daily<span class="tab-badge hidden" id="dailyBadge"></span></button>
       <button data-view="collection" class="tab">Collection</button>
-      <button data-view="bounties" class="tab cloud-only" id="bountyTabBtn">Bounty Board<span class="tab-badge hidden" id="bountyBadge"></span></button>
-      <button data-view="trading" class="tab cloud-only" id="tradeTabBtn">Trading Post<span class="tab-badge hidden" id="tradeBadge"></span></button>
+      <button data-view="market" class="tab cloud-only" id="marketTabBtn">Market<span class="tab-badge hidden" id="marketBadge"></span></button>
       <button data-view="players" class="tab" id="playersTabBtn">Players<span class="tab-badge hidden" id="playersBadge"></span></button>
       <button data-view="stats" class="tab">Stats</button>
       
@@ -223,13 +222,14 @@
       <div id="gamesPanel"><p class="muted small">Loading…</p></div>
     </section>
     <!-- ============ BOUNTY BOARD ============ -->
-    <section id="view-bounties" class="view">
+    <!-- ============ MARKET (Buyers = Bounty Board, Sellers = Trading Post) ============ -->
+    <section id="view-market" class="view">
+      <div class="market-toggle" role="tablist">
+        <button id="marketBuyersBtn" class="market-toggle-btn active" role="tab">Buyers<span class="tab-badge hidden" id="bountyBadge"></span></button>
+        <button id="marketSellersBtn" class="market-toggle-btn" role="tab">Sellers<span class="tab-badge hidden" id="tradeBadge"></span></button>
+      </div>
       <div id="bountyPanel"><p class="muted small">Loading…</p></div>
-    </section>
-
-    <!-- ============ TRADING POST ============ -->
-    <section id="view-trading" class="view">
-      <div id="tradingPanel"><p class="muted small">Loading…</p></div>
+      <div id="tradingPanel" class="hidden"><p class="muted small">Loading…</p></div>
     </section>
 
     <!-- ============ PRIZE WHEEL ============ -->
@@ -407,6 +407,7 @@
   <script src="js/cotd.js"></script>
   <script src="js/bounties.js"></script>
   <script src="js/trading.js"></script>
+  <script src="js/market.js"></script>
   <script src="js/sandbox.js"></script>
   <script src="js/slots.js"></script>
 </body>
