@@ -85,7 +85,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'bounties', 'trading', 'sets', 'admin'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -263,6 +263,7 @@
   /* ---------------------------------------------------------- views */
   function showView(name, quiet) {
     if (name === 'daily' && !isCloud()) name = 'packs';
+    if (name === 'bounties' || name === 'trading') name = 'market';
     if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
     if ((name === 'admin' || name === 'sandbox') && !canAdminArea()) name = 'packs';
     S.view = name;
@@ -286,12 +287,13 @@
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
     else if (S.view === 'arcade') { if (typeof CPS !== 'undefined' && CPS.games) CPS.games.render(); }
-    else if (S.view === 'bounties' && CPS.bounties) CPS.bounties.render();
-    else if(S.view==='trading'&&CPS.trading)CPS.trading.render();
+    else if (S.view === 'market' && CPS.market) CPS.market.render();
     else if (CPS.sandbox && CPS.sandbox.PUBLIC[S.view]) { CPS.sandbox.render(S.view); }
     else if (S.view === 'wheel') renderWheel();
     else renderPacksSide();
   }
+
+
 
   /* ---------------------------------------------------------- packs view */
   function renderPacksSide() {
@@ -2019,6 +2021,7 @@
   /* ---------------------------------------------------------- events */
   function bind() {
     $$('.tab').forEach(function (t) { t.addEventListener('click', function () { showView(t.dataset.view); }); });
+    if (CPS.market) CPS.market.init();
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
     $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
