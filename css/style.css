@@ -1384,13 +1384,10 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .shop-hist-row:last-child { border-bottom: none; }
 .shop-hist-box { cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
 .shop-hist-box:hover { background: var(--panel2); }
-.shop-pack-size { width: 140px; margin: 0 auto; }
-.shop-pack-size .pack { width: 100%; }
+.shop-pack-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+/* .pack.mini is 120px wide, 5/8 aspect = 192px tall — mystery matches */
+.shop-mystery { width: 120px; height: 192px; margin: 0 auto 12px; }
 
 .shop-mystery { width: 140px; height: 180px; margin: 0 auto 12px; border-radius: 12px; background: linear-gradient(135deg, #1a1a2e, #0f0f1a); border: 2px dashed var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
 .shop-mystery-q { font-size: 3rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,.4); }
 .shop-deal-tag.mystery { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; }
-.shop-info-box { margin: 12px 0; }
-.shop-info-box h3 { margin: 0 0 8px; }
-.shop-info-list { margin: 0; padding-left: 20px; }
-.shop-info-list li { margin: 4px 0; }
