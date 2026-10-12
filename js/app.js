@@ -1351,16 +1351,7 @@
   }
 
   /* --- sets & settings */
-  function fillGenSet() {
-    var sel = $('#genSet'); if (!sel) return; var keep = sel.value;
-    sel.innerHTML = window.CardSets.all().map(function (s) {
-      return '<option value="' + esc(s.id) + '">' + esc(s.name) + (s.source === 'imported' ? ' (imported)' : '') + '</option>';
-    }).join('');
-    sel.value = window.CardSets.get(keep) && S.genSetTouched ? keep : S.set.id;
-  }
-
   function renderSets() {
-    fillGenSet();
     $('#setList').innerHTML = window.CardSets.all().map(function (s) {
       var st = S.player.sets[s.id], owned = st ? ownedCount(s, st) : 0;
       return '<div class="set-item' + (s.id === S.set.id ? ' current' : '') + '">' +
