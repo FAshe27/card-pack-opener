@@ -734,8 +734,8 @@
     box.innerHTML = '<div class="muted small">Loading…</div>';
     $('#tradeList').innerHTML = '<div class="muted small">Loading…</div>';
     try {
-      var players = await CPS.cloud.call('list_players');
-      var trades = await CPS.cloud.call('list_trades');
+      var _pt = await Promise.all([CPS.cloud.call('list_players'), CPS.cloud.call('list_trades')]);
+      var players = _pt[0], trades = _pt[1];
       renderTrades(trades);
       box.innerHTML = players.map(function (p) {
         return '<button class="player-card" data-player="' + esc(p.id) + '">' +
@@ -1951,9 +1951,9 @@
     });
     $('#tradeList').addEventListener('click', function (e) {
       var a = e.target.closest('[data-trade-accept]');
-      if (a) { respondTrade(a.dataset.tradeAccept, true); return; }
+      if (a) { a.disabled = true; respondTrade(a.dataset.tradeAccept, true); return; }
       var d = e.target.closest('[data-trade-decline]');
-      if (d) { respondTrade(d.dataset.tradeDecline, false); return; }
+      if (d) { d.disabled = true; respondTrade(d.dataset.tradeDecline, false); return; }
       var c = e.target.closest('[data-trade-cancel]');
       if (c) cancelTrade(c.dataset.tradeCancel);
     });
