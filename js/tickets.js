@@ -94,7 +94,7 @@
     renderPacksSide();
   }
 
-  $('#ticketRows').addEventListener('click', function (e) {
+  var tkr = $('#ticketRows'); if (tkr) tkr.addEventListener('click', function (e) {
     var b = e.target.closest('[data-ticket-trade]');
     if (b && !b.disabled) tradeDupesTickets(b.dataset.ticketTrade);
   });
