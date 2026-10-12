@@ -1,0 +1,27 @@
+/* pack skin "nps": WPA vintage poster — sunset-orange top over a deep pine-green
+   body with layered ridge silhouettes and cream lettering (class pack-skin-nps) */
+.pack-skin-nps .pack-top {
+  background:
+    radial-gradient(circle 34px at 50% 30%, rgba(255,244,205,.95), rgba(255,205,110,.55) 55%, transparent 72%),
+    radial-gradient(ellipse 120% 46% at 12% 118%, rgba(23,66,40,.92) 62%, transparent 63%),
+    radial-gradient(ellipse 130% 58% at 88% 122%, rgba(12,42,26,.97) 64%, transparent 65%),
+    linear-gradient(180deg, #f4cf7d 0%, #e89a4e 46%, #c96a32 78%, #9c4a24 100%);
+}
+.pack-skin-nps .pack-body {
+  background:
+    radial-gradient(ellipse 85% 30% at 50% -6%, rgba(255,190,100,.20), transparent 70%),
+    repeating-linear-gradient(90deg, transparent 0 26px, rgba(255,255,255,.035) 26px 28px),
+    linear-gradient(180deg, #17402a 0%, #0f3120 52%, #081f13 100%);
+}
+.pack-skin-nps .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,214,150,.18), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-nps .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(146,84,32,.55) 4px 6px, rgba(255,240,210,.16) 6px 9px); }
+.pack-skin-nps .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(110,58,20,.5) 4px 6px, rgba(255,240,210,.08) 6px 9px); }
+.pack-skin-nps .pack-top::after { border-bottom-color: rgba(255,238,196,.65); }
+.pack-skin-nps .pack-code { color: #ffefc4; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(232,154,78,.9); }
+.pack-skin-nps .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,240,200,.5), rgba(15,49,32,.94) 72%);
+  border-color: rgba(255,238,196,.85); box-shadow: 0 0 26px rgba(232,154,78,.55), inset 0 0 18px rgba(255,220,160,.22); text-shadow: 0 0 16px rgba(255,240,200,.9); }
+.pack-skin-nps .pack-name { color: #fff6dd; text-shadow: 0 0 14px rgba(201,106,50,.9), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-nps .pack-sub { color: #d9e8c9; }
