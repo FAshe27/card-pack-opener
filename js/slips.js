@@ -22,11 +22,13 @@
 
   function render(p) {
     var set = slipSet(p);
-    var cls = p.ticket ? 'ticket-card' : 'token-card';
-    var attr = p.ticket ? ' data-ticket="1"' : ' data-tokens="1"';
+    var cls = p.ticket ? 'ticket-card' : (p.credit ? 'credit-card' : 'token-card');
+    var attr = p.ticket ? ' data-ticket="1"' : (p.credit ? ' data-credit="1"' : ' data-tokens="1"');
     var face = p.ticket
       ? '<div class="ticket-face">🎟️<b>SPIN TICKET</b><span>Jackpot!</span></div>'
-      : '<div class="token-face">🪙<b>' + p.tokens + ' GAME TOKEN' + (p.tokens === 1 ? '' : 'S') + '</b><span>Good luck!</span></div>';
+      : (p.credit
+        ? '<div class="credit-face">💵<b>$' + p.credit + ' STORE CREDIT</b><span>Ka-ching!</span></div>'
+        : '<div class="token-face">🪙<b>' + p.tokens + ' GAME TOKEN' + (p.tokens === 1 ? '' : 'S') + '</b><span>Good luck!</span></div>');
     return '<div class="card ' + cls + ' flippable deal" data-slip="1"' + attr +
       ' data-set="' + esc(set.id) + '" style="' + CPS.cards.themeStyle(set) + '">' +
       '<div class="card-inner"><div class="face front">' + face + '</div>' +
@@ -34,7 +36,9 @@
   }
 
   function banner(p) {
-    return p.ticket ? '🎟️ SPIN TICKET!' : '🪙 +' + p.tokens + ' TOKENS!';
+    if (p.ticket) return '🎟️ SPIN TICKET!';
+    if (p.credit) return '💵 +$' + p.credit + ' STORE CREDIT!';
+    return '🪙 +' + p.tokens + ' TOKENS!';
   }
 
   function isBig() { return false; } // slips never get the "big pull" treatment
