@@ -843,7 +843,7 @@
           '<span class="avatar">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
           '<span class="player-meta"><span class="player-name-row"><b>' + esc(p.display_name) + '</b>' +
           (p.is_me ? '<span class="pill pill-you">You</span>' : '') + '</span>' +
-          '<span class="muted small">' + p.favorites + ' favorites · ' + p.unique_cards + ' unique cards</span></span>' +
+          '<span class="muted small">' + p.favorites + ' in Vault · ' + p.unique_cards + ' unique cards</span></span>' +
           '<span class="player-go">›</span></button>';
       }).join('') || '<div class="empty">No players yet.</div>';
     } catch (e) { cloudError(e); }
