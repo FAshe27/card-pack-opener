@@ -68,7 +68,7 @@
       '<div class="panel shop-head">' +
       '<div class="shop-title-row"><h2>🏪 Shop</h2>' +
       '<div class="shop-balance" id="shopBalance">💵 <b>$' + data.store_credit + '</b></div></div>' +
-      '<div class="shop-restock muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
+      '<div class="shop-restock muted small">New stock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
       '<div class="panel" id="shopDupeSell"></div>' +
