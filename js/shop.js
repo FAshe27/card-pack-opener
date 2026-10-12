@@ -155,10 +155,8 @@
             var r = await CPS.cloud.call('trade_dupes_credit', { p_tier: btn.getAttribute('data-dupe-sell') });
             ctx.toast('Sold ' + r.dupes_used + ' dupes for $' + r.credit + ' Store Credit!', 'good');
             ctx.audio.coin();
-            data.store_credit = r.credit_now;
-            var balEl = $('#shopBalance', el);
-            if (balEl) balEl.innerHTML = '💵 <b>$' + data.store_credit + '</b>';
-            await ctx.refreshCloud();
+            var balEl = document.getElementById('shopBalance');
+            if (balEl) balEl.innerHTML = '💵 <b>$' + r.credit_now + '</b>';
             renderDupeSell(el);
           } catch (e) { btn.disabled = false; ctx.cloudError(e); }
         });
