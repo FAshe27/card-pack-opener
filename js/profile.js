@@ -4,7 +4,6 @@
   'use strict';
   var ctx = CPS.appCtx;
   var setSort = 'pct'; // 'pct' = by completion, 'name' = A-Z; persists across opens
-  var FAV_MAX = 20;
 
 /* Best pull = highest rarity owned; numbered variants then holos break ties. */
 function bestPull(collection) {
@@ -74,9 +73,9 @@ async function openProfile(accountId) {
       '<div class="prof-head"><span class="avatar big">' + ctx.esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
       '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button>') + '</div></div>' +
       statsHtml +
-      '<h3 class="prof-coll-h"><span>★ Favorites (' + (p.favorites || []).length + '/' + FAV_MAX + ')</span>' +
+      '<h3 class="prof-coll-h"><span>🔒 The Vault (' + (p.favorites || []).length + ')</span>' +
       (p.is_me ? '<button class="btn small" id="profFavEditBtn">Edit</button>' : '') + '</h3>' +
-      (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">No favorites yet.</div>') +
+      (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">Nothing in the Vault yet.</div>') +
       '<h3 class="prof-coll-h"><span>Collection</span><button class="btn small" id="profSortBtn"></button></h3>' +
       '<div class="prof-sets cols2"></div>' +
       '</div>', function (box) {
@@ -108,7 +107,7 @@ function ownedCards() {
     if (!st || !st.cards) return;
     s.cards.forEach(function (c) {
       var e = st.cards[c.id];
-      if (e && e.n > 0) out.push({ set: s, card: c, n: e.n });
+      if (e && e.n - (e.v || 0) > 0) out.push({ set: s, card: c, n: e.n - (e.v || 0) });
     });
   });
   return out;
@@ -126,13 +125,13 @@ function openFavManager(accountId, seedFavs) {
       if (!set || !card) return '';
       return '<div class="favmgr-item" data-k="' + ctx.esc(f.set_id + ':' + f.card_id) + '">' +
         CPS.cards.render(set, card, { holo: !!f.holo }) +
-        '<button class="favmgr-x" aria-label="Remove from favorites">×</button>' +
+        '<button class="favmgr-x" aria-label="Release from Vault">×</button>' +
         '<div class="favmgr-mv">' +
           '<button data-mv="-1" aria-label="Move earlier"' + (i === 0 ? ' disabled' : '') + '>‹</button>' +
           '<button data-mv="1" aria-label="Move later"' + (i === myFavs.length - 1 ? ' disabled' : '') + '>›</button>' +
         '</div></div>';
-    }).join('') || '<div class="empty">No favorites yet — search below to add some.</div>';
-    box.querySelector('#favmgrCount').textContent = myFavs.length + '/' + FAV_MAX;
+    }).join('') || '<div class="empty">Your Vault is empty — search below to vault copies.</div>';
+    box.querySelector('#favmgrCount').textContent = myFavs.length + (myFavs.length === 1 ? ' card' : ' cards');
     box.querySelectorAll('.favmgr-x').forEach(function (x) {
       x.addEventListener('click', function () {
         var k2 = x.parentNode.dataset.k.split(':');
@@ -183,28 +182,29 @@ function openFavManager(accountId, seedFavs) {
 
   async function toggle(setId, cardId, box) {
     var k = setId + ':' + cardId;
-    if (!favKeys[k] && myFavs.length >= FAV_MAX) { ctx.toast('You can only favorite ' + FAV_MAX + ' cards.', 'warn'); return; }
     try {
       var r = await CPS.cloud.call('toggle_favorite', { p_set: setId, p_card: cardId });
       if (r.favorited) {
         var st = ((ctx.S.player || {}).sets || {})[setId], e = st && st.cards[cardId];
-        myFavs.push({ set_id: setId, card_id: cardId, holo: !!(e && e.h > 0) });
+        if (!favKeys[k]) myFavs.push({ set_id: setId, card_id: cardId, holo: !!(e && e.h > 0) });
         favKeys[k] = true;
-        ctx.toast('Added to favorites (' + r.count + '/' + FAV_MAX + ').', 'good');
+        ctx.toast('Vaulted a copy — it is protected now. 🔒', 'good');
       } else {
         myFavs = myFavs.filter(function (f) { return f.set_id + ':' + f.card_id !== k; });
         delete favKeys[k];
-        ctx.toast('Removed from favorites.', 'good');
+        ctx.toast('Released a copy from your Vault — it is back in your inventory.', 'good');
       }
+      await ctx.refreshCloud();
+      all = ownedCards();
       renderFavs(box);
       renderResults(box, box.querySelector('.favmgr-search input').value);
     } catch (e2) { ctx.cloudError(e2); }
   }
 
   ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
-    '<h2>Manage favorites <span class="muted small" id="favmgrCount"></span></h2>' +
+    '<h2>Manage your Vault <span class="muted small" id="favmgrCount"></span></h2>' +
     '<div class="favmgr-grid"></div>' +
-    '<h3>Add cards</h3>' +
+    '<h3>Vault a copy</h3>' +
     '<div class="favmgr-search"><input type="search" placeholder="Search your cards…" aria-label="Search your cards"></div>' +
     '<div class="favmgr-results"></div>' +
     '<div class="row" style="margin-top:12px"><button class="btn primary" id="favmgrDone">Done</button></div>' +
