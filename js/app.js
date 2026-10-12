@@ -10,7 +10,7 @@
 
   var S = {
     player: null, set: null, view: 'packs', opening: null, dev: false,
-    coll: { own: 'all', rarity: '', q: '', sort: 'num' },
+    coll: { own: 'all', rarity: '', q: '', sort: 'num', allSets: false },
     loadWarnings: [],
     mode: 'locked',         // 'cloud' (logged in), 'locked' (login screen) or 'guest' (only when online play is off in js/config.js)
     account: null,          // cloud: {id, display_name, is_admin}
@@ -602,6 +602,8 @@
   /* --- collection */
   function renderCollection() {
     var set = S.set, st = ps(), f = S.coll;
+    var asb = $('#allSetsBtn'); if (asb) asb.classList.toggle('active', !!f.allSets);
+    if (f.allSets && CPS.allsets) { CPS.allsets.render(); return; }
 
     if (set.id === 'jumbled') {
       $('#compTitle').textContent = 'Jumbled Mess';
@@ -2110,6 +2112,8 @@
       var c = e.target.closest('[data-trade-cancel]');
       if (c) cancelTrade(c.dataset.tradeCancel);
     });
+    var asb2 = $('#allSetsBtn');
+    if (asb2) asb2.addEventListener('click', function () { S.coll.allSets = !S.coll.allSets; renderCollection(); });
     $('#collOwn').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       S.coll.own = b.dataset.own;
@@ -2292,6 +2296,6 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder };
+    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, isFav: isFav };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
