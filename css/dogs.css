@@ -1,0 +1,41 @@
+/* pack skin "dogs": fetch — sunny dog-park: tennis-ball lime over warm grass with scattered paw-print dots (class pack-skin-dogs) */
+.pack-skin-dogs .pack-top {
+  background:
+    radial-gradient(circle 46px at 68% 38%, rgba(254,252,232,.95), rgba(217,249,157,.6) 60%, transparent 74%),
+    radial-gradient(circle 34px at 68% 38%, transparent 62%, rgba(255,255,255,.55) 64%, transparent 70%),
+    radial-gradient(circle 5px at 22% 26%, rgba(66,32,6,.30), transparent 70%),
+    radial-gradient(circle 4px at 30% 18%, rgba(66,32,6,.26), transparent 70%),
+    radial-gradient(circle 4px at 15% 17%, rgba(66,32,6,.26), transparent 70%),
+    radial-gradient(circle 4px at 37% 26%, rgba(66,32,6,.24), transparent 70%),
+    radial-gradient(circle 5px at 79% 64%, rgba(66,32,6,.28), transparent 70%),
+    radial-gradient(circle 4px at 87% 56%, rgba(66,32,6,.24), transparent 70%),
+    radial-gradient(circle 4px at 72% 55%, rgba(66,32,6,.24), transparent 70%),
+    radial-gradient(circle 4px at 83% 72%, rgba(66,32,6,.22), transparent 70%),
+    radial-gradient(circle 3px at 48% 82%, rgba(66,32,6,.22), transparent 70%),
+    linear-gradient(180deg, #fefce8 0%, #fef08a 34%, #bef264 62%, #84cc16 100%);
+}
+.pack-skin-dogs .pack-body {
+  background:
+    radial-gradient(circle 5px at 20% 28%, rgba(254,252,232,.28), transparent 70%),
+    radial-gradient(circle 4px at 28% 20%, rgba(254,252,232,.24), transparent 70%),
+    radial-gradient(circle 4px at 13% 19%, rgba(254,252,232,.24), transparent 70%),
+    radial-gradient(circle 4px at 35% 28%, rgba(254,252,232,.22), transparent 70%),
+    radial-gradient(circle 5px at 74% 58%, rgba(254,252,232,.26), transparent 70%),
+    radial-gradient(circle 4px at 82% 50%, rgba(254,252,232,.22), transparent 70%),
+    radial-gradient(circle 4px at 67% 49%, rgba(254,252,232,.22), transparent 70%),
+    radial-gradient(circle 4px at 78% 66%, rgba(254,252,232,.20), transparent 70%),
+    radial-gradient(circle 4px at 42% 78%, rgba(254,252,232,.20), transparent 70%),
+    radial-gradient(circle 3px at 55% 36%, rgba(254,252,232,.18), transparent 70%),
+    linear-gradient(180deg, #4d7c0f 0%, #3f6212 55%, #1a2e05 100%);
+}
+.pack-skin-dogs .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(254,240,138,.30), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-dogs .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(101,163,13,.55) 4px 6px, rgba(254,252,232,.16) 6px 9px); }
+.pack-skin-dogs .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(63,98,18,.5) 4px 6px, rgba(254,252,232,.08) 6px 9px); }
+.pack-skin-dogs .pack-top::after { border-bottom-color: rgba(190,242,100,.65); }
+.pack-skin-dogs .pack-code { color: #422006; opacity: .95; text-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 12px rgba(132,204,22,.9); }
+.pack-skin-dogs .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(254,252,232,.65), rgba(101,163,13,.94) 72%);
+  border-color: rgba(254,252,232,.85); box-shadow: 0 0 26px rgba(132,204,22,.6), inset 0 0 18px rgba(254,240,138,.3); text-shadow: 0 0 16px rgba(255,255,255,.9); }
+.pack-skin-dogs .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(132,204,22,.9), 0 2px 8px rgba(0,0,0,.65); }
