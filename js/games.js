@@ -95,6 +95,8 @@
 
   async function guess(higher) {
     if (!G || G.over) return;
+    var bh = ctx.$('#gameHigher'), bl = ctx.$('#gameLower');
+    if (bh) bh.disabled = true; if (bl) bl.disabled = true;
     try {
       var r = await CPS.cloud.call('game_guess', { p_run: G.run, p_higher: higher });
       G.card = r.card; G.streak = r.streak || 0; G.bank = r.bank || G.bank;

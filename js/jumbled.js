@@ -61,6 +61,7 @@
     var pulls = server.cards.map(function (c) {
       if (c.ticket) return { ticket: true };
       if (c.tokens) return { tokens: c.tokens };
+      if (c.credit) return { credit: c.credit };
       var home = window.CardSets.get(c.set_id) || null;
       var card = (home && home.byId.get(c.id)) || {
         id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '',

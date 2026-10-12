@@ -56,13 +56,15 @@
   }
 
   function summaryBits(o) {
-    var tickets = 0, tokTotal = 0, out = '';
+    var tickets = 0, tokTotal = 0, credTotal = 0, out = '';
     o.pulls.forEach(function (p) {
       if (p.ticket) tickets++;
       else if (p.tokens) tokTotal += p.tokens;
+      else if (p.credit) credTotal += p.credit;
     });
     if (tickets) out += ' · 🎟️ <b>' + tickets + '</b> spin ticket' + (tickets === 1 ? '' : 's');
     if (tokTotal) out += ' · 🪙 <b>' + tokTotal + '</b> token' + (tokTotal === 1 ? '' : 's');
+    if (credTotal) out += ' · 💵 <b>$' + credTotal + '</b> store credit';
     return out;
   }
 
