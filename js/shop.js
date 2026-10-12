@@ -68,11 +68,6 @@
         '</div></div>';
     }).join('');
 
-    var hist = (data.history || []).map(function (h) {
-      return '<div class="shop-hist-row"><span>Slot ' + h.slot + ' · ' + esc(setName(h.set_id)) + '</span>' +
-        '<span class="muted small">💵 $' + h.price + ' · ' + new Date(h.purchased_at).toLocaleString() + '</span></div>';
-    }).join('') || '<p class="muted small">No purchases yet.</p>';
-
     el.innerHTML =
       '<div class="panel shop-head">' +
       '<h2>🏪 Shop</h2>' +
@@ -80,7 +75,19 @@
       '<div class="muted small">Next restock in <b id="shopCountdown">' + fmtTime(data.seconds_to_restock) + '</b></div>' +
       '</div>' +
       '<div class="shop-grid">' + slots + '</div>' +
-      '<div class="panel"><h3>Purchase history</h3><div class="shop-hist">' + hist + '</div></div>';
+      '<div class="panel shop-hist-box" id="shopHistBox"><h3>🧾 Purchase history</h3><span class="muted small">Tap to view</span></div>';
+
+    $('#shopHistBox', el).addEventListener('click', function () {
+      var hist = (data.history || []).map(function (h) {
+        return '<div class="shop-hist-row"><span>Slot ' + h.slot + ' · ' + esc(setName(h.set_id)) + '</span>' +
+          '<span class="muted small">💵 $' + h.price + ' · ' + new Date(h.purchased_at).toLocaleString() + '</span></div>';
+      }).join('') || '<p class="muted small">No purchases yet.</p>';
+      ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
+        '<h3>🧾 Purchase history</h3><div class="shop-hist">' + hist + '</div>',
+        function (box) {
+          box.querySelector('[data-close]').addEventListener('click', function () { ctx.closeModal(); });
+        });
+    });
 
     el.querySelectorAll('[data-buyslot]').forEach(function (btn) {
       btn.addEventListener('click', async function () {
