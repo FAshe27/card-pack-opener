@@ -348,7 +348,7 @@
       S.busy = false;
       S.myVariants = null; S.variantCensus = null;
       pulls = server.cards.map(function (c) {
-        if (c.ticket || c.tokens) return { ticket: !!c.ticket, tokens: c.tokens || 0 };
+        if (c.ticket || c.tokens || c.credit) return { ticket: !!c.ticket, tokens: c.tokens || 0, credit: c.credit || 0 };
         var card = set.byId.get(c.id) || { id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '', details: '(This card is newer than your copy of the set file. Refresh the page.)', image: '' };
         return { card: card, holo: !!c.holo, serverNew: !!c.new, variant: c.variant || null, serial: c.serial || null };
       });
@@ -2000,8 +2000,8 @@
     }
     /* The outcome was rolled above; the animation below is just theater. */
     var endState = await CPS.wheel.playHops(canvas, cfg, out.hops || [], speed);
-    var prize = out.prize || {}, isTok = prize.kind === 'tokens';
-    var pset = !isTok && prize.set_id ? window.CardSets.get(prize.set_id) : null;
+    var prize = out.prize || {}, isTok = prize.kind === 'tokens', isCred = prize.kind === 'credit';
+    var pset = !isTok && !isCred && prize.set_id ? window.CardSets.get(prize.set_id) : null;
     if (isCloud() && pset) ps(pset).packs = out.packs_now;
     if (isCloud() && isTok && CPS.games) CPS.games.setTokens(out.tokens_now);
     if (!isCloud()) renderPacksSide();
