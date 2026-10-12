@@ -24,6 +24,17 @@
     var s = window.CardSets.get(id);
     return s ? s.name : id;
   }
+  function packVisual(setId) {
+    var s = window.CardSets.get(setId);
+    if (!s) return '<div class="shop-pack"><span>' + esc(setId) + '</span></div>';
+    var t = s.theme || {};
+    var style = 'background:linear-gradient(135deg,' + (t.primary || '#333') + ',' + (t.secondary || '#111') + ');';
+    return '<div class="shop-pack" style="' + style + '">' +
+      '<div class="shop-pack-code">' + esc(s.code || setId) + '</div>' +
+      '<div class="shop-pack-name">' + esc(s.name) + '</div>' +
+      '<div class="shop-pack-sub">9 cards</div>' +
+      '</div>';
+  }
 
   async function render(el) {
     S = ctx.S;
@@ -46,15 +57,15 @@
     var slots = data.slots.map(function (sl) {
       var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
       var canBuy = data.store_credit >= sl.price && (remaining == null || remaining > 0);
-      return '<div class="panel shop-slot">' +
-        '<div class="shop-slot-head"><span class="shop-slot-num">Slot ' + sl.slot + '</span>' +
-        (sl.slot === 3 ? '<span class="pill">Deal</span>' : '') + '</div>' +
+      return '<div class="shop-booth">' +
+        (sl.slot === 3 ? '<div class="shop-deal-tag">DEAL</div>' : '') +
+        packVisual(sl.set_id) +
+        '<div class="shop-info">' +
         '<div class="shop-packname"><b>' + esc(setName(sl.set_id)) + '</b></div>' +
-        '<div class="muted small">' + esc(sl.set_id) + ' pack</div>' +
         '<div class="shop-price">💵 $' + sl.price + '</div>' +
-        (remaining != null ? '<div class="muted small">' + remaining + ' of ' + sl.limit + ' left</div>' : '<div class="muted small">Unlimited</div>') +
-        '<button class="btn primary" data-buyslot="' + sl.slot + '"' + (canBuy ? '' : ' disabled') + '>Buy pack</button>' +
-        '</div>';
+        (remaining != null ? '<div class="muted small">' + remaining + ' of ' + sl.limit + ' left</div>' : '') +
+        '<button class="btn primary" data-buyslot="' + sl.slot + '"' + (canBuy ? '' : ' disabled') + '>Buy</button>' +
+        '</div></div>';
     }).join('');
 
     var hist = (data.history || []).map(function (h) {
