@@ -27,7 +27,7 @@
   function packVisual(setId) {
     var s = window.CardSets.get(setId);
     if (!s || !CPS.cards.pack) return '<div class="shop-pack"><span>' + esc(setId) + '</span></div>';
-    return '<div class="shop-pack-wrap">' + CPS.cards.pack(s, 'mini') + '</div>';
+    return '<div class="shop-pack-wrap">' + CPS.cards.pack(s, '') + '</div>';
   }
 
   async function render(el) {
