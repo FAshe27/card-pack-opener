@@ -1366,3 +1366,17 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .market-toggle-btn { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); color: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; position: relative; }
 .market-toggle-btn.active { border-color: #f5b942; background: #1d1a12; color: #f5b942; }
 .market-toggle-btn .tab-badge { position: absolute; top: 8px; right: 12px; }
+
+/* Shop tab */
+.shop-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.shop-head h2 { margin: 0; }
+.shop-balance { font-size: 1.2rem; }
+.shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.shop-slot { text-align: center; }
+.shop-slot-head { display: flex; justify-content: center; gap: 8px; align-items: center; margin-bottom: 8px; }
+.shop-slot-num { font-weight: 700; color: var(--muted); font-size: .85rem; }
+.shop-packname { font-size: 1.1rem; margin: 8px 0 4px; }
+.shop-price { font-size: 1.4rem; font-weight: 800; margin: 12px 0 8px; }
+.shop-slot .btn { margin-top: 12px; width: 100%; }
+.shop-hist-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.shop-hist-row:last-child { border-bottom: none; }
