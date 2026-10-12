@@ -1622,6 +1622,15 @@
           (x.is_me ? '' : '<button class="btn small ghost" data-act="' + (x.disabled ? 'enable' : 'disable') + '">' + (x.disabled ? 'Enable' : 'Disable') + '</button>' +
             '<button class="btn small ghost danger-text" data-act="delete">Delete</button>') + '</div></div>';
       }).join('') || '<div class="empty">No accounts yet.</div>';
+      // Populate grant recipient dropdowns
+      var grantOpts = '<option value="everyone">Everyone (non-admin)</option>' +
+        accts.filter(function(x) { return !x.is_admin; }).map(function(x) {
+          return '<option value="' + esc(x.id) + '">' + esc(x.display_name) + '</option>';
+        }).join('');
+      ['grantPacksWho', 'grantSpinsWho', 'grantTokensWho', 'grantCreditWho'].forEach(function(id) {
+        var sel = document.getElementById(id);
+        if (sel) sel.innerHTML = grantOpts;
+      });
     } catch (e) { cloudError(e); }
   }
 
@@ -2158,12 +2167,20 @@
     $('#adminRefresh').addEventListener('click', function () { refreshCloud().then(renderAdmin); });
     $('#gaSpinAllBtn').addEventListener('click', async function () {
       var n = parseInt($('#gaSpinAllN').value, 10);
+      var who = $('#grantSpinsWho').value;
       if (!(n >= 1)) { toast('Pick a number of spin tickets.', 'warn'); return; }
-      if (!confirm('Give ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to every non-admin player?')) return;
+      var whoName = who === 'everyone' ? 'every non-admin player' : ($('#grantSpinsWho').selectedOptions[0].textContent || 'player');
+      if (!confirm('Give ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + whoName + '?')) return;
       var btn = this; btn.disabled = true;
       try {
-        var r = await CPS.cloud.call('admin_grant_spins_all', { p_spins: n });
-        toast('Gave ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        var r;
+        if (who === 'everyone') {
+          r = await CPS.cloud.call('admin_grant_spins_all', { p_spins: n });
+          toast('Gave ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        } else {
+          r = await CPS.cloud.call('admin_grant_spins', { p_account: who, p_spins: n });
+          toast('Gave ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + whoName + '.', 'good');
+        }
         renderAdmin();
       } catch (e) { cloudError(e); btn.disabled = false; }
     });
@@ -2171,13 +2188,21 @@
     CPS.admintokens.bindCreditAll();
     $('#gaAllBtn').addEventListener('click', async function () {
       var sid = $('#gaAllSet').value, n = parseInt($('#gaAllN').value, 10);
+      var who = $('#grantPacksWho').value;
       if (!sid || !(n >= 1)) { toast('Pick a set and a number of packs.', 'warn'); return; }
       var setName = (window.CardSets.get(sid) || {}).name || sid;
-      if (!confirm('Give ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to every non-admin player?')) return;
+      var whoName = who === 'everyone' ? 'every non-admin player' : ($('#grantPacksWho').selectedOptions[0].textContent || 'player');
+      if (!confirm('Give ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to ' + whoName + '?')) return;
       var btn = this; btn.disabled = true;
       try {
-        var r = await CPS.cloud.call('admin_grant_packs_all', { p_set: sid, p_packs: n });
-        toast('Gave ' + n + ' pack' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        var r;
+        if (who === 'everyone') {
+          r = await CPS.cloud.call('admin_grant_packs_all', { p_set: sid, p_packs: n });
+          toast('Gave ' + n + ' pack' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
+        } else {
+          r = await CPS.cloud.call('admin_grant_packs', { p_set: sid, p_packs: n, p_account: who });
+          toast('Gave ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to ' + whoName + '.', 'good');
+        }
         renderAdmin();
       } catch (e) { cloudError(e); btn.disabled = false; }
     });
