@@ -651,9 +651,54 @@
       tb.classList.toggle('hidden', !elig);
       tb.textContent = 'Turn in all in this set (' + elig + ' eligible)';
     }
+    var vb2 = $('#turnInDupesBtn');
+    if (vb2) {
+      var velig = isCloud() ? turnInDupesPreview(set, st).eligible : 0;
+      vb2.classList.toggle('hidden', !velig);
+      vb2.textContent = 'Turn in all duplicates in this set (' + velig + ')';
+    }
   }
 
-  
+  /* Unflagged cards in this set holding at least 2 fungible copies on hand. */
+  function turnInDupesPreview(set, st) {
+    var vmap = variantCountMap(), p = { eligible: 0, holoOnly: 0 };
+    set.cards.forEach(function (c) {
+      if (isTurned(set.id, c.id)) return;
+      var e = st.cards[c.id]; if (!e || !e.n) return;
+      var vn = vmap[set.id + ':' + c.id] || 0;
+      if (e.n - (e.v || 0) - vn < 2) return;
+      p.eligible++;
+      if ((e.n - e.h) - ((e.v || 0) - (e.vh || 0)) < 1) p.holoOnly++;
+    });
+    return p;
+  }
+
+  async function turnInDupesFlow() {
+    var set = S.set, st = ps();
+    if (!isCloud() || !set || set.id === 'jumbled') return;
+    await ensureVariants();
+    var p = turnInDupesPreview(set, st);
+    if (!p.eligible) { toast('No duplicates to turn in — every card here is a single copy, already turned in, vaulted, or numbered.', 'warn'); return; }
+    var ok = await confirmDialog('Turn in duplicates from ' + set.name,
+      '<p>Turn in <b>one copy</b> of every card you hold duplicates of — <b>' + p.eligible + '</b> card' + (p.eligible === 1 ? '' : 's') + '. Your other copies stay in your collection.</p>' +
+      '<p class="muted">Turning in destroys the copy and marks the card <b>permanently collected</b>: it counts toward your completion forever, even if you never own it again. <b>There is no undo.</b></p>',
+      'Turn them in');
+    if (!ok) return;
+    var includeHolos = false;
+    if (p.holoOnly > 0) {
+      includeHolos = await confirmDialog('Holographic cards',
+        '<p>Some of these cards are holographic — for <b>' + p.holoOnly + '</b> of them, the only copy that can be turned in is a holo.</p>' +
+        '<p class="muted">Do you still want to turn these in?</p>',
+        'Yes, turn in the holos too', 'Skip the holos');
+    }
+    try {
+      var r = await CPS.cloud.call('turn_in_dupes', { p_set: set.id, p_include_holos: includeHolos });
+      await refreshCloud();
+      toast('✓ Turned in ' + r.turned + ' duplicate' + (r.turned === 1 ? '' : 's') + '!' +
+        (r.skipped_holo ? ' Skipped ' + r.skipped_holo + ' holo-only.' : ''), 'good', 5000);
+    } catch (e) { cloudError(e); }
+  }
+
   function turnInPreview(set, st) {
     var vmap = variantCountMap(), p = { eligible: 0, holoOnly: 0, onlyCopy: 0, locked: 0 };
     set.cards.forEach(function (c) {
@@ -2045,6 +2090,8 @@
     });
     var tib = $('#turnInAllBtn');
     if (tib) tib.addEventListener('click', function () { turnInAllFlow(); });
+    var vdb = $('#turnInDupesBtn');
+    if (vdb) vdb.addEventListener('click', function () { turnInDupesFlow(); });
     $('#questList').addEventListener('click', function (e) {
       var b = e.target.closest('[data-claim]'); if (!b || b.disabled) return;
       b.disabled = true;
