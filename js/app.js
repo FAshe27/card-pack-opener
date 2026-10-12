@@ -1945,10 +1945,6 @@
         resultHtml: CPS.wheel.prizeHtml(prize, pset && pset.name)
       };
     }
-    try {
-      var c = fx.center(canvas);
-      fx.burst(c.x, c.y, { count: 60, colors: ['#ffe08a', '#ffffff', '#ffb21e'], speed: 7, shape: 'star', size: 2 });
-    } catch (e2) {}
     audio.coin();
     S.spinning = false;
     renderWheel();
