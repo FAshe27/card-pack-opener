@@ -28,13 +28,10 @@
   var PREFIX = 'sbx-';
 
   var ITEMS = [
-    // -- register test items here -------------------------------------------
-    // Example:
-    // { id: 'dice-duel', title: 'Dice Duel',
-    //   blurb: 'Roll-off against the house. Winner takes tokens.',
-    //   status: 'testing',
-    //   render: function (el) { CPS.diceDuel.render(el); },
-    //   teardown: function () { CPS.diceDuel.teardown(); } },
+    { id: 'shop', title: 'Shop', blurb: 'Rotating pack stock for Store Credit. Restocks at midnight/noon.',
+      status: 'public',
+      render: function (el) { CPS.shop.render(el); },
+      teardown: function () { CPS.shop.teardown(); } },
   ];
 
   var launched = null; // id of the item currently open (sandbox or public tab)
