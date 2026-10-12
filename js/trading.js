@@ -112,7 +112,10 @@
     }
     var opts = { holo: !!l.holo };
     if (l.variant_tier) opts.variant = { tier: l.variant_tier, serial: l.variant_serial };
-    return CPS.cards.render(s, card, opts);
+    var variantAttr = l.variant_tier ? ' data-variant-tier="' + esc(l.variant_tier) + '" data-variant-serial="' + esc(l.variant_serial) + '"' : '';
+    return '<div class="trade-card-click" data-set="' + esc(l.set_id) + '" data-card="' + esc(l.card_id) + '"' +
+      ' data-holo="' + (l.holo ? '1' : '0') + '"' + variantAttr +
+      ' style="cursor:pointer;" title="View card">' + CPS.cards.render(s, card, opts) + '</div>';
   }
 
   function listingTitle(l) {
@@ -150,6 +153,16 @@
     });
     box.querySelectorAll('[data-cancel]').forEach(function (btn) {
       btn.addEventListener('click', function () { openCancelModal(btn.getAttribute('data-cancel')); });
+    });
+    // Make trading listing cards clickable -> open card modal
+    box.querySelectorAll('.trade-card-click').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var vt = el.getAttribute('data-variant-tier');
+        var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) } : null;
+        ctx.openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
+          el.getAttribute('data-holo') === '1', variant);
+      });
     });
   }
 
