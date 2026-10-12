@@ -868,7 +868,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 /* ===================================================== collection */
 .coll-head { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center; margin-bottom: 16px; }
 .completion { display: flex; align-items: center; gap: 16px; }
-.ring { --p: 0; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--accent) calc(var(--p) * 1%), rgba(255,255,255,.08) 0); position: relative; flex: none; }
+.ring { --p: 0; --g: 0; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(#34d399 calc(var(--g) * 1%), var(--accent) calc(var(--g) * 1%), var(--accent) calc(var(--p) * 1%), rgba(255,255,255,.08) calc(var(--p) * 1%)); position: relative; flex: none; }
 .ring::before { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: var(--panel); }
 .ring span { position: relative; font-weight: 800; font-size: 1.15rem; }
 .comp-title { font-weight: 800; font-size: 1.2rem; } .comp-sub { color: var(--muted); font-size: .9rem; margin-top: 4px; }
@@ -898,7 +898,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 /* notification-style badges on the card's top-right corner: they straddle the top edge (2px overlap) and stick out
    past the right edge, so the rarity gem / name stay uncovered; holo ✦n sits left of the ×n count */
 .coll-badges { position: absolute; z-index: 2; top: -16px; right: -9px; display: flex; gap: 3px; pointer-events: none; }
-.coll-badges .badge-count, .coll-badges .badge-holo { position: static; pointer-events: auto; padding: 0 7px; height: 18px; line-height: 18px; font-size: 11px; white-space: nowrap;
+.coll-badges .badge-count, .coll-badges .badge-holo, .coll-badges .badge-turned, .coll-badges .badge-vault { position: static; pointer-events: auto; padding: 0 7px; height: 18px; line-height: 18px; font-size: 11px; white-space: nowrap;
   box-shadow: 0 0 0 2px #0b0f1a, 0 3px 8px rgba(0,0,0,.55); }
 .recent .card:hover { transform: translateY(-4px) scale(1.03); z-index: 2; }
 .empty { color: var(--muted); padding: 40px; text-align: center; grid-column: 1/-1; }
@@ -1465,3 +1465,16 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .shop-deal-tag.ticket { background: linear-gradient(135deg, #27ae60, #1e8449); color: #fff; }
 .shop-mystery-q { font-size: 3rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,.4); }
 .shop-deal-tag.mystery { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; }
+
+/* --- turn-ins + the Vault (108) --- */
+.badge-turned { background: #14532d; color: #86efac; border-radius: 999px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,.35); display: inline-flex; align-items: center; justify-content: center; min-width: 18px; }
+.badge-vault { background: #3a2c07; color: #f5b942; border-radius: 999px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,.35); display: inline-flex; align-items: center; justify-content: center; min-width: 18px; }
+.coll-item.turned .card { box-shadow: 0 0 0 2px #34d399, 0 0 16px rgba(52,211,153,.35); }
+.coll-item.vaulted .card { box-shadow: 0 0 0 1px rgba(245,185,66,.65), 0 0 10px rgba(245,185,66,.18); }
+.turned-note { color: #4ade80; font-weight: 700; }
+.vault-tag { color: #f5b942; font-weight: 700; }
+.vault-box { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.vault-title { width: 100%; font-weight: 800; font-size: .85rem; color: #f5b942; }
+.turnin-btn { margin-top: 10px; border-color: rgba(52,211,153,.5); color: #4ade80; }
+.confirm-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+.coll-actions { text-align: right; margin: 0 0 10px; }
