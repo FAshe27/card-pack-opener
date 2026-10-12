@@ -26,8 +26,8 @@
     // Refresh quests via appCtx
     if (C && C.refreshQuests) {
       await C.refreshQuests();
-      // Trigger re-render by dispatching a custom event app.js listens for, or reload view
-      if (C.S && C.S.view === 'daily' && C.renderDaily) C.renderDaily();
+      // Re-render the current view (renderDaily isn't exposed, but renderView is)
+      if (C.renderView) C.renderView();
     }
     updateBtn();
   }
