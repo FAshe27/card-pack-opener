@@ -1942,21 +1942,6 @@
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
     $('#setSelect').addEventListener('change', function (e) { selectSet(e.target.value); });
-    /* Open the set dropdown at the TOP of the list (where the sets with packs are)
-       instead of scrolled to the current set: park the selection on the first
-       option as the menu opens, and restore it if the user backs out. */
-    (function () {
-      var sel = $('#setSelect'), saved = null, picked = false;
-      sel.addEventListener('mousedown', function () {
-        saved = sel.value; picked = false;
-        if (sel.options.length) sel.selectedIndex = 0;
-      });
-      sel.addEventListener('change', function () { picked = true; });
-      sel.addEventListener('blur', function () {
-        if (!picked && saved != null) sel.value = saved;
-        saved = null;
-      });
-    })();
     $('#openBtn').addEventListener('click', startOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
     $('#autoSpinBtn').addEventListener('click', function () {
