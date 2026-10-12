@@ -1368,7 +1368,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .market-toggle-btn .tab-badge { position: absolute; top: 8px; right: 12px; }
 
 /* All-sets collection mode */
-#allSetsBtn.active { background: #f5b942; color: #1a1a1a; border-color: #f5b942; }
+#allSetsChasesBtn.active, #allSetsNumberedBtn.active { background: #f5b942; color: #1a1a1a; border-color: #f5b942; }
 .allsets-setname { text-align: center; margin-top: 4px; font-size: .75rem; }
 .allsets-item { cursor: pointer; }
 .loadmore-wrap { grid-column: 1 / -1; text-align: center; padding: 20px; }
