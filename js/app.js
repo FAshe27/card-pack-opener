@@ -2126,7 +2126,8 @@
           toast('Gave ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + whoName + '.', 'good');
         }
         renderAdmin();
-      } catch (e) { cloudError(e); btn.disabled = false; }
+      } catch (e) { cloudError(e); }
+      btn.disabled = false;
     });
     CPS.admintokens.bindAll();
     CPS.admintokens.bindCreditAll();
@@ -2149,7 +2150,8 @@
           toast('Gave ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to ' + whoName + '.', 'good');
         }
         renderAdmin();
-      } catch (e) { cloudError(e); btn.disabled = false; }
+      } catch (e) { cloudError(e); }
+      btn.disabled = false;
     });
     initCollapsible();
     document.addEventListener('click', function (e) {
