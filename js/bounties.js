@@ -60,7 +60,13 @@
       renderList();
       var mo = ctx.$('#bountyMyOpen');
       if (mo) mo.textContent = 'You have ' + (B.my_open || 0) + ' of 5 open bounties.';
-    } catch (e) { ctx.cloudError(e); }
+    } catch (e) {
+      ctx.cloudError(e);
+      var box = ctx.$('#bountyList');
+      if (box) box.innerHTML = '<div class="empty">Couldn\'t load bounties. <button class="btn small" id="bountyRetry">Retry</button></div>';
+      var rb = ctx.$('#bountyRetry');
+      if (rb) rb.addEventListener('click', load);
+    }
   }
 
   function fillSetFilter() {
@@ -199,7 +205,7 @@
             ctx.closeModal();
             ctx.toast('Bounty claimed!', 'good');
             ctx.audio.reveal('epic');
-            await ctx.refreshCloud();
+            await load(); await ctx.refreshCloud();
           } catch (e) { btn.disabled = false; ctx.cloudError(e); }
         });
       });
@@ -223,7 +229,7 @@
             await CPS.cloud.call('cancel_bounty', { p_bounty_id: id });
             ctx.closeModal();
             ctx.toast('Bounty cancelled — offer refunded.', 'good');
-            await ctx.refreshCloud();
+            await load(); await ctx.refreshCloud();
           } catch (e) { btn.disabled = false; ctx.cloudError(e); }
         });
       });
@@ -490,7 +496,7 @@
       ctx.closeModal();
       ctx.toast('Bounty posted!', 'good');
       ctx.audio.coin();
-      await ctx.refreshCloud();
+      await load(); await ctx.refreshCloud();
     } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
 
