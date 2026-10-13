@@ -78,10 +78,13 @@
     });
   }
 
-  function deliver(queue) {
+  function deliver(queue, toasted) {
     if (!queue.length) return;
-    if (modalBusy()) { /* don't stomp an open dialog — keep re-checking until it's free */
-      setTimeout(function () { deliver(queue); }, 4000);
+    if (modalBusy()) { /* don't stomp an open dialog — but say so at once
+                          (a toast now, the pop-up when the way is clear),
+                          and re-check briskly instead of every 4s */
+      if (!toasted) ctx.toast('🎉 Turn-in milestone reached!', 'good', 4000);
+      setTimeout(function () { deliver(queue, true); }, 1500);
       return;
     }
     showPopups(queue);
