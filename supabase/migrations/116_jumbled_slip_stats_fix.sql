@@ -1,17 +1,21 @@
 -- =====================================================================
--- PackRipper \u2014 migration 116: Jumbled pack crash when a pack contains
--- an insert slip (spin ticket / store credit / token slip).
+-- PackRipper \u2014 migration 116: no insert slips in Jumbled Mess packs
+-- (+ set-loop hardening in cps_open_pack).
 -- Run AFTER 108 (the live cps_open_pack). Rebuilds cps_open_pack from
--- 108 verbatim with ONE behavioral change: the three loops that iterate
--- the distinct home sets of the pack's contents now skip entries with
--- no set_id. Insert slips REPLACE a card entry in the output array with
--- a bare {"ticket": true} / {"credit": 5} / {"tokens": 5} object \u2014 no
--- set_id \u2014 so a Jumbled pack containing a slip fed NULL into the
--- per-set stats insert and the whole open aborted with:
---   null value in column "set_id" of relation "user_set_stats"
--- The same NULL also polluted the open_packs_set quest bump and the
--- pull_3_sets quest (a slip counted as a phantom third set). Regular
--- packs were unaffected (their stats write uses p_set directly).
+-- 108 with FOUR one-line changes:
+--  1. Insert slips (spin ticket / $5 Store Credit / 5 Arcade Tokens) no
+--     longer roll in Jumbled Mess packs at all \u2014 the insert roll is
+--     gated on NOT is_jumbled, the same way hero packs already are.
+--     (An admin force_ticket_next flag stays armed and fires on the
+--     player's next regular pack instead.)
+--  2-4. The three loops that iterate the distinct home sets of a pack's
+--     contents now skip entries with no set_id. A slip entry is a bare
+--     {"ticket": true} / {"credit": 5} / {"tokens": 5} object with no
+--     set_id; in a regular pack containing a slip it fed NULL into the
+--     pull_3_sets quest (a slip counted as a phantom third set). Before
+--     change 1, a Jumbled pack with a slip went further and crashed the
+--     whole open on the per-set stats insert:
+--       null value in column "set_id" of relation "user_set_stats"
 -- =====================================================================
 
 create or replace function public.cps_open_pack(p_token text, p_set text) returns jsonb
@@ -188,7 +192,7 @@ begin
   -- Table (equal odds): spin ticket / $5 Store Credit / 5 Arcade Tokens.
   -- (admin force_ticket_next guarantees the ticket row, clears on success)
   ins_kind := null;
-  if coalesce(a.force_ticket_next, false) or cps.rand01() < 0.10 then
+  if not is_jumbled and (coalesce(a.force_ticket_next, false) or cps.rand01() < 0.10) then
     ins_kind := case when coalesce(a.force_ticket_next, false) then 'ticket'
       else (array['ticket', 'credit', 'tokens'])[1 + floor(cps.rand01() * 3)::int] end;
     select idx into vi from (
@@ -362,6 +366,6 @@ begin
     'new_best', (not is_jumbled) and best_changed and new_best is not null);
 end $$;
 
--- Verify: open a Jumbled pack until one contains an insert slip \u2014 it
--- opens cleanly and the slip still pays out. (Bogus-token probes cannot
--- reach this code; the fix is three WHERE clauses inside set loops.)
+-- Verify: Jumbled packs never contain an insert slip now; regular packs
+-- still roll slips at the usual rate and a slip no longer counts as a
+-- set for the pull-3-sets daily quest.
