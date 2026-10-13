@@ -254,6 +254,15 @@
     var opening = list.classList.contains('hidden');
     if (opening) {
       fillSetSelect(); // fresh counts, always rendered from the top
+      // Portal to <body> and pin under the button: inside the sticky header the
+      // list is trapped in the header's stacking context (z 20), so page content
+      // (pack art, progress rings) paints over it. Fixed at root level it can't be.
+      if (list.parentNode !== document.body) document.body.appendChild(list);
+      var r = btn.getBoundingClientRect();
+      var w = Math.max(r.width, 264); if (w > window.innerWidth - 16) w = window.innerWidth - 16;
+      list.style.width = w + 'px';
+      list.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px';
+      list.style.top = (r.bottom + 6) + 'px';
       list.classList.remove('hidden');
       list.scrollTop = 0;
       btn.setAttribute('aria-expanded', 'true');
@@ -1994,11 +2003,13 @@
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
     window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
     var _ddBtn = $('#setDDBtn'); if (_ddBtn) _ddBtn.addEventListener('click', function (e) { e.stopPropagation(); toggleSetDD(); });
+    window.addEventListener('resize', function () { closeSetDD(); });
+    document.addEventListener('scroll', function (e) { var l = $('#setDDList'); if (l && !l.classList.contains('hidden') && e.target !== l) closeSetDD(); }, true);
     var _ddList = $('#setDDList'); if (_ddList) _ddList.addEventListener('click', function (e) {
       var b = e.target.closest('[data-set-id]'); if (!b) return;
       selectSet(b.getAttribute('data-set-id'));
     });
-    document.addEventListener('click', function (e) { if (!e.target.closest('#setDD')) closeSetDD(); });
+    document.addEventListener('click', function (e) { if (!e.target.closest('#setDD') && !e.target.closest('#setDDList')) closeSetDD(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSetDD(); });
     $('#openBtn').addEventListener('click', startOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
