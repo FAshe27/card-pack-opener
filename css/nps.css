@@ -20,7 +20,6 @@
 .pack-skin-nps .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(146,84,32,.55) 4px 6px, rgba(255,240,210,.16) 6px 9px); }
 .pack-skin-nps .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(110,58,20,.5) 4px 6px, rgba(255,240,210,.08) 6px 9px); }
 .pack-skin-nps .pack-top::after { border-bottom-color: rgba(255,238,196,.65); }
-.pack-skin-nps .pack-code { color: #ffefc4; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(232,154,78,.9); }
 .pack-skin-nps .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,240,200,.5), rgba(15,49,32,.94) 72%);
   border-color: rgba(255,238,196,.85); box-shadow: 0 0 26px rgba(232,154,78,.55), inset 0 0 18px rgba(255,220,160,.22); text-shadow: 0 0 16px rgba(255,240,200,.9); }
 .pack-skin-nps .pack-name { color: #fff6dd; text-shadow: 0 0 14px rgba(201,106,50,.9), 0 2px 8px rgba(0,0,0,.65); }
