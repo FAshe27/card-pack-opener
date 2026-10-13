@@ -1,0 +1,49 @@
+/* Scratchoffs — Sandbox prototype. Foil cells + rarity symbol chips
+   (colours mirror the Slots rarity palette in css/slots.css). */
+.scr-wrap { text-align: center; margin-top: 18px; }
+.scr-balance { margin: 2px 0 12px; font-size: 15px; }
+.scr-tiers {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px; max-width: 720px; margin: 0 auto 8px;
+}
+.scr-tier { margin: 0; }
+.scr-tier h3 { margin: 0 0 6px; }
+.scr-stage { margin: 10px auto; max-width: 360px; }
+.scr-ticket-title { margin: 6px 0 10px; }
+.scr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.scr-cell {
+  aspect-ratio: 1.35; border-radius: 12px; cursor: pointer;
+  border: 2px solid #2c2f3a; background: #1d2027;
+  display: flex; align-items: center; justify-content: center;
+  font: inherit; padding: 4px;
+}
+.scr-cell:not(.scr-cell-open) {
+  background: linear-gradient(135deg, #9aa1b1 0%, #6e7585 30%, #aeb5c4 55%, #767e90 80%, #98a0b0 100%);
+  border-color: #565d6d;
+}
+.scr-cell:not(.scr-cell-open):hover { filter: brightness(1.12); }
+.scr-foil { font-size: 22px; font-weight: 800; color: #2c2f3a; text-shadow: 0 1px 0 rgba(255,255,255,.35); }
+.scr-cell-open { cursor: default; }
+.scr-sym {
+  font-weight: 700; font-size: 11px; padding: 6px 10px; border-radius: 999px;
+  white-space: nowrap; border: 2px solid transparent;
+}
+.scr-sym-common    { color: #c8ccd4; border-color: #6b7280; background: #1d2027; }
+.scr-sym-uncommon  { color: #7ee787; border-color: #2ea043; background: #12241a; }
+.scr-sym-rare      { color: #79c0ff; border-color: #1f6feb; background: #0e1c33; }
+.scr-sym-epic      { color: #d2a8ff; border-color: #8957e5; background: #1e1433; }
+.scr-sym-legendary { color: #ffdf5d; border-color: #d4a017; background: #2b2111; }
+.scr-sym-chase     { color: #ff9ecd; border-color: #ec4899; background: #2c1220; }
+.scr-stage-btns { margin-top: 10px; display: flex; gap: 12px; align-items: center; justify-content: center; }
+.scr-result { min-height: 40px; margin: 8px 0; }
+.scr-win {
+  display: inline-block; font-weight: 800; font-size: 16px;
+  color: #ffdf5d; background: #2b2111; border: 2px solid #d4a017;
+  border-radius: 12px; padding: 9px 16px;
+}
+.scr-tuning { text-align: left; max-width: 520px; margin: 12px auto 0; }
+.scr-tuning summary { cursor: pointer; font-weight: 600; margin-bottom: 6px; }
+.scr-sim { margin-top: 8px; }
+@media (max-width: 480px) {
+  .scr-sym { font-size: 10px; padding: 5px 8px; }
+}

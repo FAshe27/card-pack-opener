@@ -1,0 +1,50 @@
+/* Plinko — Sandbox prototype. Board, chip, bins. Rarity/prize colours are
+   kept neutral gold/teal so the placeholder bins read at a glance. */
+.plk-wrap { text-align: center; margin-top: 18px; }
+.plk-badge, .scr-badge {
+  font-size: 11px; font-weight: 800; letter-spacing: .04em;
+  color: #f0a832; border: 1px solid #f0a832; border-radius: 999px;
+  padding: 2px 8px; vertical-align: middle;
+}
+.plk-balance { margin: 2px 0 12px; font-size: 15px; }
+.plk-board {
+  position: relative; max-width: 520px; margin: 0 auto;
+  background: #14161c; border: 2px solid #2c2f3a; border-radius: 14px;
+  padding: 10px 8px 8px; overflow: hidden;
+}
+.plk-chip {
+  display: none; position: absolute; width: 22px; height: 22px; z-index: 3;
+  border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe9a8, #d4a017);
+  border: 2px solid #8a6508; box-shadow: 0 2px 6px rgba(0,0,0,.5);
+}
+.plk-pegrow { display: flex; justify-content: center; gap: 26px; height: 26px; align-items: center; }
+.plk-pegrow-off { transform: translateX(13px); }
+.plk-peg { width: 6px; height: 6px; border-radius: 50%; background: #4b5163; }
+.plk-bins { display: flex; gap: 4px; margin-top: 8px; }
+.plk-bin {
+  flex: 1; min-height: 46px; display: flex; align-items: center; justify-content: center;
+  background: #1d2027; border: 1px solid #2c2f3a; border-radius: 8px;
+  font-size: 10px; font-weight: 700; line-height: 1.25; padding: 3px 2px;
+}
+.plk-bin-token { color: #c8ccd4; }
+.plk-bin-pack { color: #7ee787; border-color: #2ea043; }
+.plk-bin-edge { color: #ffdf5d; border-color: #d4a017; background: #2b2111; }
+.plk-bin-hit { outline: 2px solid #ffdf5d; filter: brightness(1.5); }
+.plk-controls { margin: 14px 0 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.plk-controls .btn { font-size: 15px; padding: 10px 18px; }
+.plk-result { min-height: 40px; margin-bottom: 6px; }
+.plk-win {
+  display: inline-block; font-weight: 800; font-size: 16px;
+  color: #ffdf5d; background: #2b2111; border: 2px solid #d4a017;
+  border-radius: 12px; padding: 9px 16px;
+}
+.plk-stats { margin-bottom: 10px; }
+.plk-tuning { text-align: left; max-width: 520px; margin: 0 auto; }
+.plk-tuning summary { cursor: pointer; font-weight: 600; margin-bottom: 6px; }
+.plk-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 6px 0; }
+.plk-table td, .plk-table th { padding: 4px 6px; border-top: 1px solid #2c2f3a; text-align: left; }
+.plk-sim { margin-top: 8px; }
+@media (max-width: 480px) {
+  .plk-bin { font-size: 8.5px; min-height: 40px; }
+  .plk-pegrow { gap: 18px; }
+}
