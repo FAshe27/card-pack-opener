@@ -1,0 +1,66 @@
+/* pack skin "disney": castle twilight — a deep royal-blue night sky dusted with
+   stars over a gold-lit castle horizon (class pack-skin-disney).
+   Scoped set CSS only — no shared stylesheet changes. Character renders are
+   transparent, so the card art panel stays the near-white theme artBackground;
+   section 2 only adds a slim gold frame line around it. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-disney .pack-top {
+  background:
+    /* a faint firework burst, upper right */
+    radial-gradient(circle 90px at 82% 18%, rgba(255,190,220,.20), transparent 70%),
+    radial-gradient(circle 46px at 82% 18%, rgba(255,225,150,.28), transparent 70%),
+    /* starfield: pin-point stars scattered over the night sky */
+    radial-gradient(circle 1.5px at 12% 24%, rgba(255,255,255,.95), transparent 60%),
+    radial-gradient(circle 1px at 28% 62%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(circle 1.5px at 44% 16%, rgba(210,225,255,.9), transparent 60%),
+    radial-gradient(circle 1px at 58% 46%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(circle 1.5px at 68% 74%, rgba(255,240,200,.85), transparent 60%),
+    radial-gradient(circle 1px at 90% 58%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(circle 1px at 6% 78%, rgba(210,225,255,.7), transparent 60%),
+    /* twilight sky: dusky violet-blue at the tear edge down to deep royal blue */
+    linear-gradient(180deg, #3a2a6e 0%, #24356e 42%, #1b3a78 78%, #16305f 100%);
+}
+.pack-skin-disney .pack-body {
+  background:
+    /* starfield continuing down the body, sparser */
+    radial-gradient(circle 1px at 18% 18%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(circle 1.5px at 76% 10%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(circle 1px at 52% 30%, rgba(210,225,255,.6), transparent 60%),
+    radial-gradient(circle 1px at 34% 52%, rgba(255,255,255,.5), transparent 60%),
+    radial-gradient(circle 1.5px at 88% 42%, rgba(255,240,200,.65), transparent 60%),
+    /* gold castle-light glow rising from the bottom edge */
+    radial-gradient(ellipse 78% 30% at 50% 114%, rgba(255,205,105,.34), transparent 70%),
+    radial-gradient(ellipse 40% 16% at 50% 116%, rgba(255,232,170,.30), transparent 70%),
+    linear-gradient(180deg, #16305f 0%, #10264e 55%, #081a36 100%);
+}
+.pack-skin-disney .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(170,200,255,.20), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-disney .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(217,164,65,.45) 4px 6px, rgba(255,255,255,.14) 6px 9px); }
+.pack-skin-disney .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(140,105,30,.5) 4px 6px, rgba(255,240,200,.08) 6px 9px); }
+.pack-skin-disney .pack-top::after { border-bottom-color: rgba(255,220,140,.6); }
+.pack-skin-disney .pack-code { color: #ffe9a8; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(217,164,65,.9); }
+.pack-skin-disney .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,242,205,.55), rgba(16,32,72,.94) 72%);
+  border-color: rgba(255,220,140,.85); box-shadow: 0 0 26px rgba(217,164,65,.6), inset 0 0 18px rgba(170,200,255,.25); text-shadow: 0 0 16px rgba(255,235,180,.9); }
+.pack-skin-disney .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(217,164,65,.9), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-disney .pack-sub { color: #d5e2ff; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Character renders are transparent and sit in the near-white art panel
+   (theme artBackground #f8f9fa, artFit contain). The frame only swaps the
+   stock translucent border for a slim gold line with a faint twilight inset,
+   so a render reads like a framed portrait. */
+.card[data-set="disney"] .cf-art {
+  border-color: rgba(217,164,65,.55);
+  box-shadow: inset 0 0 16px rgba(27,58,120,.16);
+}
+/* Slips (ticket/token/credit cards borrowed into a disney pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="disney"].ticket-card .cf-art,
+.card[data-set="disney"].token-card .cf-art,
+.card[data-set="disney"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
