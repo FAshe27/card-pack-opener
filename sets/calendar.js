@@ -314,8 +314,8 @@ CardSets.register({
       "name": "February 7",
       "rarity": "rare",
       "id": "02-07",
-      "subtitle": "Holiday",
-      "details": "National Black HIV/AIDS Awareness Day, observed each year on February 7.",
+      "subtitle": "Historic Event",
+      "details": "In 1984, astronaut Bruce McCandless II makes the first untethered spacewalk, floating free of Challenger with a nitrogen-powered jetpack.",
       "image": "assets/sets/calendar/images/02-07.svg"
     },
     {
@@ -571,7 +571,7 @@ CardSets.register({
       "rarity": "rare",
       "id": "03-10",
       "subtitle": "Holiday",
-      "details": "National Women and Girls HIV/AIDS Awareness Day, observed each year on March 10.",
+      "details": "Mario Day, celebrated each year on March 10 (MAR10) in honor of Nintendo's iconic plumber.",
       "image": "assets/sets/calendar/images/03-10.svg"
     },
     {
@@ -1131,7 +1131,7 @@ CardSets.register({
       "rarity": "rare",
       "id": "05-19",
       "subtitle": "Holiday",
-      "details": "National Asian & Pacific Islander HIV/AIDS Awareness Day, observed each year on May 19.",
+      "details": "National Devil's Food Cake Day, observed each year on May 19, celebrating the dark, rich chocolate layer cake.",
       "image": "assets/sets/calendar/images/05-19.svg"
     },
     {
@@ -2107,7 +2107,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "09-18",
       "subtitle": "Holiday",
-      "details": "National HIV/AIDS and Aging Awareness Day, observed each year on September 18.",
+      "details": "National Cheeseburger Day, observed each year on September 18, celebrating the classic American cheeseburger.",
       "image": "assets/sets/calendar/images/09-18.svg"
     },
     {
@@ -2179,7 +2179,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "09-27",
       "subtitle": "Holiday",
-      "details": "National Gay Men's HIV/AIDS Awareness Day, observed each year on September 27.",
+      "details": "World Tourism Day, observed each year on September 27, celebrating travel and the people and places it connects.",
       "image": "assets/sets/calendar/images/09-27.svg"
     },
     {
@@ -2323,7 +2323,7 @@ CardSets.register({
       "rarity": "uncommon",
       "id": "10-15",
       "subtitle": "Holiday",
-      "details": "National Latino AIDS Awareness Day, observed each year on October 15.",
+      "details": "World Students' Day, observed each year on October 15, honoring students and the power of education.",
       "image": "assets/sets/calendar/images/10-15.svg"
     },
     {
