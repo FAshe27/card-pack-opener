@@ -51,3 +51,7 @@
   .trade-card { grid-template-columns: 84px 1fr; }
   .trade-detail { grid-template-columns: 96px 1fr; }
 }
+
+/* Offer cards as clickable faces (detail view) */
+.trade-offerfaces { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.trade-offerfaces .trade-face { width: 104px; flex: none; }
