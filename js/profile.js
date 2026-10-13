@@ -58,7 +58,7 @@ async function openProfile(accountId) {
       var ptb = box.querySelector('#profTradeBtn');
       if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
       var pb = box.querySelector('.prof-best');
-      if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { ctx.openCardModal(best.set.id, best.card.id); }); }
+      if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { CPS.cardBack = { text: '← Back to ' + p.display_name + '’s profile', go: function () { openProfile(accountId); } }; ctx.openCardModal(best.set.id, best.card.id); }); }
     });
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
 }
@@ -71,10 +71,10 @@ function favsHtml(p) {
   }).join('');
 }
 
-function bindFavClicks(box) {
+function bindFavClicks(box, before) {
   box.querySelectorAll('.prof-fav').forEach(function (elm) {
     elm.style.cursor = 'pointer';
-    elm.addEventListener('click', function () { ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
+    elm.addEventListener('click', function () { if (before) before(); ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
   });
 }
 
@@ -92,7 +92,9 @@ async function openVaultScreen(accountId) {
       box.querySelector('#profBackBtn').addEventListener('click', function () { openProfile(accountId); });
       var feb = box.querySelector('#profFavEditBtn');
       if (feb) feb.addEventListener('click', function () { openFavManager(accountId, p.favorites || []); });
-      bindFavClicks(box);
+      bindFavClicks(box, function () {
+        CPS.cardBack = { text: '← Back to ' + p.display_name + '’s Vault', go: function () { openVaultScreen(accountId); } };
+      });
     });
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
 }
@@ -313,7 +315,10 @@ function openPlayerSet(accountId, displayName, setId, collection, backTo) {
       });
       box.querySelectorAll('.prof-fav').forEach(function (elm) {
         elm.style.cursor = 'pointer';
-        elm.addEventListener('click', function () { ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
+        elm.addEventListener('click', function () {
+          CPS.cardBack = { text: '← Back to ' + set.name, go: function () { openPlayerSet(accountId, displayName, setId, collection, backTo); } };
+          ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1');
+        });
       });
     });
 }
