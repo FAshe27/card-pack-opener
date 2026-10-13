@@ -12,12 +12,13 @@
 .card.glow.r-chase { animation: rainbowGlow 1.5s linear infinite; }
 
 /* Jackpot slips get their own gold moment on flip. */
-.card.glow.ticket-card, .card.glow.token-card {
-  box-shadow: 0 0 44px 10px rgba(255,210,80,.85);
-  animation: glowPulse 1.8s ease-in-out infinite; --gc: rgba(255,210,80,.85);
+.card.glow.ticket-card, .card.glow.token-card, .card.glow.credit-card {
+  box-shadow: 0 0 30px 7px rgba(255,210,80,.6);
+  animation: glowPulse 1.8s ease-in-out infinite; --gc: rgba(255,210,80,.6);
 }
 
 /* Slip jackpot faces (the reveal side of the flip). */
 .ticket-card .face.front { background: linear-gradient(135deg, #1a2f1a, #2d5a2d); border: 2px solid #4caf50; padding: 0; }
 .token-card .face.front { background: linear-gradient(135deg, #2e2410, #5a4a1a); border: 2px solid #ffb21e; padding: 0; }
-.ticket-card .ticket-face, .token-card .token-face { display: flex; }
+.credit-card .face.front { background: linear-gradient(135deg, #0f2e22, #17613c); border: 2px solid #2ecc71; padding: 0; }
+.ticket-card .ticket-face, .token-card .token-face, .credit-card .credit-face { display: flex; }
