@@ -753,6 +753,10 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .card[data-set="periodic"] .cf-details,
 .card[data-set="periodic"] .cf-foot { display: none; }
 .card[data-set="periodic"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #000; }
+/* ...but while a Periodic card sits face-down in the pack reveal, the rarity
+   glow would spoil the flip — it only appears once the card is flipped
+   (collection/modal renders are not flippable, so they keep the glow). */
+.card.flippable:not(.flipped)[data-set="periodic"] { box-shadow: none; }
 .foil { background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* holo */
@@ -837,8 +841,6 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .cb-emblem span.code-l5 { font-size: 8.4cqw; letter-spacing: .04em; }
 .cb-emblem span.code-l6 { font-size: 7.2cqw; letter-spacing: .02em; }
 .cb-name { font-weight: 800; font-size: 6cqw; text-transform: uppercase; letter-spacing: .1em; text-align: center; padding: 0 6cqw; text-shadow: 0 2px 6px rgba(0,0,0,.4); }
-.card.tease .back { animation: tease 1.2s ease-in-out infinite; }
-.card.tease.r-legendary .back, .card.tease.r-chase .back { animation-duration: .7s; }
 
 /* Unowned collection cards: full face, darkened */
 .card.unowned { filter: brightness(.38) saturate(.75); }
@@ -858,6 +860,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .badge-holo { bottom: -8px; right: -6px; background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); color: #222; }
 /* variant serial stays hidden until the card is flipped (pack reveal) */
 .flippable:not(.flipped) .badge-variant { display: none; }
+.card.flippable:not(.flipped).variant::after { display: none; }
 .badge-variant { top: -8px; right: -6px; background: linear-gradient(90deg,#ff5f5f,#ffb21e,#38c97f,#3f8cff,#b35cff); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); }
 .card.vt-prism .badge-variant { background: linear-gradient(135deg, #7fd4ff, #a0e7ff); color: #0a2a3a; text-shadow: none; }
 .card.vt-obsidian .badge-variant { background: linear-gradient(135deg, #6b3a9e, #a86ad4); color: #fff; }
@@ -1019,7 +1022,6 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 @keyframes deal { from { opacity: 0; transform: translateY(140px) scale(.4) rotate(-12deg); } }
 @keyframes holo { 0%, 100% { background-position: 0 0, 0% 50%; } 50% { background-position: 0 0, 100% 50%; } }
 @keyframes twinkle { 50% { opacity: .15; } }
-@keyframes tease { 0%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 0 0 transparent; } 50% { box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 26px 4px var(--rc); } }
 @keyframes glowPulse { 50% { box-shadow: 0 0 18px 2px var(--gc); } }
 @keyframes rainbowGlow {
   0% { box-shadow: 0 0 40px 10px rgba(255,79,163,.85); } 25% { box-shadow: 0 0 40px 10px rgba(255,178,30,.85); }
