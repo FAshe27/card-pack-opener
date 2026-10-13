@@ -1377,13 +1377,13 @@
       '<h3>' + esc(card.name) + '</h3>' +
       (!owned && !isTurned(set.id, card.id) ? '<div class="muted">Not collected yet \u2014 pull it from a pack!</div>' : '') +
       (card.subtitle ? '<div class="muted">' + esc(card.subtitle) + '</div>' : '') +
-      '<dl><dt>Number</dt><dd>#' + U.pad(card.num, set.numWidth) + ' of ' + set.cards.length + '</dd>' +
+      '<dl>' +
       '<dt>Set</dt><dd>' + esc(set.name) + '</dd>' +
       '<dt>You own</dt><dd>' + (owned ? e.n + ' total · ' + onHand(e) + ' on hand' + (e.h ? ' · ' + e.h + ' holo' : '') + ((e.v || 0) ? ' · ' + e.v + ' in Vault' : '') : '0') + '</dd>' +
       (variant ? '<dt>Variant</dt><dd>'+esc(CPS.cards.VARIANTS[variant.tier].name)+' #'+variant.serial+'/'+CPS.cards.VARIANTS[variant.tier].run+'</dd>' : '') +
       (isTurned(set.id, card.id) ? '<dt>Turned in</dt><dd class="turned-note">✓ Permanently collected</dd>' : '') +
       '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd>' +
-      '<dt>In the wild</dt><dd id="cardPop">…</dd></dl>' +
+      '<dt>Currently existing</dt><dd id="cardPop">…</dd></dl>' +
       '<div class="variant-census" id="vcensus" style="display:none"></div>' +
       (card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
       (owned && e.h && e.n > e.h ? '<button class="btn small" data-toggle-holo="' + (holo ? 0 : 1) + '">Show ' + (holo ? 'regular' : 'holo') + ' version</button>' : '') +
