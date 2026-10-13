@@ -124,7 +124,10 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .set-dd-btn:hover { border-color: var(--accent); }
 .set-dd-label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .set-dd-list {
-  position: absolute; top: calc(100% + 6px); left: 0; z-index: 200;
+  /* Fixed + body-level (app.js portals the node): inside the sticky header the
+     list is trapped in the header's stacking context, so pack art / progress
+     rings paint over it. z-index matches .acct-menu, the other header dropdown. */
+  position: fixed; z-index: 300;
   width: 264px; max-width: 92vw; max-height: 62vh; overflow-y: auto;
   background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
   box-shadow: 0 24px 60px rgba(0,0,0,.55); padding: 6px;
@@ -1048,7 +1051,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   .set-picker { order: 4; width: 100%; } .set-picker select { max-width: none; flex: 1; }
   .set-picker .set-dd { flex: 1; }
   .set-dd-btn { max-width: none; width: 100%; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,108,255,.18); font-weight: 700; }
-  .set-dd-list { left: 0; right: 0; width: auto; max-width: none; }
+  .set-dd-list { max-width: none; }
   #setSelect {
     appearance: none; -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aab4ff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
