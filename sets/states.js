@@ -11,7 +11,13 @@ CardSets.register({
   "pack": {
     "name": "State Pack",
     "emblem": "⭐",
-    "skin": "states"
+    "skin": "states",
+    "slots": [
+      { "count": 2, "label": "Common", "odds": { "common": 100 } },
+      { "count": 1, "label": "Uncommon", "odds": { "uncommon": 100 } },
+      { "count": 1, "label": "Wild card", "odds": { "common": 55, "uncommon": 30, "rare": 12, "epic": 3 } },
+      { "count": 1, "label": "Rare or better (guaranteed)", "odds": { "rare": 81.8, "epic": 14, "legendary": 4, "chase": 0.2 } }
+    ]
   },
   "cards": [
     {
