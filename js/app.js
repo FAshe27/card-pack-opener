@@ -336,6 +336,7 @@
     var busy = (S.opening && !S.opening.finished) || S.busy;
     $('#openBtn').disabled = !st.packs || busy;
     $('#openBtn').textContent = st.packs ? (set.id === 'jumbled' ? 'Open Jumbled Mess' : 'Open a pack') : 'No packs left';
+    var qb = $('#quickOpenBtn'); if (qb) qb.disabled = !st.packs || busy;
     if (CPS.jumbled) CPS.jumbled.renderBox();
     if (CPS.packsBadge) CPS.packsBadge.update();
     var owned = ownedCount(set, st);
@@ -543,6 +544,25 @@
       reveal(i);
       await U.sleep(big ? 900 : 160);
     }
+    o.auto = false;
+  }
+
+  /* Quick Open: same roll as Open a pack, but skip the sealed-pack stage
+     and flip every card at once — lands exactly where Reveal All ends. */
+  async function startQuickOpen() {
+    if ((S.opening && !S.opening.finished) || S.busy) return;
+    if (S.set.id === 'jumbled') { if (CPS.jumbled) CPS.jumbled.quickOpen(); return; }
+    if (await startOpen()) quickFinish();
+  }
+  function quickFinish() {
+    var o = S.opening; if (!o || o.torn) return;
+    o.torn = true;
+    $('#stagePack').classList.add('hidden');
+    if (o.hero) fx.banner('HERO PACK!', 'hero');
+    buildGrid(o);
+    $$('.card', $('#revealGrid')).forEach(function (el) { el.style.animationDelay = '0ms'; });
+    o.auto = true;
+    for (var i = 0; i < o.pulls.length; i++) { if (S.opening !== o) return; if (!o.revealed[i]) reveal(i); }
     o.auto = false;
   }
 
@@ -2045,6 +2065,7 @@
     document.addEventListener('click', function (e) { if (!e.target.closest('#setDD') && !e.target.closest('#setDDList')) closeSetDD(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSetDD(); });
     $('#openBtn').addEventListener('click', startOpen);
+    var _qb = $('#quickOpenBtn'); if (_qb) _qb.addEventListener('click', startQuickOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
     $('#autoSpinBtn').addEventListener('click', function () {
       if (S.autospin) S.autospin = false; else startAutospin();
@@ -2329,6 +2350,6 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog };
+    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog, quickFinish: quickFinish };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
