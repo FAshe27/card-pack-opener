@@ -6,8 +6,15 @@
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px; max-width: 720px; margin: 0 auto 8px;
 }
-.scr-tier { margin: 0; }
+/* Tier cards must read as identical boxes (Franklin, 2026-10-13): the grid
+   stretches them to equal height, each card is a flex column, the blurb
+   takes the slack, and the Buy button is full-width and pinned to the
+   bottom — so a 3-line blurb (Chase) no longer pushes its button lower
+   or wider than the others. */
+.scr-tier { margin: 0; display: flex; flex-direction: column; }
 .scr-tier h3 { margin: 0 0 6px; }
+.scr-tier p { flex: 1 1 auto; }
+.scr-tier .scr-buy { width: 100%; margin-top: auto; }
 .scr-stage { margin: 10px auto; max-width: 360px; }
 .scr-ticket-title { margin: 6px 0 10px; }
 .scr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
