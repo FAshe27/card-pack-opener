@@ -14,6 +14,10 @@
 .card[data-set="playing"] .cf-details,
 .card[data-set="playing"] .cf-foot { display: none; }
 .card[data-set="playing"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #fdfdfd; }
+/* Face-down, the back's inner frame (.cb) must curve with the card edge:
+   concentric radius = card radius 5% - the back's 4cqw padding = 1cqw
+   (the generic .cb radius, 3.5cqw, is too round at this small card radius). */
+.card[data-set="playing"] .cb { border-radius: 1cqw; }
 /* pack skin "playing": classic card-back lattice in navy, crimson and ivory (class pack-skin-playing) */
 .pack-skin-playing .pack-top {
   background:
