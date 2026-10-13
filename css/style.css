@@ -905,8 +905,9 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 /* Stats has exactly 8 tiles: on wider screens pin them to 4 x 2 so the last
    row isn't a lopsided pair (auto-fill fits 6 + 2 at desktop widths). Mobile
-   keeps the 2-across flow. Scoped to #statTiles — #globalTiles has only 2. */
-@media (min-width: 700px) { #statTiles { grid-template-columns: repeat(4, 1fr); } }
+   keeps the 2-across flow. The All-players box shares the same 4-across
+   grid so its (3) tiles match the top box's tile size exactly. */
+@media (min-width: 700px) { #statTiles, #globalTiles { grid-template-columns: repeat(4, 1fr); } }
 .tile { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
 .tile span { color: var(--muted); font-size: .8rem; } .tile b { font-size: 1.4rem; font-variant-numeric: tabular-nums; }
 .tile.clickable { cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
