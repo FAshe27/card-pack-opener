@@ -1,0 +1,66 @@
+/* pack skin "pixar": Luxo Ball sky — the clear Pixar sky blue (#2b6cb8) and
+   soft white clouds of the studio's opening, with the Luxo Ball as the motif:
+   a yellow ball (#f2c230) with its blue stripe and red star (class
+   pack-skin-pixar).
+   Scoped set CSS only — no shared stylesheet changes. Character renders are
+   transparent, so the card art panel stays the near-white theme artBackground;
+   section 2 only adds a slim ball-yellow frame line around it. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-pixar .pack-top {
+  background:
+    /* soft white clouds */
+    radial-gradient(ellipse 90px 26px at 24% 30%, rgba(255,255,255,.95), transparent 70%),
+    radial-gradient(ellipse 60px 18px at 34% 24%, rgba(255,255,255,.85), transparent 70%),
+    radial-gradient(ellipse 110px 30px at 76% 58%, rgba(255,255,255,.9), transparent 70%),
+    radial-gradient(ellipse 54px 16px at 64% 50%, rgba(255,255,255,.75), transparent 70%),
+    /* clear Pixar sky */
+    linear-gradient(180deg, #8ec9ee 0%, #5ea9dd 48%, #2b6cb8 100%);
+}
+.pack-skin-pixar .pack-body {
+  background:
+    radial-gradient(ellipse 70px 20px at 16% 12%, rgba(255,255,255,.55), transparent 70%),
+    radial-gradient(ellipse 90px 24px at 84% 26%, rgba(255,255,255,.45), transparent 70%),
+    /* the ball's yellow glow rising from the bottom edge, with a red-star warmth at its heart */
+    radial-gradient(ellipse 78% 30% at 50% 114%, rgba(242,194,48,.36), transparent 70%),
+    radial-gradient(ellipse 40% 16% at 50% 116%, rgba(255,220,120,.30), transparent 70%),
+    radial-gradient(circle 60px at 50% 108%, rgba(230,57,70,.16), transparent 70%),
+    linear-gradient(180deg, #2b6cb8 0%, #1d4e89 55%, #123a6b 100%);
+}
+.pack-skin-pixar .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,255,255,.22), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+/* crimp picks up the ball's three colours: yellow, its blue stripe, the red star */
+.pack-skin-pixar .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.45) 0 4px, rgba(242,194,48,.55) 4px 6px, rgba(43,108,184,.5) 6px 8px, rgba(255,255,255,.16) 8px 11px); }
+.pack-skin-pixar .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(160,120,20,.5) 4px 6px, rgba(230,57,70,.4) 6px 8px, rgba(255,240,200,.08) 8px 11px); }
+.pack-skin-pixar .pack-top::after { border-bottom-color: rgba(255,255,255,.65); }
+.pack-skin-pixar .pack-code { color: #ffe08a; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.6), 0 0 12px rgba(242,194,48,.8); }
+/* the emblem IS the Luxo Ball: yellow ball, blue stripe band, red star on top */
+.pack-skin-pixar .pack-emblem {
+  background:
+    linear-gradient(180deg, transparent 58%, rgba(43,108,184,.95) 58%, rgba(43,108,184,.95) 78%, transparent 78%),
+    radial-gradient(circle at 35% 30%, rgba(255,246,205,.95), rgba(242,194,48,.98) 72%);
+  border-color: rgba(255,255,255,.9);
+  box-shadow: 0 0 26px rgba(242,194,48,.55), inset 0 0 18px rgba(230,57,70,.18);
+  text-shadow: 0 0 10px rgba(230,57,70,.75), 0 1px 2px rgba(160,30,40,.6); }
+.pack-skin-pixar .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(18,58,107,.9), 0 2px 8px rgba(0,0,0,.55); }
+.pack-skin-pixar .pack-sub { color: #dceeff; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Character renders are transparent and sit in the near-white art panel
+   (theme artBackground #f8f9fa, artFit contain). The frame only swaps the
+   stock translucent border for a slim ball-yellow line with a faint sky-blue
+   inset, so a render reads like a framed portrait. */
+.card[data-set="pixar"] .cf-art {
+  border-color: rgba(242,194,48,.85);
+  box-shadow: inset 0 0 0 1px rgba(43,108,184,.18), inset 0 0 22px rgba(43,108,184,.14);
+}
+/* Slips (ticket/token/credit cards borrowed into a pixar pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="pixar"].ticket-card .cf-art,
+.card[data-set="pixar"].token-card .cf-art,
+.card[data-set="pixar"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
