@@ -32,7 +32,6 @@
 .pack-skin-calendar .crimp { background: repeating-linear-gradient(100deg, rgba(120,20,20,.55) 0 4px, rgba(255,255,255,.35) 4px 6px, rgba(185,28,28,.25) 6px 9px); }
 .pack-skin-calendar .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(120,20,20,.68) 0 4px, rgba(255,255,255,.28) 4px 6px, rgba(185,28,28,.2) 6px 9px); }
 .pack-skin-calendar .pack-top::after { border-bottom-color: rgba(185,28,28,.5); }
-.pack-skin-calendar .pack-code { color: #7f1d1d; opacity: .95; text-shadow: 0 1px 0 rgba(255,255,255,.6), 0 0 12px rgba(185,28,28,.35); }
 .pack-skin-calendar .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.7), rgba(245,240,230,.9) 72%);
   border-color: rgba(185,28,28,.7); box-shadow: 0 0 28px rgba(185,28,28,.35), inset 0 0 18px rgba(185,28,28,.18); text-shadow: 0 0 16px rgba(185,28,28,.35); }
 .pack-skin-calendar .pack-name { color: #7f1d1d; text-shadow: 0 0 14px rgba(255,255,255,.9), 0 2px 8px rgba(0,0,0,.25); }
