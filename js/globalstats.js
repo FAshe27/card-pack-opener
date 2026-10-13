@@ -38,7 +38,11 @@
         $('#bigPullCap').innerHTML = '<span class="bpc-line"><b>' + esc(lb.player) + '</b> pulled</span><b class="rt-' + lb.rarity + '">' + esc(lb.card_name) + '</b>' +
           '<span>' + rarityOf(lb.rarity).label + ' · ' + esc(lb.set_name) + ' · ' + new Date(lb.pulled_at).toLocaleDateString() + '</span>';
       } else if (bp) { bp.style.display = 'none'; }
-    } catch (e) { hide(); }
+    } catch (e) {
+      var gt = $('#globalTiles'); if (gt) gt.innerHTML = '<div class="muted small">Global stats unavailable right now.</div>';
+      var gb = $('#globalBars'); if (gb) gb.innerHTML = '';
+      var bpx = $('#bigPullPanel'); if (bpx) bpx.style.display = 'none';
+    }
   }
 
   CPS.globalStats = { render: render };
