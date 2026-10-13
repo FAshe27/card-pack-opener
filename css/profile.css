@@ -33,3 +33,6 @@
 .favmgr-row-t { min-width: 0; }
 .favmgr-row-t b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .favmgr-row .btn { margin: 0; flex-shrink: 0; }
+
+/* Phones: the profile set grid goes single-column so set names have room */
+@media (max-width: 560px) { .prof-sets.cols2 { grid-template-columns: 1fr; } }
