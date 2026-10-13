@@ -1441,6 +1441,7 @@
   var galleryReturnKind = null, galleryScrollTop = 0;
   function showStatGallery(kind, restoreScroll) {
     var title, items = [];
+    var NT = ['rainbow', 'prism', 'obsidian', 'oneofone'];
     if (kind === 'numbered') {
       title = 'Your Numbered Cards';
       (S.myVariants || []).forEach(function (v) {
@@ -1449,7 +1450,7 @@
         items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { variant: { tier: v.tier, serial: v.serial } }),
                      variant: { tier: v.tier, serial: v.serial }, holo: false });
       });
-      items.sort(function (a, b) { return a.c.name.localeCompare(b.c.name) || a.sd.name.localeCompare(b.sd.name); });
+      items.sort(function (a, b) { var ta = NT.indexOf(a.variant.tier), tb = NT.indexOf(b.variant.tier); if (ta < 0) ta = 99; if (tb < 0) tb = 99; return (ta - tb) || a.c.name.localeCompare(b.c.name) || (a.variant.serial - b.variant.serial) || a.sd.name.localeCompare(b.sd.name); });
     } else {
       title = 'Your ' + rarityOf(kind).label + ' Cards';
       window.CardSets.all().forEach(function (sd) {
@@ -1474,22 +1475,19 @@
           ' data-holo="' + (x.holo ? '1' : '0') + '">' + x.html + (x.turned ? '<span class="badge-turned" title="Turned in — permanently collected">✓</span>' : '') + '</div>';
       }).join('');
     }
-    var paged = !restoreScroll && items.length > PAGE;
-    var body = items.length
-      ? '<div class="stat-gallery">' + itemsHtml(paged ? items.slice(0, PAGE) : items) + '</div>' +
-        (paged ? '<button type="button" class="btn small" data-gallery-more style="display: block; margin: 10px auto 2px;">Show all ' + items.length + ' cards</button>' : '')
-      : '<div class="empty">None yet — keep ripping packs!</div>';
+    function groupedHtml(list) { return NT.map(function (tier) { var ti = list.filter(function (x) { return x.variant.tier === tier; }); if (!ti.length) return ''; var tv = CPS.cards.VARIANTS[tier]; return '<h3 class="st-head vt-' + esc(tier) + '">' + tv.emoji + ' ' + esc(tv.name) + ' <span class="muted small">(' + ti.length + ')</span></h3><div class="stat-gallery sg-sec">' + itemsHtml(ti) + '</div>'; }).join(''); }
+    var paged = !restoreScroll && items.length > PAGE, shown = paged ? items.slice(0, PAGE) : items, moreBtn = paged ? '<button type="button" class="btn small" data-gallery-more>Show all ' + items.length + ' cards</button>' : '', body = !items.length ? '<div class="empty">None yet \u2014 keep ripping packs!</div>' : kind === 'numbered' ? '<div class="sg-wrap">' + groupedHtml(shown) + '</div>' + moreBtn : '<div class="stat-gallery">' + itemsHtml(shown) + '</div>' + moreBtn;
     openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h2>' + esc(title) + ' <span class="muted small">(' + items.length + ')</span></h2>' + body,
       function (box) {
         if (restoreScroll) {
-          var g0 = box.querySelector('.stat-gallery');
+          var g0 = box.querySelector('.sg-wrap') || box.querySelector('.stat-gallery');
           if (g0) g0.scrollTop = galleryScrollTop;
         }
         var more = box.querySelector('[data-gallery-more]');
         if (more) more.addEventListener('click', function () {
-          var g = box.querySelector('.stat-gallery');
-          if (g) { g.innerHTML = itemsHtml(items); bindItems(g); }
+          if (kind === 'numbered') { var w = box.querySelector('.sg-wrap'); if (w) { w.innerHTML = groupedHtml(items); bindItems(w); } }
+          else { var g = box.querySelector('.stat-gallery'); if (g) { g.innerHTML = itemsHtml(items); bindItems(g); } }
           more.remove();
         });
         bindItems(box);
@@ -1497,7 +1495,7 @@
     function bindItems(box) {
         box.querySelectorAll('.stat-gallery-item').forEach(function (el) {
           el.addEventListener('click', function () {
-            var g = box.classList && box.classList.contains('stat-gallery') ? box : box.querySelector('.stat-gallery');
+            var g = el.closest('.sg-wrap') || el.closest('.stat-gallery');
             galleryScrollTop = g ? g.scrollTop : 0;
             galleryReturnKind = kind;
             var vt = el.getAttribute('data-vtier');
