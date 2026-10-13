@@ -154,6 +154,7 @@
   function setResult(html) { var r = q('#scrResult'); if (r) r.innerHTML = html; }
   function syncBadges() {
     try {
+      if (ctx.S) ctx.S.gameTokens = tokensNow; // freshest server value we have
       if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(tokensNow);
       if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
     } catch (e) { /* non-fatal */ }
@@ -245,8 +246,18 @@
         setResult('<span class="muted">No match this time — better luck on the next ticket.</span>');
       }
       current = null;
-      if (ctx.refreshCloud) { try { await ctx.refreshCloud(); } catch (e) { /* non-fatal */ } }
-      if (ctx.S && typeof ctx.S.gameTokens === 'number') tokensNow = ctx.S.gameTokens;
+      // Do NOT ctx.refreshCloud() while launched inside the Sandbox test
+      // stage: refreshCloud() re-renders the current app view, and for the
+      // Sandbox view that means renderHome() — it bounces the player out of
+      // the game back to the Sandbox list (Franklin, 2026-10-13). The claim
+      // response already carries the fresh token balance, and pack counts
+      // refresh on the next natural state load (same as Slots). In a public
+      // tab (after graduation) a full refresh is safe and keeps counts live.
+      var inTestStage = !!(root && root.closest && root.closest('#sbxStage'));
+      if (!inTestStage && ctx.refreshCloud) {
+        try { await ctx.refreshCloud(); } catch (e) { /* non-fatal */ }
+        if (ctx.S && typeof ctx.S.gameTokens === 'number') tokensNow = ctx.S.gameTokens;
+      }
     } catch (e) {
       try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
       setResult('<span class="muted small">Claim failed — reopen Scratchoffs and your ticket will resume.</span>');
