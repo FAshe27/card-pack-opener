@@ -1881,7 +1881,7 @@
     var pct = Math.min(100, Math.round(q.progress / q.target * 100));
     return '<div class="quest tier-' + q.tier + (q.done && !q.claimed ? ' claimable' : '') + '">' +
       '<div class="quest-top"><div><b>' + esc(q.title) + '</b>' +
-      '<span class="quest-tier">' + q.tier + ' &middot; &#x1F39F;&#xFE0F;' + q.tickets + '</span></div>' +
+      '<span class="quest-tier">' + q.tier + ' &middot; ' + (q.currency === 'token' ? '&#x1FA99;' + q.amount : '&#x1F39F;&#xFE0F;' + (q.amount != null ? q.amount : q.tickets)) + '</span></div>' +
       (q.claimed ? '<span class="quest-done">Claimed &#x2713;</span>' :
        q.done ? '<button class="btn small primary" data-claim="' + esc(q.key) + '">Claim</button>' :
        '<span class="quest-prog">' + q.progress + '/' + q.target + '</span>') +
@@ -2129,9 +2129,11 @@
       (async function () {
         try {
           var r = await CPS.cloud.call('claim_quest', { p_key: b.dataset.claim });
-          S.spins = r.spins_now; updateWheelBadge();
+          if (r.spins_now != null) { S.spins = r.spins_now; updateWheelBadge(); }
           fx.confetti(120);
-          toast('+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
+          toast(r.currency === 'token'
+            ? '+' + r.amount + ' arcade token' + (r.amount === 1 ? '' : 's') + '!'
+            : '+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
           await refreshQuests();
           if (S.view === 'daily') renderDaily();
         } catch (err) { cloudError(err); b.disabled = false; }
