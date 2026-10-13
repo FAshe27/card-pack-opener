@@ -85,6 +85,9 @@
         if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; check(); }, 3000);
         return;
       }
+      /* Turn-In Rewards (126): independent of the local snapshot below —
+         the server dedupe table, not this device, tracks what's owed. */
+      if (CPS.turninRewards) CPS.turninRewards.check();
       var key = KEY + ctx.S.account.id;
       var snap = compute();
       var prev = load(key);
