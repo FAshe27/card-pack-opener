@@ -22,15 +22,15 @@
     // One entry per bin, left to right. tokens = test tokens paid back,
     // pr = random packs, pj = Jumbled Mess packs (all tallied, not real).
     bins: [
-      { label: '20 packs',        tokens: 0, pr: 20, pj: 0 },
-      { label: '2 + 2 Jumbled',   tokens: 0, pr: 2,  pj: 2 },
-      { label: '1 Jumbled',       tokens: 0, pr: 0,  pj: 1 },
-      { label: '3 tokens',        tokens: 3, pr: 0,  pj: 0 },
-      { label: '1 token',         tokens: 1, pr: 0,  pj: 0 },
-      { label: '3 tokens',        tokens: 3, pr: 0,  pj: 0 },
-      { label: '1 Jumbled',       tokens: 0, pr: 0,  pj: 1 },
-      { label: '2 + 2 Jumbled',   tokens: 0, pr: 2,  pj: 2 },
-      { label: '20 packs',        tokens: 0, pr: 20, pj: 0 }
+      { label: '20 random packs',                  tokens: 0, pr: 20, pj: 0 },
+      { label: '3 random packs + 3 jumbled packs', tokens: 0, pr: 3,  pj: 3 },
+      { label: '1 jumbled pack',                   tokens: 0, pr: 0,  pj: 1 },
+      { label: '3 tokens',                         tokens: 3, pr: 0,  pj: 0 },
+      { label: '1 random pack',                    tokens: 0, pr: 1,  pj: 0 },
+      { label: '3 tokens',                         tokens: 3, pr: 0,  pj: 0 },
+      { label: '1 jumbled pack',                   tokens: 0, pr: 0,  pj: 1 },
+      { label: '3 random packs + 3 jumbled packs', tokens: 0, pr: 3,  pj: 3 },
+      { label: '20 random packs',                  tokens: 0, pr: 20, pj: 0 }
     ]
   };
   /* ===================================================================== */
@@ -99,7 +99,7 @@
   function prizeText(b) {
     var parts = [];
     if (b.pr) parts.push(b.pr + ' random pack' + (b.pr === 1 ? '' : 's'));
-    if (b.pj) parts.push(b.pj + ' Jumbled Mess');
+    if (b.pj) parts.push(b.pj + ' jumbled pack' + (b.pj === 1 ? '' : 's'));
     if (b.tokens) parts.push(b.tokens + ' token' + (b.tokens === 1 ? '' : 's'));
     return parts.length ? parts.join(' + ') : 'Nothing';
   }
@@ -336,6 +336,6 @@
     teardown: teardown,
     _test: { CONFIG: CONFIG, state: function () { return state; }, decidePath: decidePath,
              binProbability: binProbability, expectedValue: expectedValue,
-             pegOffset: pegOffset, pegY: pegY, U_PCT: U_PCT }
+             pegOffset: pegOffset, pegY: pegY, U_PCT: U_PCT, prizeText: prizeText }
   };
 })(window.CPS = window.CPS || {});
