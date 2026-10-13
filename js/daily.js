@@ -15,7 +15,7 @@
     var btn = document.getElementById('claimAllBtn');
     if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
     var claimable = getClaimable();
-    var total = 0, totalTokens = 0, count = 0, lastSpins = null;
+    var total = 0, totalTokens = 0, count = 0, failed = 0, lastSpins = null;
     var C = window.CPS && CPS.appCtx;
     for (var i = 0; i < claimable.length; i++) {
       try {
@@ -24,7 +24,7 @@
         totalTokens += r.tokens || 0;
         if (r.spins_now != null) lastSpins = r.spins_now;
         count++;
-      } catch (e) { /* skip */ }
+      } catch (e) { failed++; }
     }
     // Sync the header wheel badge + local spins (single-claim path does this;
     // Claim All previously left both stale until a full reload).
@@ -34,12 +34,17 @@
       if (C.updateWheelBadge) C.updateWheelBadge();
     }
     if (C && C.toast) {
-      var parts = [];
-      if (total) parts.push(total + ' ticket' + (total === 1 ? '' : 's'));
-      if (totalTokens) parts.push(totalTokens + ' token' + (totalTokens === 1 ? '' : 's'));
-      C.toast('Claimed ' + count + ' quest' + (count === 1 ? '' : 's') + (parts.length ? ' for ' + parts.join(' + ') : '') + '!', 'good');
+      if (count > 0) {
+        var parts = [];
+        if (total) parts.push(total + ' ticket' + (total === 1 ? '' : 's'));
+        if (totalTokens) parts.push(totalTokens + ' token' + (totalTokens === 1 ? '' : 's'));
+        C.toast('Claimed ' + count + ' quest' + (count === 1 ? '' : 's') + (parts.length ? ' for ' + parts.join(' + ') : '') + '!', 'good');
+      } else if (claimable.length) {
+        C.toast("Couldn't claim any quests — please try again.", 'warn');
+      }
+      if (failed > 0 && count > 0) C.toast(failed + ' quest claim' + (failed === 1 ? '' : 's') + ' failed — try again shortly.', 'warn');
     }
-    if (C && C.audio) C.audio.coin();
+    if (count > 0 && C && C.audio) C.audio.coin();
     // Re-render the current view (renderDaily isn't exposed, but renderView is).
     // renderView -> renderDaily -> refreshQuests, so no explicit refresh needed.
     if (C && C.renderView) C.renderView();
