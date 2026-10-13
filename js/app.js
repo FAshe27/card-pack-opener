@@ -53,7 +53,7 @@
   function loadScript(src) {
     return new Promise(function (res) {
       var s = document.createElement('script');
-      s.src = src; s.onload = function () { res(true); }; s.onerror = function () { res(false); };
+      s.src = src; s.async = false; s.onload = function () { res(true); }; s.onerror = function () { res(false); };
       document.head.appendChild(s);
     });
   }
@@ -1555,7 +1555,7 @@
     $('#recentPulls').innerHTML = allRec.length ? allRec.map(function (x) {
       var c = x.sd.byId.get(x.id); return c ? CPS.cards.render(x.sd, c, { holo: x.holo }) : '';
     }).join('') : '<div class="empty">Nothing yet.</div>';
-    if (CPS.globalStats) CPS.globalStats.render();
+    if (CPS.globalStats && (!isCloud() || S.myVariants)) CPS.globalStats.render();
   }
 
   /* --- odds */
