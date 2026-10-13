@@ -1,3 +1,8 @@
+-- ============================================================
+-- SUPERSEDED by 117_no_slips_in_jumbled.sql \u2014 DO NOT RUN.
+-- Same fix, re-issued under a new number/name because this
+-- filename would not refresh on Franklin's end. Run 117 only.
+-- ============================================================
 -- =====================================================================
 -- PackRipper \u2014 migration 116: no insert slips in Jumbled Mess packs
 -- (+ set-loop hardening in cps_open_pack).
