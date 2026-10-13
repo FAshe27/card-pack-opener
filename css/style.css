@@ -1398,7 +1398,8 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 /* Booth visuals are fixed-width (200px + 32px booth padding at >=600px,
    140px below it): once the visuals are 200px, a booth needs a 232px
    floor or the stage overflows its booth at mid widths. */
-@media (min-width: 600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(182px, 1fr)); } }
+@media (min-width: 600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(152px, 1fr)); gap: 12px; } }
+@media (min-width: 1250px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(182px, 1fr)); gap: 16px; } }
 @media (min-width: 1600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); } }
 .shop-booth { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; display: flex; flex-direction: column; }
 /* Uniform visual stage: packs come in different aspect ratios (Calendar is square 1/1,
@@ -1424,6 +1425,11 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   box-shadow: 0 6px 20px rgba(0,0,0,.4);
 }
 @media (min-width: 600px) {
+  .shop-pack-wrap .pack { --pw: 120px; }
+  .shop-pack-wrap { height: 192px; }
+  .shop-mystery { width: 120px; height: 192px; }
+}
+@media (min-width: 1250px) {
   .shop-pack-wrap .pack { --pw: 150px; }
   .shop-pack-wrap { height: 240px; }
   .shop-mystery { width: 150px; height: 240px; }
@@ -1443,6 +1449,9 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   box-shadow: 0 6px 20px rgba(0,0,0,.4);
 }
 @media (min-width: 600px) {
+  .shop-ticket { width: 120px; height: 192px; }
+}
+@media (min-width: 1250px) {
   .shop-ticket { width: 150px; height: 240px; }
 }
 @media (min-width: 1600px) {
