@@ -29,7 +29,6 @@
 .pack-skin-minecraft .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(74,138,53,.55) 4px 6px, rgba(230,255,210,.16) 6px 9px); }
 .pack-skin-minecraft .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(70,48,26,.5) 4px 6px, rgba(255,240,210,.08) 6px 9px); }
 .pack-skin-minecraft .pack-top::after { border-bottom-color: rgba(230,255,205,.65); }
-.pack-skin-minecraft .pack-code { color: #e6ffcf; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(121,194,95,.9); }
 .pack-skin-minecraft .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(235,255,215,.5), rgba(61,43,24,.94) 72%);
   border-color: rgba(220,255,190,.85); box-shadow: 0 0 26px rgba(121,194,95,.55), inset 0 0 18px rgba(160,220,120,.22); text-shadow: 0 0 16px rgba(240,255,220,.9); }
 .pack-skin-minecraft .pack-name { color: #f4ffe8; text-shadow: 0 0 14px rgba(93,163,68,.9), 0 2px 8px rgba(0,0,0,.65); }
