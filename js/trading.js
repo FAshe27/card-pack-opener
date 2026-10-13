@@ -229,7 +229,17 @@
           x.addEventListener('click', function () { ctx.closeModal(); });
         });
         box.querySelectorAll('[data-accept]').forEach(function (btn) {
-          btn.addEventListener('click', function () { acceptOffer(l.id, btn.getAttribute('data-accept'), btn); });
+          btn.addEventListener('click', async function () {
+            var o = (l.offers || []).filter(function (x) { return x.id === btn.getAttribute('data-accept'); })[0];
+            if (!o) return;
+            var ok = await ctx.confirmDialog('Accept this offer?',
+              '<p>You give: <b>' + listingTitle(l) + '</b></p>' +
+              '<p style="margin-top:10px">You get:</p><div class="trade-offerbody">' + offerLines(o) + '</div>' +
+              '<p class="muted" style="margin-top:10px">This swap is <b>final</b> — it happens immediately and can\'t be undone. Every other offer on this listing is refunded.</p>',
+              'Accept trade');
+            if (!ok) return;
+            acceptOffer(l.id, o.id, btn);
+          });
         });
         box.querySelectorAll('[data-withdraw]').forEach(function (btn) {
           btn.addEventListener('click', async function () {
