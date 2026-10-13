@@ -1697,8 +1697,9 @@
   async function renderAdmin() {
     if (!isAdmin() || !S.dev) return;
     var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
+      .sort(function (a, b) { return a.name.localeCompare(b.name); })
       .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') +
-      '<option value="jumbled">🎲 Jumbled Mess</option>';
+      '<option value="jumbled">Jumbled Mess</option>';
 
 
     $('#gaAllSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
