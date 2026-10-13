@@ -1256,9 +1256,6 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   padding: 12px 18px; border-radius: 12px; max-width: 480px;
 }
 .wheel-hint { margin-top: 14px; }
-.multi-results h3 { margin: 4px 0 12px; }
-.multi-row { display: flex; justify-content: space-between; gap: 18px; padding: 7px 2px; border-bottom: 1px solid var(--line); font-size: 1.02rem; }
-.multi-row:last-of-type { border-bottom: 0; }
 
 /* ---------- dupe trade-in ---------- */
 .tradein { margin-top: 12px; }
