@@ -22,7 +22,7 @@
     { key: 'rainbow',  icon: '🌈', label: 'Rainbow card pulls', sub: 'Numbered Rainbow cards (# of 50)' },
     { key: 'prism',    icon: '💎', label: 'Prism card pulls',   sub: 'Numbered Prism cards (# of 10)' },
     { key: 'obsidian', icon: '⚫', label: 'Obsidian card pulls', sub: 'Numbered Obsidian cards (# of 5)' },
-    { key: 'oneofone', icon: '👑', label: '1-of-1 card pulls',  sub: 'When someone pulls the One-of-One' }
+    { key: 'oneofone', icon: '👑', label: '1-of-1 card pulls',  sub: 'When someone pulls a one-of-one' }
   ];
 
   function backToNotifications() {
