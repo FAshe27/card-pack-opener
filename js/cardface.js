@@ -152,6 +152,12 @@
     if (opts.holoCount > 0) badges += '<span class="badge-holo" title="' + opts.holoCount + ' holo">✦' + (opts.holoCount > 1 ? opts.holoCount : '') + '</span>';
     if (opts.variant && VARIANTS[opts.variant.tier])
       badges += '<span class="badge-variant" title="' + variantLabel(opts.variant.tier, opts.variant.serial) + '">' + VARIANTS[opts.variant.tier].emoji + ' ' + opts.variant.serial + '/' + VARIANTS[opts.variant.tier].run + '</span>';
+    // Misprints: numbered variants sitting on Common/Uncommon cards — minted
+    // by the pre-134 lottery index bug, which aimed the variant at the pack's
+    // first cards instead of its rare+ cards. 134 fixed the lottery, so the
+    // sub-Rare variants already in the wild are a closed set; flag them.
+    if (opts.variant && VARIANTS[opts.variant.tier] && (card.rarity === 'common' || card.rarity === 'uncommon'))
+      badges += '<span class="misprint-void" title="Misprint — a numbered variant on a ' + (card.rarity === 'common' ? 'Common' : 'Uncommon') + ' card, minted by the old lottery bug. No new Misprints can be made.">MISPRINT</span>';
     return '<div class="' + cls.join(' ') + '" data-set="' + esc(set.id) + '" data-card="' + esc(card.id) + '" style="' + themeStyle(set) + '">' +
       '<div class="card-inner">' + front(set, card, opts.holo) + (opts.flippable ? back(set) : '') + '</div>' + badges + '</div>';
   }
