@@ -919,6 +919,13 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .stat-gallery-item .badge-count, .stat-gallery-item .badge-variant { top: 4px; right: 4px; }
 .stat-gallery-item .badge-holo { bottom: 4px; right: 4px; }
 .stat-gallery-item .card { width: 100%; }
+/* Numbered gallery: one scroll container, a headed grid per tier. The
+   section grids reuse .stat-gallery layout but must not scroll themselves. */
+.sg-wrap { max-height: 70vh; overflow: auto; margin-top: 4px; padding: 0 12px 10px; }
+.st-head { margin: 20px 2px 0; font-size: 1.05rem; display: flex; align-items: baseline; gap: 2px; }
+.st-head:first-child { margin-top: 8px; }
+.sg-sec { max-height: none; overflow: visible; margin-top: 0; padding: 14px 0 2px; }
+[data-gallery-more] { display: block; margin: 10px auto 2px; }
 .bars { display: grid; gap: 10px; }
 .barrow { display: grid; grid-template-columns: 96px 1fr 132px; gap: 12px; align-items: center; font-size: .9rem; }
 .barrow .bl { color: var(--rc); font-weight: 700; } .barrow .bar { height: 10px; } .barrow .bn { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; } .barrow em { color: var(--muted); font-style: normal; font-size: .8rem; }
