@@ -27,10 +27,13 @@
     return !!(m && !m.classList.contains('hidden'));
   }
 
-  function deliver(queue) {
+  function deliver(queue, toasted) {
     if (!queue.length) return;
-    if (modalBusy()) { /* don't stomp an open dialog — keep re-checking until it's free */
-      setTimeout(function () { deliver(queue); }, 4000);
+    if (modalBusy()) { /* don't stomp an open dialog — but say so at once
+                          (a toast now, the pop-up when the way is clear),
+                          and re-check briskly instead of every 4s */
+      if (!toasted) ctx.toast('🎁 Turn-In Reward earned!', 'good', 4000);
+      setTimeout(function () { deliver(queue, true); }, 1500);
       return;
     }
     showPopups(queue);
@@ -76,7 +79,14 @@
 
   async function check() {
     try {
-      if (running) return;
+      if (running) { /* a pass is already in flight (e.g. the page-load
+                        sweep asking every candidate set). Its candidate
+                        list is already fixed, so a crossing that happens
+                        NOW would be missed until some later state load —
+                        queue one follow-up pass instead of dropping it. */
+        if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; check(); }, 3000);
+        return;
+      }
       if (!ctx.isCloud() || !ctx.S.account || !ctx.S.turnedIn) return;
       if (ctx.S.opening) { /* mid pack-reveal: check again once it settles */
         if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; check(); }, 3000);
