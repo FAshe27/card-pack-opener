@@ -917,7 +917,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
    keeps the 2-across flow. Scoped to #statTiles — #globalTiles has only 2. */
 @media (min-width: 700px) { #statTiles { grid-template-columns: repeat(4, 1fr); } }
 .tile { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
-.tile span { color: var(--muted); font-size: .8rem; } .tile b { font-size: 1.4rem; }
+.tile span { color: var(--muted); font-size: .8rem; } .tile b { font-size: 1.4rem; font-variant-numeric: tabular-nums; }
 .tile.clickable { cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
 .tile.clickable:hover { border-color: var(--accent2); background: rgba(255,255,255,.07); transform: translateY(-1px); }
 .tile-hint { color: var(--accent2); font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
@@ -926,8 +926,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .stat-gallery-item { cursor: pointer; content-visibility: auto; contain-intrinsic-size: 160px 224px; }
 .stat-gallery-item .card { width: 100%; }
 .bars { display: grid; gap: 10px; }
-.barrow { display: grid; grid-template-columns: 90px 1fr 110px; gap: 12px; align-items: center; font-size: .9rem; }
-.barrow .bl { color: var(--rc); font-weight: 700; } .barrow .bar { height: 10px; } .barrow .bn { text-align: right; } .barrow em { color: var(--muted); font-style: normal; font-size: .8rem; }
+.barrow { display: grid; grid-template-columns: 96px 1fr 132px; gap: 12px; align-items: center; font-size: .9rem; }
+.barrow .bl { color: var(--rc); font-weight: 700; } .barrow .bar { height: 10px; } .barrow .bn { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; } .barrow em { color: var(--muted); font-style: normal; font-size: .8rem; }
 .best-pull { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .best-pull .card { width: 230px; cursor: pointer; }
 .best-cap { text-align: center; display: flex; flex-direction: column; gap: 3px; } .bpc-line { white-space: nowrap; } .best-cap span { color: var(--muted); font-size: .85rem; }
@@ -1064,7 +1064,11 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   .coll-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px 14px; padding: 13px 9px 0 0; }
   .coll-badges { top: -13px; right: -7px; gap: 2px; } .coll-badges .badge-count, .coll-badges .badge-holo { font-size: 9.5px; padding: 0 5px; height: 15px; line-height: 15px; }
   .badge-new, .badge-count, .badge-holo { font-size: 9px; padding: 2px 6px; }
-  .barrow { grid-template-columns: 74px 1fr 80px; }
+  /* Phones: the 3-column row starves the numbers (80px) and the label (74px), so 5-digit
+     counts wrapped mid-row. Stack deliberately instead: label + numbers on line 1,
+     full-width bar underneath - every row the same shape, bars easier to compare. */
+  .barrow { grid-template-columns: 1fr auto; grid-template-areas: "bl bn" "bar bar"; row-gap: 6px; }
+  .barrow .bl { grid-area: bl; } .barrow .bar { grid-area: bar; } .barrow .bn { grid-area: bn; }
   .form-grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
