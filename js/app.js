@@ -1955,6 +1955,11 @@
       abtn.disabled = S.spinning && !S.autospin;
       abtn.textContent = S.autospin ? 'STOP' : 'AUTOSPIN';
     }
+    var mbtn = $('#multiSpinBtn');
+    if (mbtn) {
+      mbtn.style.display = (!isLocked() && n >= 10 && cfg && cfg.wheels.length) ? '' : 'none';
+      mbtn.disabled = S.spinning || S.autospin;
+    }
     updateWheelBadge();
   }
   async function startWheelSpin() {
@@ -2044,6 +2049,7 @@
     $('#autoSpinBtn').addEventListener('click', function () {
       if (S.autospin) S.autospin = false; else startAutospin();
     });
+    var _msb = $('#multiSpinBtn'); if (_msb) _msb.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(); });
     $('#nextPackBtn').addEventListener('click', function () {
       if (S.opening && S.opening.set.id === 'jumbled' && CPS.jumbled) CPS.jumbled.open();
       else startOpen();
@@ -2319,7 +2325,7 @@
     $: $, $$: $$, esc: esc, save: save, isCloud: isCloud, isLocked: isLocked, isAdmin: isAdmin,
     toast: toast, cloudError: cloudError, refreshCloud: refreshCloud, renderView: renderView,
     renderCollection: renderCollection, renderPacksSide: renderPacksSide,
-    updateWheelBadge: updateWheelBadge, spinCount: spinCount, refreshQuests: refreshQuests,
+    updateWheelBadge: updateWheelBadge, spinCount: spinCount, refreshQuests: refreshQuests, renderWheel: renderWheel, wheelConfig: wheelConfig,
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
