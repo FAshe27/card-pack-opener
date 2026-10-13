@@ -1370,7 +1370,7 @@
     var st = ps(set), e = st.cards[card.id], owned = e && e.n > 0, r = rarityOf(card.rarity);
     var row = window.CardSets.oddsTable(set).filter(function (x) { return x.rarity.key === card.rarity; })[0];
     var holo = forceHolo != null ? forceHolo : !!(e && e.h);
-    var html = (galleryReturnKind ? '<button class="btn small gallery-back" data-gallery-back>← Back to list</button>' : '') +
+    var html = (galleryReturnKind ? '<button class="btn small gallery-back" data-gallery-back>← Back to list</button>' : CPS.cardBack ? '<button class="btn small gallery-back" data-card-back>' + esc(CPS.cardBack.text) + '</button>' : '') +
       '<button class="modal-x" data-close aria-label="Close">×</button><div class="zoom">' +
       '<div class="zoom-card">'+(owned?CPS.cards.render(set,card,variant?{variant:variant}:{holo:holo}):CPS.cards.render(set,card,{cls:'unowned'}))+'</div>' +
       '<div class="zoom-info"><div class="pill r-' + card.rarity + '">' + r.label + '</div>' +
@@ -1394,6 +1394,7 @@
     openModal(html, function (box) {
       var bk = box.querySelector('[data-gallery-back]');
       if (bk) bk.addEventListener('click', function () { showStatGallery(galleryReturnKind, true); });
+      var cb=box.querySelector('[data-card-back]');if(cb)cb.addEventListener('click',function(){if(CPS.cardBack)CPS.cardBack.go();});
       var t = box.querySelector('[data-toggle-holo]');
       if (t) t.addEventListener('click', function () { openCardModal(setId, cardId, t.dataset.toggleHolo === '1'); });
       var g = box.querySelector('[data-gift]');
@@ -1820,7 +1821,7 @@
     if (after) after(fresh);
   }
   function closeModal(force) {
-    galleryReturnKind = null;
+    galleryReturnKind = null; CPS.cardBack = null;
     if (S.gateOpen && !force) return; // the login screen stays until you log in
     if (confirmDismiss) confirmDismiss(); // a pending confirmDialog dismisses as abort, never hangs
     S.gateOpen = false;
