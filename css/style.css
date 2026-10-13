@@ -764,13 +764,13 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .card.variant .front::after {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; mix-blend-mode: color-dodge;
   background:
-    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.5), transparent 42%),
-    linear-gradient(115deg, transparent 10%, rgba(255,70,190,.55) 24%, rgba(60,220,255,.55) 38%, rgba(255,240,90,.55) 52%, rgba(120,255,160,.5) 64%, rgba(180,120,255,.5) 74%, transparent 88%);
+    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.25), transparent 42%),
+    linear-gradient(115deg, transparent 10%, rgba(255,70,190,.34) 24%, rgba(60,220,255,.34) 38%, rgba(255,240,90,.34) 52%, rgba(120,255,160,.32) 64%, rgba(180,120,255,.32) 74%, transparent 88%);
   background-size: 100% 100%, 200% 200%; animation: holo-fast 2.6s ease-in-out infinite;
 }
-@keyframes holo-fast { 0%, 100% { background-position: 50% 50%, 0% 50%; opacity: .85; } 50% { background-position: 50% 50%, 100% 50%; opacity: 1; } }
+@keyframes holo-fast { 0%, 100% { background-position: 50% 50%, 0% 50%; opacity: .44; } 50% { background-position: 50% 50%, 100% 50%; opacity: .58; } }
 .card.variant .front::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; border-radius: inherit; opacity: .28; mix-blend-mode: overlay;
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; border-radius: inherit; opacity: .19; mix-blend-mode: overlay;
   background-image: radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.6px); background-size: 7cqw 7cqw; animation: twinkle 1.6s ease-in-out infinite;
 }
 /* One-of-One: solid gold */
@@ -782,8 +782,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 @keyframes gold-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
 .card.vt-oneofone .front::after {
   background:
-    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.6), transparent 42%),
-    linear-gradient(115deg, transparent 15%, rgba(255,215,0,.55) 30%, rgba(255,243,176,.6) 45%, rgba(255,183,0,.5) 60%, transparent 80%);
+    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.31), transparent 42%),
+    linear-gradient(115deg, transparent 15%, rgba(255,215,0,.34) 30%, rgba(255,243,176,.36) 45%, rgba(255,183,0,.32) 60%, transparent 80%);
   background-size: 100% 100%, 200% 200%; animation: holo-fast 2.2s ease-in-out infinite;
 }
 /* Prism: crystalline ice-blue refraction */
@@ -794,8 +794,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 @keyframes prism-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.25); } }
 .card.vt-prism .front::after {
   background:
-    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.7), transparent 42%),
-    linear-gradient(115deg, transparent 15%, rgba(160,231,255,.6) 30%, rgba(255,255,255,.6) 45%, rgba(127,212,255,.55) 60%, transparent 80%);
+    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.34), transparent 42%),
+    linear-gradient(115deg, transparent 15%, rgba(160,231,255,.36) 30%, rgba(255,255,255,.36) 45%, rgba(127,212,255,.34) 60%, transparent 80%);
   background-size: 100% 100%, 200% 200%; animation: holo-fast 2s ease-in-out infinite;
 }
 /* Obsidian: dark volcanic glass with purple sheen */
@@ -806,11 +806,12 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 @keyframes obsidian-pulse { 0%, 100% { filter: brightness(.9); } 50% { filter: brightness(1.3); } }
 .card.vt-obsidian .front::after {
   background:
-    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.35), transparent 42%),
-    linear-gradient(115deg, transparent 10%, rgba(139,92,200,.45) 30%, rgba(88,48,140,.5) 50%, rgba(180,120,230,.4) 70%, transparent 90%);
-  background-size: 100% 100%, 200% 200%; animation: holo-fast 3.2s ease-in-out infinite;
+    radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.4), transparent 42%),
+    linear-gradient(115deg, transparent 10%, rgba(139,92,200,.52) 30%, rgba(88,48,140,.55) 50%, rgba(180,120,230,.44) 70%, transparent 90%);
+  background-size: 100% 100%, 200% 200%; animation: holo-obsidian 3.2s ease-in-out infinite;
   mix-blend-mode: screen;
 }
+@keyframes holo-obsidian { 0%, 100% { background-position: 50% 50%, 0% 50%; opacity: .55; } 50% { background-position: 50% 50%, 100% 50%; opacity: .72; } }
 /* One-of-One: gold */
 .card.vt-oneofone .badge-variant { background: linear-gradient(135deg, #ffd700, #ffb700); color: #1a1a1a; }
 
