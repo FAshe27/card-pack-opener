@@ -347,7 +347,7 @@
   function showResults(out) {
     var A = CPS.appCtx, bySet = out.packs_by_set || {}, rows = '';
     Object.keys(bySet).sort().forEach(function (sid) {
-      var st = window.CardSets.get(sid);
+      var st = window.CardSets.get(sid) || (sid === 'jumbled' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null);
       rows += '<div class="multi-row"><span>' + ((st && st.pack && st.pack.emblem) || '🎁') + ' ' + A.esc(st ? st.name : sid) + ' packs</span><b>×' + bySet[sid] + '</b></div>';
     });
     if (out.tokens_won > 0) rows += '<div class="multi-row"><span>🪙 Arcade tokens</span><b>×' + out.tokens_won + '</b></div>';
