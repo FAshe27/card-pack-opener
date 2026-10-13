@@ -22,7 +22,6 @@
 .pack-skin-cars .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(37,99,235,.5) 4px 6px, rgba(219,234,254,.14) 6px 9px); }
 .pack-skin-cars .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.66) 0 4px, rgba(30,64,175,.5) 4px 6px, rgba(219,234,254,.08) 6px 9px); }
 .pack-skin-cars .pack-top::after { border-bottom-color: rgba(253,224,71,.6); }
-.pack-skin-cars .pack-code { color: #fef3c7; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(251,191,36,.9); }
 .pack-skin-cars .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(253,224,71,.55), rgba(11,18,32,.94) 72%);
   border-color: rgba(253,224,71,.8); box-shadow: 0 0 26px rgba(251,191,36,.6), inset 0 0 18px rgba(253,224,71,.25); text-shadow: 0 0 16px rgba(255,255,255,.9); }
 .pack-skin-cars .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(251,191,36,.9), 0 2px 8px rgba(0,0,0,.65); }
