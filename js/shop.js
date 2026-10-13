@@ -53,10 +53,12 @@
       var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
       var canBuy = data.store_credit >= sl.price && (remaining == null || remaining > 0);
       var isTicket = sl.kind === 'ticket';
+      var isToken = sl.kind === 'token';
       var visual = isTicket ? '<div class="shop-ticket"><div class="shop-ticket-icon">\uD83C\uDFAB</div><div class="muted small">Spin Ticket</div></div>'
+        : isToken ? '<div class="shop-ticket"><div class="shop-ticket-icon">\uD83E\uDE99</div><div class="muted small">Arcade Token</div></div>'
         : sl.mystery ? '<div class="shop-mystery"><div class="shop-mystery-q">?</div><div class="muted small">Mystery Pack</div></div>' : packVisual(sl.set_id);
-      var name = isTicket ? '<b>Spin Ticket</b>' : sl.mystery ? '<b>???</b>' : '<b>' + esc(setName(sl.set_id)) + '</b>';
-      var tag = sl.slot === 3 ? '<div class="shop-deal-tag">DEAL</div>' : (sl.mystery ? '<div class="shop-deal-tag mystery">MYSTERY</div>' : (isTicket ? '<div class="shop-deal-tag ticket">WHEEL</div>' : ''));
+      var name = isTicket ? '<b>Spin Ticket</b>' : isToken ? '<b>Arcade Token</b>' : sl.mystery ? '<b>???</b>' : '<b>' + esc(setName(sl.set_id)) + '</b>';
+      var tag = sl.slot === 3 ? '<div class="shop-deal-tag">DEAL</div>' : (sl.mystery ? '<div class="shop-deal-tag mystery">MYSTERY</div>' : (isTicket ? '<div class="shop-deal-tag ticket">WHEEL</div>' : (isToken ? '<div class="shop-deal-tag ticket">ARCADE</div>' : '')));
       return '<div class="shop-booth">' + tag + visual +
         '<div class="shop-info">' +
         '<div class="shop-packname">' + name + '</div>' +
@@ -93,6 +95,13 @@
               S.spins = r.spins_now;
               if (S.player) S.player.spins = r.spins_now;
               if (ctx.updateWheelBadge) ctx.updateWheelBadge();
+            }
+          }
+          if (r.kind === 'token') {
+            msg = '\uD83E\uDE99 Arcade Token purchased!';
+            if (r.tokens_now != null && S) {
+              S.gameTokens = r.tokens_now;
+              if (CPS.games && CPS.games.updateBadge) CPS.games.updateBadge();
             }
           }
           if (r.revealed_set) msg = '🎁 Mystery revealed: ' + setName(r.revealed_set) + '! Check your packs.';
