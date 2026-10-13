@@ -328,7 +328,7 @@
     var A = CPS.appCtx, bySet = agg.bySet || {}, rows = '';
     Object.keys(bySet).sort().forEach(function (sid) {
       var st = window.CardSets.get(sid) || (sid === 'jumbled' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null);
-      rows += '<div class="multi-row"><span>' + ((st && st.pack && st.pack.emblem) || '🎁') + ' ' + A.esc(st ? st.name : sid) + ' packs</span><b>×' + bySet[sid] + '</b></div>';
+      rows += '<div class="multi-row"><span>' + (sid === 'jumbled' ? '' : ((st && st.pack && st.pack.emblem) || '🎁') + ' ') + A.esc(st ? st.name : sid) + ' packs</span><b>×' + bySet[sid] + '</b></div>';
     });
     if (agg.tokens > 0) rows += '<div class="multi-row"><span>🪙 Arcade tokens</span><b>×' + agg.tokens + '</b></div>';
     if (agg.credit > 0) rows += '<div class="multi-row"><span>💵 Store Credit</span><b>$' + agg.credit + '</b></div>';
