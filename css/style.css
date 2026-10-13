@@ -94,6 +94,8 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .variant-census .vc-done { color: var(--good); }
 .variant-census .vc-mine { color: var(--accent2); font-weight: 700; }
 .variants-grid .card { max-width: 170px; }
+.variants-panel { margin-top: 16px; }
+.variants-grid .coll-item { pointer-events: auto; cursor: pointer; }
 .vserial-cap { text-align: center; font-size: .8rem; margin-top: 4px; color: var(--muted); }
 .vserial-cap b { color: var(--text); }
 .gift-modal label { display: block; margin: 10px 0; }
