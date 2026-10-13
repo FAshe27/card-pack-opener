@@ -1,13 +1,10 @@
 /* "Element of Surprise" update (2026-10-10):
-   1. No pre-flip rarity tell. app.js tags unflipped epic+ cards with .tease,
-      whose pulsing rarity glow spoiled the pull before the flip. Neutralized
-      here (app.js is at the push size limit, so the class stays as a hook).
+   1. No pre-flip rarity tell. (The old .tease pulse was removed from app.js
+      entirely on 2026-10-13; nothing tags cards with .tease anymore.)
    2. Stronger glow on flip — the reveal is the payoff now.
    3. Ticket/token slips use the standard flippable card structure (js/slips.js),
       so pre-flip they show the pack's set back like every other card.
    Loaded last, so these rules win ties with style.css / playing.css. */
-.card.tease .back { animation: none; }
-
 .card.glow.r-uncommon { box-shadow: 0 0 20px rgba(56,201,127,.55); }
 .card.glow.r-rare { box-shadow: 0 0 32px 4px rgba(63,140,255,.85); }
 .card.glow.r-epic { box-shadow: 0 0 46px 10px rgba(179,92,255,.9); animation: glowPulse 2s ease-in-out infinite; --gc: rgba(179,92,255,.9); }
