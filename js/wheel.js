@@ -88,29 +88,6 @@
     });
   }
 
-  /* Guest-mode roll: mirrors cps.roll_wheel(). Returns {hops, prize}. */
-  function rollLocal(cfg) {
-    var byId = {}, hops = [], wid = 'w1', guard = 0, prize = null;
-    cfg.wheels.forEach(function (w) { byId[w.id] = w; });
-    while (guard++ < 25) {
-      var wheel = byId[wid];
-      if (!wheel) break;
-      var total = wheel.segments.reduce(function (a, s) { return a + s.weight; }, 0);
-      if (total <= 0) break;
-      var r = Math.random() * total, acc = 0, seg = null;
-      for (var i = 0; i < wheel.segments.length; i++) {
-        acc += wheel.segments[i].weight;
-        if (r < acc) { seg = wheel.segments[i]; break; }
-      }
-      if (!seg) break;
-      hops.push({ wheel: wid, key: seg.key, kind: seg.kind, set_id: seg.set_id, packs: seg.packs, label: seg.label });
-      if (seg.kind === 'packs') { prize = { kind: 'packs', set_id: seg.set_id, packs: seg.packs }; break; }
-      if (seg.kind === 'tokens') { prize = { kind: 'tokens', tokens: seg.tokens }; break; }
-      wid = seg.wheel;
-    }
-    return { hops: hops, prize: prize };
-  }
-
   /* Center angle of a segment in the wheel's local frame (rotation = 0). */
   function segSpan(wheel, key) {
     var total = wheel.segments.reduce(function (a, s) { return a + s.weight; }, 0);
@@ -299,7 +276,6 @@
   CPS.wheel = {
     enrich: enrich,
     localConfig: localConfig,
-    rollLocal: rollLocal,
     draw: draw,
     spinTo: spinTo,
     playHops: playHops,
@@ -344,18 +320,23 @@
       });
     }).catch(function (e) { S.spinning = false; A.renderWheel(); A.cloudError(e); });
   }
-  function showResults(out) {
-    var A = CPS.appCtx, bySet = out.packs_by_set || {}, rows = '';
+  /* Shared prize-summary popup: SPIN x10 passes its server aggregate,
+     AUTOSPIN passes the tally it accumulated in app.js (S._autoAgg). */
+  function showSummary(agg) {
+    var A = CPS.appCtx, bySet = agg.bySet || {}, rows = '';
     Object.keys(bySet).sort().forEach(function (sid) {
       var st = window.CardSets.get(sid) || (sid === 'jumbled' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null);
       rows += '<div class="multi-row"><span>' + ((st && st.pack && st.pack.emblem) || '🎁') + ' ' + A.esc(st ? st.name : sid) + ' packs</span><b>×' + bySet[sid] + '</b></div>';
     });
-    if (out.tokens_won > 0) rows += '<div class="multi-row"><span>🪙 Arcade tokens</span><b>×' + out.tokens_won + '</b></div>';
-    if (out.credit_won > 0) rows += '<div class="multi-row"><span>💵 Store Credit</span><b>$' + out.credit_won + '</b></div>';
+    if (agg.tokens > 0) rows += '<div class="multi-row"><span>🪙 Arcade tokens</span><b>×' + agg.tokens + '</b></div>';
+    if (agg.credit > 0) rows += '<div class="multi-row"><span>💵 Store Credit</span><b>$' + agg.credit + '</b></div>';
     if (!rows) rows = '<div class="multi-row"><span>No prizes this time.</span></div>';
     A.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
-      '<div class="multi-results"><h3>🎉 ' + (out.spins_used || 10) + ' spins — you got:</h3>' + rows +
+      '<div class="multi-results"><h3>🎉 ' + agg.n + ' spins — you got:</h3>' + rows +
       '<button class="btn primary" data-close style="margin-top:16px">Nice!</button></div>');
   }
-  CPS.wheelMulti = { start: start };
+  function showResults(out) {
+    showSummary({ n: out.spins_used || 10, bySet: out.packs_by_set || {}, tokens: out.tokens_won || 0, credit: out.credit_won || 0 });
+  }
+  CPS.wheelMulti = { start: start, showSummary: showSummary };
 })(window.CPS);
