@@ -179,7 +179,13 @@
             ctx.audio.coin();
             var balEl = document.getElementById('shopBalance');
             if (balEl) balEl.innerHTML = '💵 <b>$' + r.credit_now + '</b>';
-            renderDupeSell(el);
+            // The sale removed cards server-side, but dupeCounts() reads the
+            // LOCAL collection (ctx.S) — re-rendering alone shows the same
+            // stale counts and a re-enabled Sell button. Pull fresh state:
+            // refreshCloud() reloads get_state, then re-renders the Shop with
+            // the real remaining dupes (and refreshes the dupe_trade quest).
+            if (ctx.refreshCloud) await ctx.refreshCloud();
+            else renderDupeSell(el);
           } catch (e) { btn.disabled = false; ctx.cloudError(e); }
         });
       });
