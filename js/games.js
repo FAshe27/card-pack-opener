@@ -5,6 +5,7 @@
 (function (CPS) {
   var ctx = CPS.appCtx;
   var G = null; // {run, card, streak, bank}
+  var acting = false; // in-flight guard: double-taps can't double-spend or double-claim
 
   function el() { return ctx.$('#gamesPanel'); }
 
@@ -83,18 +84,21 @@
   }
 
   async function start() {
+    if (acting) return;
     if (!ctx.isCloud()) { ctx.toast('Games need online play.', 'warn'); return; }
+    acting = true;
     try {
       var r = await CPS.cloud.call('game_start', {});
       setTokens(r.tokens_left);
       G = { run: r.run, card: r.card, streak: 0, bank: [], over: false };
       ctx.audio.click();
       render();
-    } catch (e) { ctx.cloudError(e); }
+    } catch (e) { ctx.cloudError(e); } finally { acting = false; }
   }
 
   async function guess(higher) {
-    if (!G || G.over) return;
+    if (acting || !G || G.over) return;
+    acting = true;
     var bh = ctx.$('#gameHigher'), bl = ctx.$('#gameLower');
     if (bh) bh.disabled = true; if (bl) bl.disabled = true;
     try {
@@ -107,11 +111,12 @@
         ctx.audio.error();
       }
       render();
-    } catch (e) { ctx.cloudError(e); }
+    } catch (e) { ctx.cloudError(e); } finally { acting = false; }
   }
 
   async function claim() {
-    if (!G || G.over) return;
+    if (acting || !G || G.over) return;
+    acting = true;
     try {
       var r = await CPS.cloud.call('game_claim', { p_run: G.run });
       var bits = [];
@@ -128,7 +133,7 @@
       render();
       ctx.renderPacksSide();
       ctx.updateWheelBadge();
-    } catch (e) { ctx.cloudError(e); }
+    } catch (e) { ctx.cloudError(e); } finally { acting = false; }
   }
 
   CPS.games = { render: render, refresh: render, setTokens: setTokens, updateBadge: updateBadge };
