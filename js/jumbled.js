@@ -105,5 +105,10 @@
     renderBox();
   }
 
-  CPS.jumbled = { open: open, renderBox: renderBox, count: jpacks, pseudoSet: jset };
+  async function quickOpen() {
+    await open();
+    if (S.opening && !S.opening.torn && ctx.quickFinish) ctx.quickFinish();
+  }
+
+  CPS.jumbled = { open: open, quickOpen: quickOpen, renderBox: renderBox, count: jpacks, pseudoSet: jset };
 })(window.CPS);
