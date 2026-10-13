@@ -1,30 +1,29 @@
-/* Scratchoffs arcade game — SANDBOX PROTOTYPE (Franklin, 2026-10-12).
-   Admin-only Sandbox 'testing' item. NO real economy: fake test-token
-   balance held in this module, no server RPCs, no real packs or tokens.
-   All odds and prizes are PLACEHOLDERS for Franklin to tweak.
+/* Scratchoffs arcade game — SANDBOX, REAL ECONOMY (Franklin, 2026-10-13).
+   Still an admin-only Sandbox 'testing' item, but now playing for real:
+   real game tokens in, real packs out, via migration 129's RPCs
+   (scratch_state / scratch_buy / scratch_claim). The server enforces
+   admin-only while the game is in the Sandbox, decides the ticket at
+   purchase time and stores it (scratching is reveal-only — a refresh
+   resumes the same open ticket, never a re-roll), and pays the prize
+   exactly once on claim when the ticket is fully scratched.
 
-   How a ticket works: the outcome is decided the moment the ticket is
-   bought (exactly how the live, server-authoritative version will work —
-   scratching is only the reveal, so a refresh can never re-roll it).
-   A winning ticket hides exactly 3 matching rarity symbols among 6 filler
-   symbols that never form a triple of their own; a losing ticket has no
-   triple at all. Match 3 = win that symbol's prize for the ticket tier.
-
-   Three tiers share one outcome table, so every tier returns roughly the
-   same value per token (~0.38 test packs/token at placeholder numbers) —
-   higher tiers just swing bigger. Mount: CPS.scratch.render(el). */
+   Prize/cost tables below are DISPLAY copies of cps.scratch_cost /
+   cps.scratch_prize in supabase/migrations/129_scratchoffs.sql — the
+   server is authoritative; change both together when tweaking.
+   Consumes CPS.appCtx + CPS.cloud.call like js/slots.js.
+   Mount: CPS.scratch.render(el) / .mount(el); teardown() clears state. */
 (function (CPS) {
   'use strict';
+  var ctx = CPS.appCtx;
 
-  /* ================= PLACEHOLDER CONFIG — tweak freely ================= */
+  /* ================= CONFIG — tweak with migration 129 ================= */
   var SYMBOLS = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'chase'];
   var LABEL = { common: 'Common', uncommon: 'Uncommon', rare: 'Rare',
                 epic: 'Epic', legendary: 'Legendary', chase: 'Chase' };
-  // Outcome roll, out of 1000: which symbol (if any) the ticket matches.
+  // Outcome odds per 1000 (display/tuning only; server rolls its own copy).
   var OUTCOME_WEIGHTS = { none: 600, common: 220, uncommon: 90, rare: 50,
                           epic: 25, legendary: 11, chase: 4 };
   var CONFIG = {
-    startTokens: 100,
     tiers: [
       { id: 'jumbled', name: 'Jumbled Scratch', cost: 2, prizes: {
         common:    { pr: 0, pj: 1 }, uncommon: { pr: 0, pj: 2 },
@@ -42,9 +41,9 @@
   };
   /* ===================================================================== */
 
-  var state = { tokens: CONFIG.startTokens, tickets: 0, spent: 0,
-                wonRandom: 0, wonJumbled: 0, wins: 0 };
-  var current = null; // { tier, cells: [sym x9], revealed: [bool x9], settled: bool }
+  var busy = false;
+  var tokensNow = 0;
+  var current = null; // { ticket_id, tier, cells, revealed:[9], settled }
   var root = null;
 
   function esc(s) {
@@ -64,45 +63,9 @@
     if (p.pj) parts.push(p.pj + ' Jumbled Mess');
     return parts.length ? parts.join(' + ') : 'Nothing';
   }
-  function outcomeTotal() {
-    var t = 0, k; for (k in OUTCOME_WEIGHTS) t += OUTCOME_WEIGHTS[k]; return t;
-  }
-  function rollOutcome() {
-    var roll = Math.random() * outcomeTotal(), acc = 0, k;
-    var order = ['none'].concat(SYMBOLS);
-    for (var i = 0; i < order.length; i++) {
-      acc += OUTCOME_WEIGHTS[order[i]];
-      if (roll < acc) return order[i];
-    }
-    return 'none';
-  }
-
-  /* Build a 9-cell ticket for a decided outcome. Invariant (unit-tested):
-     winner appears exactly 3x, every other symbol at most 2x; a losing
-     ticket has every symbol at most 2x. */
-  function makeTicket(outcome) {
-    var cells = [], counts = {}, i, s;
-    SYMBOLS.forEach(function (x) { counts[x] = 0; });
-    if (outcome !== 'none') {
-      for (i = 0; i < 3; i++) { cells.push(outcome); counts[outcome]++; }
-    }
-    while (cells.length < 9) {
-      // filler: never the winning symbol (already at exactly 3), and never
-      // a third copy of anything else — so no accidental second triple.
-      var options = SYMBOLS.filter(function (x) { return x !== outcome && counts[x] < 2; });
-      s = options[(Math.random() * options.length) | 0];
-      cells.push(s); counts[s]++;
-    }
-    // shuffle
-    for (i = cells.length - 1; i > 0; i--) {
-      var j = (Math.random() * (i + 1)) | 0;
-      var tmp = cells[i]; cells[i] = cells[j]; cells[j] = tmp;
-    }
-    return cells;
-  }
-
   function expectedPacksPerTicket(tier) {
-    var total = outcomeTotal(), ev = 0;
+    var total = 0, k, ev = 0;
+    for (k in OUTCOME_WEIGHTS) total += OUTCOME_WEIGHTS[k];
     SYMBOLS.forEach(function (s) {
       var p = tier.prizes[s];
       ev += (OUTCOME_WEIGHTS[s] / total) * (p.pr + p.pj);
@@ -113,47 +76,69 @@
   function render(el) {
     if (!el) return;
     root = el;
+    current = null;
+    busy = false;
+    if (!ctx || !ctx.isCloud || !ctx.isCloud()) {
+      el.innerHTML = '<div class="panel"><h2>🎟️ Scratchoffs</h2>' +
+        '<p class="muted">Scratchoffs play for real tokens and packs — log in online to play.</p></div>';
+      return;
+    }
+    tokensNow = (ctx.S && ctx.S.gameTokens) || 0;
     var tierCards = CONFIG.tiers.map(function (t) {
-      var top = t.prizes.chase;
       return '<div class="panel scr-tier">' +
         '<h3>' + esc(t.name) + '</h3>' +
-        '<p class="muted small">' + t.cost + ' test tokens · Top prize: ' + esc(prizeText(top)) + '</p>' +
+        '<p class="muted small">' + t.cost + ' tokens · Top prize: ' + esc(prizeText(t.prizes.chase)) + '</p>' +
         '<button class="btn primary scr-buy" data-tier="' + t.id + '" type="button">Buy ticket — ' + t.cost + ' 🪙</button>' +
       '</div>';
     }).join('');
     el.innerHTML =
       '<div class="panel scr-wrap">' +
-        '<h2>🎟️ Scratchoffs <span class="scr-badge">SANDBOX TEST</span></h2>' +
+        '<h2>🎟️ Scratchoffs <span class="scr-badge">SANDBOX · REAL TOKENS &amp; PACKS</span></h2>' +
         '<p class="muted small">Buy a ticket, scratch the 9 foil spots, match 3 of a rarity to win its prize. ' +
-        'The ticket is decided when you buy it — scratching only reveals it. ' +
-        '<b>Test tokens only — nothing here is real yet.</b></p>' +
+        'The server decides the ticket when you buy it — scratching only reveals it, and an unfinished ' +
+        'ticket is still here when you come back. <b>Admin-only while it\'s in the Sandbox.</b></p>' +
         '<div class="scr-balance" id="scrBalance"></div>' +
         '<div class="scr-tiers">' + tierCards + '</div>' +
         '<div class="scr-stage" id="scrStage"></div>' +
-        '<div class="scr-result" id="scrResult"></div>' +
-        '<button class="btn" id="scrReset" type="button">Reset test balance</button>' +
-        '<details class="scr-tuning"><summary>Tuning tools (placeholder odds &amp; prizes)</summary>' +
+        '<div class="scr-result" id="scrResult"><span class="muted small">Loading…</span></div>' +
+        '<details class="scr-tuning"><summary>Odds &amp; prizes (placeholder numbers)</summary>' +
           '<div id="scrTuning"></div>' +
-          '<button class="btn" id="scrSim" type="button">Simulate 1,000 tickets per tier (free)</button>' +
-          '<div class="scr-sim muted small" id="scrSimOut"></div>' +
         '</details>' +
       '</div>';
     qa('.scr-buy').forEach(function (b) {
       b.addEventListener('click', function () { buyTicket(b.getAttribute('data-tier')); });
     });
-    q('#scrReset').addEventListener('click', function () {
-      state = { tokens: CONFIG.startTokens, tickets: 0, spent: 0, wonRandom: 0, wonJumbled: 0, wins: 0 };
-      current = null;
-      renderStage(); setResult('<span class="muted small">Test balance reset.</span>'); updateHud();
-    });
-    q('#scrSim').addEventListener('click', simulate);
     renderTuning();
-    renderStage();
+    updateHud();
+    loadState();
+  }
+
+  async function loadState() {
+    try {
+      var r = await CPS.cloud.call('scratch_state', {});
+      tokensNow = r.tokens_now;
+      if (r.ticket) adoptTicket(r.ticket, true);
+      else setResult('<span class="muted small">Pick a tier to buy a ticket.</span>');
+    } catch (e) {
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      setResult('<span class="muted small">Could not load scratchoffs — has migration 129 been run?</span>');
+    }
     updateHud();
   }
 
+  function adoptTicket(t, resumed) {
+    var tier = tierById(t.tier);
+    if (!tier) return;
+    current = { ticket_id: t.ticket_id, tier: tier, cells: t.cells.slice(),
+                revealed: t.cells.map(function () { return false; }), settled: false };
+    if (resumed) setResult('<span class="muted small">You have an unfinished ' + esc(tier.name) +
+      ' ticket — scratch it!</span>');
+    renderStage();
+  }
+
   function renderTuning() {
-    var total = outcomeTotal();
+    var total = 0, k;
+    for (k in OUTCOME_WEIGHTS) total += OUTCOME_WEIGHTS[k];
     var odds = SYMBOLS.map(function (s) {
       return s + ' ' + (OUTCOME_WEIGHTS[s] / total * 100).toFixed(1) + '%';
     }).join(' · ');
@@ -163,50 +148,43 @@
     }).join('<br>');
     var t2 = q('#scrTuning');
     if (t2) t2.innerHTML = '<p>Match odds (any tier): no match ' +
-      (OUTCOME_WEIGHTS.none / total * 100).toFixed(1) + '% · ' + esc(odds) + '</p><p>' + evs + '</p>' +
-      '<p class="muted">Slots today: ~0.23 packs per token.</p>';
-  }
-
-  function simulate() {
-    var lines = CONFIG.tiers.map(function (t) {
-      var wins = {}, packs = 0, i;
-      SYMBOLS.forEach(function (s) { wins[s] = 0; });
-      for (i = 0; i < 1000; i++) {
-        var o = rollOutcome();
-        if (o !== 'none') { wins[o]++; packs += t.prizes[o].pr + t.prizes[o].pj; }
-      }
-      var won = SYMBOLS.reduce(function (a, s) { return a + wins[s]; }, 0);
-      return esc(t.name) + ': ' + won + '/1000 tickets won, ' + packs + ' packs paid (' +
-        (packs / 1000).toFixed(2) + '/ticket)';
-    });
-    var out = q('#scrSimOut');
-    if (out) out.innerHTML = lines.join('<br>');
+      (OUTCOME_WEIGHTS.none / total * 100).toFixed(1) + '% · ' + esc(odds) + '</p><p>' + evs + '</p>';
   }
 
   function setResult(html) { var r = q('#scrResult'); if (r) r.innerHTML = html; }
+  function syncBadges() {
+    try {
+      if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(tokensNow);
+      if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
+    } catch (e) { /* non-fatal */ }
+  }
   function updateHud() {
     var bal = q('#scrBalance');
-    if (bal) bal.innerHTML = '🪙 <b>' + state.tokens + ' test tokens</b>' +
-      ' &nbsp;·&nbsp; 🎁 <b>' + (state.wonRandom + state.wonJumbled) + ' test packs won</b>' +
-      ' &nbsp;·&nbsp; 🎟️ ' + state.tickets + ' tickets · ' + state.wins + ' winners';
+    if (bal) bal.innerHTML = '🪙 <b>' + tokensNow + ' token' + (tokensNow === 1 ? '' : 's') + '</b>';
     qa('.scr-buy').forEach(function (b) {
       var t = tierById(b.getAttribute('data-tier'));
-      b.disabled = !!current && !current.settled || state.tokens < (t ? t.cost : 0);
+      b.disabled = busy || !!(current && !current.settled) || tokensNow < (t ? t.cost : 0);
     });
   }
 
-  function buyTicket(tierId) {
+  async function buyTicket(tierId) {
     var tier = tierById(tierId);
-    if (!tier || (current && !current.settled)) return;
-    if (state.tokens < tier.cost) { setResult('<span class="muted small">Not enough test tokens — reset the balance.</span>'); return; }
-    state.tokens -= tier.cost; state.spent += tier.cost; state.tickets++;
-    var outcome = rollOutcome();
-    current = { tier: tier, outcome: outcome, cells: makeTicket(outcome),
-                revealed: [false, false, false, false, false, false, false, false, false],
-                settled: false };
-    setResult('<span class="muted small">' + esc(tier.name) + ' — scratch the foil spots!</span>');
-    renderStage();
+    if (!tier || busy || (current && !current.settled)) return;
+    busy = true; updateHud();
+    try {
+      var r = await CPS.cloud.call('scratch_buy', { p_tier: tierId });
+      tokensNow = r.tokens_now;
+      adoptTicket(r.ticket, r.resumed);
+      if (!r.resumed) setResult('<span class="muted small">' + esc(tier.name) + ' — scratch the foil spots!</span>');
+      if (ctx.toast) ctx.toast(r.resumed ? 'Ticket resumed' : '🎟️ Ticket bought');
+    } catch (e) {
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      setResult('<span class="muted small">Could not buy that ticket.</span>');
+    }
+    busy = false;
+    syncBadges();
     updateHud();
+    renderStage();
   }
 
   function renderStage() {
@@ -251,31 +229,43 @@
     settleIfDone();
   }
 
-  function settleIfDone() {
-    if (!current || current.settled) return;
-    if (current.revealed.some(function (r) { return !r; })) { updateHud(); return; }
+  async function settleIfDone() {
+    if (!current || current.settled || busy) return;
+    if (current.revealed.some(function (r) { return !r; })) return;
     current.settled = true;
-    if (current.outcome !== 'none') {
-      var p = current.tier.prizes[current.outcome];
-      state.wonRandom += p.pr; state.wonJumbled += p.pj; state.wins++;
-      setResult('<span class="scr-win">MATCH 3 ' + esc(LABEL[current.outcome].toUpperCase()) +
-        '! +' + esc(prizeText(p)) + '</span>');
-    } else {
-      setResult('<span class="muted">No match this time — better luck on the next ticket.</span>');
+    busy = true; updateHud(); renderStage();
+    try {
+      var r = await CPS.cloud.call('scratch_claim', { p_ticket: current.ticket_id });
+      tokensNow = r.tokens_now;
+      if (r.win) {
+        setResult('<span class="scr-win">MATCH 3 ' + esc(LABEL[r.outcome].toUpperCase()) +
+          '! +' + esc(prizeText({ pr: r.packs_random, pj: r.packs_jumbled })) + '</span>');
+        if (ctx.toast) ctx.toast('🎟️ Scratchoff win!');
+      } else {
+        setResult('<span class="muted">No match this time — better luck on the next ticket.</span>');
+      }
+      current = null;
+      if (ctx.refreshCloud) { try { await ctx.refreshCloud(); } catch (e) { /* non-fatal */ } }
+      if (ctx.S && typeof ctx.S.gameTokens === 'number') tokensNow = ctx.S.gameTokens;
+    } catch (e) {
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      setResult('<span class="muted small">Claim failed — reopen Scratchoffs and your ticket will resume.</span>');
+      current.settled = false; // server pays once; a retry is safe
     }
-    renderStage();
+    busy = false;
+    syncBadges();
     updateHud();
+    renderStage();
   }
 
-  function teardown() { root = null; }
+  function teardown() { root = null; current = null; busy = false; }
 
   CPS.scratch = {
     render: render,
     mount: render,
     teardown: teardown,
     _test: { CONFIG: CONFIG, OUTCOME_WEIGHTS: OUTCOME_WEIGHTS, SYMBOLS: SYMBOLS,
-             state: function () { return state; }, current: function () { return current; },
-             rollOutcome: rollOutcome, makeTicket: makeTicket,
-             expectedPacksPerTicket: expectedPacksPerTicket }
+             expectedPacksPerTicket: expectedPacksPerTicket,
+             current: function () { return current; } }
   };
 })(window.CPS = window.CPS || {});

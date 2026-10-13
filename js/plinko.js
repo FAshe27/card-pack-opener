@@ -35,6 +35,18 @@
   };
   /* ===================================================================== */
 
+  /* Board geometry, in bin-width units ("u") from the board centre.
+     One bin is 100/(rows+1) percent of the field width. Peg row r sits at
+     pegY(r) px; the chip's final resting offset for bin k is k - rows/2 u,
+     which is exactly one more half-step past the bottom peg row — so a chip
+     that keeps falling the same way lands in the edge bin. */
+  var U_PCT = 100 / (CONFIG.rows + 1);
+  function pegOffset(r, j) { return j - r / 2; }
+  function pegY(r) { return 40 + r * 26; }
+  var START_Y = 10;   // drop point above the top peg
+  var BIN_Y = 242;    // where the chip dives into its bin
+  var rafId = null;
+
   var state = {
     tokens: CONFIG.startTokens,
     drops: 0, spent: 0,
@@ -46,7 +58,11 @@
   var root = null;
 
   function later(fn, ms) { var t = setTimeout(fn, ms); timers.push(t); return t; }
-  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function clearTimers() {
+    timers.forEach(clearTimeout); timers = [];
+    if (rafId !== null && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(rafId);
+    rafId = null;
+  }
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -98,12 +114,17 @@
         : (b.pr + b.pj > 0 ? ' plk-bin-pack' : ' plk-bin-token');
       return '<div class="plk-bin' + cls + '" data-bin="' + i + '"><span>' + esc(b.label) + '</span></div>';
     }).join('');
-    // Pegs: rows of dots, offset alternating — purely decorative.
-    var pegRows = '', r, c;
+    // Pegs: a true Galton lattice. Row r has r+1 pegs at offsets
+    // (j - r/2) bin-widths from centre, so the field widens by half a bin
+    // on each side per row and the bottom row spans almost the full board
+    // (offsets -3.5..+3.5), carrying the chip right out to the edge bins
+    // (centres at -4..+4). Each peg is absolutely positioned in the field.
+    var pegs = '', r, j;
     for (r = 0; r < CONFIG.rows; r++) {
-      var dots = '';
-      for (c = 0; c <= r + 1; c++) dots += '<span class="plk-peg"></span>';
-      pegRows += '<div class="plk-pegrow' + (r % 2 ? ' plk-pegrow-off' : '') + '">' + dots + '</div>';
+      for (j = 0; j <= r; j++) {
+        pegs += '<span class="plk-peg" data-row="' + r + '" data-j="' + j + '" style="left:' +
+          (50 + pegOffset(r, j) * U_PCT) + '%;top:' + pegY(r) + 'px"></span>';
+      }
     }
     el.innerHTML =
       '<div class="panel plk-wrap">' +
@@ -113,8 +134,10 @@
         '<b>Test tokens only — nothing here is real yet.</b></p>' +
         '<div class="plk-balance" id="plkBalance"></div>' +
         '<div class="plk-board" id="plkBoard">' +
-          '<div class="plk-chip" id="plkChip"></div>' +
-          pegRows +
+          '<div class="plk-field" id="plkField">' +
+            '<div class="plk-chip" id="plkChip"></div>' +
+            pegs +
+          '</div>' +
           '<div class="plk-bins">' + binCells + '</div>' +
         '</div>' +
         '<div class="plk-controls">' +
@@ -212,39 +235,76 @@
     })();
   }
 
-  /* Animate the chip through the pre-decided path, then settle the prize. */
+  function placeChip(chip, offsetU, yPx) {
+    chip.style.left = (50 + offsetU * U_PCT) + '%';
+    chip.style.top = yPx + 'px';
+  }
+  function flashPeg(r, offsetU) {
+    var j = Math.round(offsetU + r / 2);
+    var peg = q('.plk-peg[data-row="' + r + '"][data-j="' + j + '"]');
+    if (!peg) return;
+    peg.classList.add('plk-peg-hit');
+    later(function () { peg.classList.remove('plk-peg-hit'); }, 180);
+  }
+
+  /* One hop of the bounce: animate the chip from point A to point B along a
+     shallow arc (it rises a few px mid-hop, like it has just caromed off a
+     peg), easing out of the bounce and into the landing. Entry/final hops
+     pass arc=0 and fall straight with gravity easing instead. */
+  function hop(chip, from, to, ms, arc, done) {
+    var t0 = null;
+    function frame(ts) {
+      if (!root || !document.body.contains(chip)) { done(); return; }
+      if (t0 === null) t0 = ts;
+      var t = Math.min(1, (ts - t0) / ms);
+      var x = from.x + (to.x - from.x) * t;
+      var y = from.y + (to.y - from.y) * t - Math.sin(Math.PI * t) * arc;
+      if (!arc) y = from.y + (to.y - from.y) * t * t; // entry/final: accelerating fall
+      placeChip(chip, x, y);
+      if (t < 1) { rafId = requestAnimationFrame(frame); }
+      else { rafId = null; done(); }
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  /* Animate the chip through the pre-decided path, bouncing peg to peg,
+     then settle the prize. Points: drop point -> top peg -> each next peg
+     row (one path step per hop) -> a final dive into the bin. */
   function dropOnce(fast, done) {
     var path = decidePath();
     var chip = q('#plkChip');
-    var board = q('#plkBoard');
-    if (!chip || !board) { settle(path, done); return; }
+    if (!chip || !root) { settle(path, done); return; }
     qa('.plk-bin').forEach(function (b) { b.classList.remove('plk-bin-hit'); });
-    // Position model: board width maps x in [0, bins-1]; chip starts centred
-    // at x = rows/2 and moves +-0.5 per row.
-    var bw = board.clientWidth || 520;
-    var slot = bw / CONFIG.bins.length;
-    var x = CONFIG.rows / 2;
-    var stepMs = fast ? 35 : 110;
+    var hopMs = fast ? 50 : 185;
+    // offsets[r] = chip offset (in u) when it sits on peg row r
+    var offsets = [0], i;
+    for (i = 0; i < CONFIG.rows - 1; i++) offsets.push(offsets[i] + path.steps[i] * 0.5);
+    var binOffsetU = offsets[CONFIG.rows - 1] + path.steps[CONFIG.rows - 1] * 0.5;
     chip.style.display = 'block';
-    chip.style.transition = 'none';
-    chip.style.left = (x * slot + slot / 2 - 11) + 'px';
-    chip.style.top = '2px';
-    var i = 0;
-    (function step() {
-      if (!root || !document.body.contains(chip)) { settle(path, done); return; }
-      if (i >= path.steps.length) {
-        var binEl = q('.plk-bin[data-bin="' + path.bin + '"]');
-        if (binEl) binEl.classList.add('plk-bin-hit');
-        later(function () { chip.style.display = 'none'; settle(path, done); }, fast ? 60 : 220);
-        return;
-      }
-      x += path.steps[i] * 0.5;
-      i++;
-      chip.style.transition = 'left ' + stepMs + 'ms ease-in, top ' + stepMs + 'ms ease-in';
-      chip.style.left = (x * slot + slot / 2 - 11) + 'px';
-      chip.style.top = (2 + i * 26) + 'px';
-      later(step, stepMs);
-    })();
+    placeChip(chip, 0, START_Y);
+    hop(chip, { x: 0, y: START_Y }, { x: 0, y: pegY(0) }, fast ? 40 : 130, 0, function () {
+      flashPeg(0, 0);
+      var r = 0;
+      (function nextPeg() {
+        if (r >= CONFIG.rows - 1) {
+          hop(chip, { x: offsets[CONFIG.rows - 1], y: pegY(CONFIG.rows - 1) },
+              { x: binOffsetU, y: BIN_Y }, fast ? 40 : 160, 0, function () {
+            var binEl = q('.plk-bin[data-bin="' + path.bin + '"]');
+            if (binEl) binEl.classList.add('plk-bin-hit');
+            chip.style.display = 'none';
+            settle(path, done);
+          });
+          return;
+        }
+        var from = { x: offsets[r], y: pegY(r) };
+        var to = { x: offsets[r + 1], y: pegY(r + 1) };
+        r++;
+        hop(chip, from, to, hopMs, 10, function () {
+          flashPeg(r, offsets[r]);
+          nextPeg();
+        });
+      })();
+    });
   }
 
   function settle(path, done) {
@@ -275,6 +335,7 @@
     mount: render,
     teardown: teardown,
     _test: { CONFIG: CONFIG, state: function () { return state; }, decidePath: decidePath,
-             binProbability: binProbability, expectedValue: expectedValue }
+             binProbability: binProbability, expectedValue: expectedValue,
+             pegOffset: pegOffset, pegY: pegY, U_PCT: U_PCT }
   };
 })(window.CPS = window.CPS || {});
