@@ -35,7 +35,6 @@
 .pack-skin-dogs .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(101,163,13,.55) 4px 6px, rgba(254,252,232,.16) 6px 9px); }
 .pack-skin-dogs .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(63,98,18,.5) 4px 6px, rgba(254,252,232,.08) 6px 9px); }
 .pack-skin-dogs .pack-top::after { border-bottom-color: rgba(190,242,100,.65); }
-.pack-skin-dogs .pack-code { color: #422006; opacity: .95; text-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 12px rgba(132,204,22,.9); }
 .pack-skin-dogs .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(254,252,232,.65), rgba(101,163,13,.94) 72%);
   border-color: rgba(254,252,232,.85); box-shadow: 0 0 26px rgba(132,204,22,.6), inset 0 0 18px rgba(254,240,138,.3); text-shadow: 0 0 16px rgba(255,255,255,.9); }
 .pack-skin-dogs .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(132,204,22,.9), 0 2px 8px rgba(0,0,0,.65); }
