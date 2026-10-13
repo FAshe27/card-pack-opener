@@ -993,12 +993,18 @@
     return (S.myVariants || []).filter(function (v) { return v.set_id === setId && v.card_id === cardId; })
       .sort(function (a, b) { return a.serial - b.serial; });
   }
-  async function fillCensus(box, set, card) {
+  async function fillCensus(box, set, card, variant) {
     var el = box.querySelector('#vcensus');
-    if (!el || !isCloud() || R.INDEX[card.rarity] < 2) return;   // variants are rare+
+    if (!el || !isCloud()) return;
     var census = await ensureCensus(set.id);
     if (!box.isConnected) return;
     var c = census[card.id] || { rainbow: 0, prism: 0, obsidian: 0, oneofone: 0, oneofone_by: null };
+    // Variants mint rare+ only, but a numbered copy can sit on any rarity
+    // (set regrades, grants, trades). Show the census whenever this card was
+    // opened as a numbered copy, the player owns one, any exist in the wild,
+    // or the card is rare+ (the original zero-count display).
+    if (R.INDEX[card.rarity] < 2 && !variant && !myVariantSerials(set.id, card.id).length &&
+        !(c.rainbow || c.prism || c.obsidian || c.oneofone)) return;
     var rows = VARIANT_ORDER.map(function (t) {
       var vt = CPS.cards.VARIANTS[t];
       if (t === 'oneofone') {
@@ -1408,7 +1414,7 @@
       });
       var ti = box.querySelector('[data-turnin]');
       if (ti) ti.addEventListener('click', function () { turnInFlow(setId, cardId, forceHolo, variant); });
-      fillCensus(box, set, card);
+      fillCensus(box, set, card, variant);
       fillPopulation(box, set, card);
     });
   }
