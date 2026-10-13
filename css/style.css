@@ -731,6 +731,10 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .card[data-set="periodic"] .cf-details,
 .card[data-set="periodic"] .cf-foot { display: none; }
 .card[data-set="periodic"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #000; }
+/* Face-down, the back's inner frame (.cb) must curve with the card edge:
+   concentric radius = card radius 13.7% - the back's 4cqw padding = 9.7cqw
+   (the generic .cb radius, 3.5cqw, is far too tight at this card radius). */
+.card[data-set="periodic"] .cb { border-radius: 9.7cqw; }
 /* ...but while a Periodic card sits face-down in the pack reveal, the rarity
    glow would spoil the flip — it only appears once the card is flipped
    (collection/modal renders are not flippable, so they keep the glow). */
