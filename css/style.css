@@ -1481,6 +1481,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .coll-item.vaulted .card { box-shadow: 0 0 0 1px rgba(245,185,66,.65), 0 0 10px rgba(245,185,66,.18); }
 .coll-item.turned .card { box-shadow: 0 0 0 2px #34d399, 0 0 16px rgba(52,211,153,.35); }
 .turned-note { color: #4ade80; font-weight: 700; }
+.owned-note { color: var(--accent); font-weight: 700; }
 .vault-tag { color: #f5b942; font-weight: 700; }
 .vault-box { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .vault-title { width: 100%; font-weight: 800; font-size: .85rem; color: #f5b942; }
