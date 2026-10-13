@@ -118,6 +118,60 @@
     return out.join('');
   }
 
+  /* Clickable card face for an offered card (same wrapper as wantFace,
+     so bindCardClicks picks it up). '' when unresolvable — the caller
+     falls back to the text line. */
+  function offerCardFace(c) {
+    var s = setObj(c.set_id), card = s && s.byId.get(c.card_id);
+    if (!s || !card) return '';
+    var tier = c.tier || c.variant_tier, serial = c.serial != null ? c.serial : c.variant_serial;
+    var opts = { holo: !!c.holo };
+    if (tier) opts.variant = { tier: tier, serial: serial };
+    var variantAttr = tier ? ' data-variant-tier="' + esc(tier) + '" data-variant-serial="' + esc(serial) + '"' : '';
+    return '<div class="bounty-card-click" data-set="' + esc(c.set_id) + '" data-card="' + esc(c.card_id) + '"' +
+      ' data-holo="' + (c.holo ? '1' : '0') + '"' + variantAttr +
+      ' style="cursor:pointer;" title="View card">' + CPS.cards.render(s, card, opts) + '</div>';
+  }
+
+  /* Offer body with faces: currency stays text lines, cards become
+     clickable faces. */
+  function offerBodyHtml(b) {
+    var lines = [], faces = [];
+    if (b.offer_tokens > 0) lines.push('<span class="bounty-offer-line">🪙 <b>' + b.offer_tokens + '</b> game token' + (b.offer_tokens === 1 ? '' : 's') + '</span>');
+    if (b.offer_tickets > 0) lines.push('<span class="bounty-offer-line">🎟️ <b>' + b.offer_tickets + '</b> spin ticket' + (b.offer_tickets === 1 ? '' : 's') + '</span>');
+    if (b.offer_packs > 0) {
+      var ps = setObj(b.offer_pack_set);
+      lines.push('<span class="bounty-offer-line">🎁 <b>' + b.offer_packs + '</b> ' + esc(ps ? ps.name : b.offer_pack_set) + ' pack' + (b.offer_packs === 1 ? '' : 's') + '</span>');
+    }
+    (b.offer_cards || []).forEach(function (c) {
+      var f = offerCardFace(c);
+      if (f) faces.push('<div class="bounty-want">' + f + '</div>');
+      else {
+        var s = setObj(c.set_id), card = s && s.byId.get(c.card_id);
+        var rar = c.rarity || (card && card.rarity);
+        lines.push('<span class="bounty-offer-line">🃏 <b>' + esc(c.card_name || (card && card.name) || c.card_id) + '</b>' +
+          (c.holo ? ' ✦ holo' : '') + ' <span class="muted">(' + esc(c.set_name || (s && s.name) || c.set_id) +
+          (rar ? ' · ' + esc(rar) : '') + ')</span></span>');
+      }
+    });
+    var html = lines.join('');
+    if (faces.length) html += '<div class="bounty-offerfaces">' + faces.join('') + '</div>';
+    return html;
+  }
+
+  function bindCardClicks(scope) {
+    if (!scope) return;
+    scope.querySelectorAll('.bounty-card-click').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var vt = el.getAttribute('data-variant-tier');
+        var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) } : null;
+        ctx.openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
+          el.getAttribute('data-holo') === '1', variant);
+      });
+    });
+  }
+
   function wantFace(b) {
     var s = setObj(b.want_set), card = s && s.byId.get(b.want_card);
     if (!s || !card) {
@@ -163,7 +217,7 @@
           '<div class="bounty-req">' + esc(wantReq(b)) + '</div>' +
           '<div class="muted small">posted by <b>' + esc(b.poster) + '</b> · expires in ' + esc(expiresIn(b.expires_at)) + '</div>' +
         '</div>' +
-        '<div class="bounty-offer"><div class="bounty-want-label">OFFER</div>' + offerLines(b) +
+        '<div class="bounty-offer"><div class="bounty-want-label">OFFER</div>' + offerBodyHtml(b) +
           '<div class="bounty-actions">' +
           (b.mine
             ? '<button class="btn small danger" data-cancel="' + esc(b.id) + '">Cancel bounty</button>'
@@ -177,16 +231,8 @@
     box.querySelectorAll('[data-cancel]').forEach(function (btn) {
       btn.addEventListener('click', function () { openCancelModal(btn.getAttribute('data-cancel')); });
     });
-    // Make bounty want cards clickable -> open card modal
-    box.querySelectorAll('.bounty-card-click').forEach(function (el) {
-      el.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var vt = el.getAttribute('data-variant-tier');
-        var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) } : null;
-        ctx.openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
-          el.getAttribute('data-holo') === '1', variant);
-      });
-    });
+    // Make bounty want + offer cards clickable -> open card modal
+    bindCardClicks(box);
   }
 
   /* ------------------------------------------------------------ claim */
@@ -204,13 +250,14 @@
       '<div class="bounty-tradebox"><div><span class="bounty-want-label">YOU GIVE</span><b>' + esc(cardName) + '</b>' +
         '<div class="muted small">' + esc(wantReq(b)) + '</div></div>' +
       '<div class="bounty-trade-arrow">⇄</div>' +
-      '<div><span class="bounty-want-label">YOU GET</span><div>' + offerLines(b) + '</div></div></div>' +
+      '<div><span class="bounty-want-label">YOU GET</span><div>' + offerBodyHtml(b) + '</div></div></div>' +
       '<div class="row wrap"><button class="btn primary" id="bountyClaimGo">Claim bounty</button>' +
       '<button class="btn" data-close>Never mind</button></div>',
       function (box) {
         box.querySelectorAll('[data-close]').forEach(function (x) {
           x.addEventListener('click', function () { ctx.closeModal(); });
         });
+        bindCardClicks(box);
         ctx.$('#bountyClaimGo', box).addEventListener('click', async function () {
           var btn = this; btn.disabled = true;
           try {
