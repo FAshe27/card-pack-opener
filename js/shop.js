@@ -155,6 +155,30 @@
     return out;
   }
 
+  function dupeNotTurnedCounts() {
+    // Per-tier dupes that belong to cards NOT yet turned in (for the sell
+    // confirm's heads-up). Mirrors ctx.dupeCounts' per-card formula in
+    // app.js exactly — keep the two in sync: dupes per card =
+    // max(0, (copies - vaulted) - max(1, unvaulted variants)).
+    var out = { common: 0, uncommon: 0, rare: 0, epic: 0 };
+    if (!ctx.S || !ctx.S.player || !ctx.isTurned) return out;
+    var vmap = null;
+    try { vmap = ctx.variantCountMap ? ctx.variantCountMap() : null; } catch (e) {}
+    window.CardSets.all().forEach(function (set) {
+      var st = ctx.S.player.sets[set.id];
+      if (!st || !st.cards) return;
+      set.cards.forEach(function (c) {
+        if (ctx.isTurned(set.id, c.id)) return;
+        var e = st.cards[c.id];
+        if (!e || !e.n) return;
+        var t = c.rarity === 'common' ? 'common' : c.rarity === 'uncommon' ? 'uncommon' : c.rarity === 'rare' ? 'rare' : 'epic';
+        var v = vmap ? (vmap[set.id + ':' + c.id] || 0) : 0;
+        out[t] += Math.max(0, (e.n - (e.v || 0)) - Math.max(1, v));
+      });
+    });
+    return out;
+  }
+
   function renderDupeSell(el) {
     var counts = dupeCounts();
     var rows = DUPE_CREDIT_TIERS.map(function (t) {
@@ -177,8 +201,13 @@
           var n = dupeCounts()[tier] || 0, credit = t ? Math.floor(n / t.rate) : 0;
           if (!t || credit < 1) return;
           btn.disabled = true;
+          var nt = dupeNotTurnedCounts()[tier] || 0;
+          var ntLine = nt > 0
+            ? '<p style="color:#ffd97a">⚠️ <b>' + nt + '</b> of your ' + n + ' ' + t.label + ' duplicates are copies of cards you haven\'t turned in yet.</p>'
+            : '<p class="muted">All of these cards have already been turned in.</p>';
           var ok = await ctx.confirmDialog('Sell duplicates?',
             '<p>Sell <b>' + (credit * t.rate) + ' ' + t.label + '</b> duplicate' + (credit * t.rate === 1 ? '' : 's') + ' for <b>$' + credit + ' Store Credit</b>?</p>' +
+            ntLine +
             '<p class="muted">The cards are removed from your collection. <b>There is no undo.</b> Numbered and vaulted copies are never sold.</p>',
             'Sell them');
           if (!ok) { btn.disabled = false; return; }
