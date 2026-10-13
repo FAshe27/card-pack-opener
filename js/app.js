@@ -1441,12 +1441,20 @@
       });
       items.sort(function (a, b) { return a.c.name.localeCompare(b.c.name) || a.sd.name.localeCompare(b.sd.name); });
     }
+    // Render in chunks: a 100+ card gallery of full card renders at once can
+    // kill a phone browser tab outright (Chrome's "Can't open this page").
+    var PAGE = 60;
+    function itemsHtml(list) {
+      return list.map(function (x) {
+        return '<div class="stat-gallery-item" data-set="' + esc(x.sd.id) + '" data-card="' + esc(x.c.id) + '"' +
+          (x.variant ? ' data-vtier="' + esc(x.variant.tier) + '" data-vserial="' + x.variant.serial + '"' : '') +
+          ' data-holo="' + (x.holo ? '1' : '0') + '">' + x.html + '</div>';
+      }).join('');
+    }
+    var paged = !restoreScroll && items.length > PAGE;
     var body = items.length
-      ? '<div class="stat-gallery">' + items.map(function (x) {
-          return '<div class="stat-gallery-item" data-set="' + esc(x.sd.id) + '" data-card="' + esc(x.c.id) + '"' +
-            (x.variant ? ' data-vtier="' + esc(x.variant.tier) + '" data-vserial="' + x.variant.serial + '"' : '') +
-            ' data-holo="' + (x.holo ? '1' : '0') + '">' + x.html + '</div>';
-        }).join('') + '</div>'
+      ? '<div class="stat-gallery">' + itemsHtml(paged ? items.slice(0, PAGE) : items) + '</div>' +
+        (paged ? '<button type="button" class="btn small" data-gallery-more style="display: block; margin: 10px auto 2px;">Show all ' + items.length + ' cards</button>' : '')
       : '<div class="empty">None yet — keep ripping packs!</div>';
     openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h2>' + esc(title) + ' <span class="muted small">(' + items.length + ')</span></h2>' + body,
@@ -1455,9 +1463,18 @@
           var g0 = box.querySelector('.stat-gallery');
           if (g0) g0.scrollTop = galleryScrollTop;
         }
+        var more = box.querySelector('[data-gallery-more]');
+        if (more) more.addEventListener('click', function () {
+          var g = box.querySelector('.stat-gallery');
+          if (g) { g.innerHTML = itemsHtml(items); bindItems(g); }
+          more.remove();
+        });
+        bindItems(box);
+      });
+    function bindItems(box) {
         box.querySelectorAll('.stat-gallery-item').forEach(function (el) {
           el.addEventListener('click', function () {
-            var g = box.querySelector('.stat-gallery');
+            var g = box.classList && box.classList.contains('stat-gallery') ? box : box.querySelector('.stat-gallery');
             galleryScrollTop = g ? g.scrollTop : 0;
             galleryReturnKind = kind;
             var vt = el.getAttribute('data-vtier');
@@ -1466,7 +1483,7 @@
               el.getAttribute('data-holo') === '1', variant);
           });
         });
-      });
+    }
   }
   function renderStats() {
     var set = S.set, st = ps();
