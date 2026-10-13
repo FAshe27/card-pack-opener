@@ -454,9 +454,8 @@
     var grid = $('#revealGrid');
     grid.innerHTML = o.pulls.map(function (p, i) {
       if (CPS.slips.isSlip(p)) return CPS.slips.render(p);
-      var tease = R.INDEX[p.card.rarity] >= 3 ? ' tease' : '';
       var rset = p.homeSet || o.set;
-      return CPS.cards.render(rset, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal' + tease,
+      return CPS.cards.render(rset, p.card, { holo: p.holo, flippable: true, isNew: p.isNew, cls: 'deal',
         variant: p.variant ? { tier: p.variant, serial: p.serial } : null });
     }).join('');
     $$('.card', grid).forEach(function (el, i) {
