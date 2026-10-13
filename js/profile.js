@@ -30,11 +30,6 @@ async function openProfile(accountId) {
     collection.forEach(function (c) { holos += c.h || 0; });
     var pct = totT ? (totU / totT * 100) : 0;
     var best = bestPull(collection);
-    var favs = (p.favorites || []).map(function (f) {
-      var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
-      if (!set || !card) return '';
-      return '<div class="prof-fav" data-fav-set="' + ctx.esc(f.set_id) + '" data-fav-card="' + ctx.esc(f.card_id) + '" data-fav-holo="' + (f.holo ? '1' : '0') + '">' + CPS.cards.render(set, card, { holo: !!f.holo }) + '</div>';
-    }).join('');
     var statsHtml =
       '<div class="prof-stats">' +
       '<div class="prof-stat"><b>' + ctx.U.fmt(totU) + '</b><span>cards</span></div>' +
@@ -46,63 +41,130 @@ async function openProfile(accountId) {
         '<b class="rt-' + best.card.rarity + '">' + ctx.esc(best.card.name) + '</b>' +
         '<span class="pb-sub">' + ctx.esc(best.set.name) + ' · ' + ctx.rarityOf(best.card.rarity).label + '</span></div>' : '');
 
-    function renderSets(box) {
-      var arr = sets.slice();
-      arr.sort(function (a, b) {
-        if (setSort === 'pct') {
-          var pa = a.total ? a.unique / a.total : 0, pb = b.total ? b.unique / b.total : 0;
-          if (pb !== pa) return pb - pa;
-        }
-        return a.set_name < b.set_name ? -1 : (a.set_name > b.set_name ? 1 : 0);
-      });
-      var el = box.querySelector('.prof-sets');
-      el.innerHTML = arr.map(function (s) {
-        var pc = s.total ? (s.unique / s.total * 100) : 0;
-        var tp = s.total ? ((s.turned || 0) / s.total * 100) : 0;
-        return '<div class="prof-set" data-pset="' + ctx.esc(s.set_id) + '">' +
-          '<div class="prof-set-top"><span>' + ctx.esc(s.set_name) + '</span>' +
-          '<span class="muted small">' + ctx.U.fmt(s.unique) + '/' + ctx.U.fmt(s.total) + ' · ' + pc.toFixed(1) + '% collected</span></div>' +
-          '<span class="bar"><i style="width:' + pc.toFixed(1) + '%"></i></span>' +
-          (s.turned ? '<div class="muted small turned-note">' + ctx.U.fmt(s.turned) + ' turned in · ' + tp.toFixed(1) + '%</div>' : '') + '</div>';
-      }).join('') || '<div class="empty">—</div>';
-      el.querySelectorAll('.prof-set').forEach(function (elm) {
-        elm.addEventListener('click', function () {
-          openPlayerSet(accountId, p.display_name, elm.dataset.pset, collection);
-        });
-      });
-    }
-
+    var poss = ctx.esc(p.display_name) + '’s';
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
       '<div class="prof-head"><span class="avatar big">' + ctx.esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
       '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button>') + '</div></div>' +
       statsHtml +
-      '<h3 class="prof-coll-h"><span>🔒 The Vault (' + (p.favorites || []).length + ')</span>' +
+      '<div class="prof-nav">' +
+      '<button class="btn prof-nav-btn" id="profVaultBtn">🔒 View ' + poss + ' Vault<span class="muted">' + (p.favorites || []).length + '</span></button>' +
+      '<button class="btn prof-nav-btn" id="profCollBtn">🗂️ View ' + poss + ' Collection</button>' +
+      '<button class="btn prof-nav-btn" id="profTrophyBtn">🏆 View ' + poss + ' Trophy Case</button>' +
+      '</div>' +
+      '</div>', function (box) {
+      box.querySelector('#profVaultBtn').addEventListener('click', function () { openVaultScreen(accountId); });
+      box.querySelector('#profCollBtn').addEventListener('click', function () { openCollectionScreen(accountId); });
+      box.querySelector('#profTrophyBtn').addEventListener('click', function () { openTrophyScreen(accountId, p.display_name); });
+      var ptb = box.querySelector('#profTradeBtn');
+      if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
+      var pb = box.querySelector('.prof-best');
+      if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { ctx.openCardModal(best.set.id, best.card.id); }); }
+    });
+  } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
+}
+
+function favsHtml(p) {
+  return (p.favorites || []).map(function (f) {
+    var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
+    if (!set || !card) return '';
+    return '<div class="prof-fav" data-fav-set="' + ctx.esc(f.set_id) + '" data-fav-card="' + ctx.esc(f.card_id) + '" data-fav-holo="' + (f.holo ? '1' : '0') + '">' + CPS.cards.render(set, card, { holo: !!f.holo }) + '</div>';
+  }).join('');
+}
+
+function bindFavClicks(box) {
+  box.querySelectorAll('.prof-fav').forEach(function (elm) {
+    elm.style.cursor = 'pointer';
+    elm.addEventListener('click', function () { ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
+  });
+}
+
+async function openVaultScreen(accountId) {
+  ctx.openModal('<div class="muted" style="padding:24px">Loading…</div>');
+  try {
+    var p = await CPS.cloud.call('get_profile', { p_account: accountId });
+    var favs = favsHtml(p);
+    ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
+      '<button class="btn small prof-back" id="profBackBtn">← Back</button>' +
+      '<h3 class="prof-coll-h"><span>🔒 ' + ctx.esc(p.display_name) + '’s Vault (' + (p.favorites || []).length + ')</span>' +
       (p.is_me ? '<button class="btn small" id="profFavEditBtn">Edit</button>' : '') + '</h3>' +
       (favs ? '<div class="prof-favs">' + favs + '</div>' : '<div class="empty">Nothing in the Vault yet.</div>') +
-      '<h3 class="prof-coll-h"><span>Collection</span><button class="btn small" id="profSortBtn"></button></h3>' +
+      '</div>', function (box) {
+      box.querySelector('#profBackBtn').addEventListener('click', function () { openProfile(accountId); });
+      var feb = box.querySelector('#profFavEditBtn');
+      if (feb) feb.addEventListener('click', function () { openFavManager(accountId, p.favorites || []); });
+      bindFavClicks(box);
+    });
+  } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
+}
+
+async function openCollectionScreen(accountId) {
+  ctx.openModal('<div class="muted" style="padding:24px">Loading…</div>');
+  try {
+    var p = await CPS.cloud.call('get_profile', { p_account: accountId });
+    var sets = p.sets || [], collection = p.collection || [];
+    ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
+      '<button class="btn small prof-back" id="profBackBtn">← Back</button>' +
+      '<h3 class="prof-coll-h"><span>' + ctx.esc(p.display_name) + '’s Collection</span><button class="btn small" id="profSortBtn"></button></h3>' +
       '<div class="prof-sets cols2"></div>' +
       '</div>', function (box) {
-      renderSets(box);
+      function renderSets() {
+        var arr = sets.slice();
+        arr.sort(function (a, b) {
+          if (setSort === 'pct') {
+            var pa = a.total ? a.unique / a.total : 0, pb = b.total ? b.unique / b.total : 0;
+            if (pb !== pa) return pb - pa;
+          }
+          return a.set_name < b.set_name ? -1 : (a.set_name > b.set_name ? 1 : 0);
+        });
+        var el = box.querySelector('.prof-sets');
+        el.innerHTML = arr.map(function (s) {
+          var pc = s.total ? (s.unique / s.total * 100) : 0;
+          var tp = s.total ? ((s.turned || 0) / s.total * 100) : 0;
+          return '<div class="prof-set" data-pset="' + ctx.esc(s.set_id) + '">' +
+            '<div class="prof-set-top"><span>' + ctx.esc(s.set_name) + '</span>' +
+            '<span class="muted small">' + ctx.U.fmt(s.unique) + '/' + ctx.U.fmt(s.total) + ' · ' + pc.toFixed(1) + '% collected</span></div>' +
+            '<span class="bar"><i style="width:' + pc.toFixed(1) + '%"></i></span>' +
+            (s.turned ? '<div class="muted small turned-note">' + ctx.U.fmt(s.turned) + ' turned in · ' + tp.toFixed(1) + '%</div>' : '') + '</div>';
+        }).join('') || '<div class="empty">—</div>';
+        el.querySelectorAll('.prof-set').forEach(function (elm) {
+          elm.addEventListener('click', function () {
+            openPlayerSet(accountId, p.display_name, elm.dataset.pset, collection, 'collection');
+          });
+        });
+      }
+      renderSets();
       var sb = box.querySelector('#profSortBtn');
       var paintSort = function () { sb.textContent = setSort === 'pct' ? 'Sort: % ↓' : 'Sort: A–Z'; };
       paintSort();
       sb.addEventListener('click', function () {
         setSort = setSort === 'pct' ? 'name' : 'pct';
-        paintSort(); renderSets(box);
+        paintSort(); renderSets();
       });
-      var feb = box.querySelector('#profFavEditBtn');
-      if (feb) feb.addEventListener('click', function () { openFavManager(accountId, p.favorites || []); });
-      var ptb = box.querySelector('#profTradeBtn');
-      if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
-      /* Vault cards + Best pull open the card modal, like card faces everywhere else */
-      box.querySelectorAll('.prof-fav').forEach(function (elm) {
-        elm.style.cursor = 'pointer';
-        elm.addEventListener('click', function () { ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
-      });
-      var pb = box.querySelector('.prof-best');
-      if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { ctx.openCardModal(best.set.id, best.card.id); }); }
+      box.querySelector('#profBackBtn').addEventListener('click', function () { openProfile(accountId); });
     });
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
+}
+
+var trophyStamp = 0;
+async function openTrophyScreen(accountId, displayName) {
+  var stamp = ++trophyStamp;
+  ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
+    '<button class="btn small prof-back" id="profBackBtn">← Back</button>' +
+    '<h3 class="prof-coll-h"><span>🏆 ' + ctx.esc(displayName) + '’s Trophy Case</span></h3>' +
+    '<div id="trophyBody"><div class="muted" style="padding:12px">Loading…</div></div>' +
+    '</div>', function (box) {
+    box.querySelector('#profBackBtn').addEventListener('click', function () { openProfile(accountId); });
+  });
+  try {
+    var t = await CPS.cloud.call('get_trophies', { p_account: accountId });
+    if (stamp !== trophyStamp) return;
+    var body = document.getElementById('trophyBody');
+    if (body) body.innerHTML = (CPS.trophies && CPS.trophies.render) ? CPS.trophies.render(t) : '<div class="empty">Trophies unavailable right now.</div>';
+  } catch (e) {
+    if (stamp !== trophyStamp) return;
+    var b2 = document.getElementById('trophyBody');
+    if (b2) b2.innerHTML = '<div class="empty">Trophies unavailable right now.</div>';
+  }
 }
 
 /* ---------------- favorites manager ---------------- */
@@ -227,7 +289,7 @@ function openFavManager(accountId, seedFavs) {
   });
 }
 
-function openPlayerSet(accountId, displayName, setId, collection) {
+function openPlayerSet(accountId, displayName, setId, collection, backTo) {
   var set = window.CardSets.get(setId);
   if (!set) return;
   var owned = {};
@@ -246,7 +308,9 @@ function openPlayerSet(accountId, displayName, setId, collection) {
         (e.h > 0 ? ' \u00b7 \u2726 holo' : '') + ' \u00b7 \u00d7' + e.n + '</span></div></div>';
     }).join('') + '</div>' : '<div class="empty">No cards in this set yet.</div>') +
     '</div>', function (box) {
-      box.querySelector('#pcBackBtn').addEventListener('click', function () { openProfile(accountId); });
+      box.querySelector('#pcBackBtn').addEventListener('click', function () {
+        if (backTo === 'collection') openCollectionScreen(accountId); else openProfile(accountId);
+      });
       box.querySelectorAll('.prof-fav').forEach(function (elm) {
         elm.style.cursor = 'pointer';
         elm.addEventListener('click', function () { ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
