@@ -93,6 +93,24 @@
     var n = T ? T.listings.filter(function (l) { return l.mine && l.offer_count > 0; }).length : 0;
     b.textContent = n;
     b.classList.toggle('hidden', !(n > 0));
+    CPS._tradeNav = n; if (CPS.paintMarketNav) CPS.paintMarketNav();
+  }
+
+  /* Market nav badge, trading half (see bounties.js): my listings that
+     have offers waiting. Called by bounties.navBadge on state loads;
+     20s cache, best-effort. */
+  var navAt = 0, navBusy = false;
+  async function navBadge() {
+    if (!ctx.isCloud()) { CPS._tradeNav = 0; if (CPS.paintMarketNav) CPS.paintMarketNav(); return; }
+    if (navBusy || Date.now() - navAt < 20000) { if (CPS.paintMarketNav) CPS.paintMarketNav(); return; }
+    navBusy = true;
+    try {
+      var r = await CPS.cloud.call('trading_post', {});
+      navAt = Date.now();
+      CPS._tradeNav = (r.listings || []).filter(function (l) { return l.mine && l.offer_count > 0; }).length;
+      if (CPS.paintMarketNav) CPS.paintMarketNav();
+    } catch (e) { /* badge is best-effort */ }
+    navBusy = false;
   }
 
   function expiresIn(iso) {
@@ -653,5 +671,5 @@
     } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
 
-  CPS.trading = { render: render, refresh: load, updateBadge: updateBadge };
+  CPS.trading = { render: render, refresh: load, updateBadge: updateBadge, navBadge: navBadge };
 })(window.CPS);
