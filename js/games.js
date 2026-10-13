@@ -44,7 +44,7 @@
         var rk = G.card.rank;
         html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 10 ? ' disabled' : '') + '>\u25b2 Higher</button>' +
                 '<button class="btn big" id="gameLower"' + (rk <= 1 ? ' disabled' : '') + '>\u25bc Lower</button></div>';
-        html += '<button class="btn ghost" id="gameClaim">Claim prizes &amp; end run</button>';
+        html += '<button class="btn ghost" id="gameClaim"' + (G.bank && G.bank.length ? '' : ' disabled') + '>Claim prizes &amp; end run</button>';
       } else {
         html += '<div class="game-over">' + (G.busted ? '💥 Bust! The bank is gone.' : 'Prizes claimed!') + '</div>';
         html += '<button class="btn primary" id="gameAgain">Play again (1 token)</button>';
