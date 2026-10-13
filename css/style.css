@@ -1322,21 +1322,28 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .player-name-row { display: flex; align-items: center; gap: 8px; }
 .pill-you { font-size: .65rem; padding: 1px 8px; }
 
-/* Spin ticket jackpot card */
-.ticket-card { position: relative; background: linear-gradient(135deg, #1a2f1a, #2d5a2d); border: 2px solid transparent; }
-.ticket-card.flipped { border-color: #4caf50; }
+/* Spin ticket jackpot card — styling lives on .face.front (surprise.css) so the
+   whole card flips like a normal card; a background/border here on the outer
+   element never rotates and breaks the flip illusion. */
+.ticket-card { position: relative; }
 .ticket-face { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; font-size: 3rem; gap: 8px; padding: 20px; text-align: center; }
 .ticket-card.flipped .ticket-face { display: flex; }
 .ticket-face b { font-size: 1.1rem; color: #a5d6a7; letter-spacing: 0.1em; }
 .ticket-face span { font-size: 0.9rem; color: #c8e6c9; }
 
 /* Game token slip card */
-.token-card { position: relative; background: linear-gradient(135deg, #2e2410, #5a4a1a); border: 2px solid transparent; }
-.token-card.flipped { border-color: #ffb21e; }
+.token-card { position: relative; }
 .token-face { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; font-size: 3rem; gap: 8px; padding: 20px; text-align: center; }
 .token-card.flipped .token-face { display: flex; }
 .token-face b { font-size: 1rem; color: #ffd97a; letter-spacing: 0.08em; }
 .token-face span { font-size: 0.9rem; color: #ffe9b8; }
+
+/* Store credit slip card */
+.credit-card { position: relative; }
+.credit-face { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; font-size: 3rem; gap: 8px; padding: 20px; text-align: center; }
+.credit-card.flipped .credit-face { display: flex; }
+.credit-face b { font-size: 1rem; color: #9ff0bb; letter-spacing: 0.08em; }
+.credit-face span { font-size: 0.9rem; color: #c9f5d8; }
 
 /* Higher/Lower game */
 .game-table { display: flex; flex-direction: column; align-items: center; gap: 10px; }
