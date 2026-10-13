@@ -1400,7 +1400,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
    floor or the stage overflows its booth at mid widths. */
 @media (min-width: 600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(152px, 1fr)); gap: 12px; } }
 @media (min-width: 1250px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(182px, 1fr)); gap: 16px; } }
-@media (min-width: 1600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); } }
+@media (min-width: 1600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(204px, 1fr)); } }
 .shop-booth { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; display: flex; flex-direction: column; }
 /* Uniform visual stage: packs come in different aspect ratios (Calendar is square 1/1,
    most are 5/8), so every booth reserves the same visual height and centers the pack —
@@ -1435,9 +1435,9 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   .shop-mystery { width: 150px; height: 240px; }
 }
 @media (min-width: 1600px) {
-  .shop-pack-wrap .pack { --pw: 200px; }
-  .shop-pack-wrap { height: 320px; }
-  .shop-mystery { width: 200px; height: 320px; }
+  .shop-pack-wrap .pack { --pw: 172px; }
+  .shop-pack-wrap { height: 275px; }
+  .shop-mystery { width: 172px; height: 275px; }
 }
 
 .shop-ticket {
@@ -1455,7 +1455,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   .shop-ticket { width: 150px; height: 240px; }
 }
 @media (min-width: 1600px) {
-  .shop-ticket { width: 200px; height: 320px; }
+  .shop-ticket { width: 172px; height: 275px; }
 }
 .shop-ticket-icon { font-size: 3rem; filter: drop-shadow(0 0 14px rgba(46,204,113,.45)); }
 .shop-deal-tag.ticket { background: linear-gradient(135deg, #27ae60, #1e8449); color: #fff; }
