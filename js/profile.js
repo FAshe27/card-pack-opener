@@ -33,14 +33,14 @@ async function openProfile(accountId) {
     var favs = (p.favorites || []).map(function (f) {
       var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
       if (!set || !card) return '';
-      return '<div class="prof-fav">' + CPS.cards.render(set, card, { holo: !!f.holo }) + '</div>';
+      return '<div class="prof-fav" data-fav-set="' + ctx.esc(f.set_id) + '" data-fav-card="' + ctx.esc(f.card_id) + '" data-fav-holo="' + (f.holo ? '1' : '0') + '">' + CPS.cards.render(set, card, { holo: !!f.holo }) + '</div>';
     }).join('');
     var statsHtml =
       '<div class="prof-stats">' +
-      '<div class="prof-stat"><b>' + totU.toLocaleString() + '</b><span>cards</span></div>' +
+      '<div class="prof-stat"><b>' + ctx.U.fmt(totU) + '</b><span>cards</span></div>' +
       '<div class="prof-stat"><b>' + pct.toFixed(1) + '%</b><span>complete</span></div>' +
-      '<div class="prof-stat"><b>' + holos + '</b><span>holos</span></div>' +
-      '<div class="prof-stat"><b>' + totTi.toLocaleString() + '</b><span>turned in</span></div>' +
+      '<div class="prof-stat"><b>' + ctx.U.fmt(holos) + '</b><span>holos</span></div>' +
+      '<div class="prof-stat"><b>' + ctx.U.fmt(totTi) + '</b><span>turned in</span></div>' +
       '</div>' +
       (best ? '<div class="prof-best"><span class="pb-top">★ Best pull</span>' +
         '<b class="rt-' + best.card.rarity + '">' + ctx.esc(best.card.name) + '</b>' +
@@ -61,9 +61,9 @@ async function openProfile(accountId) {
         var tp = s.total ? ((s.turned || 0) / s.total * 100) : 0;
         return '<div class="prof-set" data-pset="' + ctx.esc(s.set_id) + '">' +
           '<div class="prof-set-top"><span>' + ctx.esc(s.set_name) + '</span>' +
-          '<span class="muted small">' + s.unique + '/' + s.total + ' · ' + pc.toFixed(1) + '% collected</span></div>' +
+          '<span class="muted small">' + ctx.U.fmt(s.unique) + '/' + ctx.U.fmt(s.total) + ' · ' + pc.toFixed(1) + '% collected</span></div>' +
           '<span class="bar"><i style="width:' + pc.toFixed(1) + '%"></i></span>' +
-          (s.turned ? '<div class="muted small turned-note">' + s.turned + ' turned in · ' + tp.toFixed(1) + '%</div>' : '') + '</div>';
+          (s.turned ? '<div class="muted small turned-note">' + ctx.U.fmt(s.turned) + ' turned in · ' + tp.toFixed(1) + '%</div>' : '') + '</div>';
       }).join('') || '<div class="empty">—</div>';
       el.querySelectorAll('.prof-set').forEach(function (elm) {
         elm.addEventListener('click', function () {
@@ -94,6 +94,13 @@ async function openProfile(accountId) {
       if (feb) feb.addEventListener('click', function () { openFavManager(accountId, p.favorites || []); });
       var ptb = box.querySelector('#profTradeBtn');
       if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
+      /* Vault cards + Best pull open the card modal, like card faces everywhere else */
+      box.querySelectorAll('.prof-fav').forEach(function (elm) {
+        elm.style.cursor = 'pointer';
+        elm.addEventListener('click', function () { ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
+      });
+      var pb = box.querySelector('.prof-best');
+      if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { ctx.openCardModal(best.set.id, best.card.id); }); }
     });
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
 }
@@ -233,13 +240,17 @@ function openPlayerSet(accountId, displayName, setId, collection) {
     (cards.length ? '<div class="prof-favs">' + cards.map(function (card) {
       var e = owned[card.id];
       var v=(e.variants||[])[0];
-      return '<div class="prof-fav">' + CPS.cards.render(set,card,{holo:e.h>0,variant:v&&{tier:v.tier,serial:v.serial}}) +
+      return '<div class="prof-fav" data-fav-set="' + ctx.esc(set.id) + '" data-fav-card="' + ctx.esc(card.id) + '" data-fav-holo="' + (e.h > 0 ? '1' : '0') + '">' + CPS.cards.render(set,card,{holo:e.h>0,variant:v&&{tier:v.tier,serial:v.serial}}) +
         '<div class="prof-fav-cap"><b>' + ctx.esc(card.name) + '</b>' +
         '<span class="muted small">#' + ctx.U.pad(card.num, set.numWidth) + ' \u00b7 ' + ctx.rarityOf(card.rarity).label +
         (e.h > 0 ? ' \u00b7 \u2726 holo' : '') + ' \u00b7 \u00d7' + e.n + '</span></div></div>';
     }).join('') + '</div>' : '<div class="empty">No cards in this set yet.</div>') +
     '</div>', function (box) {
       box.querySelector('#pcBackBtn').addEventListener('click', function () { openProfile(accountId); });
+      box.querySelectorAll('.prof-fav').forEach(function (elm) {
+        elm.style.cursor = 'pointer';
+        elm.addEventListener('click', function () { ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1'); });
+      });
     });
 }
 
