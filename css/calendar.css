@@ -14,6 +14,11 @@
 .card[data-set="calendar"] .cf-foot { display: none; }
 .card[data-set="calendar"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #e9e9e9; }
 
+/* Face-down, the back's inner frame (.cb) must curve with the card edge:
+   concentric radius = card radius 9.5% - the back's 4cqw padding = 5.5cqw
+   (the generic .cb radius, 3.5cqw, is too tight at this card radius). */
+.card[data-set="calendar"] .cb { border-radius: 5.5cqw; }
+
 /* pack skin "calendar": wall-calendar page - warm paper with a red date-header band (class pack-skin-calendar) */
 .pack-skin-calendar .pack-top {
   background:
