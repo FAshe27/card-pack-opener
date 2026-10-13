@@ -36,3 +36,17 @@
 
 /* Phones: the profile set grid goes single-column so set names have room */
 @media (max-width: 560px) { .prof-sets.cols2 { grid-template-columns: 1fr; } }
+
+/* ---------- profile hub + trophy case (2026-10-13) ---------- */
+.prof-nav { display: grid; gap: 8px; margin-top: 14px; }
+.prof-nav-btn { width: 100%; margin: 0; padding: 12px 14px; font-size: 1rem; text-align: left; }
+.prof-nav-btn .muted { float: right; }
+.prof-back { margin: 0 0 10px; }
+.trophy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 16px 10px; margin-top: 12px; }
+.trophy { text-align: center; min-width: 0; }
+.trophy-medal { width: 84px; height: 84px; margin: 0 auto; border-radius: 50%; border: 4px solid #8a8f98; background: var(--panel2); display: flex; align-items: center; justify-content: center; font-size: 2.3rem; }
+.trophy-medal.prism { border-color: transparent; background: linear-gradient(var(--panel2), var(--panel2)) padding-box, conic-gradient(#ff4fa3, #ffb21e, #38c97f, #3f8cff, #b35cff, #ff4fa3) border-box; }
+.trophy-img { width: 84px; height: 84px; margin: 0 auto; display: block; border-radius: 20px; border: 4px solid #8a8f98; object-fit: cover; background: var(--panel2); }
+.trophy.locked .trophy-medal, .trophy.locked .trophy-img { filter: grayscale(1); opacity: .55; }
+.trophy-title { font-weight: 700; font-size: .85rem; margin-top: 8px; }
+.trophy-desc { color: var(--muted); font-size: .75rem; margin-top: 2px; }
