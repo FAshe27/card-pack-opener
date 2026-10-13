@@ -1,8 +1,10 @@
 /* Calendar set: square date tiles (class pack-skin-calendar, data-set="calendar").
    The card IS the tile - full-bleed, zero text chrome (no title/subtitle/details/
    footer/rarity frame); name/subtitle/details/rarity stay in the card modal.
-   Rarity reads via a rarity-colored outer glow. */
-.card[data-set="calendar"] { aspect-ratio: 1/1; border-radius: 13.7%;
+   Rarity reads via a rarity-colored outer glow. Card radius 9.5% is
+   concentric with the tile art's rarity border (7% radius at 2.5% inset),
+   so the card edge and the border curve parallel each other. */
+.card[data-set="calendar"] { aspect-ratio: 1/1; border-radius: 9.5%;
   box-shadow: 0 0 26px 3px color-mix(in srgb, var(--rc) 55%, transparent); }
 .card[data-set="calendar"] .front { padding: 0; background: #e9e9e9; }
 .card[data-set="calendar"] .cf { padding: 0; gap: 0; background: #e9e9e9; border-radius: inherit; overflow: hidden; }
