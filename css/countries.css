@@ -19,7 +19,6 @@
 .pack-skin-countries .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(212,175,55,.42) 4px 6px, rgba(255,255,255,.14) 6px 9px); }
 .pack-skin-countries .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(120,90,20,.5) 4px 6px, rgba(255,255,255,.08) 6px 9px); }
 .pack-skin-countries .pack-top::after { border-bottom-color: rgba(255,220,140,.6); }
-.pack-skin-countries .pack-code { color: #ffe9b0; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(212,175,55,.85); }
 .pack-skin-countries .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,240,200,.55), rgba(20,40,80,.94) 72%);
   border-color: rgba(255,220,140,.85); box-shadow: 0 0 26px rgba(212,175,55,.6), inset 0 0 18px rgba(160,200,255,.28); text-shadow: 0 0 16px rgba(255,220,140,.9); }
 .pack-skin-countries .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(212,175,55,.85), 0 2px 8px rgba(0,0,0,.65); }
