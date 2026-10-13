@@ -306,3 +306,56 @@
     prizeHtml: prizeHtml
   };
 })(window.CPS);
+
+/* --- SPIN x10 (migration 128): one server call simulates 10 spins; the
+   wheel plays ONE visual spin (the last result's hop chain), then a
+   summary popup lists everything won. State lives in app.js; this
+   module drives it through CPS.appCtx like the other feature modules. */
+(function (CPS) {
+  function start() {
+    var A = CPS.appCtx; if (!A) return;
+    var S = A.S;
+    if (S.spinning || S.autospin || A.isLocked()) return;
+    if (A.spinCount() < 10) { A.toast('Multi-spin needs 10 spin tickets.', 'warn'); A.audio.error(); return; }
+    var cfg = S._wheelCfg || A.wheelConfig();
+    if (!cfg || !cfg.wheels.length) { A.toast("The wheel isn't ready yet.", 'warn'); return; }
+    S.spinning = true;
+    S._wheelEnd = null;
+    CPS.wheel.draw(document.getElementById('wheelCanvas'), cfg.wheels[0], 0);
+    var nm = document.getElementById('wheelName'); if (nm) nm.textContent = cfg.wheels[0].name;
+    A.renderWheel();
+    CPS.cloud.call('spin_wheel_multi', { p_count: 10 }).then(function (out) {
+      S.spins = out.spins_left;
+      A.refreshQuests();
+      A.renderWheel();
+      var pn = out.packs_now || {};
+      Object.keys(pn).forEach(function (sid) { var st = window.CardSets.get(sid); if (st) A.ps(st).packs = pn[sid]; });
+      if (out.tokens_won > 0 && CPS.games) CPS.games.setTokens(out.tokens_now);
+      var results = out.results || [], last = results[results.length - 1] || {};
+      return CPS.wheel.playHops(document.getElementById('wheelCanvas'), cfg, last.hops || [], 1).then(function (endState) {
+        var prize = last.prize || {}, isTok = prize.kind === 'tokens', isCred = prize.kind === 'credit';
+        var pset = !isTok && !isCred && prize.set_id ? window.CardSets.get(prize.set_id) : null;
+        if (endState) S._wheelEnd = { wheelId: endState.wheelId, key: endState.key, rot: endState.rotation, resultHtml: CPS.wheel.prizeHtml(prize, pset && pset.name) };
+        A.audio.coin();
+        S.spinning = false;
+        A.renderWheel();
+        A.renderPacksSide();
+        showResults(out);
+      });
+    }).catch(function (e) { S.spinning = false; A.renderWheel(); A.cloudError(e); });
+  }
+  function showResults(out) {
+    var A = CPS.appCtx, bySet = out.packs_by_set || {}, rows = '';
+    Object.keys(bySet).sort().forEach(function (sid) {
+      var st = window.CardSets.get(sid);
+      rows += '<div class="multi-row"><span>' + ((st && st.pack && st.pack.emblem) || '🎁') + ' ' + A.esc(st ? st.name : sid) + ' packs</span><b>×' + bySet[sid] + '</b></div>';
+    });
+    if (out.tokens_won > 0) rows += '<div class="multi-row"><span>🪙 Arcade tokens</span><b>×' + out.tokens_won + '</b></div>';
+    if (out.credit_won > 0) rows += '<div class="multi-row"><span>💵 Store Credit</span><b>$' + out.credit_won + '</b></div>';
+    if (!rows) rows = '<div class="multi-row"><span>No prizes this time.</span></div>';
+    A.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<div class="multi-results"><h3>🎉 ' + (out.spins_used || 10) + ' spins — you got:</h3>' + rows +
+      '<button class="btn primary" data-close style="margin-top:16px">Nice!</button></div>');
+  }
+  CPS.wheelMulti = { start: start };
+})(window.CPS);
