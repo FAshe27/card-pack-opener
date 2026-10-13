@@ -27,6 +27,15 @@
     return !!(m && !m.classList.contains('hidden'));
   }
 
+  function deliver(queue) {
+    if (!queue.length) return;
+    if (modalBusy()) { /* don't stomp an open dialog — keep re-checking until it's free */
+      setTimeout(function () { deliver(queue); }, 4000);
+      return;
+    }
+    showPopups(queue);
+  }
+
   function turnedCount(set) {
     var n = 0;
     set.cards.forEach(function (c) { if (ctx.isTurned(set.id, c.id)) n++; });
@@ -105,11 +114,7 @@
       try { await ctx.refreshCloud(); } catch (e) { /* pop-up still tells the truth */ }
       running = false;
 
-      if (modalBusy()) { /* don't stomp an open dialog; prizes are already in */
-        if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; showPopups(queue); }, 4000);
-        return;
-      }
-      showPopups(queue);
+      deliver(queue);
     } catch (e) { running = false; /* rewards must never break the app */ }
   }
 
