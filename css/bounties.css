@@ -74,3 +74,7 @@
 /* Cancel/claim modal buttons sit in a .row — the global .btn.danger margin-top
    misaligns them, so neutralize it there. */
 .row .btn.danger { margin-top: 0; }
+
+/* Offer cards as clickable faces (board + claim modal) */
+.bounty-offerfaces { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.bounty-offerfaces .bounty-want { width: 104px; flex: none; }
