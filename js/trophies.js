@@ -1,118 +1,161 @@
-/* js/trophies.js — Trophy Case rendering (profile overhaul, migration 130).
-   Consumes CPS.appCtx; registers CPS.trophies. The server returns raw facts
-   (cps_get_trophies); tier tables, titles, and descriptions live here.
-
-   Franklin's trophy art: drop square images in images/trophies/ and fill in
-   ART below (key -> path). Until a key has art, that trophy renders as a
-   placeholder medallion (emoji in a tier-colored ring). Set-completion
-   trophies never need art: they reuse the set's own pack emblem in a gold
-   ring. The case is display-only — there is nothing to edit or claim. */
-(function (CPS) {
+/* Trophy Case (js/trophies.js) — v2: the WHOLE catalog is visible.
+   Earned trophies are lit with their earn date underneath; unearned ones
+   are greyed with progress. All facts come from cps_get_trophies
+   (migration 130 + dates/progress from 132); titles, tiers, and layout
+   live here. Tier lines show EVERY tier as its own tile. */
+(function () {
   'use strict';
-  var ctx = CPS.appCtx;
 
+  /* Trophy art: when Franklin's images land in images/trophies/, put the
+     path here per key — that tile swaps its placeholder medallion for the
+     real art. Set trophies never need art (they use the set emblem). */
   var ART = {
     turned_1000: '', turned_2500: '', turned_5000: '', turned_10000: '',
     packs_10: '', packs_100: '', packs_1000: '', packs_2500: '', packs_5000: '', packs_10000: '',
     oneofone: '', cotd: ''
   };
 
-  /* Ring color per tier index within a line: stone, bronze, silver, gold,
-     ice, prismatic. */
-  var RINGS = ['#8a8f98', '#cd7f32', '#b8c0cc', '#ffb21e', '#7ee8fa', 'prism'];
+  var TURNED_TIERS = [
+    { n: 1000, ring: '#cd7f32' },   // bronze
+    { n: 2500, ring: '#b8c0cc' },   // silver
+    { n: 5000, ring: '#ffb21e' },   // gold
+    { n: 10000, ring: 'prism' }     // prismatic
+  ];
+  var PACK_TIERS = [
+    { n: 10, ring: '#8a8f98' },     // stone
+    { n: 100, ring: '#cd7f32' },    // bronze
+    { n: 1000, ring: '#b8c0cc' },   // silver
+    { n: 2500, ring: '#ffb21e' },   // gold
+    { n: 5000, ring: '#7ee8fa' },   // ice
+    { n: 10000, ring: 'prism' }     // prismatic
+  ];
 
-  var LINES = {
-    turned: {
-      emoji: '♻️', tiers: [1000, 2500, 5000, 10000],
-      title: function (t) { return ctx.U.fmt(t) + ' Cards Turned In'; },
-      desc: function (total) { return ctx.U.fmt(total) + ' turned in'; }
-    },
-    packs: {
-      emoji: '🎁', tiers: [10, 100, 1000, 2500, 5000, 10000],
-      title: function (t) { return ctx.U.fmt(t) + ' Packs Opened'; },
-      desc: function (total) { return ctx.U.fmt(total) + ' opened'; }
+  function U() { return (window.CPS && CPS.appCtx && CPS.appCtx.U) || null; }
+  function esc(s) { var u = U(); return u ? u.esc(s) : String(s == null ? '' : s); }
+  function fmt(n) { var u = U(); return u ? u.fmt(n) : String(n); }
+
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var s = String(iso);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+      var m = s.split('-');
+      return MONTHS[+m[1] - 1] + ' ' + (+m[2]) + ', ' + m[0];
     }
-  };
-
-  function medal(emoji, ring, locked) {
-    var prism = ring === 'prism';
-    return '<div class="trophy-medal' + (prism ? ' prism' : '') + '"' +
-      (prism ? '' : ' style="border-color:' + ring + '"') + '><span>' + emoji + '</span></div>';
+    var d = new Date(s);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', year: 'numeric' });
   }
 
-  function visual(artKey, emoji, ring, locked) {
+  function medal(artKey, emoji, ring) {
     var art = ART[artKey];
-    if (art) {
-      var prism = ring === 'prism';
-      return '<img class="trophy-img" src="' + ctx.esc(art) + '" alt=""' +
-        (prism ? '' : ' style="border-color:' + ring + '"') + '>';
-    }
-    return medal(emoji, ring, locked);
+    if (art) return '<div class="trophy-medal art"><img src="' + esc(art) + '" alt=""></div>';
+    if (ring === 'prism') return '<div class="trophy-medal prism"><span>' + emoji + '</span></div>';
+    return '<div class="trophy-medal" style="border-color:' + ring + '"><span>' + emoji + '</span></div>';
+  }
+  function emblemMedal(emblem) {
+    return '<div class="trophy-medal emblem" style="border-color:#ffb21e"><span>' + esc(emblem || '🏆') + '</span></div>';
   }
 
-  function tile(o) {
-    return '<div class="trophy' + (o.locked ? ' locked' : '') + '">' + o.img +
-      '<div class="trophy-title">' + ctx.esc(o.title) + '</div>' +
-      '<div class="trophy-desc">' + ctx.esc(o.desc) + '</div></div>';
+  function tile(medalHtml, title, descHtml, dateIso, locked) {
+    var date = !locked && dateIso ? fmtDate(dateIso) : '';
+    return '<div class="trophy' + (locked ? ' locked' : '') + '">' + medalHtml +
+      '<div class="trophy-title">' + esc(title) + '</div>' +
+      '<div class="trophy-desc">' + descHtml + '</div>' +
+      (date ? '<div class="trophy-date">Earned ' + esc(date) + '</div>' : '') + '</div>';
   }
 
-  function tierTiles(key, total) {
-    var L = LINES[key], out = [], earned = 0, i;
-    for (i = 0; i < L.tiers.length; i++) if (total >= L.tiers[i]) earned = L.tiers[i];
-    function ringFor(t) { return RINGS[Math.min(L.tiers.indexOf(t), RINGS.length - 1)]; }
-    if (earned) {
-      out.push(tile({
-        img: visual(key + '_' + earned, L.emoji, ringFor(earned)),
-        title: L.title(earned), desc: L.desc(total)
-      }));
-    }
-    var next = null;
-    for (i = 0; i < L.tiers.length; i++) if (L.tiers[i] > earned) { next = L.tiers[i]; break; }
-    if (next != null && total > 0) {
-      out.push(tile({
-        locked: true,
-        img: visual(key + '_' + next, L.emoji, ringFor(next), true),
-        title: L.title(next), desc: ctx.U.fmt(total) + ' / ' + ctx.U.fmt(next)
-      }));
-    }
-    return out;
+  function tierTiles(tiers, dates, total, keyPrefix, emoji, earnedNoun, titleNoun) {
+    var earned = 0;
+    var html = tiers.map(function (t) {
+      var isEarned = total >= t.n;
+      if (isEarned) earned++;
+      var desc = isEarned ? fmt(total) + ' ' + earnedNoun : fmt(total) + ' / ' + fmt(t.n);
+      return tile(medal(keyPrefix + '_' + t.n, emoji, t.ring), fmt(t.n) + ' ' + titleNoun,
+        desc, dates ? dates[String(t.n)] : null, !isEarned);
+    }).join('');
+    return { html: html, earned: earned };
   }
 
-  /* data = the cps_get_trophies payload. Returns the case's inner HTML. */
-  function render(data) {
-    if (!data) return '<div class="empty">Trophies unavailable right now.</div>';
-    var tiles = [];
-    (data.sets || []).forEach(function (s) {
-      var set = window.CardSets.get(s.set_id);
-      var emblem = (set && set.pack && set.pack.emblem) || '🏆';
-      tiles.push(tile({
-        img: medal(emblem, '#ffb21e'),
-        title: s.set_name, desc: '100% turned in'
-      }));
+  function render(t) {
+    t = t || {};
+    var doneSets = {};   // set_id -> completion date (or null pre-132)
+    (t.sets || []).forEach(function (s) { doneSets[s.set_id] = s.at || null; });
+    var prog = {};       // set_id -> {turned, total}
+    (t.progress || []).forEach(function (p) { prog[p.set_id] = p; });
+    var hasProgress = !!t.progress;
+
+    /* ---- set completions: every set on the site ---- */
+    var setRows = [];
+    if (window.CardSets && window.CardSets.all) {
+      window.CardSets.all().forEach(function (set) {
+        if (!set || set.id === 'jumbled') return;
+        var p = prog[set.id];
+        var total = p ? p.total : (set.cards ? set.cards.length : 0);
+        setRows.push({ id: set.id, name: set.name || set.id, emblem: set.emblem, turned: p ? p.turned : 0, total: total, done: set.id in doneSets, at: doneSets[set.id] });
+      });
+    }
+    // Sets the server reports but the registry doesn't know (shouldn't
+    // happen) still show as earned rather than vanishing.
+    (t.sets || []).forEach(function (s) {
+      if (!setRows.some(function (r) { return r.id === s.set_id; })) {
+        setRows.push({ id: s.set_id, name: s.set_name || s.set_id, emblem: null, turned: s.turned, total: s.total, done: true, at: s.at || null });
+      }
     });
-    tiles = tiles.concat(tierTiles('turned', data.turned_total || 0));
-    tiles = tiles.concat(tierTiles('packs', data.packs_opened || 0));
-    if (data.oneofone) {
-      tiles.push(tile({
-        img: visual('oneofone', '💠', 'prism'),
-        title: 'One-of-One Pull',
-        desc: (data.oneofone.card_name || 'A 1-of-1') +
-          (data.oneofone.set_name ? ' · ' + data.oneofone.set_name : '')
-      }));
+    setRows.sort(function (a, b) {
+      if (a.done !== b.done) return a.done ? -1 : 1;
+      if (a.done && b.done) return String(b.at || '').localeCompare(String(a.at || ''));
+      var pa = a.total ? a.turned / a.total : 0, pb = b.total ? b.turned / b.total : 0;
+      if (pb !== pa) return pb - pa;
+      return a.name.localeCompare(b.name);
+    });
+    var earnedSets = 0;
+    var setsHtml = setRows.map(function (r) {
+      if (r.done) {
+        earnedSets++;
+        return tile(emblemMedal(r.emblem), r.name, '100% turned in', r.at, false);
+      }
+      if (!hasProgress) return '';  // pre-132 server: unearned sets unknown
+      var pct = r.total ? Math.floor(1000 * r.turned / r.total) / 10 : 0;
+      var desc = fmt(r.turned) + ' / ' + fmt(r.total) + ' turned in · ' + pct + '%' +
+        '<span class="trophy-bar"><i style="width:' + Math.min(100, pct) + '%"></i></span>';
+      return tile(emblemMedal(r.emblem), r.name, desc, null, true);
+    }).join('');
+
+    /* ---- tiered lines ---- */
+    var turned = tierTiles(TURNED_TIERS, t.turned_dates, t.turned_total || 0, 'turned', '♻️', 'turned in', 'Cards Turned In');
+    var packs = tierTiles(PACK_TIERS, t.packs_dates, t.packs_opened || 0, 'packs', '🎁', 'opened', 'Packs Opened');
+
+    /* ---- special ---- */
+    var specialHtml = '', specialEarned = 0;
+    if (t.oneofone) {
+      specialEarned++;
+      var oo = t.oneofone;
+      var desc = 'You pulled ' + esc(oo.card_name || 'a one-of-one') + (oo.set_name ? ' · ' + esc(oo.set_name) : '') +
+        (oo.serial ? ' · #' + esc(oo.serial) + '/1' : '');
+      specialHtml += tile(medal('oneofone', '💠', 'prism'), 'One-of-One Pull', desc, oo.at, false);
+    } else {
+      specialHtml += tile(medal('oneofone', '💠', 'prism'), 'One-of-One Pull', 'Pull a One-of-One variant', null, true);
     }
-    if ((data.cotd_days || 0) > 0) {
-      tiles.push(tile({
-        img: visual('cotd', '⭐', '#ffb21e'),
-        title: 'Card of the Day',
-        desc: 'Pulled Card of the Day on ' + ctx.U.fmt(data.cotd_days) +
-          (data.cotd_days === 1 ? ' day' : ' days')
-      }));
+    var cotdDays = t.cotd_days || 0;
+    if (cotdDays > 0) {
+      specialEarned++;
+      specialHtml += tile(medal('cotd', '⭐', '#ffb21e'), 'Card of the Day',
+        'Pulled Card of the Day on ' + fmt(cotdDays) + (cotdDays === 1 ? ' day' : ' days'), t.cotd_first, false);
+    } else {
+      specialHtml += tile(medal('cotd', '⭐', '#ffb21e'), 'Card of the Day', 'Pull the Card of the Day', null, true);
     }
-    if (!tiles.length) {
-      return '<div class="empty">No trophies yet — complete a set or hit a milestone to earn your first.</div>';
-    }
-    return '<div class="trophy-grid">' + tiles.join('') + '</div>';
+
+    var totalTiles = setRows.length + TURNED_TIERS.length + PACK_TIERS.length + 2;
+    var earnedTotal = earnedSets + turned.earned + packs.earned + specialEarned;
+
+    return '<div class="trophy-count">' + earnedTotal + ' earned · ' + (totalTiles - earnedTotal) + ' to go</div>' +
+      '<h4 class="trophy-sec">Set completions — 100% turned in</h4><div class="trophy-grid">' + setsHtml + '</div>' +
+      '<h4 class="trophy-sec">Cards turned in</h4><div class="trophy-grid">' + turned.html + '</div>' +
+      '<h4 class="trophy-sec">Packs opened</h4><div class="trophy-grid">' + packs.html + '</div>' +
+      '<h4 class="trophy-sec">Special</h4><div class="trophy-grid">' + specialHtml + '</div>';
   }
 
-  CPS.trophies = { render: render };
-})(window.CPS = window.CPS || {});
+  window.CPS = window.CPS || {};
+  CPS.trophies = { render: render, TURNED_TIERS: TURNED_TIERS, PACK_TIERS: PACK_TIERS, ART: ART };
+})();
