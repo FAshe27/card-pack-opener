@@ -4,7 +4,7 @@
    pre-flip they show the pack's set back exactly like every other card —
    the jackpot is only revealed on flip. Registers as CPS.slips. */
 (function (CPS) {
-  function isSlip(p) { return !!(p && (p.ticket || p.tokens)); }
+  function isSlip(p) { return !!(p && (p.ticket || p.tokens || p.credit)); }
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
