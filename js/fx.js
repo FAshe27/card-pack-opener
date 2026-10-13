@@ -57,9 +57,20 @@
     setTimeout(function () { d.remove(); }, ms || 900);
   }
   function banner(text, cls, ms) {
+    /* Banners share one centered flex-column wrapper so simultaneous
+       banners (a slip + a legendary, a hero pack + a chase…) STACK
+       instead of rendering on top of each other. */
+    var wrap = document.querySelector('.fx-banners');
+    if (!wrap) {
+      wrap = document.createElement('div'); wrap.className = 'fx-banners';
+      document.body.appendChild(wrap);
+    }
     var d = document.createElement('div'); d.className = 'fx-banner ' + (cls || '');
-    d.innerHTML = '<span>' + CPS.util.esc(text) + '</span>'; document.body.appendChild(d);
-    setTimeout(function () { d.remove(); }, ms || 2200);
+    d.innerHTML = '<span>' + CPS.util.esc(text) + '</span>'; wrap.appendChild(d);
+    setTimeout(function () {
+      d.remove();
+      if (!wrap.children.length && wrap.parentNode) wrap.remove();
+    }, ms || 2200);
   }
   function center(el) { var r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
   CPS.fx = { burst: burst, confetti: confetti, flash: flash, banner: banner, center: center };
