@@ -1721,14 +1721,12 @@
           (x.is_me ? '' : '<button class="btn small ghost" data-act="' + (x.disabled ? 'enable' : 'disable') + '">' + (x.disabled ? 'Enable' : 'Disable') + '</button>' +
             '<button class="btn small ghost danger-text" data-act="delete">Delete</button>') + '</div></div>';
       }).join('') || '<div class="empty">No accounts yet.</div>';
-      // Populate grant recipient dropdowns
+      // Populate grant recipient dropdowns (admins included; pick kept across re-renders)
       var grantOpts = '<option value="everyone">Everyone (non-admin)</option>' +
-        accts.filter(function(x) { return !x.is_admin; }).map(function(x) {
-          return '<option value="' + esc(x.id) + '">' + esc(x.display_name) + '</option>';
-        }).join('');
+        accts.map(function(x) { return '<option value="' + esc(x.id) + '">' + esc(x.display_name) + (x.is_admin ? ' (Admin)' : '') + (x.is_me ? ' (You)' : '') + '</option>'; }).join('');
       ['grantPacksWho', 'grantSpinsWho', 'grantTokensWho', 'grantCreditWho', 'notifyWho'].forEach(function(id) {
         var sel = document.getElementById(id);
-        if (sel) sel.innerHTML = grantOpts;
+        if (sel) { var p = sel.value; sel.innerHTML = grantOpts; if (p && grantOpts.indexOf('value="' + p + '"') > -1) sel.value = p; }
       });
     } catch (e) { cloudError(e); }
   }
