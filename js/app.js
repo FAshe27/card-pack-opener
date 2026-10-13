@@ -668,6 +668,7 @@
       vb2.classList.toggle('hidden', !velig);
       vb2.textContent = 'Turn in all duplicates in this set (' + velig + ')';
     }
+    if (CPS.turninAll) CPS.turninAll.refresh();
   }
 
   /* Unflagged cards in this set holding at least 2 fungible copies on hand. */
@@ -2310,6 +2311,6 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder };
+    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
