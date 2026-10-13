@@ -172,9 +172,18 @@
         '<div class="tradein-rows">' + rows + '</div>';
       box.querySelectorAll('[data-dupe-sell]').forEach(function (btn) {
         btn.addEventListener('click', async function () {
+          var tier = btn.getAttribute('data-dupe-sell');
+          var t = null; DUPE_CREDIT_TIERS.forEach(function (x) { if (x.tier === tier) t = x; });
+          var n = dupeCounts()[tier] || 0, credit = t ? Math.floor(n / t.rate) : 0;
+          if (!t || credit < 1) return;
           btn.disabled = true;
+          var ok = await ctx.confirmDialog('Sell duplicates?',
+            '<p>Sell <b>' + (credit * t.rate) + ' ' + t.label + '</b> duplicate' + (credit * t.rate === 1 ? '' : 's') + ' for <b>$' + credit + ' Store Credit</b>?</p>' +
+            '<p class="muted">The cards are removed from your collection. <b>There is no undo.</b> Numbered and vaulted copies are never sold.</p>',
+            'Sell them');
+          if (!ok) { btn.disabled = false; return; }
           try {
-            var r = await CPS.cloud.call('trade_dupes_credit', { p_tier: btn.getAttribute('data-dupe-sell') });
+            var r = await CPS.cloud.call('trade_dupes_credit', { p_tier: tier });
             ctx.toast('Sold ' + r.dupes_used + ' dupes for $' + r.credit + ' Store Credit!', 'good');
             ctx.audio.coin();
             var balEl = document.getElementById('shopBalance');
