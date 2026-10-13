@@ -929,7 +929,10 @@
         '<h2>Notifications</h2>' +
         (items.length ? '<div class="notif-list">' + items.map(function (it) {
           return '<button class="notif' + (it.read ? '' : ' unread') + '" data-notif="' + it.id + '"' +
-            (it.view ? ' data-view="' + esc(it.view) + '"' : '') + '>' +
+            (it.view ? ' data-view="' + esc(it.view) + '"' : '') +
+            (it.meta && it.meta.set_id ? ' data-nset="' + esc(it.meta.set_id) + '" data-ncard="' + esc(it.meta.card_id) + '"' +
+              ' data-nholo="' + (it.meta.holo ? '1' : '0') + '"' +
+              (it.meta.tier ? ' data-ntier="' + esc(it.meta.tier) + '" data-nserial="' + it.meta.serial + '"' : '') : '') + '>' +
             '<span class="notif-icon">' + (NOTIF_KIND_ICON[it.kind] || '🔔') + '</span>' +
             '<span class="notif-text">' + esc(it.text) +
             '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
@@ -943,7 +946,12 @@
               try { await CPS.cloud.call('read_notifications', { p_ids: [id] }); } catch (e) {}
               el.classList.remove('unread');
               refreshNotifBadge();
-              if (view) { closeModal(); showView(view); }
+              if (el.dataset.nset) {
+                var vt = el.dataset.ntier;
+                closeModal();
+                openCardModal(el.dataset.nset, el.dataset.ncard, el.dataset.nholo === '1',
+                  vt ? { tier: vt, serial: parseInt(el.dataset.nserial, 10) } : null);
+              } else if (view) { closeModal(); showView(view); }
             });
           });
           var ra = box.querySelector('#notifReadAll');
