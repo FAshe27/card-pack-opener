@@ -14,21 +14,19 @@
     mode: 'locked',         // 'cloud' (logged in) or 'locked' (login screen) — the site is online-only
     account: null,          // cloud: {id, display_name, is_admin}
     onlineSets: [],         // cloud: set ids that exist on the server
-    guestImported: false,
     busy: false
   };
 
   /* --- helpers */
   function rarityOf(key) { return R.RARITIES[R.INDEX[key]]; }
   function save() {
-    if (S.mode === 'cloud') return Promise.resolve(); // the server is the source of truth
-    return Store.savePlayer(S.player).catch(function (e) { console.warn(e); });
+    return Promise.resolve(); // online-only: the server is the source of truth
   }
   function isCloud() { return S.mode === 'cloud'; }
   function isLocked() { return S.mode === 'locked'; }
   
   function canAdminArea() { return isAdmin(); }
-  function devOn() { return !!S.dev && canAdminArea(); } // Dev tools only ever show for admins (or offline mode)
+  function devOn() { return !!S.dev && canAdminArea(); } // Dev tools only ever show for admins
   function isAdmin() { return isCloud() && S.account && S.account.is_admin; }
   function ps(set) {
     set = set || S.set;
@@ -84,7 +82,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -137,7 +135,6 @@
     (state.favorites || []).forEach(function (f) { S.favorites[f[0] + ':' + f[1]] = true; });
     S.turnedIn = {};
     (state.turn_ins || []).forEach(function (f) { S.turnedIn[f[0] + ':' + f[1]] = true; });
-    S.guestImported = !!state.guest_imported;
     S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
     if (CPS.milestones) CPS.milestones.check();
   }
@@ -274,6 +271,7 @@
   function selectSet(id) {
     var set = id === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : window.CardSets.get(id);
     if (!set) return;
+    if (S.opening && !S.opening.finished) { toast('Finish this pack first — its cards are already in your collection.', 'warn'); return; }
     S.set = set; Store.setPref('set', id);
     closeSetDD();
     S.coll.rarity = '';
@@ -352,7 +350,7 @@
         (st.packs ? 'Click to open and tear a pack' : 'No packs left') + '">' + CPS.cards.pack(set, 'float') + '</div>' +
       '<div class="idle-msg">' + (st.packs
         ? '<b>' + st.packs + ' pack' + (st.packs === 1 ? '' : 's') + ' ready.</b> Click the pack (or press <kbd>Space</kbd>) to open.'
-        : '<b>Out of packs!</b> Win, earn, or beg for packs and redeem them!') + '</div>';
+        : '<b>Out of packs!</b> Win, earn, or beg for more packs!') + '</div>';
     $('#stageIdle').classList.remove('hidden');
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
@@ -365,7 +363,7 @@
     if (S.set.id === 'jumbled') { if (typeof CPS !== 'undefined' && CPS.jumbled) CPS.jumbled.open(); return; }
     if (isLocked()) { showGate({}); return; }
     var set = S.set, st = ps();
-    if (st.packs <= 0) { toast('Out of packs! Win, earn, or beg for packs and redeem them!', 'warn'); audio.error(); return; }
+    if (st.packs <= 0) { toast('Out of packs! Win, earn, or beg for more packs!', 'warn'); audio.error(); return; }
     var pulls, seen = {}, now = Date.now(), server = null;
     if (isCloud()) {
       if (S.onlineSets.indexOf(set.id) < 0) { toast("This set isn't on the server yet. An admin can upload it from the Admin tab.", 'warn', 5000); return; }
@@ -379,8 +377,6 @@
         var card = set.byId.get(c.id) || { id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '', details: '(This card is newer than your copy of the set file. Refresh the page.)', image: '' };
         return { card: card, holo: !!c.holo, serverNew: !!c.new, variant: c.variant || null, serial: c.serial || null };
       });
-    } else {
-      pulls = CPS.packs.open(set);
     }
     var bc = st.stats.best && set.byId.get(st.stats.best.id);
     var curBest = bc ? CPS.packs.score(bc, st.stats.best.holo) : -1, prevBest = curBest, bestPull = null;
@@ -427,7 +423,7 @@
     if (S.busy) return;
     if (o && !o.finished) { if (!o.torn) tear(); return; } // a pack is already out: tear it
     if (isLocked()) { showGate({}); return; }
-    if (ps().packs <= 0) { toast('Out of packs! Win, earn, or beg for packs and redeem them!', '', 3500); return; }
+    if (ps().packs <= 0) { toast('Out of packs! Win, earn, or beg for more packs!', '', 3500); return; }
     if (await startOpen()) { await U.sleep(320); if (S.opening && !S.opening.torn) tear(); }
   }
 
@@ -495,7 +491,8 @@
     el.classList.remove('tease'); el.classList.add('flipped');
     audio.flip();
     if (CPS.slips.isSlip(p)) {
-      setTimeout(function () { el.classList.add('glow'); fx.banner(CPS.slips.banner(p), 'ticket', 2000); }, 300);
+      var multiSlip = o.quick && o.pulls.filter(function (x) { return CPS.slips.isSlip(x); }).length > 1; /* Quick Open with several slips: the summary line reports the totals — don't strobe a banner per slip */
+      setTimeout(function () { el.classList.add('glow'); if (!multiSlip) fx.banner(CPS.slips.banner(p), 'ticket', 2000); }, 300);
     } else {
       setTimeout(function () { el.classList.add('glow'); audio.reveal(p.card.rarity); flair(el, p); }, 300);
     }
@@ -556,7 +553,7 @@
   }
   function quickFinish() {
     var o = S.opening; if (!o || o.torn) return;
-    o.torn = true;
+    o.torn = true; o.quick = true;
     $('#stagePack').classList.add('hidden');
     if (o.hero) fx.banner('HERO PACK!', 'hero');
     buildGrid(o);
@@ -632,9 +629,8 @@
       .map(function (r) { return '<option value="' + r.key + '">' + r.label + '</option>'; }).join('');
     sel.value = f.rarity;
 
-    if (CPS.tickets) CPS.tickets.render();
     if (isCloud() && !S.myVariants) ensureVariants().then(function () {
-      if (S.view === 'collection') { if (CPS.tickets) CPS.tickets.render(); }
+      if (S.view === 'collection') renderCollection();
     });
 
     var q = f.q.trim().toLowerCase();
@@ -719,6 +715,7 @@
         '<p class="muted">Do you still want to turn these in?</p>',
         'Yes, turn in the holos too', 'Skip the holos');
     }
+    if (includeHolos === null) return; /* holo dialog dismissed = abort the whole turn-in */
     try {
       var r = await CPS.cloud.call('turn_in_dupes', { p_set: set.id, p_include_holos: includeHolos });
       await refreshCloud();
@@ -741,6 +738,7 @@
     return p;
   }
 
+  var confirmDismiss = null; /* while a confirmDialog is open, closeModal() fires this so backdrop/Escape dismiss as null (abort) instead of hanging the promise */
   function confirmDialog(title, bodyHtml, okLabel, cancelLabel) {
     return new Promise(function (resolve) {
       var done = false;
@@ -749,10 +747,11 @@
         '<div class="confirm-btns"><button class="btn" data-cx>' + esc(cancelLabel || 'Cancel') + '</button>' +
         '<button class="btn primary" data-ok>' + esc(okLabel || 'Confirm') + '</button></div>',
         function (box) {
-          function fin(v) { if (done) return; done = true; closeModal(); resolve(v); }
+          function fin(v) { if (done) return; done = true; confirmDismiss = null; closeModal(); resolve(v); }
+          confirmDismiss = function () { fin(null); };
           box.querySelector('[data-ok]').addEventListener('click', function () { fin(true); });
           box.querySelector('[data-cx]').addEventListener('click', function () { fin(false); });
-          box.querySelector('[data-close]').addEventListener('click', function () { fin(false); });
+          box.querySelector('[data-close]').addEventListener('click', function () { fin(null); });
         });
     });
   }
@@ -777,6 +776,7 @@
         '<p class="muted">Do you still want to turn these in?</p>',
         'Yes, turn in the holos too', 'Skip the holos');
     }
+    if (includeHolos === null) return; /* holo dialog dismissed = abort the whole turn-in */
     try {
       var r = await CPS.cloud.call('turn_in_all', { p_set: set.id, p_include_holos: includeHolos });
       await refreshCloud();
@@ -852,32 +852,22 @@
   function onHand(e) { return e ? Math.max(0, e.n - (e.v || 0)) : 0; }
   function onHandHolo(e) { return e ? Math.max(0, e.h - (e.vh || 0)) : 0; }
 
-  /* --- favorites */
-  var FAV_MAX = 20;
+  /* --- favorites (the Vault) */
   function favKey(setId, cardId) { return setId + ':' + cardId; }
   function isFav(setId, cardId) {
-    if (isCloud()) return !!(S.favorites && S.favorites[favKey(setId, cardId)]);
-    var p = S.player; return !!(p && p.favs && p.favs.indexOf(favKey(setId, cardId)) >= 0);
+    return !!(S.favorites && S.favorites[favKey(setId, cardId)]);
   }
   function favCount() {
-    if (isCloud()) return S.favorites ? Object.keys(S.favorites).length : 0;
-    var p = S.player; return p && p.favs ? p.favs.length : 0;
+    return S.favorites ? Object.keys(S.favorites).length : 0;
   }
   async function toggleFavorite(setId, cardId, holo) {
-    var k = favKey(setId, cardId), already = isFav(setId, cardId);
-    if (!isCloud() && !already && favCount() >= FAV_MAX) { toast('You can only favorite ' + FAV_MAX + ' cards.', 'warn'); return; }
+    var k = favKey(setId, cardId);
     if (isCloud()) {
       try {
         var r = await CPS.cloud.call('toggle_favorite', { p_set: setId, p_card: cardId });
         if (r.favorited) S.favorites[k] = true; else delete S.favorites[k];
         toast(r.favorited ? 'Vaulted a copy — it is protected now. 🔒' : 'Released a copy from your Vault.', 'good');
       } catch (e) { cloudError(e); return; }
-    } else {
-      var p = S.player; p.favs = p.favs || [];
-      var ix = p.favs.indexOf(k);
-      if (ix >= 0) p.favs.splice(ix, 1); else p.favs.push(k);
-      await save();
-      toast(ix >= 0 ? 'Removed from favorites.' : 'Added to favorites (' + p.favs.length + '/' + FAV_MAX + ').', 'good');
     }
     openCardModal(setId, cardId, holo); // re-render the modal button
     if (S.view === 'collection') renderCollection();
@@ -1382,7 +1372,7 @@
       '<div class="zoom-card">'+(owned?CPS.cards.render(set,card,variant?{variant:variant}:{holo:holo}):CPS.cards.render(set,card,{cls:'unowned'}))+'</div>' +
       '<div class="zoom-info"><div class="pill r-' + card.rarity + '">' + r.label + '</div>' +
       '<h3>' + esc(card.name) + '</h3>' +
-      (!owned ? '<div class="muted">Not collected yet \u2014 pull it from a pack!</div>' : '') +
+      (!owned && !isTurned(set.id, card.id) ? '<div class="muted">Not collected yet \u2014 pull it from a pack!</div>' : '') +
       (card.subtitle ? '<div class="muted">' + esc(card.subtitle) + '</div>' : '') +
       '<dl><dt>Number</dt><dd>#' + U.pad(card.num, set.numWidth) + ' of ' + set.cards.length + '</dd>' +
       '<dt>Set</dt><dd>' + esc(set.name) + '</dd>' +
@@ -1467,7 +1457,7 @@
           var e = pst.cards[c.id];
           if (!(e && e.n > 0) && !isTurned(sd.id, c.id)) return;
           var holo = !!(e && e.h > 0);
-          items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { holo: holo }), variant: null, holo: holo });
+          items.push({ sd: sd, c: c, html: CPS.cards.render(sd, c, { holo: holo }), variant: null, holo: holo, turned: isTurned(sd.id, c.id) });
         });
       });
       items.sort(function (a, b) { return a.c.name.localeCompare(b.c.name) || a.sd.name.localeCompare(b.sd.name); });
@@ -1477,9 +1467,9 @@
     var PAGE = 60;
     function itemsHtml(list) {
       return list.map(function (x) {
-        return '<div class="stat-gallery-item" data-set="' + esc(x.sd.id) + '" data-card="' + esc(x.c.id) + '"' +
+        return '<div class="stat-gallery-item' + (x.turned ? ' turned' : '') + '" data-set="' + esc(x.sd.id) + '" data-card="' + esc(x.c.id) + '"' +
           (x.variant ? ' data-vtier="' + esc(x.variant.tier) + '" data-vserial="' + x.variant.serial + '"' : '') +
-          ' data-holo="' + (x.holo ? '1' : '0') + '">' + x.html + '</div>';
+          ' data-holo="' + (x.holo ? '1' : '0') + '">' + x.html + (x.turned ? '<span class="badge-turned" title="Turned in — permanently collected">✓</span>' : '') + '</div>';
       }).join('');
     }
     var paged = !restoreScroll && items.length > PAGE;
@@ -1747,24 +1737,7 @@
     var b = e.target.closest('[data-act]'); if (!b) return;
     var row = b.closest('[data-acct]'), id = row.dataset.acct, name = row.dataset.name, act = b.dataset.act, r;
     try {
-      if (act === 'grant') {
-        var sid = $('.ga-set', row).value, n = parseInt($('.ga-n', row).value, 10);
-        if (!sid || !n) { toast('Pick a set and a number of packs.', 'warn'); return; }
-        r = await CPS.cloud.call('admin_grant_packs', { p_set: sid, p_packs: n, p_account: id });
-        toast((n > 0 ? 'Gave ' : 'Removed ') + Math.abs(n) + ' pack' + (Math.abs(n) === 1 ? '' : 's') + (n > 0 ? ' to ' : ' from ') + name + ' (now ' + r.packs_now + ').', 'good');
-        if (id === S.account.id) { ps({ id: sid }).packs = r.packs_now; renderPacksSide(); }
-      } else if (act === 'grantspins') {
-        var sn = parseInt($('.ga-sp', row).value, 10);
-        if (!sn) { toast('Enter a number of spins.', 'warn'); return; }
-        r = await CPS.cloud.call('admin_grant_spins', { p_account: id, p_spins: sn });
-        toast((sn > 0 ? 'Gave ' : 'Removed ') + Math.abs(sn) + ' spin' + (Math.abs(sn) === 1 ? '' : 's') + (sn > 0 ? ' to ' : ' from ') + name + ' (now ' + r.spins_now + ').', 'good');
-        if (id === S.account.id) { S.spins = r.spins_now; updateWheelBadge(); if (S.view === 'wheel') renderWheel(); }
-        renderAdmin();
-      } else if (act === 'granttokens') {
-        await CPS.admintokens.grant(row, id, name);
-      } else if (act === 'grantcredit') {
-        await CPS.admintokens.grantCredit(row, id, name);
-      } else if (act === 'rename') {
+      if (act === 'rename') {
         var nn = prompt('New display name for ' + name + ':', name); if (!nn || !nn.trim()) return;
         await CPS.cloud.call('admin_update_account', { p_account: id, p_display_name: nn.trim() });
         if (id === S.account.id) { S.account.display_name = nn.trim(); S.player.name = nn.trim(); applyPrefsUI(); }
@@ -1824,16 +1797,10 @@
     finally { btn.disabled = false; }
   }
 
-  async function switchPlayer(id) {
-    var p = await Store.loadPlayer(id); if (!p) return;
-    p.sets = p.sets || {};
-    S.player = p; Store.setActivePlayerId(id); applyPrefsUI(); resetStage(); renderView();
-  }
-
   /* --- dev mode lock */
   function requestDevUnlock() {
     var html = '<button class="modal-x" data-close aria-label="Close">×</button><h2>🔒 Unlock dev mode</h2>' +
-      '<p class="muted small">Dev mode adds free packs and the prize code generator. Enter the password to turn it on in this browser.</p>' +
+      '<p class="muted small">Dev mode adds free packs for testing. Enter the password to turn it on in this browser.</p>' +
       '<form class="row" id="devForm" autocomplete="off"><input id="devPass" type="password" placeholder="Password" aria-label="Dev mode password">' +
       '<button class="btn primary small" type="submit">Unlock</button></form>';
     openModal(html, function (box) {
@@ -1864,6 +1831,7 @@
   function closeModal(force) {
     galleryReturnKind = null;
     if (S.gateOpen && !force) return; // the login screen stays until you log in
+    if (confirmDismiss) confirmDismiss(); // a pending confirmDialog dismisses as abort, never hangs
     S.gateOpen = false;
     $('#modal').classList.add('hidden'); $('#modalBox').innerHTML = '';
   }
@@ -1883,11 +1851,6 @@
 
 
   /* --- prize wheel */
-  function chicagoToday() {
-    try { return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); }
-    catch (e) { return new Date().toDateString(); }
-  }
-  
   function spinCount() {
     return isCloud() ? (S.spins || 0) : ((S.player && S.player.spins) || 0);
   }
@@ -1911,23 +1874,22 @@
     var pct = Math.min(100, Math.round(q.progress / q.target * 100));
     return '<div class="quest tier-' + q.tier + (q.done && !q.claimed ? ' claimable' : '') + '">' +
       '<div class="quest-top"><div><b>' + esc(q.title) + '</b>' +
-      '<span class="quest-tier">' + q.tier + ' &middot; ' + (q.currency === 'token' ? '&#x1FA99;' + q.amount : '&#x1F39F;&#xFE0F;' + (q.amount != null ? q.amount : q.tickets)) + '</span></div>' +
+      '<span class="quest-tier">' + q.tier + ' &middot; ' + (q.currency === 'token' ? '&#x1FA99; ' + q.amount + ' token' + (q.amount === 1 ? '' : 's') : '&#x1F39F;&#xFE0F; ' + (q.amount != null ? q.amount : q.tickets) + ' ticket' + ((q.amount != null ? q.amount : q.tickets) === 1 ? '' : 's')) + '</span></div>' +
       (q.claimed ? '<span class="quest-done">Claimed &#x2713;</span>' :
        q.done ? '<button class="btn small primary" data-claim="' + esc(q.key) + '">Claim</button>' :
-       '<span class="quest-prog">' + q.progress + '/' + q.target + '</span>') +
+       '<span class="quest-prog">' + Math.min(q.progress, q.target) + '/' + q.target + '</span>') +
       '</div><div class="bar quest-bar"><i style="width:' + pct + '%"></i></div></div>';
   }
   async function renderDaily() {
     var list = $('#questList');
     if (!list) return;
-    list.innerHTML = '<div class="muted">Loading&hellip;</div>';
+    if (!S.quests) list.innerHTML = '<div class="muted">Loading&hellip;</div>'; /* Loading flash only on first load, not after every claim */
     await refreshQuests();
     if (S.view !== 'daily') return;
     var all = S.quests || [];
-    var qs = all.filter(function (q) { return !q.claimed; });
+    var qs = all.filter(function (q) { return !q.claimed; }).concat(all.filter(function (q) { return q.claimed; })); /* claimed stay visible at the bottom */
     list.innerHTML = qs.length ? qs.map(questHtml).join('') :
-      (all.length ? '<div class="empty">All quests complete &mdash; fresh ones at midnight CST.</div>' :
-       '<div class="empty">No quests today &mdash; check back tomorrow.</div>');
+      '<div class="empty">No quests today &mdash; check back tomorrow.</div>';
   }
   function wheelConfig() {
     if (isCloud()) return S.wheelCfg ? CPS.wheel.enrich(S.wheelCfg) : null;
@@ -1991,6 +1953,7 @@
     if (S.autospin || S.spinning || isLocked()) return;
     if (spinCount() < 2) { toast('Autospin needs at least 2 spin tickets.', 'warn'); return; }
     S.autospin = true;
+    S._autoAgg = { n: 0, bySet: {}, tokens: 0, credit: 0 };
     renderWheel();
     while (S.autospin && S.view === 'wheel' && spinCount() > 0) {
       var ok = await doOneSpin(2);
@@ -1999,6 +1962,8 @@
     S.autospin = false;
     S.spinning = false;
     renderWheel();
+    if (S._autoAgg && S._autoAgg.n > 1 && CPS.wheelMulti && CPS.wheelMulti.showSummary) CPS.wheelMulti.showSummary(S._autoAgg);
+    S._autoAgg = null;
   }
   async function doOneSpin(speed) {
     speed = speed || 1;
@@ -2011,17 +1976,9 @@
     renderWheel();
     var canvas = $('#wheelCanvas'), out = null;
     try {
-      if (isCloud()) {
-        out = await CPS.cloud.call('spin_wheel', {});
-        S.spins = out.spins_left;
-        refreshQuests();
-      } else {
-        out = CPS.wheel.rollLocal(cfg);
-        S.player.spins = Math.max(0, (S.player.spins || 1) - 1);
-        var gset = out.prize && window.CardSets.get(out.prize.set_id);
-        if (gset) { ps(gset).packs += out.prize.packs; out.packs_now = ps(gset).packs; }
-        await save();
-      }
+      out = await CPS.cloud.call('spin_wheel', {});
+      S.spins = out.spins_left;
+      refreshQuests();
     } catch (e) {
       S.spinning = false;
       renderWheel();
@@ -2042,6 +1999,7 @@
         resultHtml: CPS.wheel.prizeHtml(prize, pset && pset.name)
       };
     }
+    if (S.autospin && S._autoAgg) { var A = S._autoAgg; A.n++; if (isTok) A.tokens += prize.tokens || 0; else if (isCred) A.credit += prize.credit || 0; else if (prize.set_id) A.bySet[prize.set_id] = (A.bySet[prize.set_id] || 0) + (prize.packs || 0); }
     audio.coin();
     S.spinning = false;
     renderWheel();
@@ -2068,7 +2026,8 @@
     var _qb = $('#quickOpenBtn'); if (_qb) _qb.addEventListener('click', startQuickOpen);
     $('#spinBtn').addEventListener('click', startWheelSpin);
     $('#autoSpinBtn').addEventListener('click', function () {
-      if (S.autospin) S.autospin = false; else startAutospin();
+      if (S.autospin) { S.autospin = false; var ab = $('#autoSpinBtn'); if (ab) { ab.textContent = 'Stopping...'; ab.disabled = true; } }
+      else startAutospin();
     });
     var _msb = $('#multiSpinBtn'); if (_msb) _msb.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(); });
     $('#nextPackBtn').addEventListener('click', function () {
@@ -2097,9 +2056,6 @@
     $('#collSearch').addEventListener('input', function (e) { S.coll.q = e.target.value; renderCollection(); });
     $('#collRarity').addEventListener('change', function (e) { S.coll.rarity = e.target.value; renderCollection(); });
     $('#collSort').addEventListener('change', function (e) { S.coll.sort = e.target.value; renderCollection(); });
-    var tir = $('#tradeinRows'); if (tir) tir.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-trade]');
-    });
     $('#playerList').addEventListener('click', function (e) {
       var b = e.target.closest('[data-player]');
       if (b) CPS.profile.openProfile(b.dataset.player);
@@ -2342,7 +2298,7 @@
 
   CPS.app = { state: S, config: CONFIG, openPack: startOpen, tear: tear, revealAll: revealAll, showView: showView, selectSet: selectSet };
   /* Shared context for split-out modules (js/tickets.js). */
-  CPS.appCtx = { S: S, U: U, R: R, Store: Store, audio: audio, fx: fx,
+  CPS.appCtx = { S: S, U: U, R: R, audio: audio, fx: fx,
     $: $, $$: $$, esc: esc, save: save, isCloud: isCloud, isLocked: isLocked, isAdmin: isAdmin,
     toast: toast, cloudError: cloudError, refreshCloud: refreshCloud, renderView: renderView,
     renderCollection: renderCollection, renderPacksSide: renderPacksSide,
