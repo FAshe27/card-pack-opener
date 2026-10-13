@@ -1383,6 +1383,7 @@
       (variant ? '<dt>Variant</dt><dd>'+esc(CPS.cards.VARIANTS[variant.tier].name)+' #'+variant.serial+'/'+CPS.cards.VARIANTS[variant.tier].run+'</dd>' : '') +
       (isTurned(set.id, card.id) ? '<dt>Turned in</dt><dd class="turned-note">✓ Permanently collected</dd>' : '') +
       '<dt>Odds</dt><dd>' + (row ? U.oneIn(row.perCard) + ' packs' : '—') + '</dd>' +
+      '<dt>Times pulled</dt><dd id="cardPulled">…</dd>' +
       '<dt>Currently existing</dt><dd id="cardPop">…</dd></dl>' +
       '<div class="variant-census" id="vcensus" style="display:none"></div>' +
       (card.details ? '<div class="zoom-details">' + esc(card.details) + '</div>' : '') +
@@ -1424,18 +1425,8 @@
       var ti = box.querySelector('[data-turnin]');
       if (ti) ti.addEventListener('click', function () { turnInFlow(setId, cardId, forceHolo, variant); });
       fillCensus(box, set, card, variant);
-      fillPopulation(box, set, card);
+      if (CPS.popfill) CPS.popfill(box, set, card);
     });
-  }
-
-  async function fillPopulation(box, set, card) {
-    var el = box.querySelector('#cardPop');
-    if (!el || !isCloud()) { if (el) el.textContent = '—'; return; }
-    try {
-      var pop = await CPS.cloud.call('card_population', { p_set: set.id, p_card: card.id });
-      if (el.isConnected) el.textContent = pop.total + ' cop' + (pop.total === 1 ? 'y' : 'ies') +
-        (pop.holos ? ' (' + pop.holos + ' holo)' : '');
-    } catch (e) { if (el.isConnected) el.textContent = '—'; }
   }
 
   /* --- stats */
