@@ -1399,9 +1399,6 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
    140px below it): once the visuals are 200px, a booth needs a 232px
    floor or the stage overflows its booth at mid widths. */
 @media (min-width: 600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); } }
-/* Six booths: on wide screens deal them 3 x 2 at the size five used to
-   get, instead of squeezing all six into one ragged-edge row. */
-@media (min-width: 1150px) { .shop-grid { grid-template-columns: repeat(3, minmax(0, 340px)); justify-content: center; } }
 .shop-booth { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; display: flex; flex-direction: column; }
 /* Uniform visual stage: packs come in different aspect ratios (Calendar is square 1/1,
    most are 5/8), so every booth reserves the same visual height and centers the pack —
