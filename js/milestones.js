@@ -78,6 +78,15 @@
     });
   }
 
+  function deliver(queue) {
+    if (!queue.length) return;
+    if (modalBusy()) { /* don't stomp an open dialog — keep re-checking until it's free */
+      setTimeout(function () { deliver(queue); }, 4000);
+      return;
+    }
+    showPopups(queue);
+  }
+
   function check() {
     try {
       if (!ctx.isCloud() || !ctx.S.account || !ctx.S.turnedIn) return;
@@ -111,11 +120,7 @@
         queue.push({ set: set, full: true });
       });
       if (!queue.length) return;
-      if (modalBusy()) { /* don't stomp an open dialog; the snapshot is saved, so re-queue lightly */
-        if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; showPopups(queue); }, 4000);
-        return;
-      }
-      showPopups(queue);
+      deliver(queue);
     } catch (e) { /* milestones must never break the app */ }
   }
 
