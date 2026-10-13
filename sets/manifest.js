@@ -33,5 +33,7 @@ CardSets.manifest = [
   'nps.js',
   'aquariums.js',
   'minecraft.js',
-  'disney.js'
+  'disney.js',
+  'pixar.js',
+  'pixar-additions.js'
 ];
