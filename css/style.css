@@ -921,7 +921,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .tile-hint { color: var(--accent2); font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .gallery-back { margin-bottom: 12px; }
 .stat-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 12px; max-height: 70vh; overflow: auto; padding: 20px 12px 10px; }
-.stat-gallery-item { cursor: pointer; }
+.stat-gallery-item { cursor: pointer; content-visibility: auto; contain-intrinsic-size: 160px 224px; }
 .stat-gallery-item .card { width: 100%; }
 .bars { display: grid; gap: 10px; }
 .barrow { display: grid; grid-template-columns: 90px 1fr 110px; gap: 12px; align-items: center; font-size: .9rem; }
