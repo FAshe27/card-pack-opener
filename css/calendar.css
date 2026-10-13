@@ -40,3 +40,7 @@
 .pack.pack-skin-calendar { aspect-ratio: 1/1; }
 .pack.pack-skin-calendar .pack-top { border-radius: 14px 14px 0 0; }
 .pack.pack-skin-calendar .pack-body { border-radius: 0 0 14px 14px; }
+
+/* No rarity glow while face-down in the pack reveal — it would spoil the flip.
+   The glow returns once flipped; collection/modal renders are not flippable. */
+.card.flippable:not(.flipped)[data-set="calendar"] { box-shadow: none; }
