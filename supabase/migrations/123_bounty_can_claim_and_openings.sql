@@ -1,3 +1,9 @@
+-- *** SUPERSEDED by 124 — DO NOT RUN ***
+-- As issued, this file carried one closing paren too many at the end of
+-- the pack_openings insert (line ~443) and fails with a syntax error.
+-- Run 124_bounty_can_claim_and_openings_fix.sql instead (same content,
+-- one paren removed, paren-depth walked clean).
+-- =====================================================================
 -- =====================================================================
 -- PackRipper \u2014 migration 123: two honesty fixes
 -- Run AFTER 122 (live cps_open_pack) and 074 (live cps_list_bounties).
