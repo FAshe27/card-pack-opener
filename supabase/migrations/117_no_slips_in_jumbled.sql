@@ -1,3 +1,9 @@
+-- ============================================================
+-- SUPERSEDED by 119_turned_in_never_new.sql if not yet run.
+-- 119 contains everything in this file plus the fix that a
+-- turned-in card never shows as "New" again. If you already
+-- ran this file, just run 119. Never run this after 119.
+-- ============================================================
 -- =====================================================================
 -- PackRipper \u2014 migration 117: no insert slips in Jumbled Mess packs
 -- (+ set-loop hardening in cps_open_pack).
