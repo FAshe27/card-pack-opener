@@ -203,6 +203,7 @@
     mt.classList.toggle('hidden', !mt.textContent);
     updateWheelBadge();
     if (typeof CPS !== 'undefined' && CPS.games) CPS.games.updateBadge();
+    if (typeof CPS !== 'undefined' && CPS.bounties) CPS.bounties.navBadge();
   }
 
   
