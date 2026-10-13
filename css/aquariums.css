@@ -24,7 +24,6 @@
 .pack-skin-aquariums .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(20,130,140,.55) 4px 6px, rgba(220,250,255,.16) 6px 9px); }
 .pack-skin-aquariums .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(10,90,90,.5) 4px 6px, rgba(220,250,255,.08) 6px 9px); }
 .pack-skin-aquariums .pack-top::after { border-bottom-color: rgba(210,245,255,.65); }
-.pack-skin-aquariums .pack-code { color: #d8f6ff; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(47,163,173,.9); }
 .pack-skin-aquariums .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(220,250,255,.5), rgba(6,56,76,.94) 72%);
   border-color: rgba(190,240,255,.85); box-shadow: 0 0 26px rgba(47,163,173,.6), inset 0 0 18px rgba(140,230,200,.25); text-shadow: 0 0 16px rgba(255,255,255,.9); }
 .pack-skin-aquariums .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(47,163,173,.9), 0 2px 8px rgba(0,0,0,.65); }
