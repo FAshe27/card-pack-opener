@@ -89,6 +89,34 @@
     var n = B ? B.bounties.filter(function (x) { return x.can_claim; }).length : 0;
     b.textContent = n;
     b.classList.toggle('hidden', !(n > 0));
+    CPS._bountyNav = n; paintMarketNav();
+  }
+
+  /* --- Market nav badge: claimable bounties (this module's half) plus
+     my listings with offers (trading.js's half, CPS._tradeNav), painted
+     into #marketBadge by paintMarketNav. app.js's applyPrefsUI calls
+     navBadge() on every state load — the games-badge pattern — so the
+     count stays fresh app-wide, not just inside the Market view. A 20s
+     cache keeps state-load bursts from re-fetching the board. */
+  var navAt = 0, navBusy = false;
+  function paintMarketNav() {
+    var b = ctx.$('#marketBadge'); if (!b) return;
+    var n = (CPS._bountyNav || 0) + (CPS._tradeNav || 0);
+    b.textContent = n;
+    b.classList.toggle('hidden', !(n > 0));
+  }
+  async function navBadge() {
+    if (CPS.trading && CPS.trading.navBadge) CPS.trading.navBadge();
+    if (!ctx.isCloud()) { CPS._bountyNav = 0; paintMarketNav(); return; }
+    if (navBusy || Date.now() - navAt < 20000) { paintMarketNav(); return; }
+    navBusy = true;
+    try {
+      var r = await CPS.cloud.call('list_bounties', {});
+      navAt = Date.now();
+      CPS._bountyNav = (r.bounties || []).filter(function (x) { return x.can_claim; }).length;
+      paintMarketNav();
+    } catch (e) { /* badge is best-effort */ }
+    navBusy = false;
   }
 
   function expiresIn(iso) {
@@ -560,5 +588,6 @@
     } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
 
-  CPS.bounties = { render: render, refresh: load, updateBadge: updateBadge };
+  CPS.bounties = { render: render, refresh: load, updateBadge: updateBadge, navBadge: navBadge, paintMarketNav: paintMarketNav };
+  CPS.paintMarketNav = paintMarketNav;
 })(window.CPS);
