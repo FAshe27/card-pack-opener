@@ -24,7 +24,6 @@
 .pack-skin-beverages .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(178,52,9,.55) 4px 6px, rgba(255,240,210,.16) 6px 9px); }
 .pack-skin-beverages .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(150,40,5,.5) 4px 6px, rgba(255,240,210,.08) 6px 9px); }
 .pack-skin-beverages .pack-top::after { border-bottom-color: rgba(255,244,220,.65); }
-.pack-skin-beverages .pack-code { color: #fff3da; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(217,154,61,.9); }
 .pack-skin-beverages .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,244,220,.5), rgba(124,45,18,.94) 72%);
   border-color: rgba(255,243,218,.8); box-shadow: 0 0 26px rgba(217,154,61,.6), inset 0 0 18px rgba(255,235,190,.25); text-shadow: 0 0 16px rgba(255,255,255,.9); }
 .pack-skin-beverages .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(217,154,61,.9), 0 2px 8px rgba(0,0,0,.65); }
