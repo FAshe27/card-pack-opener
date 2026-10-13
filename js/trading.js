@@ -155,15 +155,7 @@
       btn.addEventListener('click', function () { openCancelModal(btn.getAttribute('data-cancel')); });
     });
     // Make trading listing cards clickable -> open card modal
-    box.querySelectorAll('.trade-card-click').forEach(function (el) {
-      el.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var vt = el.getAttribute('data-variant-tier');
-        var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) } : null;
-        ctx.openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
-          el.getAttribute('data-holo') === '1', variant);
-      });
-    });
+    bindCardClicks(box);
   }
 
   function findListing(id) {
@@ -182,6 +174,51 @@
       ' <span class="muted">(' + esc(s ? s.name : sid) + ')</span></span>';
   }
 
+  /* Clickable card face for an offered card (same wrapper as listingFace,
+     so bindCardClicks picks it up). '' when the card can't be resolved —
+     the caller falls back to the text line. */
+  function offerCardFace(c) {
+    var sid = c.set_id || c.set, cid = c.card_id || c.card;
+    var s = setObj(sid), card = s && s.byId.get(cid);
+    if (!s || !card) return '';
+    var opts = { holo: !!c.holo };
+    if (c.tier) opts.variant = { tier: c.tier, serial: c.serial };
+    var variantAttr = c.tier ? ' data-variant-tier="' + esc(c.tier) + '" data-variant-serial="' + esc(c.serial) + '"' : '';
+    return '<div class="trade-card-click" data-set="' + esc(sid) + '" data-card="' + esc(cid) + '"' +
+      ' data-holo="' + (c.holo ? '1' : '0') + '"' + variantAttr +
+      ' style="cursor:pointer;" title="View card">' + CPS.cards.render(s, card, opts) + '</div>';
+  }
+
+  /* Offer body for the detail view: currency stays text lines, cards
+     become clickable faces. (The accept-confirm keeps offerLines text.) */
+  function offerBodyHtml(o) {
+    var lines = [], faces = [];
+    if (o.tokens > 0) lines.push('<span class="trade-offer-line">🪙 <b>' + o.tokens + '</b> game token' + (o.tokens === 1 ? '' : 's') + '</span>');
+    if (o.tickets > 0) lines.push('<span class="trade-offer-line">🎟️ <b>' + o.tickets + '</b> spin ticket' + (o.tickets === 1 ? '' : 's') + '</span>');
+    if (o.packs > 0) lines.push('<span class="trade-offer-line">🎁 <b>' + o.packs + '</b> ' + esc(o.pack_name || o.pack_set) + ' pack' + (o.packs === 1 ? '' : 's') + '</span>');
+    (o.cards || []).forEach(function (c) {
+      var f = offerCardFace(c);
+      if (f) faces.push('<div class="trade-face">' + f + '</div>');
+      else lines.push(offerCardLines(c));
+    });
+    var html = lines.join('');
+    if (faces.length) html += '<div class="trade-offerfaces">' + faces.join('') + '</div>';
+    return html || '<span class="muted small">—</span>';
+  }
+
+  function bindCardClicks(scope) {
+    if (!scope) return;
+    scope.querySelectorAll('.trade-card-click').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var vt = el.getAttribute('data-variant-tier');
+        var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) } : null;
+        ctx.openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
+          el.getAttribute('data-holo') === '1', variant);
+      });
+    });
+  }
+
   function offerLines(o) {
     var out = [];
     if (o.tokens > 0) out.push('<span class="trade-offer-line">🪙 <b>' + o.tokens + '</b> game token' + (o.tokens === 1 ? '' : 's') + '</span>');
@@ -198,7 +235,7 @@
       return '<div class="panel trade-offerbox">' +
         '<div class="trade-offerhead"><b>' + esc(o.offerer) + '</b>' +
         '<span class="muted small">' + new Date(o.created_at).toLocaleString() + '</span></div>' +
-        '<div class="trade-offerbody">' + offerLines(o) + '</div>' +
+        '<div class="trade-offerbody">' + offerBodyHtml(o) + '</div>' +
         '<div class="trade-actions">' +
         (l.mine ? '<button class="btn small primary" data-accept="' + esc(o.id) + '">Accept this offer</button>' : '') +
         (o.mine ? '<button class="btn small" data-withdraw="' + esc(o.id) + '">Withdraw</button>' : '') +
@@ -228,6 +265,7 @@
         box.querySelectorAll('[data-close]').forEach(function (x) {
           x.addEventListener('click', function () { ctx.closeModal(); });
         });
+        bindCardClicks(box);
         box.querySelectorAll('[data-accept]').forEach(function (btn) {
           btn.addEventListener('click', async function () {
             var o = (l.offers || []).filter(function (x) { return x.id === btn.getAttribute('data-accept'); })[0];
