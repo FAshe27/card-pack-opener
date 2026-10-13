@@ -81,6 +81,7 @@
           </div>
 
           <div class="mini-stats" id="miniStats"></div>
+          <button class="btn small ghost" style="width:100%;margin-top:10px" onclick="CPS.app.showView('odds')">Odds &amp; pack contents</button>
         </aside>
 
         <section class="panel stage" id="stage">
@@ -230,8 +231,8 @@
     <!-- ============ MARKET (Buyers = Bounty Board, Sellers = Trading Post) ============ -->
     <section id="view-market" class="view">
       <div class="market-toggle" role="tablist">
-        <button id="marketBuyersBtn" class="market-toggle-btn active" role="tab">Buyers<span class="tab-badge hidden" id="bountyBadge"></span></button>
-        <button id="marketSellersBtn" class="market-toggle-btn" role="tab">Sellers<span class="tab-badge hidden" id="tradeBadge"></span></button>
+        <button id="marketBuyersBtn" class="market-toggle-btn active" role="tab">Bounties<span class="tab-badge hidden" id="bountyBadge"></span></button>
+        <button id="marketSellersBtn" class="market-toggle-btn" role="tab">Trading Post<span class="tab-badge hidden" id="tradeBadge"></span></button>
       </div>
       <div id="bountyPanel"><p class="muted small">Loading…</p></div>
       <div id="tradingPanel" class="hidden"><p class="muted small">Loading…</p></div>
@@ -252,7 +253,7 @@
           <button id="autoSpinBtn" class="btn big" style="display:none">AUTOSPIN</button>
           <button id="multiSpinBtn" class="btn big" style="display:none">SPIN ×10</button>
         </div>
-        <p class="muted small wheel-hint">Everyone gets three free spin tickets every day at midnight CST if you have fewer than 10 spin tickets saved. Franklin can gift extra spin tickets. Wheel hops are free — a spin only ends when you win packs.</p>
+        <p class="muted small wheel-hint">Everyone gets three free spin tickets every day at midnight CST if you have fewer than 10 spin tickets saved. Franklin can gift extra spin tickets. Wheel hops are free — a spin ends when you win packs, tokens, or Store Credit.</p>
       </div>
     </section>
 
@@ -260,7 +261,7 @@
     <section id="view-daily" class="view">
       <div class="panel">
         <h2>Daily Achievements</h2>
-        <p class="muted small">Fresh quests every day at midnight. Finish one, claim spin tickets.</p>
+        <p class="muted small">Fresh quests every day at midnight. Finish one, claim spin tickets and arcade tokens.</p>
         <div class="quest-claim-all"><button id="claimAllBtn" class="btn primary hidden">Claim all</button></div>
         <div id="questList" class="quest-list"></div>
       </div>
@@ -368,7 +369,6 @@
   <script defer src="js/daily.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/gifting.js"></script>
-  <script defer src="js/tickets.js"></script>
     <script defer src="js/packsbadge.js"></script>
   <script defer src="js/globalstats.js"></script>
   <script defer src="js/jumbled.js"></script>
