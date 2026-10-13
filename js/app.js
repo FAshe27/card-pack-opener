@@ -1517,11 +1517,11 @@
       });
     });
     var numberedEarly = (S.myVariants || []).length;
-    var tiles=[['Packs opened',agg.opened],['Cards pulled',agg.pulled],['Unique cards',agg.unique+' / '+agg.total],['Completion',U.pct(agg.total?agg.unique/agg.total:0)],
+    var tiles=[['Packs opened',agg.opened],['Cards pulled',agg.pulled],['Unique cards',U.fmt(agg.unique)+' / '+U.fmt(agg.total)],['Completion',U.pct(agg.total?agg.unique/agg.total:0)],
       ['Epic Cards',agg.ownedByRarity.epic||0,'epic'],['Legendary Cards',agg.ownedByRarity.legendary||0,'legendary'],
       ['Chase Cards',agg.ownedByRarity.chase||0,'chase'],['Numbered Cards',numberedEarly,'numbered']];
     $('#statTiles').innerHTML=tiles.map(function(t){
-      return '<div class="tile' + (t[2] ? ' clickable' : '') + '"' + (t[2] ? ' data-stat-gallery="' + t[2] + '" title="Click to see your ' + t[0].toLowerCase() + '"' : '') + '><span>'+t[0]+'</span><b>'+t[1]+'</b>' + (t[2] ? '<span class="tile-hint">Click to view ›</span>' : '') + '</div>';
+      return '<div class="tile' + (t[2] ? ' clickable' : '') + '"' + (t[2] ? ' data-stat-gallery="' + t[2] + '" title="Click to see your ' + t[0].toLowerCase() + '"' : '') + '><span>'+t[0]+'</span><b>'+(typeof t[1]==='number'?U.fmt(t[1]):t[1])+'</b>' + (t[2] ? '<span class="tile-hint">Click to view ›</span>' : '') + '</div>';
     }).join('');
     $$('#statTiles [data-stat-gallery]').forEach(function (el) {
       el.addEventListener('click', function () { showStatGallery(el.getAttribute('data-stat-gallery')); });
@@ -1530,8 +1530,8 @@
     var max = Math.max.apply(null, R.RARITIES.map(function (r) { return agg.byRarity[r.key] || 0; }).concat([numbered, 1]));
     $('#rarityBars').innerHTML = R.RARITIES.map(function (r) {
       var n = agg.byRarity[r.key] || 0;
-      return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + n + (agg.pulled ? ' <em>' + U.pct(n / agg.pulled) + '</em>' : '') + '</span></div>';
-    }).join('') + '<div class="barrow r-numbered"><span class="bl">Numbered</span><span class="bar"><i style="width:' + (numbered / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + numbered + '</span></div>';
+      return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + U.fmt(n) + (agg.pulled ? ' <em>' + U.pct(n / agg.pulled) + '</em>' : '') + '</span></div>';
+    }).join('') + '<div class="barrow r-numbered"><span class="bl">Numbered</span><span class="bar"><i style="width:' + (numbered / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + U.fmt(numbered) + '</span></div>';
     if (isCloud() && !S.myVariants) ensureVariants().then(function () { if (S.view === 'stats') renderStats(); });
 
     var bestO = null, bestSd = null, bestSc = -1;
