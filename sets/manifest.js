@@ -32,5 +32,6 @@ CardSets.manifest = [
   'countries.js',
   'nps.js',
   'aquariums.js',
-  'minecraft.js'
+  'minecraft.js',
+  'disney.js'
 ];
