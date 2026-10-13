@@ -146,12 +146,17 @@
       tokNow = r.tokens_now;
       updateBalance(tokNow);
       if (r.win) {
+        // Sync local pack inventory from the server's grant list, the way
+        // the wheel (packs_now) and Higher/Lower claim (inventory) already do.
+        (r.grants || []).forEach(function (g) { var st = ctx.ps({ id: g.set_id }); if (st) st.packs = (st.packs || 0) + (g.packs || 0); });
+        if (r.packs_jumbled > 0) { var jst = ctx.ps({ id: 'jumbled' }); if (jst) jst.packs = (jst.packs || 0) + r.packs_jumbled; }
         wins.push({ spin: s + 1, text: prizeText(r) });
         totRandom += r.packs_random;
         totJumbled += r.packs_jumbled;
       }
       await new Promise(function (ok) { animateReels(r.symbols, fast, ok); });
     }
+    if (wins.length && ctx.renderPacksSide) ctx.renderPacksSide();
 
     var html;
     if (done === 0 && stoppedEarly) {
@@ -174,7 +179,7 @@
   }
 
   function escHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
