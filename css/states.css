@@ -28,7 +28,6 @@
 .pack-skin-states .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(212,175,55,.45) 4px 6px, rgba(255,255,255,.10) 6px 9px); }
 .pack-skin-states .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.68) 0 4px, rgba(212,175,55,.38) 4px 6px, rgba(255,255,255,.06) 6px 9px); }
 .pack-skin-states .pack-top::after { border-bottom-color: rgba(212,175,55,.55); }
-.pack-skin-states .pack-code { color: #f5edd6; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(212,175,55,.9); }
 .pack-skin-states .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(212,175,55,.45), rgba(6,15,38,.94) 72%);
   border-color: rgba(212,175,55,.85); box-shadow: 0 0 30px rgba(212,175,55,.65), inset 0 0 18px rgba(255,255,255,.18); text-shadow: 0 0 16px rgba(212,175,55,.95); }
 .pack-skin-states .pack-name { color: #f5edd6; letter-spacing: .18em; text-shadow: 0 0 14px rgba(212,175,55,.85), 0 2px 8px rgba(0,0,0,.65); }
