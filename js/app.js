@@ -943,8 +943,8 @@
             '<span class="notif-text">' + esc(it.text) +
             '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
         }).join('') + '</div><div class="notif-actions"><button class="btn small" id="notifReadAll">Mark all read</button>' +
-        (items.some(function (it) { return it.read; }) ? '<button class="btn small" id="notifClearRead">Clear read</button>' : '') + '</div>'
-        : '<div class="empty">No notifications yet.</div>') +
+        (items.some(function (it) { return it.read; }) ? '<button class="btn small" id="notifClearRead">Clear read</button>' : '') + '<button class="btn small" id="notifSettingsBtn">⚙ Settings</button></div>'
+        : '<div class="empty">No notifications yet.</div><div class="notif-actions"><button class="btn small" id="notifSettingsBtn">⚙ Notification Settings</button></div>') +
         '</div>', function (box) {
           box.querySelectorAll('.notif').forEach(function (el) {
             el.addEventListener('click', async function () {
@@ -971,6 +971,8 @@
             try { await CPS.cloud.call('clear_notifications', {}); } catch (e) { cloudError(e); return; }
             openNotifications();
           });
+          var sb = box.querySelector('#notifSettingsBtn');
+          if (sb) sb.addEventListener('click', function () { if (CPS.notifSettings) CPS.notifSettings.open(); });
         });
     } catch (e) { closeModal(true); cloudError(e); }
   }
