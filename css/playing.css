@@ -40,7 +40,6 @@
 .pack-skin-playing .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(200,16,46,.35) 4px 6px, rgba(255,255,255,.10) 6px 9px); }
 .pack-skin-playing .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.68) 0 4px, rgba(200,16,46,.30) 4px 6px, rgba(255,255,255,.06) 6px 9px); }
 .pack-skin-playing .pack-top::after { border-bottom-color: rgba(255,255,255,.45); }
-.pack-skin-playing .pack-code { color: #f3ecd9; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.7), 0 0 12px rgba(200,16,46,.9); }
 .pack-skin-playing .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.30), rgba(20,28,70,.92) 72%);
   border-color: rgba(243,236,217,.75); box-shadow: 0 0 28px rgba(200,16,46,.55), inset 0 0 18px rgba(255,255,255,.20); text-shadow: 0 0 16px rgba(255,255,255,.9); }
 .pack-skin-playing .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(200,16,46,.85), 0 2px 8px rgba(0,0,0,.65); }
