@@ -33,6 +33,7 @@ window.CPS = window.CPS || {};
       });
     },
     pad: function (n, w) { return String(n).padStart(w || 3, '0'); },
+    fmt: function (n) { return Number(n).toLocaleString('en-US'); },
     $: function (sel, root) { return (root || document).querySelector(sel); },
     $$: function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); },
     h: function (html) { var t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; },

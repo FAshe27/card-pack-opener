@@ -20,14 +20,14 @@
       if (S.view !== 'stats') return;
       var br = g.by_rarity || {};
       $('#globalTiles').innerHTML = [['Cards pulled', g.pulled], ['Cards turned in', g.turned_in || 0], ['Holo pulls', g.holos]].map(function (t) {
-        return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b></div>';
+        return '<div class="tile"><span>' + t[0] + '</span><b>' + U.fmt(t[1]) + '</b></div>';
       }).join('');
       var gnum = g.numbered || 0;
       var gmax = Math.max.apply(null, R.RARITIES.map(function (r) { return br[r.key] || 0; }).concat([gnum, 1]));
       $('#globalBars').innerHTML = R.RARITIES.map(function (r) {
         var n = br[r.key] || 0;
-        return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / gmax * 100).toFixed(1) + '%"></i></span><span class="bn">' + n + (g.pulled ? ' <em>' + U.pct(n / g.pulled) + '</em>' : '') + '</span></div>';
-      }).join('') + '<div class="barrow r-numbered"><span class="bl">Numbered</span><span class="bar"><i style="width:' + (gnum / gmax * 100).toFixed(1) + '%"></i></span><span class="bn">' + gnum + '</span></div>';
+        return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / gmax * 100).toFixed(1) + '%"></i></span><span class="bn">' + U.fmt(n) + (g.pulled ? ' <em>' + U.pct(n / g.pulled) + '</em>' : '') + '</span></div>';
+      }).join('') + '<div class="barrow r-numbered"><span class="bl">Numbered</span><span class="bar"><i style="width:' + (gnum / gmax * 100).toFixed(1) + '%"></i></span><span class="bn">' + U.fmt(gnum) + '</span></div>';
       var lb = g.latest_big, bp = $('#bigPullPanel');
       if (lb && bp) {
         bp.style.display = '';
