@@ -68,6 +68,7 @@
       'Turn them in');
     if (!ok) return;
     var includeHolos = await holoPrompt(C, p.holoOnly);
+    if (includeHolos === null) return; /* holo dialog dismissed = abort the whole turn-in */
     try {
       var r = await CPS.cloud.call('turn_in_all_sets', { p_include_holos: includeHolos });
       await C.refreshCloud();
@@ -89,6 +90,7 @@
       'Turn them in');
     if (!ok) return;
     var includeHolos = await holoPrompt(C, p.holoOnly);
+    if (includeHolos === null) return; /* holo dialog dismissed = abort the whole turn-in */
     try {
       var r = await CPS.cloud.call('turn_in_dupes_all_sets', { p_include_holos: includeHolos });
       await C.refreshCloud();
