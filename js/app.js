@@ -1944,11 +1944,6 @@
       mbtn.style.display = (!isLocked() && n >= 10 && cfg && cfg.wheels.length) ? '' : 'none';
       mbtn.disabled = S.spinning || S.autospin;
     }
-    var m5btn = $('#multiSpin5Btn');
-    if (m5btn) {
-      m5btn.style.display = (!isLocked() && n >= 5 && cfg && cfg.wheels.length) ? '' : 'none';
-      m5btn.disabled = S.spinning || S.autospin;
-    }
     updateWheelBadge();
   }
   async function startWheelSpin() {
@@ -2037,7 +2032,6 @@
       else startAutospin();
     });
     var _msb = $('#multiSpinBtn'); if (_msb) _msb.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(); });
-    var _m5b = $('#multiSpin5Btn'); if (_m5b) _m5b.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(5); });
     $('#nextPackBtn').addEventListener('click', function () {
       if (S.opening && S.opening.set.id === 'jumbled' && CPS.jumbled) CPS.jumbled.open();
       else startOpen();
@@ -2052,7 +2046,7 @@
     $('#revealGrid').addEventListener('click', function (e) {
       var c = e.target.closest('.card'); if (!c) return;
       if (!c.classList.contains('flipped')) reveal(+c.dataset.i);
-      else if (!c.dataset.ticket && !c.dataset.tokens) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
+      else if (!c.dataset.ticket && !c.dataset.tokens && !c.dataset.credit) openCardModal(c.dataset.set, c.dataset.card, c.classList.contains('holo'));
     });
     $('#freePackBtn').addEventListener('click', function () { addFree(1); });
     $('#adminUnlockBtn').addEventListener('click', requestDevUnlock);
