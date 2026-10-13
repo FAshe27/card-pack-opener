@@ -592,16 +592,13 @@
     var owned = ownedCount(set, st), total = set.cards.length;
     var turnedN = 0, complete = 0;
     set.cards.forEach(function (c) { var t = isTurned(set.id, c.id); if (t) turnedN++; if (t || (st.cards[c.id] && st.cards[c.id].n > 0)) complete++; });
-    var copies = 0, holoU = 0;
-    set.cards.forEach(function (c) { var e = st.cards[c.id]; if (e) { copies += e.n; if (e.h) holoU++; } });
     var pct = total ? complete / total : 0;
     $('#compRing').style.setProperty('--p', (pct * 100).toFixed(1));
     $('#compRing').style.setProperty('--g', total ? (turnedN / total * 100).toFixed(1) : 0);
     $('#compPct').textContent = (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%';
     $('#compTitle').textContent = set.name;
-    $('#compSub').innerHTML = complete + ' / ' + total + ' unique cards (' + (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%)' +
-      (turnedN ? ' · <span class="turned-note">' + turnedN + ' turned in (' + (total ? (turnedN / total * 100).toFixed(1) : '0.0') + '%)</span>' : '') +
-      ' · ' + copies + ' total copies · ' + holoU + ' holo';
+    $('#compSub').innerHTML = '<span class="owned-note">' + complete + ' / ' + total + ' unique cards owned (' + (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%)</span>' +
+      '<br><span class="turned-note">' + turnedN + ' turned in (' + (total ? (turnedN / total * 100).toFixed(1) : '0.0') + '%)</span>';
 
     $('#rarityProgress').innerHTML = R.RARITIES.filter(function (r) { return set.pools[r.key].length; }).map(function (r) {
       var pool = set.pools[r.key], have = pool.filter(function (c) { return (st.cards[c.id] && st.cards[c.id].n) || isTurned(set.id, c.id); }).length;
