@@ -249,7 +249,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   repeating-linear-gradient(-45deg, rgba(0,0,0,.04) 0 4cqw, transparent 4cqw 8cqw),
   url('../assets/sets/space/card-back-art.svg') center / cover no-repeat #05070f; }
 /* pack skin "plants": painted wrap — jungle photo, one 1000x1600 image stored as 4 band SVGs
-   (assets/sets/plants/pack-art-1..4.svg) under a flat 15% black layer; no light shaft, no shine (Franklin 2026-10-14) */
+   (assets/sets/plants/pack-art-1..4.svg) under a flat 15% black layer; static light shaft removed, animated shine sweep kept (Franklin 2026-10-14) */
 .pack-skin-plants .pack-top {
   background-color: #04120a;
   background-image: linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.15)), url('../assets/sets/plants/pack-art-1.svg'), url('../assets/sets/plants/pack-art-2.svg'), url('../assets/sets/plants/pack-art-3.svg'), url('../assets/sets/plants/pack-art-4.svg');
@@ -265,7 +265,6 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   background-position: 0 0, 0 calc(var(--pw) * -.176), 0 calc(var(--pw) * .224), 0 calc(var(--pw) * .624), 0 calc(var(--pw) * 1.024);
 }
 .pack-skin-plants .pack-body::before { background: none; }
-.pack-skin-plants .pack-shine { display: none; }
 .pack-skin-plants .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(120,190,90,.5) 4px 6px, rgba(255,255,255,.12) 6px 9px); }
 .pack-skin-plants .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(40,90,35,.55) 4px 6px, rgba(255,255,255,.07) 6px 9px); }
 .pack-skin-plants .pack-top::after { border-bottom-color: rgba(230,250,190,.6); }
