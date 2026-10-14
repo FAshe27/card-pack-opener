@@ -940,7 +940,7 @@
             (it.meta && it.meta.set_id ? ' data-nset="' + esc(it.meta.set_id) + '" data-ncard="' + esc(it.meta.card_id) + '"' +
               ' data-nholo="' + (it.meta.holo ? '1' : '0') + '"' +
               (it.meta.tier ? ' data-ntier="' + esc(it.meta.tier) + '" data-nserial="' + it.meta.serial + '"' : '') : '') + '>' +
-            '<span class="notif-icon">' + (NOTIF_KIND_ICON[it.kind] || '🔔') + '</span>' +
+            '<span class="notif-icon">' + ((CPS.notifIcon && CPS.notifIcon(it)) || NOTIF_KIND_ICON[it.kind] || '🔔') + '</span>' +
             '<span class="notif-text">' + esc(it.text) +
             '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
         }).join('') + '</div><div class="notif-actions"><button class="btn small" id="notifReadAll">Mark all read</button>' +
