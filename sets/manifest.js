@@ -35,5 +35,7 @@ CardSets.manifest = [
   'minecraft.js',
   'disney.js',
   'pixar.js',
-  'pixar-additions.js'
+  'pixar-additions.js',
+  'water.js',
+  'water-additions.js'
 ];
