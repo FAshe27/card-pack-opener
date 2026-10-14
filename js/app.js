@@ -372,7 +372,7 @@
       try { server = await CPS.cloud.call('open_pack', { p_set: set.id }); }
       catch (e) { S.busy = false; renderPacksSide(); cloudError(e); return; }
       S.busy = false;
-      S.myVariants = null; S.variantCensus = null;
+      S.myVariants = null; S.variantCensus = null; S.variantMisprints = null;
       pulls = server.cards.map(function (c) {
         if (c.ticket || c.tokens || c.credit) return { ticket: !!c.ticket, tokens: c.tokens || 0, credit: c.credit || 0 };
         var card = set.byId.get(c.id) || { id: c.id, num: c.id, name: 'Card ' + c.id, rarity: c.rarity, subtitle: '', details: '(This card is newer than your copy of the set file. Refresh the page.)', image: '' };
@@ -989,50 +989,6 @@
     }
     return S.myVariants;
   }
-  async function ensureCensus(setId) {
-    if (!isCloud()) return {};
-    S.variantCensus = S.variantCensus || {};
-    if (!S.variantCensus[setId]) {
-      try { S.variantCensus[setId] = await CPS.cloud.call('variant_census', { p_set: setId }); }
-      catch (e) { S.variantCensus[setId] = {}; }
-    }
-    return S.variantCensus[setId];
-  }
-  function myVariantSerials(setId, cardId) {
-    return (S.myVariants || []).filter(function (v) { return v.set_id === setId && v.card_id === cardId; })
-      .sort(function (a, b) { return a.serial - b.serial; });
-  }
-  async function fillCensus(box, set, card, variant) {
-    var el = box.querySelector('#vcensus');
-    if (!el || !isCloud()) return;
-    var census = await ensureCensus(set.id);
-    if (!box.isConnected) return;
-    var c = census[card.id] || { rainbow: 0, prism: 0, obsidian: 0, oneofone: 0, oneofone_by: null };
-    // Variants mint rare+ only, but a numbered copy can sit on any rarity
-    // (set regrades, grants, trades). Show the census whenever this card was
-    // opened as a numbered copy, the player owns one, any exist in the wild,
-    // or the card is rare+ (the original zero-count display).
-    if (R.INDEX[card.rarity] < 2 && !variant && !myVariantSerials(set.id, card.id).length &&
-        !(c.rainbow || c.prism || c.obsidian || c.oneofone)) return;
-    var rows = VARIANT_ORDER.map(function (t) {
-      var vt = CPS.cards.VARIANTS[t];
-      if (t === 'oneofone') {
-        return '<div class="vc-row"><span>One-of-one variant</span><span class="vc-n ' + (c.oneofone_by ? 'vc-done' : '') + '">' +
-          (c.oneofone_by ? 'found by <b>' + esc(c.oneofone_by) + '</b>' : 'not found') + '</span></div>';
-      }
-      var n = c[t] || 0;
-      return '<div class="vc-row"><span>' + vt.name + ' variants</span><span class="vc-n ' + (n >= vt.run ? 'vc-done' : '') + '">' +
-        n + '/' + vt.run + ' found</span></div>';
-    }).join('');
-    var mine = myVariantSerials(set.id, card.id);
-    if (mine.length) {
-      rows += '<div class="vc-row"><span>Your serials</span><span class="vc-mine">' +
-        mine.map(function (v) { return CPS.cards.VARIANTS[v.tier].name + ' #' + v.serial; }).join(', ') + '</span></div>';
-    }
-    el.innerHTML = rows;
-    el.style.display = '';
-  }
-
   /* --- trading */
   var TB = null; // trade builder state
 
@@ -1425,7 +1381,7 @@
       });
       var ti = box.querySelector('[data-turnin]');
       if (ti) ti.addEventListener('click', function () { turnInFlow(setId, cardId, forceHolo, variant); });
-      fillCensus(box, set, card, variant);
+      if (CPS.census) CPS.census.fill(box, set, card, variant);
       if (CPS.popfill) CPS.popfill(box, set, card);
     });
   }
