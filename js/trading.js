@@ -401,5 +401,8 @@
     CPS.composer.openOffer(COMPOSER_HOST, l, prefill);
   }
 
-  CPS.trading = { render: render, refresh: load, updateBadge: updateBadge, navBadge: navBadge, openListing: openPostModal, openOffer: openOfferModal };
+  CPS.trading = { render: render, refresh: load, updateBadge: updateBadge, navBadge: navBadge, openListing: openPostModal, openOffer: openOfferModal,
+    /* Phase 3 (§3.6): the card screen's listed-ghost tiles read my
+       already-loaded listings from here — best-effort, never a fetch. */
+    myListings: function () { return T ? T.listings.filter(function (l) { return l.mine; }) : null; } };
 })(window.CPS);
