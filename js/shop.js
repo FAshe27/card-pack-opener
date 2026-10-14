@@ -142,24 +142,34 @@
   }
 
   var DUPE_CREDIT_TIERS = [
-    { tier: 'common', rate: 20, label: 'Common' },
-    { tier: 'uncommon', rate: 12, label: 'Uncommon' },
-    { tier: 'rare', rate: 6, label: 'Rare' },
-    { tier: 'epic', rate: 4, label: 'Epic+' }
+    { tier: 'common', rate: 20, dollars: 1, label: 'Common' },
+    { tier: 'uncommon', rate: 12, dollars: 1, label: 'Uncommon' },
+    { tier: 'rare', rate: 6, dollars: 1, label: 'Rare' },
+    { tier: 'epic', rate: 4, dollars: 1, label: 'Epic' },
+    { tier: 'legendary', rate: 2, dollars: 1, label: 'Legendary' },
+    { tier: 'chase', rate: 1, dollars: 2, label: 'Chase' }
   ];
 
   function dupeCounts() {
-    // pooled across all sets, mirrors CPS.tickets.ticketDupeCounts
-    var out = { common: 0, uncommon: 0, rare: 0, epic: 0 };
+    // Pooled across all sets, bucketed by each card's OWN rarity: the
+    // Shop sells every tier separately (migration 142), while app.js's
+    // ctx.dupeCounts pools epic+legendary+chase for the ticket trade.
+    // Per-card formula mirrors app.js exactly: dupes =
+    // max(0, (copies - vaulted) - max(1, unvaulted variants)).
+    var out = { common: 0, uncommon: 0, rare: 0, epic: 0, legendary: 0, chase: 0 };
     if (!ctx.S || !ctx.S.player) return out;
     var vmap = null;
     try { vmap = ctx.variantCountMap ? ctx.variantCountMap() : null; } catch (e) {}
     window.CardSets.all().forEach(function (set) {
       var st = ctx.S.player.sets[set.id];
-      if (!st || !ctx.dupeCounts) return;
-      var c = ctx.dupeCounts(set, st, vmap);
-      out.common += c.common || 0; out.uncommon += c.uncommon || 0;
-      out.rare += c.rare || 0; out.epic += c.epic || 0;
+      if (!st || !st.cards) return;
+      set.cards.forEach(function (c) {
+        if (out[c.rarity] == null) return;
+        var e = st.cards[c.id];
+        if (!e || !e.n) return;
+        var v = vmap ? (vmap[set.id + ':' + c.id] || 0) : 0;
+        out[c.rarity] += Math.max(0, (e.n - (e.v || 0)) - Math.max(1, v));
+      });
     });
     return out;
   }
@@ -169,7 +179,7 @@
     // confirm's heads-up). Mirrors ctx.dupeCounts' per-card formula in
     // app.js exactly — keep the two in sync: dupes per card =
     // max(0, (copies - vaulted) - max(1, unvaulted variants)).
-    var out = { common: 0, uncommon: 0, rare: 0, epic: 0 };
+    var out = { common: 0, uncommon: 0, rare: 0, epic: 0, legendary: 0, chase: 0 };
     if (!ctx.S || !ctx.S.player || !ctx.isTurned) return out;
     var vmap = null;
     try { vmap = ctx.variantCountMap ? ctx.variantCountMap() : null; } catch (e) {}
@@ -180,7 +190,8 @@
         if (ctx.isTurned(set.id, c.id)) return;
         var e = st.cards[c.id];
         if (!e || !e.n) return;
-        var t = c.rarity === 'common' ? 'common' : c.rarity === 'uncommon' ? 'uncommon' : c.rarity === 'rare' ? 'rare' : 'epic';
+        var t = c.rarity;
+        if (out[t] == null) return;
         var v = vmap ? (vmap[set.id + ':' + c.id] || 0) : 0;
         out[t] += Math.max(0, (e.n - (e.v || 0)) - Math.max(1, v));
       });
@@ -191,7 +202,7 @@
   function renderDupeSell(el) {
     var counts = dupeCounts();
     var rows = DUPE_CREDIT_TIERS.map(function (t) {
-      var n = counts[t.tier], credit = Math.floor(n / t.rate);
+      var n = counts[t.tier], credit = Math.floor(n / t.rate) * t.dollars;
       return '<div class="tradein-row">' +
         '<span class="pill r-' + (t.tier === 'epic' ? 'epic' : t.tier) + '">' + t.label + '</span>' +
         '<span class="tradein-mid"><b>' + n + '</b><span class="muted">/' + t.rate + '</span> dupes <span class="muted">&rarr;</span> <b>$' + credit + '</b></span>' +
@@ -201,21 +212,21 @@
     var box = $('#shopDupeSell', el);
     if (box) {
       box.innerHTML = '<h3>💰 Sell your dupes to the shop</h3>' +
-        '<p class="muted small">Sell full batches of duplicates for Store Credit: 20 Commons = $1 \u00b7 12 Uncommons = $1 \u00b7 6 Rares = $1 \u00b7 4 Epic or better = $1. The counter shows dupes you have / dupes per $1.</p>' +
+        '<p class="muted small">Sell full batches of duplicates for Store Credit: 20 Commons = $1 \u00b7 12 Uncommons = $1 \u00b7 6 Rares = $1 \u00b7 4 Epics = $1 \u00b7 2 Legendaries = $1 \u00b7 1 Chase = $2. The counter shows dupes you have / dupes per batch.</p>' +
         '<div class="tradein-rows">' + rows + '</div>';
       box.querySelectorAll('[data-dupe-sell]').forEach(function (btn) {
         btn.addEventListener('click', async function () {
           var tier = btn.getAttribute('data-dupe-sell');
           var t = null; DUPE_CREDIT_TIERS.forEach(function (x) { if (x.tier === tier) t = x; });
-          var n = dupeCounts()[tier] || 0, credit = t ? Math.floor(n / t.rate) : 0;
-          if (!t || credit < 1) return;
+          var n = dupeCounts()[tier] || 0, batches = t ? Math.floor(n / t.rate) : 0, credit = t ? batches * t.dollars : 0;
+          if (!t || batches < 1) return;
           btn.disabled = true;
           var nt = dupeNotTurnedCounts()[tier] || 0;
           var ntLine = nt > 0
             ? '<p style="color:#ffd97a">⚠️ <b>' + nt + '</b> of your ' + n + ' ' + t.label + ' duplicates are copies of cards you haven\'t turned in yet.</p>'
             : '<p class="muted">All of these cards have already been turned in.</p>';
           var ok = await ctx.confirmDialog('Sell duplicates?',
-            '<p>Sell <b>' + (credit * t.rate) + ' ' + t.label + '</b> duplicate' + (credit * t.rate === 1 ? '' : 's') + ' for <b>$' + credit + ' Store Credit</b>?</p>' +
+            '<p>Sell <b>' + (batches * t.rate) + ' ' + t.label + '</b> duplicate' + (batches * t.rate === 1 ? '' : 's') + ' for <b>$' + credit + ' Store Credit</b>?</p>' +
             ntLine +
             '<p class="muted">The cards are removed from your collection. <b>There is no undo.</b> Numbered and vaulted copies are never sold.</p>',
             'Sell them');
