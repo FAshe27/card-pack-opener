@@ -43,11 +43,11 @@
 .tp-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .trade-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
 
-/* ---- sticky recap footers + pinned picks (Phase 1, moved) ----
-   The footer bleeds to the modal-box edges (its padding is 26px) so
-   the primary button stays reachable without scrolling the whole form. */
+/* ---- recap footers + pinned picks (Phase 1, moved) ----
+   The footer bleeds to the modal-box edges (its padding is 26px) and
+   flows with the form as part of the window — not pinned to the
+   modal's bottom edge (Franklin 2026-10-14). */
 .bounty-footer, .trade-footer {
-  position: sticky; bottom: -26px; z-index: 2;
   margin: 18px -26px -26px; padding: 12px 26px 20px;
   background: var(--panel); border-top: 1px solid var(--line);
   display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
