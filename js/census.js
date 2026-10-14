@@ -51,6 +51,19 @@
     // or the card is rare+ (the original zero-count display).
     if (R.INDEX[card.rarity] < 2 && !variant && !myVariantSerials(set.id, card.id).length &&
         !(c.rainbow || c.prism || c.obsidian || c.oneofone)) return;
+    var mcount = misprints[card.id] || 0;
+    // Misprint card (Franklin, 2026-10-14): no tier listing at all — the
+    // explainer sentence IS the census, and it opens the misprint owners.
+    if (mcount > 0) {
+      el.innerHTML = '<div class="vc-row vc-link" data-owners="misprint"><span class="vc-misprint-note">Early in PackRipper history, this card mistakenly had ' +
+        mcount + ' numbered card' + (mcount === 1 ? '' : 's') + ' minted.</span><span class="vc-go">›</span></div>';
+      el.style.display = '';
+      el.onclick = function (ev) {
+        var row = ev.target.closest('[data-owners]');
+        if (row && el.contains(row)) openOwners(set, card, 'misprint');
+      };
+      return;
+    }
     var rows = ORDER.map(function (t) {
       var vt = CPS.cards.VARIANTS[t];
       if (t === 'oneofone') {
@@ -65,11 +78,6 @@
       return '<div class="vc-row"><span>' + vt.name + ' variants</span><span class="vc-n">' +
         n + '/' + vt.run + ' found</span></div>';
     }).join('');
-    var mcount = misprints[card.id] || 0;
-    if (mcount > 0) {
-      rows += '<div class="vc-row vc-link" data-owners="misprint"><span class="vc-misprint-note">Early in PackRipper history, this card mistakenly had ' +
-        mcount + ' numbered card' + (mcount === 1 ? '' : 's') + ' minted.</span><span class="vc-go">›</span></div>';
-    }
     var mine = myVariantSerials(set.id, card.id);
     if (mine.length) {
       rows += '<div class="vc-row"><span>Your serials</span><span class="vc-mine">' +
