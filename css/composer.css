@@ -1,0 +1,116 @@
+/* Market composer (Phase 2): the shared post-bounty / list-a-card /
+   make-an-offer forms from js/composer.js. Form-only rules moved here
+   from bounties.css / trading.css; board + claim/cancel/detail rules
+   stay in those files. Loads after trading.css. */
+
+/* ---- bounty form (moved from bounties.css) ---- */
+.bounty-form h4 { margin: 18px 0 8px; }
+.bounty-form .row { margin-bottom: 10px; }
+/* site CSS forces label.inline inputs to 70px wide (meant for number fields);
+   undo that for radios (checkboxes already have their own fix in style.css) */
+.bounty-form label.inline input[type=radio] { width: 16px; height: 16px; margin: 0; flex: none; }
+.bounty-pick-grid {
+  display: grid; grid-template-columns: 1fr;
+  gap: 6px; max-height: 220px; overflow: auto; margin: 8px 0;
+  border: 1px solid var(--line); border-radius: 10px; padding: 8px;
+}
+.bounty-pick {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  background: none; border: 2px solid transparent; border-radius: 8px; padding: 6px 8px;
+  cursor: pointer; color: inherit; text-align: left; font-size: .85rem;
+}
+.bounty-pick:hover { border-color: var(--line); }
+.bounty-pick.selected { border-color: #f5b942; background: #1d1a12; }
+.bounty-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bounty-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.warn { color: #ff9d6b; }
+
+/* ---- trading forms (moved from trading.css) ---- */
+.trade-form h4 { margin: 18px 0 8px; }
+.trade-form .row { margin-bottom: 10px; }
+.trade-form label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: none; }
+.tp-pick-grid {
+  display: grid; gap: 6px; margin: 8px 0; max-height: 32vh; overflow-y: auto;
+}
+.tp-pick {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 12px; cursor: pointer; text-align: left; width: 100%;
+  font: inherit; color: inherit;
+}
+.tp-pick:hover { border-color: var(--line); }
+.tp-pick.selected { border-color: #f5b942; background: #1d1a12; }
+.tp-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trade-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+
+/* ---- sticky recap footers + pinned picks (Phase 1, moved) ----
+   The footer bleeds to the modal-box edges (its padding is 26px) so
+   the primary button stays reachable without scrolling the whole form. */
+.bounty-footer, .trade-footer {
+  position: sticky; bottom: -26px; z-index: 2;
+  margin: 18px -26px -26px; padding: 12px 26px 20px;
+  background: var(--panel); border-top: 1px solid var(--line);
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+.bounty-footer .btn, .trade-footer .btn { margin-top: 0; }
+.bounty-recap, .trade-recap { flex: 1 1 200px; font-weight: 600; }
+.pb-pin { display: flex; gap: 10px; align-items: center; margin: 8px 0; min-height: 40px; }
+.pb-pin .bounty-want { width: 44px; flex: none; }
+.pb-pin .bounty-want .card { width: 100%; border-radius: 8px; }
+.pb-pin .bounty-want .cf { border-radius: 4px; }
+.tp-pin { display: flex; gap: 10px; align-items: center; margin: 8px 0; min-height: 40px; }
+.tp-pin .trade-face { width: 44px; flex: none; }
+.picker-count { margin: 6px 0 0; }
+
+/* ---- listing review box (moved from trading.css) ---- */
+.trade-reviewbox {
+  display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: start;
+  background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px; margin: 12px 0;
+}
+.trade-reviewbox .trade-face .card { width: 100%; }
+@media (max-width: 560px) {
+  .trade-reviewbox { grid-template-columns: 84px 1fr; }
+}
+
+/* ---- Phase 2: inline errors, segmented copy control, per-row adds ---- */
+.cmp-hidden { display: none !important; }
+.cmp-errors {
+  background: rgba(255,84,112,.10); border: 1px solid rgba(255,84,112,.45);
+  color: #ffb3c0; border-radius: 10px; padding: 10px 12px;
+  font-size: .88rem; line-height: 1.45; margin: 10px 0;
+}
+.cmp-errors p { margin: 2px 0; }
+.cmp-errors.cmp-note {
+  background: rgba(255,255,255,.05); border-color: var(--line); color: var(--muted, #b9b9c4);
+}
+.cmp-seg { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.cmp-seg button {
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 14px; cursor: pointer; color: inherit; font: inherit; font-size: .88rem;
+}
+.cmp-seg button:hover { border-color: #f5b942; }
+.cmp-seg button.on { border-color: #f5b942; background: #1d1a12; color: #ffd97a; font-weight: 700; }
+.cmp-seg button:disabled { opacity: .45; cursor: not-allowed; }
+.cmp-tierrow { align-items: center; }
+.cmp-rowacts { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.cmp-rowacts .btn { margin-top: 0; }
+.cmp-copyrows { display: grid; gap: 6px; margin: 4px 0 10px; }
+.cmp-copyrows-label { margin-top: 8px; }
+.cmp-copyrow { display: flex; gap: 8px; align-items: stretch; }
+.cmp-copybtn {
+  flex: 1; text-align: left; background: var(--panel2); border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 12px; cursor: pointer; color: inherit; font: inherit;
+}
+.cmp-copybtn:hover { border-color: #f5b942; }
+.cmp-copyrow.selected .cmp-copybtn { border-color: #f5b942; background: #1d1a12; }
+.cmp-holo-toggle {
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 12px; cursor: pointer; color: inherit; font: inherit; white-space: nowrap;
+}
+.cmp-holo-toggle.on { border-color: #f5b942; background: #1d1a12; color: #ffd97a; font-weight: 700; }
+.chip-flip {
+  border: 1px solid var(--line); background: none; color: var(--muted, #b9b9c4);
+  border-radius: 999px; padding: 1px 8px; cursor: pointer; font-size: .75rem;
+}
+.chip-flip:hover { color: #ffd97a; border-color: #f5b942; }
