@@ -1,0 +1,161 @@
+/* Arcade lobby + game pages — Torn-inspired layout, PackRipper skin.
+   Uses only the site's own tokens from css/style.css (:root palette,
+   rarity colours, .panel gradient language). All classes are arc-*
+   namespaced so nothing here can collide with the games' own CSS. */
+
+/* ---- token header strip (Torn's info bar, our voice) ---- */
+.arc-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: linear-gradient(180deg, rgba(29,36,64,.75), rgba(22,28,48,.75));
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 16px; box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  margin-bottom: 16px; font-size: 1.02rem;
+}
+.arc-head-icon {
+  display: grid; place-items: center; flex: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-weight: 800; font-size: .8rem; font-style: normal;
+}
+.arc-head-text b { color: var(--text); }
+.arc-head-streak { margin-left: auto; color: var(--muted); font-size: .92rem; }
+.arc-head-streak b { color: var(--warn); }
+
+/* ---- back row on a game page ---- */
+.arc-backrow { margin-bottom: 12px; }
+.arc-back { padding-left: 4px; }
+
+/* ---- lobby grid ---- */
+.arc-grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.arc-tile {
+  --tile: var(--accent);
+  display: flex; flex-direction: column; text-align: left;
+  padding: 0; overflow: hidden; cursor: pointer;
+  font: inherit; color: var(--text);
+  background: linear-gradient(180deg, rgba(29,36,64,.75), rgba(22,28,48,.9));
+  border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.arc-tile:hover:not(:disabled), .arc-tile:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--tile);
+  box-shadow: 0 16px 44px rgba(0,0,0,.4), 0 0 0 1px var(--tile);
+  outline: none;
+}
+.arc-tile-slots { --tile: var(--c-chase); }
+.arc-tile-highlow { --tile: var(--accent2); }
+.arc-tile-plinko { --tile: var(--c-legendary); }
+.arc-tile-scratch { --tile: var(--c-uncommon); }
+
+.arc-tile-head {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,.04);
+  border-bottom: 1px solid var(--line);
+}
+.arc-tile-title { font-weight: 800; letter-spacing: .08em; font-size: .95rem; }
+.arc-tile-tag {
+  flex: none; font-size: .72rem; font-weight: 800; letter-spacing: .04em;
+  padding: 3px 8px; border-radius: 999px;
+  background: rgba(124,108,255,.16); color: #c9c2ff;
+  border: 1px solid rgba(124,108,255,.35);
+}
+.arc-tile-tag.testing { background: rgba(255,178,30,.12); color: var(--warn); border-color: rgba(255,178,30,.35); }
+
+.arc-tile-art {
+  display: grid; place-items: center;
+  min-height: 148px; padding: 18px 12px;
+  background:
+    radial-gradient(320px 150px at 50% 0%, color-mix(in srgb, var(--tile) 22%, transparent), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 10px, transparent 10px 20px);
+}
+.arc-tile-foot { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px 14px; margin-top: auto; }
+.arc-tile-blurb { color: var(--muted); font-size: .85rem; line-height: 1.45; }
+.arc-play { font-weight: 800; color: var(--tile); }
+.arc-soon { font-weight: 800; color: var(--muted); }
+
+.arc-tile.is-testing { filter: grayscale(.75); opacity: .62; }
+.arc-tile.is-testing:hover { transform: none; }
+.arc-tile.is-testing:not(:disabled) { cursor: pointer; }
+.arc-tile.is-testing:not(:disabled):hover { transform: translateY(-3px); opacity: .8; }
+
+/* ---- tile art: Slots (three reels, rarity-coloured 7s) ---- */
+.arc-art-slots { display: flex; gap: 10px; }
+.arc-reel {
+  display: grid; place-items: center;
+  width: 54px; height: 68px; border-radius: 10px;
+  background: #0e1324; border: 2px solid var(--rc, var(--line));
+  font-size: 2rem; font-weight: 900; color: var(--rc, var(--text));
+  box-shadow: inset 0 0 18px rgba(0,0,0,.6), 0 6px 16px rgba(0,0,0,.35);
+}
+
+/* ---- tile art: High / Low (mini number card + arrows) ---- */
+.arc-art-highlow { display: flex; align-items: center; gap: 14px; }
+.arc-minicard {
+  display: grid; place-items: center;
+  width: 62px; height: 86px; border-radius: 9px;
+  background: linear-gradient(135deg, #232342, #2e2e5a);
+  border: 2px solid #6b6bd6;
+  font-size: 2.1rem; font-weight: 800; color: #fff;
+  text-shadow: 0 2px 12px rgba(107,107,214,.6);
+  box-shadow: 0 6px 16px rgba(0,0,0,.4);
+}
+.arc-arrow { font-size: 1.7rem; line-height: 1; }
+.arc-arrow.up { color: var(--good); }
+.arc-arrow.down { color: var(--bad); }
+
+/* ---- tile art: Plinko (ball, peg pyramid, bins) ---- */
+.arc-art-plinko { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.arc-ball {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe9b0, var(--c-legendary) 65%, #b25c00);
+  box-shadow: 0 4px 10px rgba(0,0,0,.45);
+}
+.arc-pegs { display: flex; gap: 14px; }
+.arc-pegs i { width: 7px; height: 7px; border-radius: 50%; background: #aebadd; box-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.arc-bins { display: flex; gap: 4px; margin-top: 3px; }
+.arc-bins i { width: 16px; height: 12px; border-radius: 3px 3px 0 0; background: rgba(255,178,30,.35); border: 1px solid rgba(255,178,30,.5); border-bottom: 0; }
+.arc-bins i:nth-child(3) { background: rgba(255,79,163,.4); border-color: rgba(255,79,163,.6); }
+
+/* ---- tile art: Scratchoffs (foil ticket + coin) ---- */
+.arc-art-scratch { position: relative; }
+.arc-ticket {
+  display: grid; grid-template-columns: repeat(3, 26px); gap: 6px;
+  padding: 12px; border-radius: 8px;
+  background: linear-gradient(150deg, #232b4a, #171d33);
+  border: 1.5px dashed rgba(232,236,246,.4);
+  box-shadow: 0 8px 20px rgba(0,0,0,.4);
+}
+.arc-foil {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f2f4fa, #9aa3ba 60%, #6d7690);
+  box-shadow: inset 0 0 6px rgba(255,255,255,.5);
+}
+.arc-coin {
+  position: absolute; right: -14px; bottom: -10px;
+  font-size: 1.9rem; transform: rotate(12deg);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
+}
+
+@media (max-width: 560px) {
+  .arc-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .arc-tile-art { min-height: 118px; padding: 14px 8px; }
+  .arc-head-streak { margin-left: 0; }
+  /* narrow tiles: shrink the head + slot reels so nothing clips */
+  .arc-tile-head { padding: 8px 10px; }
+  .arc-tile-title { font-size: .82rem; }
+  .arc-tile-tag { font-size: .65rem; padding: 2px 6px; }
+  .arc-tile-foot { padding: 10px 10px 12px; }
+  .arc-art-slots { gap: 6px; }
+  .arc-reel { width: 40px; height: 52px; font-size: 1.45rem; border-radius: 8px; }
+  .arc-art-highlow { gap: 9px; }
+  .arc-minicard { width: 50px; height: 70px; font-size: 1.7rem; }
+  .arc-arrow { font-size: 1.3rem; }
+  .arc-ticket { grid-template-columns: repeat(3, 21px); gap: 5px; padding: 9px; }
+  .arc-foil { width: 21px; height: 21px; }
+  .arc-coin { font-size: 1.5rem; right: -8px; }
+}
