@@ -696,11 +696,12 @@
       if (avail <= 0) return;
       var used = BD.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id; }).length;
       if (avail - used <= 0) return;
+      var usedPlain = BD.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id && !o.holo; }).length;
       if (q) {
         var hay = ('#' + c.num + ' ' + c.num + ' ' + c.name + ' ' + (c.subtitle || '')).toLowerCase();
         if (hay.indexOf(q) < 0) return;
       }
-      list.push({ card: c, left: avail - used, holo: (e.h || 0) - (e.vh || 0) > 0, holoLeft: pbHoloLeft(s.id, c.id) });
+      list.push({ card: c, left: avail - used, plainLeft: plainOn(e) - usedPlain, holo: (e.h || 0) - (e.vh || 0) > 0, holoLeft: pbHoloLeft(s.id, c.id) });
     });
     list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
     var matched = list.length;
@@ -713,7 +714,7 @@
         '<span class="cmp-rowacts"><span class="muted small">#' + o.card.num + '</span> ' +
         '<span class="pill r-' + o.card.rarity + '">' + esc(o.card.rarity) + '</span>' +
         ' <span class="muted small">×' + o.left + '</span>' +
-        '<button type="button" class="btn small" data-add="' + esc(o.card.id) + '">Add</button>' +
+        (o.plainLeft > 0 ? '<button type="button" class="btn small" data-add="' + esc(o.card.id) + '">Add</button>' : '') +
         (o.holoLeft > 0 ? '<button type="button" class="btn small" data-addholo="' + esc(o.card.id) + '">Add ✦</button>' : '') +
         '</span></div>';
     }).join('') || '<div class="muted small">No matches.</div>';
@@ -1281,6 +1282,7 @@
       var holoLeft = holoOn(e) - OD.cards.filter(function (o) { return o.set === s.id && o.card === c.id && o.holo; }).length;
       if (plainLeft - usedPlain > 0) {
         rows.push({ set: s.id, card: c, kind: 'plain', left: plainLeft - usedPlain,
+                    plainAdd: plainOn(e) - OD.cards.filter(function (o) { return o.set === s.id && o.card === c.id && !o.tier && !o.holo; }).length > 0,
                     holo: holoOn(e) > 0, holoLeft: Math.max(0, holoLeft), label: c.name, tier: null, serial: null });
       }
       vs.forEach(function (v) {
@@ -1307,7 +1309,7 @@
         '<span class="tp-pick-name">' + esc(r.label) + (r.kind === 'plain' && r.holo ? ' ✦' : '') + '</span>' +
         '<span class="cmp-rowacts"><span class="muted small">#' + r.card.num + '</span> <span class="pill r-' + r.card.rarity + '">' + esc(r.card.rarity) + '</span>' +
         (r.kind === 'plain' ? ' <span class="muted small">×' + r.left + '</span>' : '') +
-        '<button type="button" class="btn small" data-add="' + i + '">Add</button>' +
+        (r.kind === 'variant' || r.plainAdd ? '<button type="button" class="btn small" data-add="' + i + '">Add</button>' : '') +
         (r.holoLeft > 0 ? '<button type="button" class="btn small" data-addholo="' + i + '">Add ✦</button>' : '') +
         '</span></div>';
     }).join('') || '<div class="muted small">No matches.</div>';
