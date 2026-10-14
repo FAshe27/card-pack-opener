@@ -149,16 +149,22 @@
     insts.forEach(function (inst) {
       tiles.push({ kind: 'variant', key: 'variant:' + inst.id, inst: inst, vaulted: !!inst.vaulted });
     });
-    for (var i = 0; i < c.holoOn; i++) tiles.push({ kind: 'holo', key: 'holo', vaulted: false });
+    /* Keys are unique PER POSITION within a kind: fungible copies share
+       a kind, and a bare-kind key made the selection resolver's
+       first-match land on tile #1 no matter which copy was clicked —
+       the clicked tile appeared to jump to the front (Franklin,
+       2026-10-14). Enumeration order is deterministic, so a positional
+       key is a stable identity across repaints. */
+    for (var i = 0; i < c.holoOn; i++) tiles.push({ kind: 'holo', key: 'holo:' + i, vaulted: false });
     if (c.plainOn > STACK_MAX && !view.expanded) {
       tiles.push({ kind: 'stack', key: 'stack', count: c.plainOn, vaulted: false });
     } else {
-      for (var j = 0; j < c.plainOn; j++) tiles.push({ kind: 'plain', key: 'plain', vaulted: false });
+      for (var j = 0; j < c.plainOn; j++) tiles.push({ kind: 'plain', key: 'plain:' + j, vaulted: false });
       if (c.plainOn > STACK_MAX) tiles.push({ kind: 'collapse', key: 'collapse', vaulted: false });
     }
-    for (var k = 0; k < c.holoV; k++) tiles.push({ kind: 'holoVault', key: 'holoVault', vaulted: true });
-    for (var m = 0; m < c.plainV; m++) tiles.push({ kind: 'plainVault', key: 'plainVault', vaulted: true });
-    ghosts.forEach(function (l) { tiles.push({ kind: 'ghost', key: 'ghost', listing: l, vaulted: false }); });
+    for (var k = 0; k < c.holoV; k++) tiles.push({ kind: 'holoVault', key: 'holoVault:' + k, vaulted: true });
+    for (var m = 0; m < c.plainV; m++) tiles.push({ kind: 'plainVault', key: 'plainVault:' + m, vaulted: true });
+    ghosts.forEach(function (l, gi) { tiles.push({ kind: 'ghost', key: 'ghost:' + gi, listing: l, vaulted: false }); });
     return tiles;
   }
   function selectable(t) { return t.kind !== 'ghost' && t.kind !== 'stack' && t.kind !== 'collapse'; }
