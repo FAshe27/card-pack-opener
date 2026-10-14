@@ -88,6 +88,17 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .variant-census .vc-n { font-weight: 800; font-variant-numeric: tabular-nums; }
 .variant-census .vc-done { color: var(--good); }
 .variant-census .vc-mine { color: var(--accent2); font-weight: 700; }
+.variant-census .vc-link { cursor: pointer; }
+.variant-census .vc-link:hover .vc-n { text-decoration: underline; }
+.variant-census .vc-go { color: var(--accent2); font-weight: 800; }
+.variant-census .vc-misprint-note { color: var(--muted); font-style: italic; }
+.owners-list { display: flex; flex-direction: column; gap: 2px; margin-top: 10px; }
+.owners-row { display: flex; justify-content: space-between; gap: 10px; padding: 7px 10px; background: var(--panel2); border-radius: 8px; align-items: baseline; }
+.owners-serial { font-weight: 800; font-variant-numeric: tabular-nums; }
+.owners-name { font-weight: 700; }
+.owners-you { color: var(--accent2); font-weight: 700; }
+.owners-tag { color: var(--muted); font-size: .82rem; font-weight: 700; }
+.owners-misprint { color: var(--bad); font-size: .72rem; font-weight: 800; letter-spacing: .06em; border: 1px solid var(--bad); padding: 0 4px; border-radius: 4px; }
 .variants-grid .card { max-width: 170px; }
 .variants-panel { margin-top: 16px; }
 .variants-grid .coll-item { pointer-events: auto; cursor: pointer; }
