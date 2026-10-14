@@ -1,11 +1,22 @@
-/* Higher/Lower game (admin-only beta). Server-driven via cps_game_* RPCs.
-   Consumes CPS.appCtx (S, $, toast, audio, isAdmin, isCloud) and registers
-   as CPS.games. The panel lives in the admin view for now; moving it to a
-   public Games tab later is just a visibility change. */
+/* Arcade — lobby + game pages (Franklin, 2026-10-14).
+   Layout inspired by Torn's casino grid (token header strip, one big tile
+   per game, click a tile to go to that game's page) skinned in PackRipper's
+   own palette/type — not a Torn clone. Prize Wheel stays its own tab and is
+   NOT part of this lobby.
+   Structure: CPS.games.render() draws either the lobby or the currently
+   open game page inside #gamesPanel, the same in-place swap the Sandbox
+   uses for Launch test / Back. No app.js changes: the existing 'arcade'
+   renderView branch calls render(), and setTokens/updateBadge are the only
+   touchpoints other modules use.
+   Higher/Lower is server-driven via cps_game_* RPCs; Slots mounts from
+   CPS.slots (js/slots.js) on its own page. Plinko + Scratchoffs are still
+   testing in the Sandbox, so their tiles are greyed 'In testing' tiles —
+   admins can click through to the Sandbox, everyone else sees Coming soon. */
 (function (CPS) {
   var ctx = CPS.appCtx;
   var G = null; // {run, card, streak, bank}
   var acting = false; // in-flight guard: double-taps can't double-spend or double-claim
+  var page = 'lobby'; // 'lobby' | 'highlow' | 'slots'
 
   function el() { return ctx.$('#gamesPanel'); }
 
@@ -25,11 +36,100 @@
     return bank.map(function (p) { return '<span class="bank-prize">' + prizeName(p) + '</span>'; }).join('');
   }
 
-  function render() {
-    var box = el(); if (!box) return;
+  /* ---------------- shared header (Torn's info strip, our words) -------- */
+  function headerHTML() {
     var tokens = ctx.S.gameTokens || 0;
-    var html = '<div class="panel"><h2>Arcade</h2>' +
-      '<div class="arcade-tokens">🪙 <b><span id="gameTokens">' + tokens + '</span> token' + (tokens === 1 ? '' : 's') + '</b></div></div>';
+    var html = '<div class="arc-head"><span class="arc-head-icon" aria-hidden="true">i</span>' +
+      '<span class="arc-head-text">You have 🪙 <b><span id="gameTokens">' + tokens + '</span> token' +
+      (tokens === 1 ? '' : 's') + '</b></span>';
+    if (G && !G.over) html += '<span class="arc-head-streak">High / Low streak: <b>' + G.streak + '</b></span>';
+    html += '</div>';
+    return html;
+  }
+
+  function backHTML() {
+    return '<div class="arc-backrow"><button class="btn ghost arc-back" id="arcBackBtn" type="button">← Back to Arcade</button></div>';
+  }
+
+  function bindBack(box) {
+    var b = box.querySelector('#arcBackBtn');
+    if (b) b.addEventListener('click', function () { page = 'lobby'; window.scrollTo(0, 0); render(); });
+  }
+
+  /* ---------------- lobby ---------------- */
+  function artHTML(key) {
+    if (key === 'slots') {
+      return '<div class="arc-art-slots" aria-hidden="true">' +
+        '<span class="arc-reel r-common">7</span><span class="arc-reel r-legendary">7</span><span class="arc-reel r-chase">7</span></div>';
+    }
+    if (key === 'highlow') {
+      return '<div class="arc-art-highlow" aria-hidden="true">' +
+        '<span class="arc-arrow up">▲</span><span class="arc-minicard">7</span><span class="arc-arrow down">▼</span></div>';
+    }
+    if (key === 'plinko') {
+      return '<div class="arc-art-plinko" aria-hidden="true"><span class="arc-ball"></span>' +
+        '<span class="arc-pegs"><i></i><i></i><i></i></span>' +
+        '<span class="arc-pegs"><i></i><i></i><i></i><i></i></span>' +
+        '<span class="arc-pegs"><i></i><i></i><i></i><i></i><i></i></span>' +
+        '<span class="arc-bins"><i></i><i></i><i></i><i></i><i></i></span></div>';
+    }
+    // scratchoffs
+    return '<div class="arc-art-scratch" aria-hidden="true"><div class="arc-ticket">' +
+      '<span class="arc-foil"></span><span class="arc-foil"></span><span class="arc-foil"></span>' +
+      '<span class="arc-foil"></span><span class="arc-foil"></span><span class="arc-foil"></span>' +
+      '<span class="arc-foil"></span><span class="arc-foil"></span><span class="arc-foil"></span>' +
+      '</div><span class="arc-coin">🪙</span></div>';
+  }
+
+  var TILES = [
+    { id: 'highlow', title: 'HIGH / LOW', tag: '1 🪙 a run', accent: 'highlow',
+      blurb: 'Guess whether the next card is higher or lower. Every round is win-or-bust — claim your prize bank any time.' },
+    { id: 'slots', title: 'SLOTS', tag: '2 🪙 a spin', accent: 'slots',
+      blurb: 'Match three rarity symbols to win packs. Legendary and Chase triples are announced to everyone!' },
+    { id: 'plinko', title: 'PLINKO', tag: 'IN TESTING', accent: 'plinko', testing: true,
+      blurb: 'Drop a chip down 8 rows of pegs — centre bins pay tokens, edge bins pay big packs.' },
+    { id: 'scratchoffs', title: 'SCRATCHOFFS', tag: 'IN TESTING', accent: 'scratch', testing: true,
+      blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.' }
+  ];
+
+  function renderLobby(box) {
+    var admin = false;
+    try { admin = !!ctx.isAdmin(); } catch (e) { /* local/guest: not admin */ }
+    var tiles = TILES.map(function (t) {
+      var cls = 'arc-tile arc-tile-' + t.accent + (t.testing ? ' is-testing' : '');
+      var foot = t.testing
+        ? (admin ? '<span class="arc-play">Open in Sandbox →</span>' : '<span class="arc-soon">Coming soon</span>')
+        : '<span class="arc-play">Play →</span>';
+      var attrs = t.testing
+        ? (admin ? ' data-arc-sandbox="1"' : ' disabled aria-disabled="true"')
+        : ' data-arc-open="' + t.id + '"';
+      return '<button type="button" class="' + cls + '"' + attrs + '>' +
+        '<span class="arc-tile-head"><span class="arc-tile-title">' + t.title + '</span>' +
+        '<span class="arc-tile-tag' + (t.testing ? ' testing' : '') + '">' + t.tag + '</span></span>' +
+        '<span class="arc-tile-art">' + artHTML(t.id) + '</span>' +
+        '<span class="arc-tile-foot"><span class="arc-tile-blurb">' + t.blurb + '</span>' + foot + '</span>' +
+        '</button>';
+    }).join('');
+    box.innerHTML = headerHTML() +
+      '<div class="arc-grid">' + tiles + '</div>';
+    box.querySelectorAll('[data-arc-open]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        page = b.getAttribute('data-arc-open');
+        window.scrollTo(0, 0);
+        render();
+      });
+    });
+    box.querySelectorAll('[data-arc-sandbox]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('sandbox');
+      });
+    });
+  }
+
+  /* ---------------- High / Low page ---------------- */
+  function renderHighLow(box) {
+    var tokens = ctx.S.gameTokens || 0;
+    var html = headerHTML() + backHTML();
     html += '<div class="panel"><h3>High / Low</h3>';
     if (!G) {
       html += '<p class="muted">Guess whether the next number is <b>higher</b> or <b>lower</b>. ' +
@@ -42,8 +142,8 @@
       html += '<div class="game-streak">Streak: <b>' + G.streak + '</b></div>';
       if (!G.over) {
         var rk = G.card.rank;
-        html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 10 ? ' disabled' : '') + '>\u25b2 Higher</button>' +
-                '<button class="btn big" id="gameLower"' + (rk <= 1 ? ' disabled' : '') + '>\u25bc Lower</button></div>';
+        html += '<div class="row wrap"><button class="btn big" id="gameHigher"' + (rk >= 10 ? ' disabled' : '') + '>▲ Higher</button>' +
+                '<button class="btn big" id="gameLower"' + (rk <= 1 ? ' disabled' : '') + '>▼ Lower</button></div>';
         html += '<button class="btn ghost" id="gameClaim"' + (G.bank && G.bank.length ? '' : ' disabled') + '>Claim prizes &amp; end run</button>';
       } else {
         html += '<div class="game-over">' + (G.busted ? '💥 Bust! The bank is gone.' : 'Prizes claimed!') + '</div>';
@@ -54,11 +154,24 @@
       html += '</div>';
     }
     html += '</div>';
-    html += '<div id="slotsMount"></div>';
     box.innerHTML = html;
-    updateBadge();
+    bindBack(box);
     bind();
+  }
+
+  /* ---------------- Slots page ---------------- */
+  function renderSlots(box) {
+    box.innerHTML = headerHTML() + backHTML() + '<div id="slotsMount"></div>';
+    bindBack(box);
     if (CPS.slots) CPS.slots.mount(ctx.$('#slotsMount'));
+  }
+
+  function render() {
+    var box = el(); if (!box) return;
+    if (page === 'highlow') renderHighLow(box);
+    else if (page === 'slots') renderSlots(box);
+    else renderLobby(box);
+    updateBadge();
   }
 
   function setTokens(n) {
@@ -136,5 +249,9 @@
     } catch (e) { ctx.cloudError(e); } finally { acting = false; }
   }
 
-  CPS.games = { render: render, refresh: render, setTokens: setTokens, updateBadge: updateBadge };
+  CPS.games = {
+    render: render, refresh: render, setTokens: setTokens, updateBadge: updateBadge,
+    open: function (p) { page = p || 'lobby'; render(); },
+    lobby: function () { page = 'lobby'; render(); }
+  };
 })(window.CPS);
