@@ -352,25 +352,50 @@
     return m;
   }
 
+  /* Phase 1 helpers: remembered sets (module-local storage; app.js's own
+     last-set pref isn't exposed to modules). */
+  function lsGet(k) { try { return window.localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
+  function countLine(total, shown, searching) {
+    if (searching) return total + (total === 1 ? ' match' : ' matches') + (shown < total ? ' · showing ' + shown : '');
+    if (shown < total) return total + ' cards · showing the ' + shown + ' rarest — type to search';
+    return total + (total === 1 ? ' card' : ' cards');
+  }
+
   async function openPostModal() {
     try { await ctx.ensureVariants(); } catch (e) { /* variants optional for posting */ }
     var sets = sortByName(window.CardSets.all().filter(function (s) { return s.id !== 'jumbled'; }));
-    PB = {
-      sets: sets, wantSet: sets[0] ? sets[0].id : '', wantCard: null, q: '',
-      offerSet: '', offerQ: '',
-      holo: 'any', tier: '', serial: '',
-      tokens: 0, tickets: 0, packSet: '', packs: 0,
-      offerCards: []   // {set, card, holo}
-    };
+    if (!PB) {
+      // fresh form, seeded from the remembered sets (Phase 1 §1.6)
+      PB = {
+        sets: sets, wantSet: '', wantCard: null, q: '',
+        offerSet: '', offerQ: '',
+        holo: 'any', tier: '', serial: '',
+        tokens: 0, tickets: 0, packSet: '', packs: 0,
+        offerCards: []   // {set, card, holo}
+      };
+      var rw = lsGet('cps.composerSet.want');
+      PB.wantSet = sets.some(function (s) { return s.id === rw; }) ? rw : (sets[0] ? sets[0].id : '');
+      var ro = lsGet('cps.composerSet.offer'), oSets = ownedSets();
+      PB.offerSet = oSets.some(function (s) { return s.id === ro; }) ? ro : (oSets[0] ? oSets[0].id : '');
+    }
+    PB.sets = sets;
+    if (!sets.some(function (s) { return s.id === PB.wantSet; })) PB.wantSet = sets[0] ? sets[0].id : '';
+    pbShowForm();
+  }
+
+  function pbShowForm() {
     ctx.openModal(
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h3>Post a bounty</h3>' +
+      (B ? '<div class="muted small">Open bounties: ' + (B.my_open || 0) + ' of 5</div>' : '') +
       '<div class="bounty-form">' +
       '<h4>You want</h4>' +
       '<div class="row wrap"><label>Set <select id="pbSet"></select></label>' +
       '<label>Search <input id="pbSearch" placeholder="card name or #" size="18"></label></div>' +
+      '<div id="pbWantSel" class="pb-pin"></div>' +
+      '<div id="pbCardCount" class="muted small picker-count"></div>' +
       '<div id="pbCardResults" class="bounty-pick-grid"></div>' +
-      '<div id="pbWantSel" class="muted small"></div>' +
       '<div class="row wrap"><span class="muted small">Copy needed:</span>' +
       '<label class="inline"><input type="radio" name="pbHolo" value="any" checked> Any copy</label>' +
       '<label class="inline"><input type="radio" name="pbHolo" value="holo"> Holo only</label></div>' +
@@ -378,25 +403,171 @@
       '<select id="pbTier"><option value="">—</option><option value="rainbow">Rainbow /50</option>' +
       '<option value="prism">Prism /10</option><option value="obsidian">Obsidian /5</option>' +
       '<option value="oneofone">One-of-One</option></select>' +
-      '<input id="pbSerial" type="number" min="1" placeholder="#" style="width:64px;flex:none"></div>' +
+      '<input id="pbSerial" type="number" min="1" placeholder="#" style="width:64px;flex:none">' +
+      '<span class="muted small" id="pbTierHint"></span></div>' +
       '<h4>You offer</h4>' +
       '<div class="row wrap"><label>🪙 Tokens <input id="pbTokens" type="number" min="0" max="' + (ctx.S.gameTokens || 0) +
-        '" value="0" style="width:80px"></label><span class="muted small">you have ' + (ctx.S.gameTokens || 0) + '</span>' +
+        '" value="0" style="width:80px"></label><span class="muted small" id="pbTokensHave"></span>' +
       '<label>🎟️ Tickets <input id="pbTickets" type="number" min="0" max="' + (ctx.S.spins || 0) +
-        '" value="0" style="width:80px"></label><span class="muted small">you have ' + (ctx.S.spins || 0) + '</span></div>' +
+        '" value="0" style="width:80px"></label><span class="muted small" id="pbTicketsHave"></span></div>' +
       '<div class="row wrap"><label>🎁 Packs <select id="pbPackSet"></select></label>' +
       '<input id="pbPacks" type="number" min="0" value="0" style="width:70px"><span class="muted small" id="pbPacksHave"></span></div>' +
       '<div class="row wrap"><label>🃏 Card <select id="pbCardSet"></select></label>' +
       '<label>Search <input id="pbCardSearch" placeholder="card name or #" size="18"></label></div>' +
+      '<div id="pbOfferCount" class="muted small picker-count"></div>' +
       '<div id="pbOfferGrid" class="bounty-pick-grid"></div>' +
       '<div class="row wrap"><label class="inline"><input type="checkbox" id="pbCardHolo"> add as holo</label>' +
       '<span class="muted small">tap a card to add it to your offer (up to 5)</span></div>' +
       '<div id="pbOfferCards" class="bounty-offer-chips"></div>' +
-      '<div class="row wrap"><button class="btn primary big" id="pbGo">Post bounty</button>' +
-      '<button class="btn" data-close>Cancel</button></div>' +
       '<p class="muted small">Your offer is held in escrow until the bounty is claimed, cancelled, or expires (7 days).</p>' +
+      '<div class="bounty-footer"><span class="bounty-recap" id="pbRecap"></span>' +
+      '<button class="btn primary big" id="pbGo">Review bounty →</button>' +
+      '<button class="btn" data-close>Cancel</button>' +
+      '<button class="btn small" id="pbStartOver">Start over</button></div>' +
       '</div>',
       bindPostModal);
+  }
+
+  /* Collect every DOM field into PB (the review screen replaces the form,
+     so the submit path reads state, never the DOM). */
+  function pbCollect(box) {
+    PB.tokens = Math.max(0, parseInt(box.querySelector('#pbTokens').value, 10) || 0);
+    PB.tickets = Math.max(0, parseInt(box.querySelector('#pbTickets').value, 10) || 0);
+    PB.packSet = box.querySelector('#pbPackSet').value || '';
+    PB.packs = Math.max(0, parseInt(box.querySelector('#pbPacks').value, 10) || 0);
+    PB.serial = box.querySelector('#pbSerial').value || '';
+    pbClampSerial(box);
+  }
+
+  /* The same checks, in the same order, with the same messages as the old
+     direct submit. */
+  function pbValidate() {
+    if (!PB.wantCard) { ctx.toast('Pick the card you want first.', 'warn'); return false; }
+    if (PB.packSet && !PB.packs) { ctx.toast('Set the pack count for your pack offer.', 'warn'); return false; }
+    var packs = PB.packSet ? PB.packs : 0;
+    if (!PB.tokens && !PB.tickets && !packs && !PB.offerCards.length) {
+      ctx.toast('Your bounty needs an offer — tokens, tickets, packs, or cards.', 'warn'); return false;
+    }
+    var serial = (PB.serial || '').trim();
+    if ((PB.tier && !serial) || (!PB.tier && serial)) {
+      ctx.toast('A numbered serial needs both a tier and a number.', 'warn'); return false;
+    }
+    return true;
+  }
+
+  function pbReview(box) {
+    pbCollect(box);
+    if (!pbValidate()) return;
+    var serial = (PB.serial || '').trim();
+    var offer = {
+      offer_tokens: PB.tokens, offer_tickets: PB.tickets,
+      offer_packs: PB.packSet ? PB.packs : 0, offer_pack_set: PB.packSet || null,
+      offer_cards: PB.offerCards.map(function (o) { return { set_id: o.set, card_id: o.card, holo: o.holo }; })
+    };
+    var want = {
+      want_set: PB.wantCard.set, want_card: PB.wantCard.id, want_holo: PB.holo,
+      want_tier: PB.tier || null, want_serial: serial || null
+    };
+    ctx.openModal(
+      '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h3>Review your bounty</h3>' +
+      '<div class="bounty-tradebox"><div><span class="bounty-want-label">YOU GIVE</span><div>' + offerBodyHtml(offer) + '</div></div>' +
+      '<div class="bounty-trade-arrow">⇄</div>' +
+      '<div><span class="bounty-want-label">YOU GET</span><div class="bounty-want">' + wantFace(want) + '</div>' +
+      '<div class="bounty-req">' + esc(wantReq(want)) + '</div></div></div>' +
+      '<p class="muted small">Your offer is held in escrow until the bounty is claimed, cancelled, or expires (7 days).</p>' +
+      '<div class="row wrap"><button class="btn" id="pbBack">← Back</button>' +
+      '<button class="btn primary big" id="pbConfirm">Post bounty — escrow my offer</button></div>',
+      function (rbox) {
+        rbox.querySelectorAll('[data-close]').forEach(function (x) {
+          x.addEventListener('click', function () { ctx.closeModal(); });
+        });
+        bindCardClicks(rbox);
+        rbox.querySelector('#pbBack').addEventListener('click', function () { pbShowForm(); });
+        rbox.querySelector('#pbConfirm').addEventListener('click', function () { pbDoSubmit(this); });
+      });
+  }
+
+  /* The old pbSubmit body, reading PB instead of the DOM. The RPC params
+     are byte-identical to the pre-review-step submit (pinned by the
+     golden-params harness). */
+  async function pbDoSubmit(btn) {
+    var serial = (PB.serial || '').trim();
+    btn.disabled = true;
+    try {
+      await CPS.cloud.call('post_bounty', {
+        p_want: { set: PB.wantCard.set, card: PB.wantCard.id, holo: PB.holo,
+                  tier: PB.tier || null, serial: serial || null },
+        p_offer: { tokens: PB.tokens, tickets: PB.tickets, pack_set: PB.packSet || null,
+                   packs: PB.packSet ? PB.packs : 0,
+                   cards: PB.offerCards.map(function (o) { return { set: o.set, card: o.card, holo: o.holo }; }) }
+      });
+      PB = null;   // posted — the next open starts fresh
+      ctx.closeModal();
+      ctx.toast('Bounty posted!', 'good');
+      ctx.audio.coin();
+      await load(); await ctx.refreshCloud();
+    } catch (e) { btn.disabled = false; ctx.cloudError(e); }
+  }
+
+  function pbRecap(box) {
+    var t = box.querySelector('#pbRecap'); if (!t) return;
+    var want = 'Nothing wanted yet';
+    if (PB.wantCard) {
+      var c = cardObj(PB.wantCard.set, PB.wantCard.id);
+      want = 'Wanting ' + (c ? c.name : PB.wantCard.id);
+    }
+    var bits = [];
+    if (PB.tokens > 0) bits.push('🪙 ' + PB.tokens + ' token' + (PB.tokens === 1 ? '' : 's'));
+    if (PB.tickets > 0) bits.push('🎟️ ' + PB.tickets + ' ticket' + (PB.tickets === 1 ? '' : 's'));
+    if (PB.packSet && PB.packs > 0) {
+      var ps = setObj(PB.packSet);
+      bits.push('🎁 ' + PB.packs + ' ' + (ps ? ps.name : PB.packSet) + ' pack' + (PB.packs === 1 ? '' : 's'));
+    }
+    PB.offerCards.forEach(function (o) {
+      var oc = cardObj(o.set, o.card);
+      bits.push('🃏 ' + (oc ? oc.name : o.card) + (o.holo ? ' ✦' : ''));
+    });
+    t.textContent = want + ' · Offering ' + (bits.length ? bits.join(' + ') : 'nothing yet');
+  }
+
+  function pbRenderMoneyHints(box) {
+    var th = box.querySelector('#pbTokensHave'), kh = box.querySelector('#pbTicketsHave');
+    if (th) th.textContent = 'You have ' + (ctx.S.gameTokens || 0) + ' · ' + Math.max(0, (ctx.S.gameTokens || 0) - PB.tokens) + ' left after';
+    if (kh) kh.textContent = 'You have ' + (ctx.S.spins || 0) + ' · ' + Math.max(0, (ctx.S.spins || 0) - PB.tickets) + ' left after';
+  }
+
+  /* Numbered-serial sanity (Phase 1 §1.5): tiers only exist on Rare+
+     cards, and the serial can't exceed the tier's run. Submission
+     semantics are unchanged (tier and serial still go together). */
+  function pbSyncTier(box) {
+    var tierSel = box.querySelector('#pbTier'), serialInp = box.querySelector('#pbSerial');
+    var hint = box.querySelector('#pbTierHint');
+    if (!tierSel || !serialInp) return;
+    var card = PB.wantCard ? cardObj(PB.wantCard.set, PB.wantCard.id) : null;
+    var rarePlus = !!card && (ctx.R.INDEX[card.rarity] || 0) >= (ctx.R.INDEX.rare || 2);
+    if (!rarePlus && PB.tier) {
+      PB.tier = ''; PB.serial = '';
+      tierSel.value = ''; serialInp.value = '';
+      pbRenderWantSel(box);
+    }
+    tierSel.disabled = !rarePlus;
+    serialInp.disabled = !rarePlus || !PB.tier;
+    if (hint) hint.textContent = card && !rarePlus ? 'Numbered serials need a Rare or better card.' : '';
+    pbClampSerial(box);
+  }
+
+  function pbClampSerial(box) {
+    if (!PB.tier) return;
+    var v = CPS.cards.VARIANTS[PB.tier]; if (!v) return;
+    var n = parseInt(PB.serial, 10);
+    if (isNaN(n)) return;
+    var c = Math.max(1, Math.min(v.run, n));
+    if (String(c) !== String(PB.serial).trim()) {
+      PB.serial = String(c);
+      var inp = box.querySelector('#pbSerial'); if (inp) inp.value = PB.serial;
+      pbRenderWantSel(box);
+    }
   }
 
   function bindPostModal(box) {
@@ -408,52 +579,99 @@
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>';
     }).join('');
     setSel.value = PB.wantSet;
-    setSel.addEventListener('change', function () { PB.wantSet = setSel.value; PB.q = ''; box.querySelector('#pbSearch').value = ''; pbRenderResults(box); });
+    setSel.addEventListener('change', function () {
+      PB.wantSet = setSel.value; lsSet('cps.composerSet.want', PB.wantSet);
+      PB.q = ''; box.querySelector('#pbSearch').value = ''; pbRenderResults(box);
+    });
 
     var q = box.querySelector('#pbSearch');
+    q.value = PB.q;
     q.addEventListener('input', function () { PB.q = q.value; pbRenderResults(box); });
 
     box.querySelectorAll('input[name="pbHolo"]').forEach(function (r) {
+      r.checked = (PB.holo === r.value);
       r.addEventListener('change', function () { PB.holo = r.value; pbRenderWantSel(box); });
     });
-    box.querySelector('#pbTier').addEventListener('change', function (e) { PB.tier = e.target.value; pbRenderWantSel(box); });
-    box.querySelector('#pbSerial').addEventListener('input', function (e) { PB.serial = e.target.value; pbRenderWantSel(box); });
+    var tierSel = box.querySelector('#pbTier');
+    tierSel.value = PB.tier;
+    tierSel.addEventListener('change', function (e) { PB.tier = e.target.value; pbSyncTier(box); pbRenderWantSel(box); });
+    var serialInp = box.querySelector('#pbSerial');
+    serialInp.value = PB.serial;
+    serialInp.addEventListener('input', function (e) { PB.serial = e.target.value; pbRenderWantSel(box); });
+    serialInp.addEventListener('change', function () { pbClampSerial(box); });
 
-    // pack offer
+    // currency: keep PB in sync as you type; clamp to balance on change
+    function bindMoney(inputSel, key, balance) {
+      var inp = box.querySelector(inputSel);
+      inp.value = PB[key];
+      inp.addEventListener('input', function () {
+        PB[key] = Math.max(0, parseInt(inp.value, 10) || 0);
+        pbRenderMoneyHints(box); pbRecap(box);
+      });
+      inp.addEventListener('change', function () {
+        var v = Math.max(0, Math.min(balance, parseInt(inp.value, 10) || 0));
+        inp.value = v; PB[key] = v;
+        pbRenderMoneyHints(box); pbRecap(box);
+      });
+    }
+    bindMoney('#pbTokens', 'tokens', ctx.S.gameTokens || 0);
+    bindMoney('#pbTickets', 'tickets', ctx.S.spins || 0);
+
+    // pack offer: count disabled until a set is chosen, clamped to holdings
     var packSet = box.querySelector('#pbPackSet'), packsHave = box.querySelector('#pbPacksHave');
+    var packsInp = box.querySelector('#pbPacks');
     var invSets = PB.sets.filter(function (s) { return (ctx.ps({ id: s.id }).packs || 0) > 0; });
     packSet.innerHTML = '<option value="">—</option>' + invSets.map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + ' (' + ctx.ps({ id: s.id }).packs + ')</option>';
     }).join('');
+    packSet.value = PB.packSet;
     function syncPacks() {
-      var sid = packSet.value, n = ctx.ps({ id: sid }).packs || 0;
-      packsHave.textContent = sid ? 'you have ' + n : '';
-      box.querySelector('#pbPacks').max = n;
+      PB.packSet = packSet.value;
+      var n = PB.packSet ? (ctx.ps({ id: PB.packSet }).packs || 0) : 0;
+      packsHave.textContent = PB.packSet ? 'you have ' + n : '';
+      packsInp.disabled = !PB.packSet;
+      packsInp.max = n;
+      PB.packs = Math.max(0, Math.min(n, PB.packs || 0));
+      packsInp.value = PB.packs;
+      pbRecap(box);
     }
-    packSet.addEventListener('change', syncPacks); syncPacks();
+    packSet.addEventListener('change', syncPacks);
+    packsInp.addEventListener('input', function () {
+      PB.packs = Math.max(0, parseInt(packsInp.value, 10) || 0);
+      pbRecap(box);
+    });
+    packsInp.addEventListener('change', syncPacks);
+    syncPacks();
 
     // offer-card picker (same pick-grid pattern as "You want": tap a card to add it)
     var oSets = ownedSets();
-    PB.offerSet = oSets[0] ? oSets[0].id : '';
-    PB.offerQ = '';
+    if (!oSets.some(function (s) { return s.id === PB.offerSet; })) PB.offerSet = oSets[0] ? oSets[0].id : '';
     var oSetSel = box.querySelector('#pbCardSet');
     oSetSel.innerHTML = oSets.map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>';
     }).join('');
     oSetSel.value = PB.offerSet;
     oSetSel.addEventListener('change', function () {
-      PB.offerSet = oSetSel.value; PB.offerQ = '';
+      PB.offerSet = oSetSel.value; lsSet('cps.composerSet.offer', PB.offerSet);
+      PB.offerQ = '';
       box.querySelector('#pbCardSearch').value = '';
       pbRenderOfferGrid(box);
     });
-    box.querySelector('#pbCardSearch').addEventListener('input', function (e) {
+    var oSearch = box.querySelector('#pbCardSearch');
+    oSearch.value = PB.offerQ;
+    oSearch.addEventListener('input', function (e) {
       PB.offerQ = e.target.value; pbRenderOfferGrid(box);
     });
     pbRenderOfferGrid(box);
 
-    box.querySelector('#pbGo').addEventListener('click', function () { pbSubmit(box, this); });
+    box.querySelector('#pbGo').addEventListener('click', function () { pbReview(box); });
+    box.querySelector('#pbStartOver').addEventListener('click', function () { PB = null; openPostModal(); });
     pbRenderResults(box);
     pbRenderOfferCards(box);
+    pbRenderMoneyHints(box);
+    pbSyncTier(box);
+    pbRecap(box);
+    q.focus();
   }
 
   function pbRenderResults(box) {
@@ -468,18 +686,22 @@
       list.push(c);
     });
     list.sort(sortByRarity);
+    var matched = list.length;
     list = list.slice(0, 40);
+    var cl = box.querySelector('#pbCardCount');
+    if (cl) cl.textContent = countLine(matched, list.length, !!q);
     grid.innerHTML = list.map(function (c) {
       var sel = PB.wantCard && PB.wantCard.set === s.id && PB.wantCard.id === c.id;
       return '<button class="bounty-pick' + (sel ? ' selected' : '') + '" data-card="' + esc(c.id) + '">' +
         '<span class="bounty-pick-name">' + esc(c.name) + '</span>' +
-        '<span class="pill r-' + c.rarity + '">' + esc(c.rarity) + '</span></button>';
+        '<span><span class="muted small">#' + c.num + '</span> ' +
+        '<span class="pill r-' + c.rarity + '">' + esc(c.rarity) + '</span></span></button>';
     }).join('') || '<div class="muted small">No matches.</div>';
     grid.querySelectorAll('[data-card]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var card = s.byId.get(btn.getAttribute('data-card'));
         PB.wantCard = { set: s.id, id: card.id };
-        pbRenderResults(box); pbRenderWantSel(box);
+        pbRenderResults(box); pbRenderWantSel(box); pbSyncTier(box);
       });
     });
     pbRenderWantSel(box);
@@ -487,30 +709,41 @@
 
   function pbRenderWantSel(box) {
     var t = box.querySelector('#pbWantSel');
-    if (!PB.wantCard) { t.innerHTML = 'No card selected yet.'; return; }
+    if (!PB.wantCard) { t.innerHTML = '<span class="muted small">No card selected yet.</span>'; pbRecap(box); return; }
     var card = cardObj(PB.wantCard.set, PB.wantCard.id);
     var extra = '';
     var v = PB.tier && CPS.cards.VARIANTS[PB.tier];
     if (PB.tier && PB.serial) extra = ' · ' + esc(v ? v.name + ' #' + PB.serial + '/' + v.run : PB.tier + ' #' + PB.serial);
     else if (PB.tier || PB.serial) extra = ' · <span class="warn">serial needs both tier and number</span>';
-    t.innerHTML = 'Wanting: <b>' + esc(card ? card.name : PB.wantCard.id) + '</b> (' +
-      (PB.holo === 'holo' ? 'holo only' : 'any copy') + ')' + extra;
+    var shaped = {
+      want_set: PB.wantCard.set, want_card: PB.wantCard.id, want_holo: PB.holo,
+      want_tier: PB.tier || null, want_serial: PB.serial || null
+    };
+    t.innerHTML = '<div class="bounty-want">' + wantFace(shaped) + '</div>' +
+      '<div class="pb-pin-text"><b>' + esc(card ? card.name : PB.wantCard.id) + '</b>' +
+      (card ? ' <span class="pill r-' + card.rarity + '">' + esc(card.rarity) + '</span>' : '') +
+      '<div class="muted small">Wanting (' + (PB.holo === 'holo' ? 'holo only' : 'any copy') + ')' + extra + '</div></div>';
+    bindCardClicks(t);
+    pbRecap(box);
   }
 
   function pbRenderOfferCards(box) {
     var t = box.querySelector('#pbOfferCards');
     t.innerHTML = PB.offerCards.map(function (o, i) {
-      var card = cardObj(o.set, o.card);
+      var card = cardObj(o.set, o.card), s = setObj(o.set);
       return '<span class="trade-chip"><b>' + esc(card ? card.name : o.card) + '</b>' +
         (o.holo ? ' ✦' : '') +
+        ' <span class="muted small">(' + esc(s ? s.name : o.set) + ')</span>' +
         '<button class="chip-x" data-rm="' + i + '" title="Remove">×</button></span>';
     }).join('') || '<span class="muted small">No cards offered yet.</span>';
     t.querySelectorAll('[data-rm]').forEach(function (x) {
       x.addEventListener('click', function () {
         PB.offerCards.splice(+x.getAttribute('data-rm'), 1);
         pbRenderOfferCards(box);
+        pbRenderOfferGrid(box);
       });
     });
+    pbRecap(box);
   }
 
   function pbRenderOfferGrid(box) {
@@ -531,11 +764,15 @@
       list.push({ card: c, left: avail - used, holo: (e.h || 0) - (e.vh || 0) > 0 });
     });
     list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
+    var matched = list.length;
     list = list.slice(0, 40);
+    var cl = box.querySelector('#pbOfferCount');
+    if (cl) cl.textContent = countLine(matched, list.length, !!q);
     grid.innerHTML = list.map(function (o) {
       return '<button class="bounty-pick" data-card="' + esc(o.card.id) + '">' +
         '<span class="bounty-pick-name">' + esc(o.card.name) + (o.holo ? ' ✦' : '') + '</span>' +
-        '<span><span class="pill r-' + o.card.rarity + '">' + esc(o.card.rarity) + '</span>' +
+        '<span><span class="muted small">#' + o.card.num + '</span> ' +
+        '<span class="pill r-' + o.card.rarity + '">' + esc(o.card.rarity) + '</span>' +
         ' <span class="muted small">×' + o.left + '</span></span></button>';
     }).join('') || '<div class="muted small">No matches.</div>';
     grid.querySelectorAll('[data-card]').forEach(function (btn) {
@@ -553,39 +790,18 @@
     var wantHolo = box.querySelector('#pbCardHolo').checked;
     var holoUsed = PB.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo; }).length;
     if (wantHolo && holoUsed >= (e.h || 0) - (e.vh || 0)) { ctx.toast('You don\'t have another holo copy on hand.', 'warn'); return; }
+    if (!wantHolo) {
+      // Mirror of the holo check above: a plain add needs a plain copy on
+      // hand — (n - h) - (v - vh). This is the client half of the
+      // migration-139 incident: offering the plain copy of a holo-only
+      // card used to sail through and die on the server.
+      var plainOn = (e.n - (e.h || 0)) - ((e.v || 0) - (e.vh || 0));
+      var plainUsed = PB.offerCards.filter(function (o) { return o.set === sid && o.card === cid && !o.holo; }).length;
+      if (plainUsed >= plainOn) { ctx.toast('You don\'t have another plain copy on hand.', 'warn'); return; }
+    }
     PB.offerCards.push({ set: sid, card: cid, holo: wantHolo && (e.h || 0) - (e.vh || 0) > 0 });
     pbRenderOfferCards(box);
     pbRenderOfferGrid(box);
-  }
-
-  async function pbSubmit(box, btn) {
-    if (!PB.wantCard) { ctx.toast('Pick the card you want first.', 'warn'); return; }
-    var tokens = Math.max(0, parseInt(box.querySelector('#pbTokens').value, 10) || 0);
-    var tickets = Math.max(0, parseInt(box.querySelector('#pbTickets').value, 10) || 0);
-    var packSet = box.querySelector('#pbPackSet').value || null;
-    var packs = Math.max(0, parseInt(box.querySelector('#pbPacks').value, 10) || 0);
-    if (packSet && !packs) { ctx.toast('Set the pack count for your pack offer.', 'warn'); return; }
-    if (!packSet) packs = 0;
-    if (!tokens && !tickets && !packs && !PB.offerCards.length) {
-      ctx.toast('Your bounty needs an offer — tokens, tickets, packs, or cards.', 'warn'); return;
-    }
-    var serial = (box.querySelector('#pbSerial').value || '').trim();
-    if ((PB.tier && !serial) || (!PB.tier && serial)) {
-      ctx.toast('A numbered serial needs both a tier and a number.', 'warn'); return;
-    }
-    btn.disabled = true;
-    try {
-      await CPS.cloud.call('post_bounty', {
-        p_want: { set: PB.wantCard.set, card: PB.wantCard.id, holo: PB.holo,
-                  tier: PB.tier || null, serial: serial || null },
-        p_offer: { tokens: tokens, tickets: tickets, pack_set: packSet, packs: packs,
-                   cards: PB.offerCards.map(function (o) { return { set: o.set, card: o.card, holo: o.holo }; }) }
-      });
-      ctx.closeModal();
-      ctx.toast('Bounty posted!', 'good');
-      ctx.audio.coin();
-      await load(); await ctx.refreshCloud();
-    } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
 
   CPS.bounties = { render: render, refresh: load, updateBadge: updateBadge, navBadge: navBadge, paintMarketNav: paintMarketNav };
