@@ -956,7 +956,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .pill { display: inline-block; font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--rc, var(--accent)) 18%, transparent); color: var(--rc, #cfd6ff); border: 1px solid color-mix(in srgb, var(--rc, var(--accent)) 40%, transparent); white-space: nowrap; }
 
 /* ===================================================== sets & settings */
-.sets-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; align-items: start; }
+.sets-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 20px; align-items: start; }
 .set-list { display: grid; gap: 10px; }
 .set-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
 .set-item.current { border-color: var(--accent); }
@@ -1102,7 +1102,7 @@ body.admin .player-chip .mode-tag { background: rgba(255,178,30,.18); color: #ff
 .login-form input#loginUser { font-size: 1.05rem; padding: 12px 14px; }
 .login-msg { min-height: 1.2em; font-size: .9rem; } .login-msg.bad { color: #ff9cad; }
 .acct-actions { margin-top: 14px; }
-.admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; align-items: start; }
+.admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 20px; align-items: start; }
 .admin-layout .wide { grid-column: 1 / -1; }
 .form-grid .span2 { grid-column: 1 / -1; }
 .fld-label { font-size: .82rem; color: var(--muted); display: block; margin-bottom: 2px; }
