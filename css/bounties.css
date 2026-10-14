@@ -56,6 +56,9 @@
 /* Offer cards as clickable faces (board + claim modal) */
 .bounty-offerfaces { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 .bounty-offerfaces .bounty-want { width: 104px; flex: none; }
+/* Composer review step: the YOU GET face takes the same 104px slot as
+   the offer faces — unconstrained it filled its whole grid column. */
+.bounty-tradebox .bounty-want { width: 104px; flex: none; }
 
 /* Any-number claim chooser (migration 141): serial radio rows in the
    claim confirm. Same inline-radio width fix as .bounty-form — site CSS
