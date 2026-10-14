@@ -106,6 +106,20 @@
     return !!(await ctx.confirmDialog('Discard this draft?',
       '<p>Go back to the card and throw away what you\'ve entered here?</p>', 'Discard'));
   }
+  /* app.js ALSO closes the modal on any [data-close] click (a
+     delegated #modal handler) and dismisses a pending confirmDialog
+     as abort while doing so. The composer's [data-close] buttons are
+     bound to its own CloseForm functions above, so their clicks must
+     never reach that handler — otherwise a clean Cancel's return to
+     the card is instantly closed again, and a dirty Cancel's discard
+     dialog is aborted in the same event (the live Phase 3 spot-check
+     defect). bindClose is the ONLY way composer modals bind
+     [data-close]. */
+  function bindClose(box, fn) {
+    box.querySelectorAll('[data-close]').forEach(function (x) {
+      x.addEventListener('click', function (e) { e.stopPropagation(); fn(); });
+    });
+  }
   function sanePrefill(p) {
     return (p && typeof p === 'object' &&
       (p.setId || p.cardId || p.copy || p.fromCard || p.cards || p.tokens != null)) ? p : null;
@@ -283,9 +297,7 @@
       '<div class="row wrap"><button class="btn" id="pbBack">← Back</button>' +
       '<button class="btn primary big" id="pbConfirm">Post bounty — escrow my offer</button></div>',
       function (rbox) {
-        rbox.querySelectorAll('[data-close]').forEach(function (x) {
-          x.addEventListener('click', function () { pbCloseForm(); });
-        });
+        bindClose(rbox, pbCloseForm);
         HB.bindCardClicks(rbox);
         rbox.querySelector('#pbBack').addEventListener('click', function () { pbShowForm(); });
         rbox.querySelector('#pbConfirm').addEventListener('click', function () { pbDoSubmit(rbox, this); });
@@ -330,7 +342,10 @@
   async function pbCloseForm() {
     if (BS && BS.fromCard) {
       var dirty = snapBounty() !== BS.snapshot;
-      if (!(await guardDiscard(BS, dirty))) return;
+      /* A declined discard re-shows the form: app.js's confirmDialog
+         closes the modal as it resolves, so returning bare would
+         strand the user with no form. State is intact in BD. */
+      if (!(await guardDiscard(BS, dirty))) { pbShowForm(); return; }
       var sess = BS; BS = null;
       BD = sess.stash || null;
       returnToCard(sess);
@@ -441,9 +456,7 @@
   }
 
   function bindBountyForm(box) {
-    box.querySelectorAll('[data-close]').forEach(function (x) {
-      x.addEventListener('click', function () { pbCloseForm(); });
-    });
+    bindClose(box, pbCloseForm);
     if (BD._note) { showNote(box, 'pbErrors', BD._note); BD._note = ''; }
     var setSel = box.querySelector('#pbSet');
     setSel.innerHTML = BD.sets.map(function (s) {
@@ -865,9 +878,7 @@
       '<div class="row wrap"><button class="btn" id="tpBack">← Back</button>' +
       '<button class="btn primary big" id="tpConfirm">List it — escrow my card</button></div>',
       function (rbox) {
-        rbox.querySelectorAll('[data-close]').forEach(function (x) {
-          x.addEventListener('click', function () { plCloseForm(); });
-        });
+        bindClose(rbox, plCloseForm);
         HT.bindCardClicks(rbox);
         rbox.querySelector('#tpBack').addEventListener('click', function () { plShowForm(); });
         rbox.querySelector('#tpConfirm').addEventListener('click', function () { plDoSubmit(rbox, this); });
@@ -908,7 +919,7 @@
   async function plCloseForm() {
     if (LS && LS.fromCard) {
       var dirty = snapListing() !== LS.snapshot;
-      if (!(await guardDiscard(LS, dirty))) return;
+      if (!(await guardDiscard(LS, dirty))) { plShowForm(); return; }
       var sess = LS; LS = null;
       LD = sess.stash || null;
       returnToCard(sess);
@@ -930,9 +941,7 @@
   }
 
   function bindListingForm(box) {
-    box.querySelectorAll('[data-close]').forEach(function (x) {
-      x.addEventListener('click', function () { plCloseForm(); });
-    });
+    bindClose(box, plCloseForm);
     if (LD._note) { showNote(box, 'tpErrors', LD._note); LD._note = ''; }
     var setSel = box.querySelector('#tpSet');
     setSel.innerHTML = LD.sets.map(function (s) {
@@ -1185,9 +1194,7 @@
   }
 
   function bindOfferForm(box) {
-    box.querySelectorAll('[data-close]').forEach(function (x) {
-      x.addEventListener('click', function () { ofCloseForm(); });
-    });
+    bindClose(box, ofCloseForm);
     // pack picker
     var packSet = box.querySelector('#ofPackSet'), packsHave = box.querySelector('#ofPacksHave');
     var invSets = OD.sets.filter(function (s) { return (ctx.ps({ id: s.id }).packs || 0) > 0; });
@@ -1409,7 +1416,7 @@
   async function ofCloseForm() {
     if (OS && OS.fromCard) {
       var dirty = snapOffer() !== OS.snapshot;
-      if (!(await guardDiscard(OS, dirty))) return;
+      if (!(await guardDiscard(OS, dirty))) { ofShowForm(); return; }
       var sess = OS; OS = null;
       returnToCard(sess);
     } else {
