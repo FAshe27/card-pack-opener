@@ -94,5 +94,26 @@
       });
   }
 
+  /* Tier-aware bell icon for variant_pull notifications (companion to
+     migration 140, which fixed the announcement text the same way).
+     app.js routes the bell icon through here; returning null makes it
+     fall back to the per-kind default. Tier comes from the row's meta;
+     rows old enough to lack meta are classified by their text, the same
+     word patterns cps.notif_visible uses server-side. Emojis are the
+     card-face tier emojis (CPS.cards.VARIANTS), so the icon matches the
+     emoji leading the announcement text. */
+  CPS.notifIcon = function (it) {
+    if (!it || it.kind !== 'variant_pull') return null;
+    var tier = (it.meta && it.meta.tier) || null;
+    if (!tier && it.text) {
+      if (it.text.indexOf(' pulled Prism #') >= 0) tier = 'prism';
+      else if (it.text.indexOf(' pulled Obsidian #') >= 0) tier = 'obsidian';
+      else if (it.text.indexOf(' pulled a one-of-one ') >= 0 || it.text.indexOf(' pulled the One-of-One ') >= 0) tier = 'oneofone';
+      else if (it.text.indexOf(' pulled Rainbow #') >= 0) tier = 'rainbow';
+    }
+    var v = tier && CPS.cards && CPS.cards.VARIANTS && CPS.cards.VARIANTS[tier];
+    return v ? v.emoji : null;
+  };
+
   CPS.notifSettings = { open: open };
 })(window.CPS);
