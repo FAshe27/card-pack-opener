@@ -363,26 +363,132 @@
     return sortByName(out);
   }
 
+  /* Phase 1 helpers: remembered sets (module-local storage, shared with
+     bounties.js's keys — app.js's own last-set pref isn't exposed). */
+  function lsGet(k) { try { return window.localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
+  function countLine(total, shown, searching) {
+    if (searching) return total + (total === 1 ? ' match' : ' matches') + (shown < total ? ' · showing ' + shown : '');
+    if (shown < total) return total + ' cards · showing the ' + shown + ' rarest — type to search';
+    return total + (total === 1 ? ' card' : ' cards');
+  }
+
   async function openPostModal() {
     try { await ctx.ensureVariants(); } catch (e) { /* variants optional */ }
     var sets = ownedSets();
-    PL = { sets: sets, set: sets[0] ? sets[0].id : '', card: null, q: '', holo: false, copy: 'regular', note: '' };
+    if (!PL) {
+      PL = { sets: sets, set: '', card: null, q: '', holo: false, copy: 'regular', note: '' };
+      var rl = lsGet('cps.composerSet.list');
+      PL.set = sets.some(function (s) { return s.id === rl; }) ? rl : (sets[0] ? sets[0].id : '');
+    }
+    PL.sets = sets;
+    if (!sets.some(function (s) { return s.id === PL.set; })) {
+      PL.set = sets[0] ? sets[0].id : '';
+      if (PL.card && PL.card.set !== PL.set) { PL.card = null; PL.copy = 'regular'; }
+    }
+    plShowForm();
+  }
+
+  function plShowForm() {
     ctx.openModal(
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h3>List a card</h3>' +
+      (T ? '<div class="muted small">Open listings: ' + (T.my_open || 0) + ' of 5</div>' : '') +
       '<div class="trade-form">' +
       '<div class="row wrap"><label>Set <select id="tpSet"></select></label>' +
       '<label>Search <input id="tpSearch" placeholder="card name or #" size="18"></label></div>' +
+      '<div id="tpCardSel" class="tp-pin"></div>' +
+      '<div id="tpCardCount" class="muted small picker-count"></div>' +
       '<div id="tpCardGrid" class="tp-pick-grid"></div>' +
-      '<div id="tpCardSel" class="muted small"></div>' +
       '<div class="row wrap"><label class="inline"><input type="checkbox" id="tpHolo"> list as holo</label>' +
       '<label>Which copy <select id="tpCopy"></select></label></div>' +
       '<div class="row wrap"><label>What are you looking for? (optional) <input id="tpNote" placeholder="e.g. Detroit Tigers cards" size="30" maxlength="140"></label></div>' +
-      '<div class="row wrap"><button class="btn primary big" id="tpGo">List it</button>' +
-      '<button class="btn" data-close>Cancel</button></div>' +
       '<p class="muted small">Your card is escrowed until the listing is accepted, cancelled, or expires (7 days).</p>' +
+      '<div class="trade-footer"><span class="trade-recap" id="tpRecap"></span>' +
+      '<button class="btn primary big" id="tpGo">Review listing →</button>' +
+      '<button class="btn" data-close>Cancel</button>' +
+      '<button class="btn small" id="tpStartOver">Start over</button></div>' +
       '</div>',
       bindPostModal);
+  }
+
+  /* Collect the DOM-only field (the note) into PL; everything else
+     already lives in state. */
+  function plCollect(box) {
+    PL.note = box.querySelector('#tpNote').value || '';
+  }
+
+  function plCopyDesc(c0) {
+    if (c0 && c0.tier) return variantLabel(c0.tier, c0.serial);
+    return PL.holo ? 'Holo copy' : 'Plain copy';
+  }
+
+  function plReview(box) {
+    plCollect(box);
+    if (!PL.card) { ctx.toast('Pick a card to list first.', 'warn'); return; }
+    var copies = plCopies();
+    var c0 = copies.filter(function (c) { return c.key === PL.copy; })[0] || { tier: null, serial: null };
+    var card = cardObj(PL.card.set, PL.card.id), s = setObj(PL.card.set);
+    var note = (PL.note || '').trim();
+    var shaped = {
+      set_id: PL.card.set, card_id: PL.card.id, holo: PL.holo,
+      variant_tier: c0.tier || null, variant_serial: c0.serial || null,
+      card_name: card ? card.name : PL.card.id, set_name: s ? s.name : PL.card.set,
+      rarity: card ? card.rarity : ''
+    };
+    ctx.openModal(
+      '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h3>Review your listing</h3>' +
+      '<div class="trade-reviewbox"><div class="trade-face">' + listingFace(shaped) + '</div>' +
+      '<div><div class="trade-cardname">' + esc(shaped.card_name) + '</div>' +
+      '<div class="muted small">' + esc(shaped.set_name) + ' · ' + esc(shaped.rarity) + '</div>' +
+      '<div>' + esc(plCopyDesc(c0)) + '</div>' +
+      (note ? '<div class="trade-note"><span class="muted small">Looking for: </span>“' + esc(note) + '”</div>' : '') +
+      '</div></div>' +
+      '<p class="muted small">Your card is escrowed until the listing is accepted, cancelled, or expires (7 days).</p>' +
+      '<div class="row wrap"><button class="btn" id="tpBack">← Back</button>' +
+      '<button class="btn primary big" id="tpConfirm">List it — escrow my card</button></div>',
+      function (rbox) {
+        rbox.querySelectorAll('[data-close]').forEach(function (x) {
+          x.addEventListener('click', function () { ctx.closeModal(); });
+        });
+        bindCardClicks(rbox);
+        rbox.querySelector('#tpBack').addEventListener('click', function () { plShowForm(); });
+        rbox.querySelector('#tpConfirm').addEventListener('click', function () { plDoSubmit(this); });
+      });
+  }
+
+  /* The old plSubmit body, reading PL instead of the DOM. The RPC params
+     are byte-identical to the pre-review-step submit (pinned by the
+     golden-params harness). */
+  async function plDoSubmit(btn) {
+    var copies = plCopies();
+    var c0 = copies.filter(function (c) { return c.key === PL.copy; })[0] || { tier: null, serial: null };
+    btn.disabled = true;
+    try {
+      await CPS.cloud.call('trade_post', {
+        p_card: { set: PL.card.set, card: PL.card.id, holo: PL.holo,
+                  tier: c0.tier || null, serial: c0.serial || null },
+        p_note: (PL.note || '').trim()
+      });
+      PL = null;   // listed — the next open starts fresh
+      ctx.closeModal();
+      ctx.toast('Card listed!', 'good');
+      ctx.audio.coin();
+      await ctx.refreshCloud();
+    } catch (e) { btn.disabled = false; ctx.cloudError(e); }
+  }
+
+  function plRecap(box) {
+    var t = box.querySelector('#tpRecap'); if (!t) return;
+    if (!PL || !PL.card) { t.textContent = 'No card picked yet'; return; }
+    var card = cardObj(PL.card.set, PL.card.id);
+    var copies = plCopies();
+    var c0 = copies.filter(function (c) { return c.key === PL.copy; })[0];
+    var suffix = '';
+    if (c0 && c0.tier) suffix = ' (' + variantLabel(c0.tier, c0.serial) + ')';
+    else if (PL.holo) suffix = ' (holo)';
+    t.textContent = 'Listing ' + (card ? card.name : PL.card.id) + suffix;
   }
 
   function bindPostModal(box) {
@@ -395,17 +501,27 @@
     }).join('');
     setSel.value = PL.set;
     setSel.addEventListener('change', function () {
-      PL.set = setSel.value; PL.card = null; PL.q = '';
+      PL.set = setSel.value; lsSet('cps.composerSet.list', PL.set);
+      PL.card = null; PL.q = '';
       box.querySelector('#tpSearch').value = '';
       plRenderGrid(box); plRenderSel(box);
     });
-    box.querySelector('#tpSearch').addEventListener('input', function (e) {
+    var search = box.querySelector('#tpSearch');
+    search.value = PL.q;
+    search.addEventListener('input', function (e) {
       PL.q = e.target.value; plRenderGrid(box);
     });
-    box.querySelector('#tpHolo').addEventListener('change', function (e) { PL.holo = e.target.checked; });
+    var holoInp = box.querySelector('#tpHolo');
+    holoInp.checked = PL.holo;
+    holoInp.addEventListener('change', function (e) { PL.holo = e.target.checked; plRenderSel(box); });
     box.querySelector('#tpCopy').addEventListener('change', function (e) { PL.copy = e.target.value; plRenderSel(box); });
-    box.querySelector('#tpGo').addEventListener('click', function () { plSubmit(box, this); });
+    var noteInp = box.querySelector('#tpNote');
+    noteInp.value = PL.note;
+    noteInp.addEventListener('input', function (e) { PL.note = e.target.value; });
+    box.querySelector('#tpGo').addEventListener('click', function () { plReview(box); });
+    box.querySelector('#tpStartOver').addEventListener('click', function () { PL = null; openPostModal(); });
     plRenderGrid(box); plRenderSel(box);
+    search.focus();
   }
 
   function plRenderGrid(box) {
@@ -422,12 +538,16 @@
       list.push({ card: c, left: e.n - (e.v || 0) });
     });
     list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
+    var matched = list.length;
     list = list.slice(0, 40);
+    var cl = box.querySelector('#tpCardCount');
+    if (cl) cl.textContent = countLine(matched, list.length, !!q);
     grid.innerHTML = list.map(function (o) {
       var sel = PL.card && PL.card.set === s.id && PL.card.id === o.card.id;
       return '<button class="tp-pick' + (sel ? ' selected' : '') + '" data-card="' + esc(o.card.id) + '">' +
         '<span class="tp-pick-name">' + esc(o.card.name) + '</span>' +
-        '<span><span class="pill r-' + o.card.rarity + '">' + esc(o.card.rarity) + '</span>' +
+        '<span><span class="muted small">#' + o.card.num + '</span> ' +
+        '<span class="pill r-' + o.card.rarity + '">' + esc(o.card.rarity) + '</span>' +
         ' <span class="muted small">×' + o.left + '</span></span></button>';
     }).join('') || '<div class="muted small">No matches.</div>';
     grid.querySelectorAll('[data-card]').forEach(function (btn) {
@@ -459,8 +579,8 @@
 
   function plRenderSel(box) {
     var t = box.querySelector('#tpCardSel'), cp = box.querySelector('#tpCopy');
-    if (!PL.card) { t.innerHTML = 'No card selected yet.'; cp.innerHTML = ''; return; }
-    var card = cardObj(PL.card.set, PL.card.id);
+    if (!PL.card) { t.innerHTML = '<span class="muted small">No card selected yet.</span>'; cp.innerHTML = ''; plRecap(box); return; }
+    var card = cardObj(PL.card.set, PL.card.id), s = setObj(PL.card.set);
     var copies = plCopies();
     cp.innerHTML = copies.map(function (c) {
       return '<option value="' + esc(c.key) + '"' + (PL.copy === c.key ? ' selected' : '') + '>' + esc(c.label) + '</option>';
@@ -468,27 +588,20 @@
     if (!copies.some(function (c) { return c.key === PL.copy; })) PL.copy = copies[0] ? copies[0].key : 'regular';
     cp.value = PL.copy;
     var c0 = copies.filter(function (c) { return c.key === PL.copy; })[0];
-    t.innerHTML = 'Listing: <b>' + esc(card ? card.name : PL.card.id) + '</b>' +
-      (c0 && c0.tier ? ' (' + esc(variantLabel(c0.tier, c0.serial)) + ')' : '') +
-      (PL.holo ? ' ✦ holo' : '');
-  }
-
-  async function plSubmit(box, btn) {
-    if (!PL.card) { ctx.toast('Pick a card to list first.', 'warn'); return; }
-    var copies = plCopies();
-    var c0 = copies.filter(function (c) { return c.key === PL.copy; })[0] || { tier: null, serial: null };
-    btn.disabled = true;
-    try {
-      await CPS.cloud.call('trade_post', {
-        p_card: { set: PL.card.set, card: PL.card.id, holo: PL.holo,
-                  tier: c0.tier || null, serial: c0.serial || null },
-        p_note: (box.querySelector('#tpNote').value || '').trim()
-      });
-      ctx.closeModal();
-      ctx.toast('Card listed!', 'good');
-      ctx.audio.coin();
-      await ctx.refreshCloud();
-    } catch (e) { btn.disabled = false; ctx.cloudError(e); }
+    var shaped = {
+      set_id: PL.card.set, card_id: PL.card.id, holo: PL.holo,
+      variant_tier: c0 && c0.tier ? c0.tier : null, variant_serial: c0 && c0.serial ? c0.serial : null,
+      card_name: card ? card.name : PL.card.id, set_name: s ? s.name : PL.card.set,
+      rarity: card ? card.rarity : ''
+    };
+    t.innerHTML = '<div class="trade-face">' + listingFace(shaped) + '</div>' +
+      '<div class="tp-pin-text"><b>' + esc(card ? card.name : PL.card.id) + '</b>' +
+      (card ? ' <span class="pill r-' + card.rarity + '">' + esc(card.rarity) + '</span>' : '') +
+      '<div class="muted small">Listing' +
+      (c0 && c0.tier ? ' · ' + esc(variantLabel(c0.tier, c0.serial)) : '') +
+      (PL.holo ? ' · ✦ holo' : '') + '</div></div>';
+    bindCardClicks(t);
+    plRecap(box);
   }
 
   /* ------------------------------------------------------------ make an offer */
@@ -512,6 +625,8 @@
       tokens: 0, tickets: 0, packSet: '', packs: 0,
       cards: []   // {set, card, holo, tier, serial, label}
     };
+    var ro = lsGet('cps.composerSet.offer');
+    if (sets.some(function (s) { return s.id === ro; })) OF.set = ro;
     ctx.openModal(
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h3>Make an offer</h3>' +
@@ -520,13 +635,14 @@
       ' — everything you offer is escrowed until the listing closes.</p>' +
       '<div class="trade-form">' +
       '<div class="row wrap"><label>🪙 Tokens <input id="ofTokens" type="number" min="0" max="' + (ctx.S.gameTokens || 0) +
-        '" value="0" style="width:80px"></label><span class="muted small">you have ' + (ctx.S.gameTokens || 0) + '</span>' +
+        '" value="0" style="width:80px"></label><span class="muted small" id="ofTokensHave"></span>' +
       '<label>🎟️ Tickets <input id="ofTickets" type="number" min="0" max="' + (ctx.S.spins || 0) +
-        '" value="0" style="width:80px"></label><span class="muted small">you have ' + (ctx.S.spins || 0) + '</span></div>' +
+        '" value="0" style="width:80px"></label><span class="muted small" id="ofTicketsHave"></span></div>' +
       '<div class="row wrap"><label>🎁 Packs <select id="ofPackSet"></select></label>' +
       '<input id="ofPacks" type="number" min="0" value="0" style="width:70px"><span class="muted small" id="ofPacksHave"></span></div>' +
       '<div class="row wrap"><label>🃏 Card <select id="ofCardSet"></select></label>' +
       '<label>Search <input id="ofCardSearch" placeholder="card name or #" size="18"></label></div>' +
+      '<div id="ofCardCount" class="muted small picker-count"></div>' +
       '<div id="ofCardGrid" class="tp-pick-grid"></div>' +
       '<div class="row wrap"><label class="inline"><input type="checkbox" id="ofCardHolo"> add as holo</label>' +
       '<span class="muted small">tap a card to add it (up to 5 — numbered serials listed separately)</span></div>' +
@@ -547,12 +663,35 @@
     packSet.innerHTML = '<option value="">—</option>' + invSets.map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + ' (' + ctx.ps({ id: s.id }).packs + ')</option>';
     }).join('');
+    var packsInp = box.querySelector('#ofPacks');
     function syncPacks() {
       var sid = packSet.value, n = sid ? (ctx.ps({ id: sid }).packs || 0) : 0;
       packsHave.textContent = sid ? 'you have ' + n : '';
-      box.querySelector('#ofPacks').max = n;
+      packsInp.disabled = !sid;
+      packsInp.max = n;
+      var v = Math.max(0, parseInt(packsInp.value, 10) || 0);
+      if (v > n) packsInp.value = n;
     }
-    packSet.addEventListener('change', syncPacks); syncPacks();
+    packSet.addEventListener('change', syncPacks);
+    packsInp.addEventListener('change', syncPacks);
+    syncPacks();
+    // currency: keep OF in sync as you type; clamp to balance on change
+    function ofMoney(inputSel, hintSel, key, balance) {
+      var inp = box.querySelector(inputSel), hint = box.querySelector(hintSel);
+      function paint() {
+        var v = Math.max(0, parseInt(inp.value, 10) || 0);
+        OF[key] = v;
+        if (hint) hint.textContent = 'You have ' + balance + ' · ' + Math.max(0, balance - v) + ' left after';
+      }
+      inp.addEventListener('input', paint);
+      inp.addEventListener('change', function () {
+        var v = Math.max(0, Math.min(balance, parseInt(inp.value, 10) || 0));
+        inp.value = v; paint();
+      });
+      paint();
+    }
+    ofMoney('#ofTokens', '#ofTokensHave', 'tokens', ctx.S.gameTokens || 0);
+    ofMoney('#ofTickets', '#ofTicketsHave', 'tickets', ctx.S.spins || 0);
 
     // card picker
     var oSetSel = box.querySelector('#ofCardSet');
@@ -561,7 +700,7 @@
     }).join('');
     oSetSel.value = OF.set;
     oSetSel.addEventListener('change', function () {
-      OF.set = oSetSel.value; OF.q = '';
+      OF.set = oSetSel.value; lsSet('cps.composerSet.offer', OF.set); OF.q = '';
       box.querySelector('#ofCardSearch').value = '';
       ofRenderGrid(box);
     });
@@ -606,16 +745,19 @@
       });
     });
     rows.sort(function (x, y) { return sortByRarity(x.card, y.card); });
+    OF._rowTotal = rows.length;
     return rows.slice(0, 40);
   }
 
   function ofRenderGrid(box) {
     var grid = box.querySelector('#ofCardGrid');
     var rows = ofGridRows();
+    var cl = box.querySelector('#ofCardCount');
+    if (cl) cl.textContent = countLine(OF._rowTotal || rows.length, rows.length, !!OF.q.trim());
     grid.innerHTML = rows.map(function (r, i) {
       return '<button class="tp-pick" data-row="' + i + '">' +
         '<span class="tp-pick-name">' + esc(r.label) + (r.kind === 'plain' && r.holo ? ' ✦' : '') + '</span>' +
-        '<span><span class="pill r-' + r.card.rarity + '">' + esc(r.card.rarity) + '</span>' +
+        '<span><span class="muted small">#' + r.card.num + '</span> <span class="pill r-' + r.card.rarity + '">' + esc(r.card.rarity) + '</span>' +
         (r.kind === 'plain' ? ' <span class="muted small">×' + r.left + '</span>' : '') + '</span></button>';
     }).join('') || '<div class="muted small">No matches.</div>';
     grid.querySelectorAll('[data-row]').forEach(function (btn) {
@@ -627,6 +769,14 @@
     if (!r) return;
     if (OF.cards.length >= 5) { ctx.toast('At most 5 cards per offer.', 'warn'); return; }
     var wantHolo = box.querySelector('#ofCardHolo').checked;
+    if (!r.tier && !(wantHolo && r.holo)) {
+      // Plain add: needs a plain copy on hand — (n - h) - (v - vh) —
+      // mirroring pbOfferAdd (the client half of the 139 incident).
+      var st2 = ctx.ps({ id: r.set }), e2 = st2.cards[r.card.id] || { n: 0, h: 0 };
+      var plainOn2 = (e2.n - (e2.h || 0)) - ((e2.v || 0) - (e2.vh || 0));
+      var plainUsed2 = OF.cards.filter(function (o) { return o.set === r.set && o.card === r.card.id && !o.tier && !o.holo; }).length;
+      if (plainUsed2 >= plainOn2) { ctx.toast('You don\'t have another plain copy on hand.', 'warn'); return; }
+    }
     OF.cards.push({ set: r.set, card: r.card.id, holo: wantHolo && r.holo,
                     tier: r.tier, serial: r.serial, label: r.label });
     ofRenderCards(box); ofRenderGrid(box);
@@ -635,8 +785,10 @@
   function ofRenderCards(box) {
     var t = box.querySelector('#ofCards');
     t.innerHTML = OF.cards.map(function (o, i) {
+      var s2 = setObj(o.set);
       return '<span class="trade-chip"><b>' + esc(o.label) + '</b>' +
         (o.holo ? ' ✦' : '') +
+        ' <span class="muted small">(' + esc(s2 ? s2.name : o.set) + ')</span>' +
         '<button class="chip-x" data-rm="' + i + '" title="Remove">×</button></span>';
     }).join('') || '<span class="muted small">No cards offered yet.</span>';
     t.querySelectorAll('[data-rm]').forEach(function (x) {
