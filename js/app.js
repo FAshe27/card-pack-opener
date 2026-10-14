@@ -48,6 +48,10 @@
     $('#toasts').appendChild(t);
     setTimeout(function () { t.classList.add('out'); setTimeout(function () { t.remove(); }, 400); }, ms || 3200);
   }
+  /* Two-wave boot (2026-10-14): the set files (the bulk of the payload)
+     stream in parallel from the moment boot starts; boot's tail and the
+     login paths await this promise, but the login gate no longer does. */
+  var setsReadyP = null;
   function loadScript(src) {
     return new Promise(function (res) {
       var s = document.createElement('script');
@@ -61,19 +65,33 @@
     var es = null;
     if (CPS.cloud && CPS.cloud.enabled && CPS.cloud.hasToken()) { es = CPS.cloud.call('get_state'); es.catch(function () {}); }
     var files = window.CardSets.manifest || [];
-    var oks = await Promise.all(files.map(function (f) { return loadScript('sets/' + f); }));
-    oks.forEach(function (ok, i) { if (!ok) S.loadWarnings.push('Could not load sets/' + files[i]); });
-    var custom = await Store.listCustomSets();
-    custom.forEach(function (raw) { window.CardSets.register(raw, 'imported'); });
-    if (!window.CardSets.all().length) {
-      $('main').innerHTML = '<div class="panel"><h2>No card sets found</h2><p>Add a set file to <code>sets/</code> and list it in <code>sets/manifest.js</code>.</p></div>';
-      return;
-    }
+    setsReadyP = (async function () {
+      try {
+        var oks = await Promise.all(files.map(function (f) { return loadScript('sets/' + f); }));
+        oks.forEach(function (ok, i) { if (!ok) S.loadWarnings.push('Could not load sets/' + files[i]); });
+        var custom = await Store.listCustomSets();
+        custom.forEach(function (raw) { window.CardSets.register(raw, 'imported'); });
+      } catch (e) { /* the count below reports whatever did load */ }
+      return window.CardSets.all().length;
+    })();
     S.dev = Store.getPref('dev', false) === true;
     var wantDev = /[?&]dev\b/.test(location.search);
     audio.enabled = Store.getPref('sound', true);
 
     await initAccount(es);
+    var gateEarly = false;
+    if (isLocked()) {
+      /* Wave 1: a logged-out (or expired-session) visitor gets the login
+         gate as soon as the core scripts are in — the sets keep loading
+         behind it and the login submit awaits them (see doLogin). */
+      document.body.classList.add('ready');
+      showGate(S.gate || {});
+      gateEarly = true;
+    }
+    if (!await setsReadyP) {
+      $('main').innerHTML = '<div class="panel"><h2>No card sets found</h2><p>Add a set file to <code>sets/</code> and list it in <code>sets/manifest.js</code>.</p></div>';
+      return;
+    }
     var last = Store.getPref('set', null);
     S.set = window.CardSets.get(last) ||
       (last === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null) ||
@@ -86,7 +104,7 @@
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
-    if (isLocked()) showGate(S.gate || {});
+    if (isLocked()) { if (!gateEarly) showGate(S.gate || {}); }
     else if (wantDev && !S.dev && canAdminArea()) requestDevUnlock();
   }
 
@@ -164,6 +182,7 @@
     var r = await CPS.cloud.login(username, pin, remember);
     if (!r || !r.ok) return r;
     enterCloud(await CPS.cloud.call('get_state'));
+    if (setsReadyP) await setsReadyP;
     afterEnter();
     toast('Welcome, ' + S.account.display_name + '!', 'good');
     return r;
@@ -1585,7 +1604,7 @@
       function fail(text) { msg.textContent = text; msg.className = 'login-msg bad'; audio.error(); }
       if (opts.retry) $('#gateRetry', box).addEventListener('click', async function (e) {
         var b = e.target; b.disabled = true; b.textContent = 'Trying…'; msg.textContent = ''; msg.className = 'login-msg';
-        try { enterCloud(await CPS.cloud.call('get_state')); closeModal(true); afterEnter(); toast('Welcome back, ' + S.account.display_name + '!', 'good'); }
+        try { enterCloud(await CPS.cloud.call('get_state')); if (setsReadyP) await setsReadyP; closeModal(true); afterEnter(); toast('Welcome back, ' + S.account.display_name + '!', 'good'); }
         catch (err) {
           if (err.kind === 'auth') { CPS.cloud.clearToken(); b.remove(); fail('Your session ended. Please log in again.'); }
           else { fail(err.message); b.disabled = false; b.textContent = 'Try again'; }
