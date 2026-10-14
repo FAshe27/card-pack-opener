@@ -95,3 +95,9 @@
 .pb-pin .bounty-want .card { width: 100%; border-radius: 8px; }
 .pb-pin .bounty-want .cf { border-radius: 4px; }
 .picker-count { margin: 6px 0 0; }
+
+/* Any-number claim chooser (migration 141): serial radio rows in the
+   claim confirm. Same inline-radio width fix as .bounty-form — site CSS
+   forces label.inline inputs to 70px wide. */
+.claim-serial-pick { display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; margin: 4px 0 12px; }
+.claim-serial-pick label.inline input[type=radio] { width: 16px; height: 16px; margin: 0; flex: none; }
