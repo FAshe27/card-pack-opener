@@ -56,3 +56,10 @@
 .card[data-set="beverages"] .back { padding: 0; background: #2a1503; }
 .card[data-set="beverages"] .cb { background: url('../assets/sets/beverages/card-back-art.svg') center / cover no-repeat #2a1503; border: none; border-radius: 12px; }
 .card[data-set="beverages"] .cb-emblem, .card[data-set="beverages"] .cb-name { display: none; }
+
+/* ---------- Back reframed (Franklin, 2026-10-14) ----------
+   The baked bottle-cap back sits INSIDE the standard site frame again
+   (theme-gradient surround, frame border) instead of edge-to-edge, so the
+   back art matches front proportions. Art and hidden dressing unchanged. */
+.card[data-set="beverages"] .back { padding: 4cqw; background: linear-gradient(145deg, var(--p1), var(--p2)); }
+.card[data-set="beverages"] .cb { border: 1.2cqw solid rgba(255,255,255,.55); border-radius: 3.5cqw; }
