@@ -1,6 +1,7 @@
 /* Bounty Board: public standing offers for wanted cards.
    A player posts a bounty naming one wanted card (optional holo requirement
-   or numbered-variant serial) plus an offer of game tokens, spin tickets,
+   or a numbered variant — one specific serial, or any number of a tier)
+   plus an offer of game tokens, spin tickets,
    packs, and/or up to 5 cards. The offer is escrowed server-side at post
    time; the first claimer holding the wanted card wins it atomically.
    Consumes CPS.appCtx (S, $, esc, toast, isCloud, openModal, ...). Loads
@@ -219,6 +220,11 @@
       var v = CPS.cards.VARIANTS[b.want_tier];
       return 'Needs ' + (v ? v.name : b.want_tier) + ' #' + b.want_serial + '/' + (v ? v.run : '?');
     }
+    if (b.want_tier) {
+      // tier-only want (migration 141): any number of the variant
+      var vt = CPS.cards.VARIANTS[b.want_tier];
+      return 'Needs ' + (vt ? vt.name : b.want_tier) + ' — any number';
+    }
     return b.want_holo === 'holo' ? 'Needs a holo copy' : 'Any copy';
   }
 
@@ -271,25 +277,61 @@
   function openClaimModal(id) {
     var b = findBounty(id); if (!b || !b.can_claim) return;
     var cardName = b.card_name || b.want_card;
+    /* Tier-any want (migration 141): the claimer hands over one of their
+       own held, unvaulted instances of the tier — picked here when they
+       hold more than one, automatic (p_serial null) when exactly one. */
+    var tierAny = !!(b.want_tier && !b.want_serial);
+    var held = [];
+    if (tierAny) {
+      held = (ctx.S.myVariants || []).filter(function (v) {
+        return v.set_id === b.want_set && v.card_id === b.want_card &&
+          v.tier === b.want_tier && !v.vaulted;
+      }).sort(function (x, y) { return x.serial - y.serial; });
+    }
+    var vInfo = tierAny ? CPS.cards.VARIANTS[b.want_tier] : null;
+    var tierName = vInfo ? vInfo.name : b.want_tier;
+    var chooserHtml = '';
+    if (tierAny && held.length >= 2) {
+      chooserHtml = '<div class="claim-serial-pick"><span class="muted small">You\'ll hand over:</span>' +
+        held.map(function (v, i) {
+          return '<label class="inline"><input type="radio" name="claimSerial" value="' + v.serial + '"' +
+            (i === 0 ? ' checked' : '') + '> ' + esc(tierName) + ' #' + v.serial + '/' + (vInfo ? vInfo.run : '?') + '</label>';
+        }).join('') + '</div>';
+    }
+    var noCopy = tierAny && held.length === 0;
     ctx.openModal(
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h3>Claim bounty</h3>' +
-      '<p>Are you sure you want to trade:</p>' +
-      '<div class="bounty-tradebox"><div><span class="bounty-want-label">YOU GIVE</span><b>' + esc(cardName) + '</b>' +
-        '<div class="muted small">' + esc(wantReq(b)) + '</div></div>' +
-      '<div class="bounty-trade-arrow">⇄</div>' +
-      '<div><span class="bounty-want-label">YOU GET</span><div>' + offerBodyHtml(b) + '</div></div></div>' +
-      '<div class="row wrap"><button class="btn primary" id="bountyClaimGo">Claim bounty</button>' +
-      '<button class="btn" data-close>Never mind</button></div>',
+      (noCopy
+        ? '<p>You don\'t have an unvaulted ' + esc(tierName) + ' copy of <b>' + esc(cardName) +
+          '</b> on hand to hand over — if yours is in the Vault, release it first.</p>' +
+          '<div class="row wrap"><button class="btn" data-close>Never mind</button></div>'
+        : '<p>Are you sure you want to trade:</p>' +
+          '<div class="bounty-tradebox"><div><span class="bounty-want-label">YOU GIVE</span><b>' + esc(cardName) + '</b>' +
+            '<div class="muted small">' + esc(wantReq(b)) + '</div></div>' +
+          '<div class="bounty-trade-arrow">⇄</div>' +
+          '<div><span class="bounty-want-label">YOU GET</span><div>' + offerBodyHtml(b) + '</div></div></div>' +
+          chooserHtml +
+          '<div class="row wrap"><button class="btn primary" id="bountyClaimGo">Claim bounty</button>' +
+          '<button class="btn" data-close>Never mind</button></div>'),
       function (box) {
         box.querySelectorAll('[data-close]').forEach(function (x) {
           x.addEventListener('click', function () { ctx.closeModal(); });
         });
         bindCardClicks(box);
-        ctx.$('#bountyClaimGo', box).addEventListener('click', async function () {
+        var go = ctx.$('#bountyClaimGo', box);
+        if (!go) return;
+        go.addEventListener('click', async function () {
           var btn = this; btn.disabled = true;
           try {
-            await CPS.cloud.call('claim_bounty', { p_bounty_id: id });
+            var args = { p_bounty_id: id };
+            if (tierAny) {
+              // Only tier-any claims carry p_serial; every other claim
+              // keeps the exact pre-141 call shape.
+              var sel = box.querySelector('input[name="claimSerial"]:checked');
+              args.p_serial = sel ? parseInt(sel.value, 10) : null;
+            }
+            await CPS.cloud.call('claim_bounty', args);
             ctx.closeModal();
             ctx.toast('Bounty claimed!', 'good');
             ctx.audio.reveal('epic');
@@ -370,7 +412,7 @@
       PB = {
         sets: sets, wantSet: '', wantCard: null, q: '',
         offerSet: '', offerQ: '',
-        holo: 'any', tier: '', serial: '',
+        holo: 'any', tier: '', serial: '', anyMode: false,
         tokens: 0, tickets: 0, packSet: '', packs: 0,
         offerCards: []   // {set, card, holo}
       };
@@ -404,6 +446,7 @@
       '<option value="prism">Prism /10</option><option value="obsidian">Obsidian /5</option>' +
       '<option value="oneofone">One-of-One</option></select>' +
       '<input id="pbSerial" type="number" min="1" placeholder="#" style="width:64px;flex:none">' +
+      '<label class="inline"><input type="checkbox" id="pbAnyNum"> Any number</label>' +
       '<span class="muted small" id="pbTierHint"></span></div>' +
       '<h4>You offer</h4>' +
       '<div class="row wrap"><label>🪙 Tokens <input id="pbTokens" type="number" min="0" max="' + (ctx.S.gameTokens || 0) +
@@ -436,6 +479,7 @@
     PB.packSet = box.querySelector('#pbPackSet').value || '';
     PB.packs = Math.max(0, parseInt(box.querySelector('#pbPacks').value, 10) || 0);
     PB.serial = box.querySelector('#pbSerial').value || '';
+    PB.anyMode = !!box.querySelector('#pbAnyNum').checked;
     pbClampSerial(box);
   }
 
@@ -449,7 +493,9 @@
       ctx.toast('Your bounty needs an offer — tokens, tickets, packs, or cards.', 'warn'); return false;
     }
     var serial = (PB.serial || '').trim();
-    if ((PB.tier && !serial) || (!PB.tier && serial)) {
+    // Any number (migration 141) satisfies a tier on its own; a serial
+    // still needs a tier, and a tier alone still needs one or the other.
+    if ((!PB.tier && serial) || (PB.tier && !serial && !PB.anyMode)) {
       ctx.toast('A numbered serial needs both a tier and a number.', 'warn'); return false;
     }
     return true;
@@ -466,7 +512,7 @@
     };
     var want = {
       want_set: PB.wantCard.set, want_card: PB.wantCard.id, want_holo: PB.holo,
-      want_tier: PB.tier || null, want_serial: serial || null
+      want_tier: PB.tier || null, want_serial: PB.anyMode ? null : (serial || null)
     };
     ctx.openModal(
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
@@ -497,7 +543,7 @@
     try {
       await CPS.cloud.call('post_bounty', {
         p_want: { set: PB.wantCard.set, card: PB.wantCard.id, holo: PB.holo,
-                  tier: PB.tier || null, serial: serial || null },
+                  tier: PB.tier || null, serial: PB.anyMode ? null : (serial || null) },
         p_offer: { tokens: PB.tokens, tickets: PB.tickets, pack_set: PB.packSet || null,
                    packs: PB.packSet ? PB.packs : 0,
                    cards: PB.offerCards.map(function (o) { return { set: o.set, card: o.card, holo: o.holo }; }) }
@@ -538,10 +584,12 @@
   }
 
   /* Numbered-serial sanity (Phase 1 §1.5): tiers only exist on Rare+
-     cards, and the serial can't exceed the tier's run. Submission
-     semantics are unchanged (tier and serial still go together). */
+     cards, and the serial can't exceed the tier's run. Any number
+     (migration 141) lets a tier go without a serial — ticking it
+     disables the serial input, and it only exists alongside a tier. */
   function pbSyncTier(box) {
     var tierSel = box.querySelector('#pbTier'), serialInp = box.querySelector('#pbSerial');
+    var anyChk = box.querySelector('#pbAnyNum');
     var hint = box.querySelector('#pbTierHint');
     if (!tierSel || !serialInp) return;
     var card = PB.wantCard ? cardObj(PB.wantCard.set, PB.wantCard.id) : null;
@@ -551,8 +599,10 @@
       tierSel.value = ''; serialInp.value = '';
       pbRenderWantSel(box);
     }
+    if (!PB.tier) PB.anyMode = false;
+    if (anyChk) { anyChk.checked = !!PB.anyMode; anyChk.disabled = !rarePlus || !PB.tier; }
     tierSel.disabled = !rarePlus;
-    serialInp.disabled = !rarePlus || !PB.tier;
+    serialInp.disabled = !rarePlus || !PB.tier || PB.anyMode;
     if (hint) hint.textContent = card && !rarePlus ? 'Numbered serials need a Rare or better card.' : '';
     pbClampSerial(box);
   }
@@ -599,6 +649,13 @@
     serialInp.value = PB.serial;
     serialInp.addEventListener('input', function (e) { PB.serial = e.target.value; pbRenderWantSel(box); });
     serialInp.addEventListener('change', function () { pbClampSerial(box); });
+    var anyChk = box.querySelector('#pbAnyNum');
+    anyChk.checked = !!PB.anyMode;
+    anyChk.addEventListener('change', function () {
+      PB.anyMode = anyChk.checked;
+      pbSyncTier(box);
+      pbRenderWantSel(box);
+    });
 
     // currency: keep PB in sync as you type; clamp to balance on change
     function bindMoney(inputSel, key, balance) {
@@ -713,11 +770,12 @@
     var card = cardObj(PB.wantCard.set, PB.wantCard.id);
     var extra = '';
     var v = PB.tier && CPS.cards.VARIANTS[PB.tier];
-    if (PB.tier && PB.serial) extra = ' · ' + esc(v ? v.name + ' #' + PB.serial + '/' + v.run : PB.tier + ' #' + PB.serial);
+    if (PB.tier && PB.anyMode) extra = ' · ' + esc(v ? v.name : PB.tier) + ' — any number';
+    else if (PB.tier && PB.serial) extra = ' · ' + esc(v ? v.name + ' #' + PB.serial + '/' + v.run : PB.tier + ' #' + PB.serial);
     else if (PB.tier || PB.serial) extra = ' · <span class="warn">serial needs both tier and number</span>';
     var shaped = {
       want_set: PB.wantCard.set, want_card: PB.wantCard.id, want_holo: PB.holo,
-      want_tier: PB.tier || null, want_serial: PB.serial || null
+      want_tier: PB.tier || null, want_serial: PB.anyMode ? null : (PB.serial || null)
     };
     t.innerHTML = '<div class="bounty-want">' + wantFace(shaped) + '</div>' +
       '<div class="pb-pin-text"><b>' + esc(card ? card.name : PB.wantCard.id) + '</b>' +
