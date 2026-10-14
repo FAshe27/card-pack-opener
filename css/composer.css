@@ -10,18 +10,20 @@
    undo that for radios (checkboxes already have their own fix in style.css) */
 .bounty-form label.inline input[type=radio] { width: 16px; height: 16px; margin: 0; flex: none; }
 .bounty-pick-grid {
-  display: grid; grid-template-columns: 1fr;
+  display: grid; grid-template-columns: minmax(0, 1fr);
   gap: 6px; max-height: 220px; overflow: auto; margin: 8px 0;
   border: 1px solid var(--line); border-radius: 10px; padding: 8px;
 }
 .bounty-pick {
+  min-width: 0;
   display: flex; align-items: center; justify-content: space-between; gap: 6px;
   background: none; border: 2px solid transparent; border-radius: 8px; padding: 6px 8px;
   cursor: pointer; color: inherit; text-align: left; font-size: .85rem;
 }
 .bounty-pick:hover { border-color: var(--line); }
 .bounty-pick.selected { border-color: #f5b942; background: #1d1a12; }
-.bounty-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bounty-pick-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bounty-pick > span:not(.bounty-pick-name) { flex: none; }
 .bounty-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
 .warn { color: #ff9d6b; }
 
@@ -30,7 +32,7 @@
 .trade-form .row { margin-bottom: 10px; }
 .trade-form label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: none; }
 .tp-pick-grid {
-  display: grid; gap: 6px; margin: 8px 0; max-height: 32vh; overflow-y: auto;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin: 8px 0; max-height: 32vh; overflow-y: auto;
 }
 .tp-pick {
   display: flex; justify-content: space-between; align-items: center; gap: 10px;
@@ -40,7 +42,7 @@
 }
 .tp-pick:hover { border-color: var(--line); }
 .tp-pick.selected { border-color: #f5b942; background: #1d1a12; }
-.tp-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tp-pick-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .trade-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
 
 /* ---- recap footers + pinned picks (Phase 1, moved) ----
@@ -143,3 +145,18 @@ button.copies-tile:hover { border-color: #f5b942; }
 .copies-actions .btn { margin-top: 0; }
 .copies-reason { margin-top: 6px; }
 .copies-bountyline { margin-top: 8px; }
+
+/* Phones (Franklin audit, 2026-10-14): the pick rows assumed desktop width —
+   names crushed to a few letters while the meta + Add buttons wrapped
+   raggedly inside the row, and want-row rarity pills clipped off the list.
+   Names now ellipsize first (rules above); at phone widths the offer rows
+   wrap deliberately: name on its own line, meta + Add buttons right-aligned
+   on the second line. Want rows stay single-line with the pill visible. */
+@media (max-width: 560px) {
+  .tp-pick, .bounty-pick:has(.cmp-rowacts) { flex-wrap: wrap; row-gap: 6px; }
+  .tp-pick .tp-pick-name, .bounty-pick .bounty-pick-name { flex-basis: 100%; }
+  .tp-pick .cmp-rowacts, .bounty-pick .cmp-rowacts { flex: 1 1 100%; justify-content: flex-end; flex-wrap: nowrap; }
+}
+@media (max-width: 400px) {
+  .tp-pick .cmp-rowacts, .bounty-pick .cmp-rowacts { flex-wrap: wrap; }
+}
