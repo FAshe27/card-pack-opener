@@ -427,6 +427,10 @@
     CPS.composer.openBounty(COMPOSER_HOST, prefill);
   }
 
-  CPS.bounties = { render: render, refresh: load, updateBadge: updateBadge, navBadge: navBadge, paintMarketNav: paintMarketNav, openPost: openPostModal };
+  CPS.bounties = { render: render, refresh: load, updateBadge: updateBadge, navBadge: navBadge, paintMarketNav: paintMarketNav, openPost: openPostModal,
+    /* Phase 3 (§3.6): my open bounties from the already-loaded board —
+       best-effort, never a fetch. (The composer host's myOpen() is a
+       count for form headers; this one returns the bounty rows.) */
+    myOpen: function () { return B ? B.bounties.filter(function (b) { return b.mine; }) : null; } };
   CPS.paintMarketNav = paintMarketNav;
 })(window.CPS);
