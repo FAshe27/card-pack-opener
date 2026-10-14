@@ -58,11 +58,11 @@
 
   /* --- boot */
   async function boot() {
+    var es = null;
+    if (CPS.cloud && CPS.cloud.enabled && CPS.cloud.hasToken()) { es = CPS.cloud.call('get_state'); es.catch(function () {}); }
     var files = window.CardSets.manifest || [];
-    for (var i = 0; i < files.length; i++) {
-      var ok = await loadScript('sets/' + files[i]);
-      if (!ok) S.loadWarnings.push('Could not load sets/' + files[i]);
-    }
+    var oks = await Promise.all(files.map(function (f) { return loadScript('sets/' + f); }));
+    oks.forEach(function (ok, i) { if (!ok) S.loadWarnings.push('Could not load sets/' + files[i]); });
     var custom = await Store.listCustomSets();
     custom.forEach(function (raw) { window.CardSets.register(raw, 'imported'); });
     if (!window.CardSets.all().length) {
@@ -73,7 +73,7 @@
     var wantDev = /[?&]dev\b/.test(location.search);
     audio.enabled = Store.getPref('sound', true);
 
-    await initAccount();
+    await initAccount(es);
     var last = Store.getPref('set', null);
     S.set = window.CardSets.get(last) ||
       (last === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null) ||
@@ -91,12 +91,12 @@
   }
 
   /* --- online accounts */
-  async function initAccount() {
+  async function initAccount(es) {
     if (!CPS.cloud.enabled) { setLocked(); S.gate = { msg: "Can't reach the server right now. Please try again later.", retry: true }; return; }
     setLocked();
     if (!CPS.cloud.hasToken()) { S.gate = {}; return; }
     try {
-      enterCloud(await CPS.cloud.call('get_state'));
+      enterCloud(await (es || CPS.cloud.call('get_state')));
     } catch (e) {
       if (e.kind === 'auth') { CPS.cloud.clearToken(); S.gate = { msg: 'Your session ended. Please log in again.' }; }
       else S.gate = { msg: e.message, retry: e.kind === 'network' };
