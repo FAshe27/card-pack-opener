@@ -1224,7 +1224,9 @@
   }
 
   function pickTravelVariant(p) {
-    var s = myVariantSerials(p.setId, p.cardId).filter(function (v) { return !v.vaulted; });
+    var s = (S.myVariants || []).filter(function (v) { return v.set_id === p.setId && v.card_id === p.cardId; })
+      .sort(function (a, b) { return a.serial - b.serial; })
+      .filter(function (v) { return !v.vaulted; });
     return s.length ? { tier: s[0].tier, serial: s[0].serial } : null;
   }
   function tbRenderDock() {
@@ -1236,7 +1238,7 @@
       if (!set || !card) return '';
       var tv = TB.step === 1 ? pickTravelVariant(p) : null;
       return '<span class="trade-chip"><b>' + esc(card.name) + '</b>' +
-        (tv ? '<span class="chip-variant" title="' + esc(CPS.cards.variantLabel(tv.tier, tv.serial)) + ' travels with this card">' + RB + ' #' + tv.serial + '</span>' : '') +
+        (tv ? '<span class="chip-variant" title="' + esc(CPS.cards.variantLabel(tv.tier, tv.serial)) + ' travels with this card">' + CPS.cards.VARIANTS[tv.tier].emoji + ' #' + tv.serial + '</span>' : '') +
         (p.h > 0 ? '<button class="chip-holo' + (p.holo ? ' on' : '') + '" data-chip-holo="' + i + '" title="Toggle holographic">\u2726</button>' : '') +
         '<button class="chip-x" data-chip-x="' + i + '" title="Remove">\u00d7</button></span>';
     }).join('');
@@ -1265,7 +1267,7 @@
         return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: p.holo, variant: tv }) +
           '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
           (p.holo ? ' \u00b7 \u2726 holo' : '') +
-          (tv ? ' \u00b7 ' + RB + ' #' + tv.serial + '/' + CPS.cards.VARIANTS[tv.tier].run : '') + '</span></div></div>';
+          (tv ? ' \u00b7 ' + CPS.cards.VARIANTS[tv.tier].emoji + ' #' + tv.serial + '/' + CPS.cards.VARIANTS[tv.tier].run : '') + '</span></div></div>';
       }).join('') + '</div>';
     }
     var box = $('#tradeReview');
