@@ -65,3 +65,6 @@
 @media (max-width: 340px) {
   .plk-bin { font-size: 6.8px; }
 }
+
+/* Back to Arcade row (2026-10-14) */
+.plk-backrow { text-align: left; margin-bottom: 10px; }
