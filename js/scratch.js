@@ -46,6 +46,8 @@
   var busy = false;
   var tokensNow = 0;
   var current = null; // { ticket_id, tier, cells, revealed:[9], settled }
+  var lastSettled = null; // settled ticket snapshot: stays on screen (grid +
+                          // result) until the player buys the next ticket
   var root = null;
 
   function esc(s) {
@@ -112,6 +114,7 @@
     }).join('');
     el.innerHTML =
       '<div class="panel scr-wrap">' +
+        '<div class="scr-backrow"><button class="btn ghost" id="scrBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🎟️ Scratchoffs</h2>' +
         '<p class="muted small">Buy a ticket, scratch the 9 foil spots, match 3 of a rarity to win its prize. ' +
         'The server decides the ticket when you buy it — scratching only reveals it, and an unfinished ' +
@@ -127,6 +130,10 @@
     qa('.scr-buy').forEach(function (b) {
       b.addEventListener('click', function () { buyTicket(b.getAttribute('data-tier')); });
     });
+    var bk = q('#scrBack');
+    if (bk) bk.addEventListener('click', function () {
+      if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('arcade');
+    });
     renderTuning();
     updateHud();
     loadState();
@@ -136,7 +143,12 @@
     try {
       var r = await CPS.cloud.call('scratch_state', {});
       tokensNow = r.tokens_now;
-      if (r.ticket) adoptTicket(r.ticket, true);
+      if (r.ticket) { lastSettled = null; adoptTicket(r.ticket, true); }
+      else if (lastSettled) {
+        current = lastSettled;
+        renderStage();
+        setResult(lastSettled.resultHtml);
+      }
       else setResult('<span class="muted small">Pick a tier to buy a ticket.</span>');
     } catch (e) {
       try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
@@ -198,6 +210,7 @@
     try {
       var r = await CPS.cloud.call('scratch_buy', { p_tier: tierId });
       tokensNow = r.tokens_now;
+      lastSettled = null;
       adoptTicket(r.ticket, r.resumed);
       if (!r.resumed) setResult('<span class="muted small">' + esc(tier.name) + ' — scratch the foil spots!</span>');
       if (ctx.toast) ctx.toast(r.resumed ? 'Ticket resumed' : '🎟️ Ticket bought');
@@ -263,15 +276,25 @@
     try {
       var r = await CPS.cloud.call('scratch_claim', { p_ticket: current.ticket_id });
       tokensNow = r.tokens_now;
+      var resultHtml;
       if (r.win) {
-        setResult('<span class="scr-win">MATCH 3 ' + esc(LABEL[r.outcome].toUpperCase()) +
-          '! +' + esc(prizeText({ pr: r.packs_random, pj: r.packs_jumbled })) + '</span>');
+        resultHtml = '<span class="scr-win">MATCH 3 ' + esc(LABEL[r.outcome].toUpperCase()) +
+          '! +' + esc(prizeText({ pr: r.packs_random, pj: r.packs_jumbled })) + '</span>';
         if (ctx.toast) ctx.toast('🎟️ Scratchoff win!');
       } else {
-        setResult('<span class="muted">No match this time — better luck on the next ticket.</span>');
+        resultHtml = '<span class="muted">No match this time — better luck on the next ticket.</span>';
       }
+      setResult(resultHtml);
       lsClear(current.ticket_id);
-      current = null;
+      // Keep the finished ticket on screen — grid and result stay visible
+      // until the player buys the next ticket (Franklin, 2026-10-14). The
+      // snapshot also survives the refreshCloud remount below and any
+      // leave-and-return, because loadState restores it when the server
+      // has no open ticket.
+      lastSettled = { ticket_id: current.ticket_id, tier: current.tier,
+                      cells: current.cells.slice(), revealed: current.revealed.slice(),
+                      settled: true, resultHtml: resultHtml };
+      current = lastSettled;
       // Do NOT ctx.refreshCloud() while launched inside the Sandbox test
       // stage: refreshCloud() re-renders the current app view, and for the
       // Sandbox view that means renderHome() — it bounces the player out of
