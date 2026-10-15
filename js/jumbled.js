@@ -103,6 +103,8 @@
     ctx.audio.click();
     ctx.renderPacksSide();
     renderBox();
+    var pr = ctx.$('#stagePack .pack').getBoundingClientRect();
+    if (pr.top < 0 || pr.bottom > innerHeight) ctx.$('#stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async function quickOpen() {
