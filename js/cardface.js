@@ -188,7 +188,7 @@
   function pack(set, extraCls) {
     var skin = set.pack.skin ? ' pack-skin-' + set.pack.skin : '';   // optional look, e.g. pack: { skin: 'space' }
     return '<div class="pack ' + (extraCls || '') + skin + '" style="' + themeStyle(set) + '">' +
-      '<div class="pack-top"><div class="crimp"></div></div>' +
+      '<div class="pack-top"><div class="pack-shine-top"></div><div class="crimp"></div></div>' +
       '<div class="pack-body"><div class="pack-shine"></div>' +
       '<div class="pack-emblem">' + esc(set.pack.emblem || '✦') + '</div>' +
       '<div class="pack-name">' + esc(set.name) + '</div>' +
