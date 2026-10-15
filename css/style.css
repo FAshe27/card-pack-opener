@@ -1516,3 +1516,17 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .card[data-set="space"] .cb { border: 1.2cqw solid rgba(255,255,255,.55); border-radius: 3.5cqw; }
 .card[data-set="plants"] .back { padding: 4cqw; background: linear-gradient(145deg, var(--p1), var(--p2)); }
 .card[data-set="plants"] .cb { border: 1.2cqw solid rgba(255,255,255,.55); border-radius: 3.5cqw; }
+
+/* Pack shine crosses the tear line (Franklin, 2026-10-15): the sweep element
+   lives in .pack-body, whose box starts below the seal and clips it
+   (overflow: hidden), so the light never reached the pack's top flap. A twin
+   element (.pack-shine-top, rendered by cardface inside .pack-top) shows the
+   SAME sweep through a window: it is sized and positioned exactly like the
+   body's shine element in pack space (2pw wide, twice the body height tall,
+   top edge at -.536pw), so the band runs unbroken across the cutline and the
+   two stay in sync (same keyframes, duration, easing). .pack-top clips the
+   twin to the flap, so it tears away with the seal. Square packs
+   (Calendar/Periodic, 1/1) get their matching geometry below. */
+.pack-top { overflow: hidden; }
+.pack-shine-top { position: absolute; left: calc(var(--pw) * -.5); top: calc(var(--pw) * -.536); width: calc(var(--pw) * 2); height: calc(var(--pw) * 2.848); background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.45) 50%, transparent 60%); animation: shine 3.5s ease-in-out infinite; pointer-events: none; }
+.pack-skin-calendar .pack-shine-top, .pack-skin-periodic .pack-shine-top { top: calc(var(--pw) * -.335); height: calc(var(--pw) * 1.78); }
