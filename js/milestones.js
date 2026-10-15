@@ -1,44 +1,29 @@
 /* js/milestones.js — turn-in completion milestones.
    COMPLETION (Franklin's definition) = every card TURNED IN, not merely
-   collected. Watches the local turned-in state after every state load:
+   collected:
    - a rarity fully turned in within a set  -> celebratory pop-up (local)
    - a whole set fully turned in           -> bigger pop-up + the client
      calls cps_announce_set_completion; the server verifies the
      completion, records it exactly once, and notifies every other
      player (same mechanism as chase-pull announcements).
-   First run per account+device records a silent baseline — completions
-   that already existed never pop or announce retroactively.
+   WHICH milestones are fresh is decided by the SERVER (migration 156,
+   cps_milestone_sync): it keeps one completion snapshot per account,
+   so a milestone pops exactly once per account, on whichever device
+   loads first — never again on a second device. (Before 156 the
+   snapshot lived in this browser's localStorage, so any device whose
+   snapshot predated a crossing replayed its pop-up on the next visit.)
+   The first sync for an account records a silent baseline —
+   completions that already existed never pop or announce
+   retroactively. If the sync call fails (RPC not live yet, offline),
+   nothing pops and the server snapshot is untouched, so fresh
+   milestones stay fresh for the next successful load.
    Turn-ins are permanent, so milestones are monotonic: once earned,
-   they can never un-earn or re-fire on this device. */
+   they can never un-earn. */
 (function (CPS) {
   'use strict';
   var ctx = CPS.appCtx;
-  var KEY = 'cps.milestones.v1.';
   var retryTimer = null;
-
-  function compute() {
-    var rar = {}, full = {};
-    window.CardSets.all().forEach(function (set) {
-      if (set.id === 'jumbled' || !set.cards.length) return;
-      var turnedByR = {}, turnedTotal = 0;
-      set.cards.forEach(function (c) {
-        if (ctx.isTurned(set.id, c.id)) { turnedByR[c.rarity] = (turnedByR[c.rarity] || 0) + 1; turnedTotal++; }
-      });
-      ctx.R.RARITIES.forEach(function (r) {
-        var pool = set.pools[r.key];
-        if (pool && pool.length && (turnedByR[r.key] || 0) >= pool.length) rar[set.id + ':' + r.key] = true;
-      });
-      if (turnedTotal >= set.cards.length) full[set.id] = true;
-    });
-    return { rar: rar, full: full };
-  }
-
-  function load(key) {
-    try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
-  }
-  function save(key, snap) {
-    try { localStorage.setItem(key, JSON.stringify(snap)); } catch (e) { /* private mode etc. */ }
-  }
+  var running = false;
 
   function modalBusy() {
     var m = document.getElementById('modal');
@@ -90,29 +75,48 @@
     showPopups(queue);
   }
 
-  function check() {
+  function retryLater() {
+    if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; check(); }, 3000);
+  }
+
+  async function check() {
     try {
       if (!ctx.isCloud() || !ctx.S.account || !ctx.S.turnedIn) return;
       if (ctx.S.opening) { /* mid pack-reveal: check again once it settles */
-        if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; check(); }, 3000);
+        retryLater();
         return;
       }
-      /* Turn-In Rewards (126): independent of the local snapshot below —
+      /* Turn-In Rewards (126): independent of the milestone sync below —
          the server dedupe table, not this device, tracks what's owed. */
       if (CPS.turninRewards) CPS.turninRewards.check();
-      var key = KEY + ctx.S.account.id;
-      var snap = compute();
-      var prev = load(key);
-      if (!prev) { save(key, snap); return; } /* silent baseline */
-      var freshFull = [], freshRar = {};
-      Object.keys(snap.full).forEach(function (sid) { if (!prev.full || !prev.full[sid]) freshFull.push(sid); });
-      Object.keys(snap.rar).forEach(function (k) {
-        if (prev.rar && prev.rar[k]) return;
-        var sid = k.split(':')[0], rk = k.split(':')[1];
-        if (freshFull.indexOf(sid) !== -1) return; /* the full-set pop-up subsumes its rarities */
-        (freshRar[sid] = freshRar[sid] || []).push(rk);
+      if (running) { /* a sync is already in flight; its fresh list is
+                        already fixed, so queue one follow-up pass */
+        retryLater();
+        return;
+      }
+      if (!window.CardSets || !window.CardSets.all().length) {
+        /* Set files still streaming in (two-wave boot): a fresh
+           milestone must be renderable by name, and the server marks
+           it seen the moment it reports it — wait until sets exist. */
+        retryLater();
+        return;
+      }
+      running = true;
+      var r = null;
+      try {
+        r = await CPS.cloud.call('milestone_sync', {});
+      } catch (e) { /* not live yet / offline: the server snapshot is
+                       untouched, so fresh milestones stay fresh and
+                       pop on the next successful load */ }
+      running = false;
+      if (!r || r.baseline) return;
+      var freshFull = r.fresh_full || [];
+      var freshRar = {};
+      (r.fresh_rar || []).forEach(function (fr) {
+        if (!fr || !fr.set || !fr.rarity) return;
+        if (freshFull.indexOf(fr.set) !== -1) return; /* the full-set pop-up subsumes its rarities */
+        (freshRar[fr.set] = freshRar[fr.set] || []).push(fr.rarity);
       });
-      save(key, snap); /* record first so nothing can double-fire */
       var queue = [];
       Object.keys(freshRar).forEach(function (sid) {
         var set = window.CardSets.get(sid); if (!set) return;
@@ -124,7 +128,7 @@
       });
       if (!queue.length) return;
       deliver(queue);
-    } catch (e) { /* milestones must never break the app */ }
+    } catch (e) { running = false; /* milestones must never break the app */ }
   }
 
   CPS.milestones = { check: check };
