@@ -86,7 +86,7 @@
       blurb: 'Guess whether the next card is higher or lower. Every round is win-or-bust — claim your prize bank any time.' },
     { id: 'slots', title: 'SLOTS', tag: '2 🪙 a spin', accent: 'slots',
       blurb: 'Match three rarity symbols to win packs. Legendary and Chase triples are announced to everyone!' },
-    { id: 'plinko', title: 'PLINKO', tag: '2 🪙 a drop', accent: 'plinko', view: 'sbx-plinko',
+    { id: 'plinko', title: 'PLINKO', tag: '3 🪙 a drop', accent: 'plinko', view: 'sbx-plinko',
       blurb: 'Drop a chip down 8 rows of pegs — centre bins pay tokens, edge bins pay big packs.' },
     { id: 'scratchoffs', title: 'SCRATCHOFFS', tag: '2 🪙 a ticket', accent: 'scratch', view: 'sbx-scratchoffs',
       blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.' }
