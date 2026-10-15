@@ -30,9 +30,9 @@
       { label: '20 random packs',                  tokens: 0, pr: 20, pj: 0 },
       { label: '3 random packs + 3 jumbled packs', tokens: 0, pr: 3,  pj: 3 },
       { label: '1 jumbled pack',                   tokens: 0, pr: 0,  pj: 1 },
-      { label: '3 tokens',                         tokens: 3, pr: 0,  pj: 0 },
+      { label: '1 token',                          tokens: 1, pr: 0,  pj: 0 },
       { label: '1 random pack',                    tokens: 0, pr: 1,  pj: 0 },
-      { label: '3 tokens',                         tokens: 3, pr: 0,  pj: 0 },
+      { label: '1 token',                          tokens: 1, pr: 0,  pj: 0 },
       { label: '1 jumbled pack',                   tokens: 0, pr: 0,  pj: 1 },
       { label: '3 random packs + 3 jumbled packs', tokens: 0, pr: 3,  pj: 3 },
       { label: '20 random packs',                  tokens: 0, pr: 20, pj: 0 }
