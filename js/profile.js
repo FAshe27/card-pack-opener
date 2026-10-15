@@ -64,10 +64,24 @@ async function openProfile(accountId) {
 }
 
 function favsHtml(p) {
+  // A vaulted NUMBERED copy should show as numbered. The favorites
+  // rows carry no tier/serial, but the same payload's collection
+  // entries list every variant with its vaulted flag -- the tile
+  // wears the best vaulted variant (tier rank, then lowest serial).
+  var vrank = { oneofone: 0, obsidian: 1, prism: 2, rainbow: 3 };
+  var vaultedVariant = {};
+  (p.collection || []).forEach(function (e) {
+    var vs = (e.variants || []).filter(function (v) { return v.vaulted; }).sort(function (x, y) {
+      var rx = vrank[x.tier] != null ? vrank[x.tier] : 9, ry = vrank[y.tier] != null ? vrank[y.tier] : 9;
+      return (rx - ry) || (x.serial - y.serial);
+    });
+    if (vs.length) vaultedVariant[e.set_id + ':' + e.card_id] = vs[0];
+  });
   return (p.favorites || []).map(function (f) {
     var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
     if (!set || !card) return '';
-    return '<div class="prof-fav" data-fav-set="' + ctx.esc(f.set_id) + '" data-fav-card="' + ctx.esc(f.card_id) + '" data-fav-holo="' + (f.holo ? '1' : '0') + '">' + CPS.cards.render(set, card, { holo: !!f.holo }) + '</div>';
+    var v = vaultedVariant[f.set_id + ':' + f.card_id];
+    return '<div class="prof-fav" data-fav-set="' + ctx.esc(f.set_id) + '" data-fav-card="' + ctx.esc(f.card_id) + '" data-fav-holo="' + (f.holo ? '1' : '0') + '">' + CPS.cards.render(set, card, { holo: !!f.holo, variant: v ? { tier: v.tier, serial: v.serial } : undefined }) + '</div>';
   }).join('');
 }
 
