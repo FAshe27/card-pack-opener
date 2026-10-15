@@ -59,3 +59,13 @@
   border-color: rgba(255,255,255,.16);
   box-shadow: none;
 }
+
+/* ---------- 3. Card art framing (faces up) ---------- */
+/* Comic art puts the face in the top third of the frame, so the stock
+   centre crop (object-position 50%) beheaded half the set — headless
+   torsos everywhere. Bias this set's crop window upward. Slips keep the
+   stock framing (they are not set cards). */
+.card[data-set="hero"] .cf-art img { object-position: 50% 28%; }
+.card[data-set="hero"].ticket-card .cf-art img,
+.card[data-set="hero"].token-card .cf-art img,
+.card[data-set="hero"].credit-card .cf-art img { object-position: 50% 50%; }
