@@ -123,9 +123,6 @@
         '<div class="scr-tiers">' + tierCards + '</div>' +
         '<div class="scr-stage" id="scrStage"></div>' +
         '<div class="scr-result" id="scrResult"><span class="muted small">Loading…</span></div>' +
-        '<details class="scr-tuning"><summary>Odds &amp; prizes (placeholder numbers)</summary>' +
-          '<div id="scrTuning"></div>' +
-        '</details>' +
       '</div>';
     qa('.scr-buy').forEach(function (b) {
       b.addEventListener('click', function () { buyTicket(b.getAttribute('data-tier')); });
@@ -134,7 +131,6 @@
     if (bk) bk.addEventListener('click', function () {
       if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('arcade');
     });
-    renderTuning();
     updateHud();
     loadState();
   }
@@ -169,21 +165,6 @@
     // Fully scratched before a refresh but never settled: settle now
     // (the server pays exactly once, so this is safe).
     if (current.revealed.every(function (r) { return r; })) settleIfDone();
-  }
-
-  function renderTuning() {
-    var total = 0, k;
-    for (k in OUTCOME_WEIGHTS) total += OUTCOME_WEIGHTS[k];
-    var odds = SYMBOLS.map(function (s) {
-      return s + ' ' + (OUTCOME_WEIGHTS[s] / total * 100).toFixed(1) + '%';
-    }).join(' · ');
-    var evs = CONFIG.tiers.map(function (t) {
-      var ev = expectedPacksPerTicket(t);
-      return esc(t.name) + ': ' + ev.toFixed(2) + ' packs/ticket (' + (ev / t.cost).toFixed(3) + '/token)';
-    }).join('<br>');
-    var t2 = q('#scrTuning');
-    if (t2) t2.innerHTML = '<p>Match odds (any tier): no match ' +
-      (OUTCOME_WEIGHTS.none / total * 100).toFixed(1) + '% · ' + esc(odds) + '</p><p>' + evs + '</p>';
   }
 
   function setResult(html) { var r = q('#scrResult'); if (r) r.innerHTML = html; }

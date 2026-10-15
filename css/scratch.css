@@ -48,8 +48,6 @@
   color: #ffdf5d; background: #2b2111; border: 2px solid #d4a017;
   border-radius: 12px; padding: 9px 16px;
 }
-.scr-tuning { text-align: left; max-width: 520px; margin: 12px auto 0; }
-.scr-tuning summary { cursor: pointer; font-weight: 600; margin-bottom: 6px; }
 .scr-sim { margin-top: 8px; }
 @media (max-width: 480px) {
   .scr-sym { font-size: 10px; padding: 5px 8px; }
