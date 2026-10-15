@@ -1,0 +1,63 @@
+/* Roulette (Sandbox prototype) — rlt- namespaced. Standard number table:
+   absolutely-positioned cells + chip hotspots share one unit grid. */
+.rlt-wrap { max-width: 860px; }
+.rlt-top { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; margin: 10px 0 14px; }
+.rlt-wheelbox { position: relative; width: 240px; height: 240px; flex: 0 0 auto; }
+.rlt-pointer { position: absolute; top: -4px; left: 50%; transform: translateX(-50%); z-index: 3;
+  color: #ffd75e; font-size: 18px; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+.rlt-rotor { width: 100%; height: 100%; will-change: transform; }
+.rlt-svg { display: block; width: 100%; height: 100%; }
+.rlt-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 30px; font-weight: 800; color: #eef1f6; text-shadow: 0 1px 4px rgba(0,0,0,.7); }
+.rlt-side { flex: 1 1 260px; min-width: 240px; }
+.rlt-balance, .rlt-stake { font-size: 15px; margin: 2px 0; }
+.rlt-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.rlt-warn { color: #ff9a9a; font-size: 13px; }
+.rlt-result { background: rgba(255,255,255,.05); border: 1px solid #39404e; border-radius: 10px;
+  padding: 8px 10px; font-size: 14px; margin: 8px 0; }
+.rlt-ball { display: inline-block; min-width: 24px; text-align: center; padding: 2px 4px;
+  border-radius: 999px; color: #fff; font-weight: 800; }
+.rlt-wins, .rlt-net { opacity: .85; font-size: 13px; }
+.rlt-history { font-size: 13px; margin: 6px 0; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.rlt-hist { display: inline-block; min-width: 22px; text-align: center; padding: 1px 3px;
+  border-radius: 999px; color: #fff; font-size: 12px; font-weight: 700; }
+.rlt-red { background: #b3232a; }
+.rlt-black { background: #20242c; }
+.rlt-green { background: #1d7a3a; }
+.rlt-session { font-size: 12.5px; opacity: .75; }
+
+.rlt-tablescroll { overflow-x: auto; padding-bottom: 16px; }
+.rlt-table { position: relative; min-width: 560px; aspect-ratio: 14.15 / 3; background: #14532d;
+  border: 2px solid #7c5a2e; border-radius: 10px; }
+.rlt-cell { position: absolute; padding: 1.5px; box-sizing: border-box; }
+.rlt-cell span { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+  border: 1px solid rgba(255,255,255,.55); border-radius: 4px; color: #fff; font-weight: 700;
+  font-size: clamp(10px, 1.9vw, 15px); box-sizing: border-box; }
+.rlt-cell.rlt-red span { background: #b3232a; }
+.rlt-cell.rlt-black span { background: #20242c; }
+.rlt-cell.rlt-green span { background: #1d7a3a; }
+.rlt-cell.rlt-colbet span { background: rgba(0,0,0,.25); font-size: clamp(9px, 1.6vw, 13px); }
+.rlt-cell.rlt-hit span { outline: 3px solid #ffd75e; outline-offset: -3px; }
+
+.rlt-spot { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
+  border: 1.5px dashed rgba(255,255,255,0); background: transparent; cursor: pointer; z-index: 2;
+  font-size: 14px; line-height: 1; padding: 0; }
+.rlt-spot:hover:not(:disabled) { border-color: rgba(255,215,94,.8); background: rgba(255,215,94,.15); }
+.rlt-spot.rlt-on { background: radial-gradient(circle at 35% 30%, #ffe9a3, #e3a81c 70%);
+  border: 2px solid #fff2c4; box-shadow: 0 1px 4px rgba(0,0,0,.55); }
+.rlt-spot:disabled { cursor: default; opacity: .85; }
+
+.rlt-outrow { display: flex; gap: 6px; margin-top: 6px; }
+.rlt-out { flex: 1 1 0; padding: 9px 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,.55);
+  background: #14532d; color: #fff; font-weight: 700; font-size: 13.5px; cursor: pointer; }
+.rlt-out.rlt-on { background: #8a6d1f; border-color: #ffd75e; box-shadow: inset 0 0 0 1px #ffd75e; }
+.rlt-out:disabled { cursor: default; opacity: .85; }
+
+.rlt-odds { margin-top: 14px; font-size: 13.5px; }
+.rlt-oddsgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 14px; margin-top: 8px; }
+.rlt-oddsgrid p { grid-column: 1 / -1; opacity: .85; }
+
+@media (max-width: 640px) {
+  .rlt-wheelbox { width: 190px; height: 190px; margin: 0 auto; }
+  .rlt-top { flex-direction: column; }
+}
