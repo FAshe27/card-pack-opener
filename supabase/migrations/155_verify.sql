@@ -1,100 +1,116 @@
--- =====================================================================
--- 155_verify.sql — post-run smoke test for 155. Run AFTER
--- 155_market_nav_counts.sql. Everything happens inside one transaction
--- that ROLLS BACK: the planted session, bounty and listing all vanish.
--- Expect one row at the end: 155 VERIFY PASS.
+-- 155_verify.sql -- smoke test for migration 155 (CotD wording + activity
+-- grants). One transaction, ROLLS BACK -- net effect zero: today's real
+-- CotD row, inventories and notifications are all restored on rollback.
 --
--- Checks, in order:
---   1. cps_market_nav answers post-auth and its counts move by exactly
---      +1/+1 when a claimable bounty and an offered listing are planted.
---   2. Calling cps_market_nav does NOT touch today's visit_market
---      daily (progress unchanged — the bug being fixed).
---   3. A real board load (cps_list_bounties) still DOES bump
---      visit_market to done — a genuine Market visit still counts.
--- =====================================================================
+-- Inside the transaction it removes today's CotD row, marks one real
+-- player "active" (a fake pack opening yesterday, Chicago time) and a
+-- second player "inactive" (their yesterday openings removed, in-txn
+-- only), then runs the rollover and checks:
+--   * the CotD row is recreated and a second call changes nothing;
+--   * the active player gained exactly 15 packs (+5 of the CotD set),
+--     got the long CotD text and the Activity bonus notification;
+--   * the inactive player gained 0 packs and got only the short text.
+-- Expected: SMOKE PASSED at the end.
 begin;
-
-insert into cps.sessions (token_hash, account_id, expires_at)
-select cps.hash_text('smoke155-token-00000001'), id, now() + interval '1 hour'
-  from cps.accounts where display_name = 'Admin Account';
 
 do $$
 declare
-  v_admin   uuid;
-  v_other   uuid;
-  v_set     text;
-  v_card    text;
-  v_day     date := (now() at time zone 'America/Chicago')::date;
-  v_before  jsonb;
-  v_after   jsonb;
-  v_prog0   int;
-  v_prog1   int;
-  v_done    boolean;
-  r         jsonb;
+  today  date := (now() at time zone 'America/Chicago')::date;
+  active_acct uuid; idle_acct uuid;
+  cotd_set text;
+  a_before int; a_after int;
+  i_before int; i_after int;
+  g_cotd int; g_bonus int;
+  a_notifs int; i_notifs int; n_cotd int;
 begin
-  select id into v_admin from cps.accounts where display_name = 'Admin Account';
-  if v_admin is null then raise exception 'VERIFY FAIL: no Admin Account fixture'; end if;
-  select id into v_other
-    from cps.accounts
-   where not is_admin and not disabled and id <> v_admin
-   order by id limit 1;
-  if v_other is null then raise exception 'VERIFY FAIL: no second account fixture'; end if;
-
-  -- a card the Admin holds on hand (plain copy, not all vaulted)
-  select c.set_id, c.card_id into v_set, v_card
-    from cps.collection c
-   where c.account_id = v_admin and c.count - c.vaulted_count >= 1
-   order by c.set_id, c.card_id limit 1;
-  if v_set is null then raise exception 'VERIFY FAIL: Admin holds no on-hand card for the fixture'; end if;
-
-  -- today's visit_market progress BEFORE anything (null row = -1)
-  select coalesce((select progress from cps.daily_quests
-                    where account_id = v_admin and day = v_day
-                      and quest_key = 'visit_market'), -1) into v_prog0;
-
-  v_before := public.cps_market_nav('smoke155-token-00000001');
-  if v_before ->> 'claimable' is null or v_before ->> 'trade_offers' is null then
-    raise exception 'VERIFY FAIL: market_nav shape = %', v_before;
+  select id into active_acct from cps.accounts
+   where not is_admin and not disabled order by created_at limit 1;
+  select id into idle_acct from cps.accounts
+   where not is_admin and not disabled and id <> active_acct
+   order by created_at limit 1;
+  if active_acct is null or idle_acct is null then
+    raise exception 'SMOKE FAILED: need at least two non-admin players';
   end if;
 
-  -- plant: a bounty from someone else wanting a card Admin holds,
-  -- and a listing BY Admin with an open offer on it
-  insert into cps.bounties (poster, want_set, want_card, want_holo, offer_tokens)
-  values (v_other, v_set, v_card, 'any', 1);
-  insert into cps.trade_listings (lister, set_id, card_id)
-  values (v_admin, v_set, v_card);
-  insert into cps.listing_offers (listing_id, offerer, tokens)
-  select t.id, v_other, 1
-    from cps.trade_listings t
-   where t.lister = v_admin and t.set_id = v_set and t.card_id = v_card
-     and t.status = 'open'
-   order by t.created_at desc limit 1;
+  -- fixture (in-transaction only): active opened a pack yesterday,
+  -- idle did not
+  delete from cps.pack_openings
+   where account_id in (active_acct, idle_acct)
+     and (opened_at at time zone 'America/Chicago')::date = today - 1;
+  insert into cps.pack_openings (account_id, set_id, cards, opened_at)
+    select active_acct, id, '[]'::jsonb,
+           ((today - 1)::timestamp + interval '12 hours') at time zone 'America/Chicago'
+      from cps.card_sets where active and id <> 'jumbled' order by id limit 1;
 
-  v_after := public.cps_market_nav('smoke155-token-00000001');
-  if (v_after ->> 'claimable')::int <> (v_before ->> 'claimable')::int + 1 then
-    raise exception 'VERIFY FAIL: claimable % -> % (expected +1)', v_before, v_after;
+  select coalesce(sum(packs), 0) into a_before from cps.pack_inventory where account_id = active_acct;
+  select coalesce(sum(packs), 0) into i_before from cps.pack_inventory where account_id = idle_acct;
+  select count(*) into a_notifs from cps.notifications where account_id = active_acct;
+  select count(*) into i_notifs from cps.notifications where account_id = idle_acct;
+
+  -- force the rollover inside this transaction
+  delete from cps.cotd_days where cotd_date = today;
+  perform cps.ensure_cotd_today();
+  perform cps.ensure_cotd_today(); -- second call must be a no-op
+
+  select set_id into cotd_set from cps.cotd_days where cotd_date = today;
+  if cotd_set is null then raise exception 'SMOKE FAILED: no CotD row created'; end if;
+  select count(*) into n_cotd from cps.cotd_days where cotd_date = today;
+  if n_cotd <> 1 then raise exception 'SMOKE FAILED: % CotD rows for today', n_cotd; end if;
+
+  select coalesce(sum(packs), 0) into a_after from cps.pack_inventory where account_id = active_acct;
+  select coalesce(sum(packs), 0) into i_after from cps.pack_inventory where account_id = idle_acct;
+
+  -- grants ledger: exactly +5 CotD-set packs and +10 random packs for
+  -- the active player, both stamped with today's date as ref
+  select coalesce(sum(packs), 0) into g_cotd from cps.pack_grants
+   where account_id = active_acct and reason = 'cotd_daily' and ref = today::text and set_id = cotd_set;
+  select coalesce(sum(packs), 0) into g_bonus from cps.pack_grants
+   where account_id = active_acct and reason = 'activity_bonus' and ref = today::text;
+  if g_cotd <> 5 then
+    raise exception 'SMOKE FAILED: cotd_daily grants sum to %, expected 5', g_cotd;
   end if;
-  if (v_after ->> 'trade_offers')::int <> (v_before ->> 'trade_offers')::int + 1 then
-    raise exception 'VERIFY FAIL: trade_offers % -> % (expected +1)', v_before, v_after;
+  if g_bonus <> 10 then
+    raise exception 'SMOKE FAILED: activity_bonus grants sum to %, expected 10', g_bonus;
+  end if;
+  if exists (select 1 from cps.pack_grants
+              where account_id = idle_acct and ref = today::text
+                and reason in ('cotd_daily', 'activity_bonus')) then
+    raise exception 'SMOKE FAILED: inactive player has grant rows for today';
   end if;
 
-  -- the whole point: badge counts must NOT move the daily
-  select coalesce((select progress from cps.daily_quests
-                    where account_id = v_admin and day = v_day
-                      and quest_key = 'visit_market'), -1) into v_prog1;
-  if v_prog1 <> v_prog0 then
-    raise exception 'VERIFY FAIL: visit_market progress moved by a badge call (% -> %)', v_prog0, v_prog1;
+  if a_after - a_before <> 15 then
+    raise exception 'SMOKE FAILED: active player gained % packs, expected 15', a_after - a_before;
+  end if;
+  if i_after - i_before <> 0 then
+    raise exception 'SMOKE FAILED: inactive player gained % packs, expected 0', i_after - i_before;
   end if;
 
-  -- and a real Market visit still completes it
-  r := public.cps_list_bounties('smoke155-token-00000001');
-  select progress, done into v_prog1, v_done
-    from cps.daily_quests
-   where account_id = v_admin and day = v_day and quest_key = 'visit_market';
-  if not coalesce(v_done, false) then
-    raise exception 'VERIFY FAIL: real board load did not complete visit_market (progress %)', v_prog1;
+  if (select count(*) from cps.notifications where account_id = active_acct) - a_notifs <> 2 then
+    raise exception 'SMOKE FAILED: active player should get 2 notifications (CotD + activity bonus)';
   end if;
+  if (select count(*) from cps.notifications where account_id = idle_acct) - i_notifs <> 1 then
+    raise exception 'SMOKE FAILED: inactive player should get 1 notification (CotD only)';
+  end if;
+  if not exists (select 1 from cps.notifications
+                  where account_id = active_acct and kind = 'cotd'
+                    and text like '%Pull it from a pack to win%'
+                    and text like '%You''ve been given 5 % packs to help your search.') then
+    raise exception 'SMOKE FAILED: active CotD text wrong: %',
+      (select text from cps.notifications where account_id = active_acct and kind = 'cotd' order by created_at desc limit 1);
+  end if;
+  if not exists (select 1 from cps.notifications
+                  where account_id = idle_acct and kind = 'cotd'
+                    and text like '%Pull it from a pack to win%'
+                    and text not like '%been given 5%') then
+    raise exception 'SMOKE FAILED: inactive CotD text wrong';
+  end if;
+  if not exists (select 1 from cps.notifications
+                  where account_id = active_acct and kind = 'activity_bonus'
+                    and text = 'Activity bonus! For being an active user, you''ve been granted 10 random packs!') then
+    raise exception 'SMOKE FAILED: activity bonus notification missing/wrong';
+  end if;
+
+  raise notice 'SMOKE PASSED: CotD set % | active +15 packs (+5 CotD set), long text + bonus note | inactive +0, short text only', cotd_set;
 end $$;
 
-select '155 VERIFY PASS' as result;
 rollback;
