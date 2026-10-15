@@ -34,20 +34,22 @@
    name/count, no back diamond/name — the lettering is baked into his art.
    The skin's amber road-line is off too (it would stripe the photo), and
    the crimped seals go SILVER at Franklin's call, matching the wheel.
-   Band heights carry a hair of overlap so no seam can open at the joins. */
+   Band heights carry a hair of overlap so no seam can open at the joins.
+   Bands re-sliced 2026-10-15 (seams at rows 711/1066) so no seam crosses
+   the baked lettering — the 533 seam sheared the subtitle's glyph tops. */
 .pack-skin-cars .pack-top {
   background-color: #0b1220;
   background-image: url('../assets/sets/cars/pack-art-1.svg'), url('../assets/sets/cars/pack-art-2.svg'), url('../assets/sets/cars/pack-art-3.svg');
   background-repeat: no-repeat;
-  background-size: calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .54);
-  background-position: 0 0, 0 calc(var(--pw) * .533), 0 calc(var(--pw) * 1.066);
+  background-size: calc(var(--pw) * 1) calc(var(--pw) * .717), calc(var(--pw) * 1) calc(var(--pw) * .361), calc(var(--pw) * 1) calc(var(--pw) * .54);
+  background-position: 0 0, 0 calc(var(--pw) * .711), 0 calc(var(--pw) * 1.066);
 }
 .pack-skin-cars .pack-body {
   background-color: #0b1220;
   background-image: url('../assets/sets/cars/pack-art-1.svg'), url('../assets/sets/cars/pack-art-2.svg'), url('../assets/sets/cars/pack-art-3.svg');
   background-repeat: no-repeat;
-  background-size: calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .54);
-  background-position: 0 calc(var(--pw) * -.176), 0 calc(var(--pw) * .357), 0 calc(var(--pw) * .89);
+  background-size: calc(var(--pw) * 1) calc(var(--pw) * .717), calc(var(--pw) * 1) calc(var(--pw) * .361), calc(var(--pw) * 1) calc(var(--pw) * .54);
+  background-position: 0 calc(var(--pw) * -.176), 0 calc(var(--pw) * .535), 0 calc(var(--pw) * .89);
 }
 .pack-skin-cars .pack-body::before { background: none; }
 .pack-skin-cars .pack-emblem, .pack-skin-cars .pack-name, .pack-skin-cars .pack-sub { display: none; }
