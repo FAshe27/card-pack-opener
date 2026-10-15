@@ -21,7 +21,7 @@
 
   /* ================= PLACEHOLDER CONFIG — tweak freely ================= */
   var CONFIG = {
-    cost: 2,               // real tokens per drop (server charges the same)
+    cost: 3,               // real tokens per drop (server charges the same)
     rows: 8,                 // peg rows -> rows + 1 bins
     // One entry per bin, left to right. tokens = tokens paid back,
     // pr = random packs, pj = Jumbled Mess packs. Display copy of
@@ -77,31 +77,12 @@
   function q(sel) { return root ? root.querySelector(sel) : null; }
   function qa(sel) { return root ? Array.prototype.slice.call(root.querySelectorAll(sel)) : []; }
 
-  // One drop's path: rows x (-1 left / +1 right). bin = number of rights.
-  function decidePath() {
-    var steps = [], rights = 0, i;
-    for (i = 0; i < CONFIG.rows; i++) {
-      var r = Math.random() < 0.5 ? -1 : 1;
-      steps.push(r);
-      if (r > 0) rights++;
-    }
-    return { steps: steps, bin: rights };
-  }
   function binProbability(k) {
     // C(rows, k) / 2^rows
     var n = CONFIG.rows, c = 1, i;
     for (i = 0; i < k; i++) c = c * (n - i) / (i + 1);
     return c / Math.pow(2, n);
   }
-  function expectedValue() {
-    var packs = 0, tokens = 0, i, p, b;
-    for (i = 0; i < CONFIG.bins.length; i++) {
-      p = binProbability(i); b = CONFIG.bins[i];
-      packs += p * (b.pr + b.pj); tokens += p * b.tokens;
-    }
-    return { packs: packs, tokens: tokens };
-  }
-
   function prizeText(b) {
     var parts = [];
     if (b.pr) parts.push(b.pr + ' random pack' + (b.pr === 1 ? '' : 's'));
@@ -161,8 +142,6 @@
         '<div class="plk-stats muted small" id="plkStats"></div>' +
         '<details class="plk-tuning"><summary>Odds &amp; prizes</summary>' +
           '<div id="plkTuning"></div>' +
-          '<button class="btn" id="plkSim" type="button">Simulate 1,000 drops (free, no prizes)</button>' +
-          '<div class="plk-sim muted small" id="plkSimOut"></div>' +
         '</details>' +
       '</div>';
     var bk = q('#plkBack');
@@ -178,7 +157,6 @@
       setResult('<span class="muted small">Session stats cleared.</span>');
       updateHud();
     });
-    q('#plkSim').addEventListener('click', simulate);
     renderTuning();
     updateHud();
     loadState();
@@ -228,31 +206,12 @@
   }
 
   function renderTuning() {
-    var ev = expectedValue();
     var rows = CONFIG.bins.map(function (b, i) {
       return '<tr><td>Bin ' + (i + 1) + '</td><td>' + (binProbability(i) * 100).toFixed(2) + '%</td>' +
         '<td>' + esc(b.label) + '</td></tr>';
     }).join('');
     var t = q('#plkTuning');
-    if (t) t.innerHTML = '<table class="plk-table"><tr><th>Bin</th><th>Odds</th><th>Pays</th></tr>' + rows + '</table>' +
-      '<p>Modelled return per drop: <b>' + ev.packs.toFixed(3) + ' packs</b> + <b>' +
-      ev.tokens.toFixed(3) + ' tokens</b> back, for a ' + CONFIG.cost + '-token drop. ' +
-      '(Slots today: ~0.46 packs per 2-token spin.)</p>';
-  }
-
-  function simulate() {
-    var counts = CONFIG.bins.map(function () { return 0; });
-    var packs = 0, tokens = 0, i, d;
-    for (i = 0; i < 1000; i++) {
-      d = decidePath();
-      counts[d.bin]++;
-      packs += CONFIG.bins[d.bin].pr + CONFIG.bins[d.bin].pj;
-      tokens += CONFIG.bins[d.bin].tokens;
-    }
-    var out = q('#plkSimOut');
-    if (out) out.innerHTML = 'Simulated 1,000 drops: bins hit (L→R) ' + counts.join(' · ') +
-      ' — paid ' + packs + ' packs + ' + tokens + ' tokens total (' +
-      (packs / 1000).toFixed(3) + ' packs and ' + (tokens / 1000).toFixed(2) + ' tokens per drop).';
+    if (t) t.innerHTML = '<table class="plk-table"><tr><th>Bin</th><th>Odds</th><th>Pays</th></tr>' + rows + '</table>';
   }
 
   function setResult(html) { var r = q('#plkResult'); if (r) r.innerHTML = html; }
@@ -416,8 +375,8 @@
     render: render,
     mount: render,
     teardown: teardown,
-    _test: { CONFIG: CONFIG, state: function () { return state; }, decidePath: decidePath,
-             binProbability: binProbability, expectedValue: expectedValue,
+    _test: { CONFIG: CONFIG, state: function () { return state; },
+             binProbability: binProbability,
              pegOffset: pegOffset, pegY: pegY, U_PCT: U_PCT, prizeText: prizeText }
   };
 })(window.CPS = window.CPS || {});
