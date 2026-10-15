@@ -4,6 +4,7 @@
 (function () {
   var S = window.CardSets && window.CardSets.get('cars');
   if (!S) return;
+  if (S.description) S.description = S.description.replace('502 street-legal production cars', '504 street-legal production cars');
   var extra = [
     {id: "buick-enclave-1st-gen-20082017", name: "Buick Enclave (1st gen, 2008\u20132017)", rarity: "common", subtitle: "SUV", details: "Buick's quiet, upscale three-row crossover.", image: "https://upload.wikimedia.org/wikipedia/commons/7/71/2008_Buick_Enclave.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original", logo: ''},
     {id: "buick-lacrosse-2nd-gen-20102016", name: "Buick LaCrosse (2nd gen, 2010\u20132016)", rarity: "common", subtitle: "Sedan", details: "Buick's full-size sedan with available all-wheel drive.", image: "https://upload.wikimedia.org/wikipedia/commons/a/aa/2010-2012_Buick_LaCrosse_--_01-11-2012.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original", logo: ''},
@@ -246,7 +247,9 @@
     {id: "volkswagen-vanagon-t3-19801991", name: "Volkswagen Vanagon (T3, 1980\u20131991)", rarity: "common", subtitle: "Minivan", details: "Volkswagen's rear-engine van, a camper-culture icon.", image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/1985_Volkswagen_Vanagon_GL_Camper%2C_front_right%2C_09-16-2022.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original", logo: ''},
     {id: "volvo-240-wagon-19751993", name: "Volvo 240 Wagon (1975\u20131993)", rarity: "common", subtitle: "Wagon", details: "Volvo's boxy wagon, built for nearly two decades.", image: "https://upload.wikimedia.org/wikipedia/commons/a/aa/1975_Volvo_245_DL_wagon_--_09-05-2011_front.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original", logo: ''},
     {id: "volvo-p1800-19611973", name: "Volvo P1800 (1961\u20131973)", rarity: "common", subtitle: "Coupe", details: "Roger Moore drove one as The Saint on TV.", image: "https://upload.wikimedia.org/wikipedia/commons/0/02/1965_Volvo_1800S_front.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original", logo: ''},
-    {id: "volvo-xc90-1st-gen-20032014", name: "Volvo XC90 (1st gen, 2003\u20132014)", rarity: "common", subtitle: "SUV", details: "Volvo's first SUV, with rollover protection standard.", image: "https://upload.wikimedia.org/wikipedia/commons/4/44/2007_Volvo_XC90_%28P28_MY07%29_D5_wagon_%282011-01-05%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original", logo: ''}
+    {id: "volvo-xc90-1st-gen-20032014", name: "Volvo XC90 (1st gen, 2003\u20132014)", rarity: "common", subtitle: "SUV", details: "Volvo's first SUV, with rollover protection standard.", image: "https://upload.wikimedia.org/wikipedia/commons/4/44/2007_Volvo_XC90_%28P28_MY07%29_D5_wagon_%282011-01-05%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original", logo: ''},
+    {id: "audi-rs7-20132018", name: "Audi RS7 (2013\u20132018)", rarity: "epic", subtitle: "Sports Sedan", details: "4.0L twin-turbo V8 with up to 605 hp in Performance trim, quattro grip, and a liftback hatch for the grocery run.", image: "assets/sets/cars/audi-rs7.svg", logo: ''},
+    {id: "bmw-m3-e36-19921999", name: "BMW M3 E36 (1992\u20131999)", rarity: "rare", subtitle: "Sports Coupe", details: "America got a 240-hp straight-six; Europe's made 321 hp \u2014 either way, the sweetest-steering M3 of the analog era.", image: "assets/sets/cars/bmw-m3-e36.svg", logo: ''}
   ];
   extra.forEach(function (x) {
     if (S.byId.has(x.id)) return;
