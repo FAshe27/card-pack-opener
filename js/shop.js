@@ -4,6 +4,7 @@
 (function (CPS) {
   var ctx = CPS.appCtx;
   var S, timer = null;
+  var lastHTML = null, lastFor = null; // last fully-drawn shop frame (seamless refresh)
 
   function $(s, r) { return (r || document).querySelector(s); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -32,11 +33,22 @@
 
   async function render(el) {
     S = ctx.S;
-    el.innerHTML = '<div class="panel"><p class="muted">Loading shop…</p></div>';
+    // A refresh re-enters here after the stage was emptied: stubbing the
+    // panel with a short "Loading" box collapses the page and the browser
+    // dumps the reader back at the top. Keep the last drawn frame on
+    // screen while fresh data loads (its buttons are inert), then hand
+    // the reader their scroll position back.
+    var y = window.scrollY || 0;
+    var acct = S && S.player && S.player.id;
+    if (lastHTML && lastFor === acct) el.innerHTML = lastHTML;
+    else el.innerHTML = '<div class="panel"><p class="muted">Loading shop…</p></div>';
     var data = await load();
     if (!data) { el.innerHTML = '<div class="panel"><p class="muted">Shop unavailable.</p></div>'; return; }
     draw(el, data);
     renderDupeSell(el);
+    lastHTML = el.innerHTML; lastFor = acct;
+    var sec = el.closest ? el.closest('section.view') : null;
+    if (!sec || sec.classList.contains('active')) window.scrollTo(0, y);
     // countdown timer
     var secs = data.seconds_to_restock;
     var cdEl = $('#shopCountdown', el);
@@ -242,8 +254,14 @@
             // stale counts and a re-enabled Sell button. Pull fresh state:
             // refreshCloud() reloads get_state, then re-renders the Shop with
             // the real remaining dupes (and refreshes the dupe_trade quest).
+            // refreshCloud re-renders the whole shop: save the scroll
+            // position first (the re-render's own restore can read it
+            // after the browser has already clamped the collapsed page)
+            // and put it back once the fresh shop is on screen.
+            var sy = window.scrollY || 0;
             if (ctx.refreshCloud) await ctx.refreshCloud();
             else renderDupeSell(el);
+            window.scrollTo(0, sy);
           } catch (e) { btn.disabled = false; ctx.cloudError(e); }
         });
       });
