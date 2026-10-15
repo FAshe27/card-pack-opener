@@ -370,7 +370,7 @@
         (st.packs ? 'Click to open and tear a pack' : 'No packs left') + '">' + CPS.cards.pack(set, 'float') + '</div>' +
       '<div class="idle-msg">' + (st.packs
         ? '<b>' + st.packs + ' pack' + (st.packs === 1 ? '' : 's') + ' ready.</b> Click the pack (or press <kbd>Space</kbd>) to open.'
-        : '<b>Out of packs!</b> Win, earn, or beg for more packs!') + '</div>';
+        : '<b>Out of packs!</b> Win or earn more packs!') + '</div>';
     $('#stageIdle').classList.remove('hidden');
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
@@ -383,7 +383,7 @@
     if (S.set.id === 'jumbled') { if (typeof CPS !== 'undefined' && CPS.jumbled) CPS.jumbled.open(); return; }
     if (isLocked()) { showGate({}); return; }
     var set = S.set, st = ps();
-    if (st.packs <= 0) { toast('Out of packs! Win, earn, or beg for more packs!', 'warn'); audio.error(); return; }
+    if (st.packs <= 0) { toast('Out of packs! Win or earn more packs!', 'warn'); audio.error(); return; }
     var pulls, seen = {}, now = Date.now(), server = null;
     if (isCloud()) {
       if (S.onlineSets.indexOf(set.id) < 0) { toast("This set isn't on the server yet. An admin can upload it from the Admin tab.", 'warn', 5000); return; }
@@ -443,7 +443,7 @@
     if (S.busy) return;
     if (o && !o.finished) { if (!o.torn) tear(); return; } // a pack is already out: tear it
     if (isLocked()) { showGate({}); return; }
-    if (ps().packs <= 0) { toast('Out of packs! Win, earn, or beg for more packs!', '', 3500); return; }
+    if (ps().packs <= 0) { toast('Out of packs! Win or earn more packs!', '', 3500); return; }
     if (await startOpen()) { await U.sleep(320); if (S.opening && !S.opening.torn) tear(); }
   }
 
