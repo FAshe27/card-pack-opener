@@ -93,8 +93,8 @@
       blurb: 'Drop a chip down 8 rows of pegs — centre bins pay tokens, edge bins pay big packs.' },
     { id: 'scratchoffs', title: 'SCRATCHOFFS', tag: '2 🪙 a ticket', accent: 'scratch', view: 'sbx-scratchoffs',
       blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.' }
-    ,{ id: 'roulette', title: 'ROULETTE', tag: 'Coming soon', accent: 'roulette', soon: true,
-      blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds. In testing now.' }
+    ,{ id: 'roulette', title: 'ROULETTE', tag: 'From 1 🪙 a spin', accent: 'roulette', view: 'sbx-roulette',
+      blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds.' }
   ];
 
   function renderLobby(box) {

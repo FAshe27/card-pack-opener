@@ -1,5 +1,5 @@
 /* ============================================================================
- * PackRipper Arcade — Roulette (REAL ECONOMY, Sandbox testing phase)
+ * PackRipper Arcade — Roulette (REAL ECONOMY, public in the Arcade)
  * ----------------------------------------------------------------------------
  * Standard European roulette with real numbers and a real betting table:
  * click a bet space to place ONE token on it, click again to remove it.
@@ -11,8 +11,7 @@
  * Real tokens: migration 150's cps_roulette_state / cps_roulette_spin.
  * The client only collects the layout and animates the result; the
  * SERVER validates every bet (kind + exact number set), charges the
- * stake, draws the number and pays out. Admin-only server-side while
- * Roulette is in the Sandbox; the gate drops at graduation.
+ * stake, draws the number and pays out. Open to every player since migration 151 dropped the Sandbox admin gate.
  * ========================================================================== */
 (function () {
   'use strict';
@@ -244,8 +243,12 @@
       : '';
 
     root.innerHTML =
-      '<div class="rlt-wrap">' +
-        '<p class="sbx-note">Standard European roulette — <b>real tokens</b>, Sandbox testing. Click any bet space to place a token on it (splits, corners and lines sit on the borders, just like a real table); click again to pick it back up. The server validates every bet and draws the number.</p>' +
+      '<div class="panel rlt-wrap">' +
+        '<div class="rlt-backrow"><button class="btn ghost" id="rltBack" type="button">← Back to Arcade</button></div>' +
+        '<h2>🎡 Roulette</h2>' +
+        '<p class="muted small">Standard European roulette. Click any bet space to place a token on it ' +
+        '(splits, corners and lines sit on the borders, just like a real table); click again to pick it back up. ' +
+        '<strong>Real tokens — the server validates every bet and draws the number.</strong></p>' +
         '<div class="rlt-top">' +
           '<div class="rlt-wheelbox"><div class="rlt-pointer">▼</div>' +
             '<div class="rlt-rotor" id="rltRotor">' + wheelSVG() + '</div>' +
@@ -281,6 +284,10 @@
     }
     root.querySelectorAll('.rlt-spot, .rlt-out').forEach(function (btn) {
       btn.addEventListener('click', function () { toggle(btn.dataset.key); });
+    });
+    var bk = root.querySelector('#rltBack');
+    if (bk) bk.addEventListener('click', function () {
+      if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('arcade');
     });
     var spin = root.querySelector('#rltSpin'); if (spin) spin.addEventListener('click', function () { spinWheel(); });
     var clear = root.querySelector('#rltClear'); if (clear) clear.addEventListener('click', function () { state.placed.clear(); draw(); });

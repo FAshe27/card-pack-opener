@@ -43,8 +43,8 @@
       status: 'public', noTab: true,
       render: function (el) { CPS.scratch.render(el); },
       teardown: function () { CPS.scratch.teardown(); } },
-    { id: 'roulette', title: 'Roulette', blurb: 'Standard European roulette — real tokens. Place a token on any bet space, standard odds. Final testing before release.',
-      status: 'testing',
+    { id: 'roulette', title: 'Roulette', blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds.',
+      status: 'public', noTab: true,
       render: function (el) { CPS.roulette.render(el); },
       teardown: function () { CPS.roulette.teardown(); } },
   ];

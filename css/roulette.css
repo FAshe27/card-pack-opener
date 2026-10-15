@@ -1,6 +1,7 @@
 /* Roulette (Sandbox prototype) — rlt- namespaced. Standard number table:
    absolutely-positioned cells + chip hotspots share one unit grid. */
-.rlt-wrap { max-width: 860px; }
+.rlt-wrap { max-width: 860px; margin: 18px auto 0; text-align: center; }
+.rlt-backrow { text-align: left; margin-bottom: 10px; }
 .rlt-top { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; margin: 10px 0 14px; }
 .rlt-wheelbox { position: relative; width: 240px; height: 240px; flex: 0 0 auto; }
 .rlt-pointer { position: absolute; top: -4px; left: 50%; transform: translateX(-50%); z-index: 3;
@@ -53,7 +54,7 @@
 .rlt-out.rlt-on { background: #8a6d1f; border-color: #ffd75e; box-shadow: inset 0 0 0 1px #ffd75e; }
 .rlt-out:disabled { cursor: default; opacity: .85; }
 
-.rlt-odds { margin-top: 14px; font-size: 13.5px; }
+.rlt-odds { margin-top: 14px; font-size: 13.5px; text-align: left; }
 .rlt-oddsgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 14px; margin-top: 8px; }
 .rlt-oddsgrid p { grid-column: 1 / -1; opacity: .85; }
 
