@@ -1,0 +1,60 @@
+/* pack skin "gas": night asphalt — deep navy-blacktop lit by the orange
+   glow of a station canopy, a dashed centre-line running down the face
+   (class pack-skin-gas).
+   Scoped set CSS only — no shared stylesheet changes. This is a logo /
+   sign / photo MIX set, so the card art uses the NFL-style treatment
+   (theme artFit contain on a warm off-white panel #f6f2ea — logos and
+   vintage signs sit on it uncropped); section 2 only adds a slim
+   Gulf-orange frame line around the art. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-gas .pack-top {
+  background:
+    /* canopy light pooling at the tear edge */
+    radial-gradient(ellipse 130px 30px at 24% 16%, rgba(255,166,88,.38), transparent 70%),
+    radial-gradient(ellipse 90px 22px at 70% 28%, rgba(242,101,34,.30), transparent 70%),
+    radial-gradient(ellipse 60px 16px at 88% 10%, rgba(255,205,160,.30), transparent 70%),
+    linear-gradient(180deg, #22355c 0%, #182747 55%, #111c33 100%);
+}
+.pack-skin-gas .pack-body {
+  background:
+    /* orange forecourt glow rising from the pumps below */
+    radial-gradient(ellipse 80% 28% at 50% 112%, rgba(242,101,34,.32), transparent 70%),
+    radial-gradient(ellipse 42% 16% at 50% 116%, rgba(255,179,138,.20), transparent 70%),
+    /* the dashed centre-line, running down the asphalt */
+    repeating-linear-gradient(180deg, rgba(246,242,234,.16) 0 24px, transparent 24px 58px),
+    linear-gradient(180deg, #101a30 0%, #0b1220 55%, #060a14 100%);
+  background-size: 100% 100%, 100% 100%, 3px 100%, 100% 100%;
+  background-position: 0 0, 0 0, 50% 0, 0 0;
+  background-repeat: no-repeat;
+}
+.pack-skin-gas .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(120,150,210,.20), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-gas .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(242,101,34,.5) 4px 6px, rgba(255,205,160,.18) 6px 9px); }
+.pack-skin-gas .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(120,55,20,.55) 4px 6px, rgba(255,179,138,.10) 6px 9px); }
+.pack-skin-gas .pack-top::after { border-bottom-color: rgba(255,179,138,.65); }
+.pack-skin-gas .pack-code { color: #ffb38a; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.6), 0 0 12px rgba(242,101,34,.85); }
+.pack-skin-gas .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,205,160,.45), rgba(11,18,32,.94) 72%);
+  border-color: rgba(255,179,138,.85); box-shadow: 0 0 26px rgba(242,101,34,.55), inset 0 0 18px rgba(242,101,34,.25); text-shadow: 0 0 16px rgba(255,205,160,.9); }
+.pack-skin-gas .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(24,39,71,.9), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-gas .pack-sub { color: #d8e0f0; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Logos, signs and photos sit contained on the warm panel (artFit
+   contain, art panel #f6f2ea behind them). The frame only swaps the
+   stock translucent border for a slim Gulf-orange line with a faint
+   asphalt inset. */
+.card[data-set="gas"] .cf-art {
+  border-color: rgba(242,101,34,.5);
+  box-shadow: inset 0 0 18px rgba(11,18,32,.18);
+}
+/* Slips (ticket/token/credit cards borrowed into a gas pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="gas"].ticket-card .cf-art,
+.card[data-set="gas"].token-card .cf-art,
+.card[data-set="gas"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
