@@ -1,130 +1,121 @@
--- =====================================================================
--- 156_verify.sql — post-run smoke test for 156. Run AFTER
--- 156_milestone_seen_sync.sql. Everything happens inside one
--- transaction that ROLLS BACK: planted sessions and turn-ins vanish.
--- Expect one row at the end: 156 VERIFY PASS.
+-- 156_verify.sql -- smoke test for migration 156 (CotD wording + activity
+-- grants). One transaction, ROLLS BACK -- net effect zero: today's real
+-- CotD row, inventories and notifications are all restored on rollback.
 --
--- Checks, in order:
---   1. First cps_milestone_sync for an account is a silent baseline
---      (baseline=true, nothing fresh) — even for an account that
---      already has completions.
---   2. After planting turn-ins that complete one rarity, the next
---      sync reports exactly that rarity as fresh (and not the set).
---   3. THE CROSS-DEVICE CHECK: an immediate second sync (what a
---      phone logging in after the PC would call) reports NOTHING
---      fresh — the pop-up can only ever fire on the first device.
---   4. Completing the whole set reports the set in fresh_full once,
---      and a repeat sync reports nothing.
---   5. A different account still gets its own silent baseline first
---      (snapshots are per-account).
---   6. A bogus token is rejected by cps.auth.
--- =====================================================================
+-- Inside the transaction it removes today's CotD row, marks one real
+-- player "active" (a session used yesterday, Chicago time, with their
+-- last actual login set a week back -- the stay-signed-in path) and a
+-- second player "inactive" (sessions removed, last login 3 days ago,
+-- in-txn only), then runs the rollover and checks:
+--   * the CotD row is recreated and a second call changes nothing;
+--   * the active player gained exactly 15 packs (+5 of the CotD set),
+--     got the long CotD text and the Activity bonus notification;
+--   * the inactive player gained 0 packs and got only the short text.
+-- Expected: SMOKE PASSED at the end.
 begin;
-
-insert into cps.sessions (token_hash, account_id, expires_at)
-select cps.hash_text('smoke156-token-admin-01'), id, now() + interval '1 hour'
-  from cps.accounts where display_name = 'Admin Account';
-insert into cps.sessions (token_hash, account_id, expires_at)
-select cps.hash_text('smoke156-token-other-02'), id, now() + interval '1 hour'
-  from cps.accounts
- where not is_admin and not disabled
- order by id limit 1;
 
 do $$
 declare
-  v_admin  uuid;
-  v_set    text;
-  v_rarity text;
-  r        jsonb;
+  today  date := (now() at time zone 'America/Chicago')::date;
+  active_acct uuid; idle_acct uuid;
+  cotd_set text;
+  a_before int; a_after int;
+  i_before int; i_after int;
+  g_cotd int; g_bonus int;
+  a_notifs int; i_notifs int; n_cotd int;
 begin
-  select id into v_admin from cps.accounts where display_name = 'Admin Account';
-  if v_admin is null then raise exception 'VERIFY FAIL: no Admin Account fixture'; end if;
-
-  -- Start from no snapshot for Admin (rolled back afterwards).
-  delete from cps.milestone_snapshots where account_id = v_admin;
-
-  -- 1. first sync = silent baseline
-  r := public.cps_milestone_sync('smoke156-token-admin-01');
-  if coalesce((r ->> 'baseline')::boolean, false) is not true
-     or jsonb_array_length(r -> 'fresh_rar') <> 0
-     or jsonb_array_length(r -> 'fresh_full') <> 0 then
-    raise exception 'VERIFY FAIL: first sync not a silent baseline: %', r;
+  select id into active_acct from cps.accounts
+   where not is_admin and not disabled order by created_at limit 1;
+  select id into idle_acct from cps.accounts
+   where not is_admin and not disabled and id <> active_acct
+   order by created_at limit 1;
+  if active_acct is null or idle_acct is null then
+    raise exception 'SMOKE FAILED: need at least two non-admin players';
   end if;
 
-  -- Pick the smallest rarity pool that (a) its set has other cards
-  -- too, so completing the rarity does not complete the set, and
-  -- (b) Admin has not already completed (else there is nothing to
-  -- plant and the crossing check below would see no change).
-  select t.set_id, t.rarity into v_set, v_rarity
-    from (select set_id, rarity, count(*) as n from cps.cards
-           group by set_id, rarity) t
-    join (select set_id, count(*) as n from cps.cards group by set_id) s
-      on s.set_id = t.set_id
-   where s.n > t.n
-     and (select count(*) from cps.turn_ins ti
-           join cps.cards c
-             on c.set_id = ti.set_id and c.card_id = ti.card_id
-          where ti.account_id = v_admin
-            and ti.set_id = t.set_id and c.rarity = t.rarity) < t.n
-   order by t.n asc, t.set_id, t.rarity
-   limit 1;
-  if v_set is null then raise exception 'VERIFY FAIL: no rarity-pool fixture'; end if;
+  -- fixture (in-transaction only): active was logged in yesterday via
+  -- a still-alive session (last_login deliberately stale); idle was not
+  -- logged in yesterday at all
+  delete from cps.sessions where account_id = idle_acct;
+  update cps.accounts set last_login_at = now() - interval '3 days' where id = idle_acct;
+  update cps.accounts set last_login_at = now() - interval '7 days' where id = active_acct;
+  delete from cps.sessions
+   where account_id = active_acct
+     and (last_used_at at time zone 'America/Chicago')::date = today - 1;
+  insert into cps.sessions (token_hash, account_id, expires_at, last_used_at)
+    values (cps.hash_text('smoke156-' || active_acct::text), active_acct,
+            now() + interval '1 day',
+            ((today - 1)::timestamp + interval '12 hours') at time zone 'America/Chicago');
 
-  -- 2. plant turn-ins completing that rarity; next sync reports it
-  insert into cps.turn_ins (account_id, set_id, card_id, via)
-  select v_admin, set_id, card_id, 'manual'
-    from cps.cards
-   where set_id = v_set and rarity = v_rarity
-  on conflict do nothing;
+  select coalesce(sum(packs), 0) into a_before from cps.pack_inventory where account_id = active_acct;
+  select coalesce(sum(packs), 0) into i_before from cps.pack_inventory where account_id = idle_acct;
+  select count(*) into a_notifs from cps.notifications where account_id = active_acct;
+  select count(*) into i_notifs from cps.notifications where account_id = idle_acct;
 
-  r := public.cps_milestone_sync('smoke156-token-admin-01');
-  if coalesce((r ->> 'baseline')::boolean, true) is not false
-     or jsonb_array_length(r -> 'fresh_rar') <> 1
-     or (r -> 'fresh_rar' -> 0 ->> 'set') <> v_set
-     or (r -> 'fresh_rar' -> 0 ->> 'rarity') <> v_rarity
-     or jsonb_array_length(r -> 'fresh_full') <> 0 then
-    raise exception 'VERIFY FAIL: crossing sync wrong: % (expected fresh %:%)', r, v_set, v_rarity;
+  -- force the rollover inside this transaction
+  delete from cps.cotd_days where cotd_date = today;
+  perform cps.ensure_cotd_today();
+  perform cps.ensure_cotd_today(); -- second call must be a no-op
+
+  select set_id into cotd_set from cps.cotd_days where cotd_date = today;
+  if cotd_set is null then raise exception 'SMOKE FAILED: no CotD row created'; end if;
+  select count(*) into n_cotd from cps.cotd_days where cotd_date = today;
+  if n_cotd <> 1 then raise exception 'SMOKE FAILED: % CotD rows for today', n_cotd; end if;
+
+  select coalesce(sum(packs), 0) into a_after from cps.pack_inventory where account_id = active_acct;
+  select coalesce(sum(packs), 0) into i_after from cps.pack_inventory where account_id = idle_acct;
+
+  -- grants ledger: exactly +5 CotD-set packs and +10 random packs for
+  -- the active player, both stamped with today's date as ref
+  select coalesce(sum(packs), 0) into g_cotd from cps.pack_grants
+   where account_id = active_acct and reason = 'cotd_daily' and ref = today::text and set_id = cotd_set;
+  select coalesce(sum(packs), 0) into g_bonus from cps.pack_grants
+   where account_id = active_acct and reason = 'activity_bonus' and ref = today::text;
+  if g_cotd <> 5 then
+    raise exception 'SMOKE FAILED: cotd_daily grants sum to %, expected 5', g_cotd;
+  end if;
+  if g_bonus <> 10 then
+    raise exception 'SMOKE FAILED: activity_bonus grants sum to %, expected 10', g_bonus;
+  end if;
+  if exists (select 1 from cps.pack_grants
+              where account_id = idle_acct and ref = today::text
+                and reason in ('cotd_daily', 'activity_bonus')) then
+    raise exception 'SMOKE FAILED: inactive player has grant rows for today';
   end if;
 
-  -- 3. second device: nothing fresh, ever
-  r := public.cps_milestone_sync('smoke156-token-admin-01');
-  if jsonb_array_length(r -> 'fresh_rar') <> 0
-     or jsonb_array_length(r -> 'fresh_full') <> 0 then
-    raise exception 'VERIFY FAIL: second sync replayed a milestone: %', r;
+  if a_after - a_before <> 15 then
+    raise exception 'SMOKE FAILED: active player gained % packs, expected 15', a_after - a_before;
+  end if;
+  if i_after - i_before <> 0 then
+    raise exception 'SMOKE FAILED: inactive player gained % packs, expected 0', i_after - i_before;
   end if;
 
-  -- 4. complete the whole set; fresh_full fires once, then silence
-  insert into cps.turn_ins (account_id, set_id, card_id, via)
-  select v_admin, set_id, card_id, 'manual'
-    from cps.cards
-   where set_id = v_set
-  on conflict do nothing;
-
-  r := public.cps_milestone_sync('smoke156-token-admin-01');
-  if not (r -> 'fresh_full' @> to_jsonb(v_set)) then
-    raise exception 'VERIFY FAIL: full-set sync missing % in fresh_full: %', v_set, r;
+  if (select count(*) from cps.notifications where account_id = active_acct) - a_notifs <> 2 then
+    raise exception 'SMOKE FAILED: active player should get 2 notifications (CotD + activity bonus)';
   end if;
-  r := public.cps_milestone_sync('smoke156-token-admin-01');
-  if jsonb_array_length(r -> 'fresh_rar') <> 0
-     or jsonb_array_length(r -> 'fresh_full') <> 0 then
-    raise exception 'VERIFY FAIL: full-set milestone replayed: %', r;
+  if (select count(*) from cps.notifications where account_id = idle_acct) - i_notifs <> 1 then
+    raise exception 'SMOKE FAILED: inactive player should get 1 notification (CotD only)';
+  end if;
+  if not exists (select 1 from cps.notifications
+                  where account_id = active_acct and kind = 'cotd'
+                    and text like '%Pull it from a pack to win%'
+                    and text like '%You''ve been given 5 % packs to help your search.') then
+    raise exception 'SMOKE FAILED: active CotD text wrong: %',
+      (select text from cps.notifications where account_id = active_acct and kind = 'cotd' order by created_at desc limit 1);
+  end if;
+  if not exists (select 1 from cps.notifications
+                  where account_id = idle_acct and kind = 'cotd'
+                    and text like '%Pull it from a pack to win%'
+                    and text not like '%been given 5%') then
+    raise exception 'SMOKE FAILED: inactive CotD text wrong';
+  end if;
+  if not exists (select 1 from cps.notifications
+                  where account_id = active_acct and kind = 'activity_bonus'
+                    and text = 'Activity bonus! For being an active user, you''ve been granted 10 random packs!') then
+    raise exception 'SMOKE FAILED: activity bonus notification missing/wrong';
   end if;
 
-  -- 5. another account: its first sync is still its own baseline
-  r := public.cps_milestone_sync('smoke156-token-other-02');
-  if coalesce((r ->> 'baseline')::boolean, false) is not true then
-    raise exception 'VERIFY FAIL: other account first sync not baseline: %', r;
-  end if;
-
-  -- 6. bogus token rejected
-  begin
-    r := public.cps_milestone_sync('smoke156-token-BOGUS');
-    raise exception 'VERIFY FAIL: bogus token was accepted: %', r;
-  exception when others then
-    if sqlerrm like 'VERIFY FAIL%' then raise; end if;
-    -- expected: auth raises (28000 Not logged in)
-  end;
+  raise notice 'SMOKE PASSED: CotD set % | active +15 packs (+5 CotD set), long text + bonus note | inactive +0, short text only', cotd_set;
 end $$;
 
-select '156 VERIFY PASS' as result;
 rollback;
