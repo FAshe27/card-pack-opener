@@ -139,6 +139,7 @@
     }
     el.innerHTML =
       '<div class="panel plk-wrap">' +
+        '<div class="plk-backrow"><button class="btn ghost" id="plkBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🪙 Plinko</h2>' +
         '<p class="muted small">Drop a chip, watch it bounce. Centre bins pay tokens, ' +
         'outer bins pay packs, the very edges are the jackpot. ' +
@@ -164,6 +165,10 @@
           '<div class="plk-sim muted small" id="plkSimOut"></div>' +
         '</details>' +
       '</div>';
+    var bk = q('#plkBack');
+    if (bk) bk.addEventListener('click', function () {
+      if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('arcade');
+    });
     q('#plkDrop1').addEventListener('click', function () { playDrops(1, false); });
     q('#plkDrop10').addEventListener('click', function () { playDrops(10, true); });
     q('#plkReset').addEventListener('click', function () {
@@ -197,6 +202,29 @@
       if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(state.tokens);
       if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
     } catch (e) { /* non-fatal */ }
+  }
+
+  /* Pack prizes land in S.player.sets only on a full state load, so the
+     top-bar Open Packs badge (and the packs side list) lagged behind a
+     Plinko win until the next refresh (Franklin, 2026-10-14). Pull just
+     the inventory counts from get_state, apply them the way the app's
+     own loader does, and repaint the packs side — no view remount, so
+     the result line and session stats stay put. */
+  async function refreshPackCounts() {
+    try {
+      var st = await CPS.cloud.call('get_state');
+      var sets = ctx.S && ctx.S.player && ctx.S.player.sets;
+      var inv = st && st.inventory;
+      if (!sets || !inv) return;
+      Object.keys(sets).forEach(function (k) { if (!(k in inv)) sets[k].packs = 0; });
+      Object.keys(inv).forEach(function (k) {
+        if (sets[k]) sets[k].packs = inv[k];
+        else sets[k] = { packs: inv[k], cards: {}, recent: [],
+          stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
+      });
+      if (ctx.renderPacksSide) ctx.renderPacksSide();
+      else if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
+    } catch (e) { /* non-fatal: counts catch up on the next natural load */ }
   }
 
   function renderTuning() {
@@ -269,6 +297,9 @@
         dropping = false;
         state.tokens = r.tokens_now;
         syncBadges();
+        var batchPacks = 0;
+        results.forEach(function (res) { batchPacks += (res.pr || 0) + (res.pj || 0); });
+        if (batchPacks > 0) refreshPackCounts();
         if (wins.length) {
           setResult('<span class="plk-win">' + esc(wins[wins.length - 1]) + '</span>' +
             (n > 1 ? '<div class="muted small">' + n + ' drops done.</div>' : ''));
