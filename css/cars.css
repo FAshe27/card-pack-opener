@@ -25,3 +25,33 @@
 .pack-skin-cars .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(253,224,71,.55), rgba(11,18,32,.94) 72%);
   border-color: rgba(253,224,71,.8); box-shadow: 0 0 26px rgba(251,191,36,.6), inset 0 0 18px rgba(253,224,71,.25); text-shadow: 0 0 16px rgba(255,255,255,.9); }
 .pack-skin-cars .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(251,191,36,.9), 0 2px 8px rgba(0,0,0,.65); }
+
+/* ---------- Baked-in art skin (Franklin's own art, 2026-10-14) ----------
+   His finished paintings ARE the pack and the card back: car-meet pack wrap
+   (assets/sets/cars/pack-art-1..3.svg) and an alloy-wheel card back
+   (card-back-art.svg) shown INSIDE the standard site frame. All
+   site-printed dressing is OFF for this set: no emblem circle, no printed
+   name/count, no back diamond/name — the lettering is baked into his art.
+   The skin's amber road-line is off too (it would stripe the photo), and
+   the crimped seals go SILVER at Franklin's call, matching the wheel.
+   Band heights carry a hair of overlap so no seam can open at the joins. */
+.pack-skin-cars .pack-top {
+  background-color: #0b1220;
+  background-image: url('../assets/sets/cars/pack-art-1.svg'), url('../assets/sets/cars/pack-art-2.svg'), url('../assets/sets/cars/pack-art-3.svg');
+  background-repeat: no-repeat;
+  background-size: calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .54);
+  background-position: 0 0, 0 calc(var(--pw) * .533), 0 calc(var(--pw) * 1.066);
+}
+.pack-skin-cars .pack-body {
+  background-color: #0b1220;
+  background-image: url('../assets/sets/cars/pack-art-1.svg'), url('../assets/sets/cars/pack-art-2.svg'), url('../assets/sets/cars/pack-art-3.svg');
+  background-repeat: no-repeat;
+  background-size: calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .539), calc(var(--pw) * 1) calc(var(--pw) * .54);
+  background-position: 0 calc(var(--pw) * -.176), 0 calc(var(--pw) * .357), 0 calc(var(--pw) * .89);
+}
+.pack-skin-cars .pack-body::before { background: none; }
+.pack-skin-cars .pack-emblem, .pack-skin-cars .pack-name, .pack-skin-cars .pack-sub { display: none; }
+.pack-skin-cars .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(168,178,190,.55) 4px 6px, rgba(235,240,245,.18) 6px 9px); }
+.pack-skin-cars .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.66) 0 4px, rgba(140,150,163,.5) 4px 6px, rgba(220,228,236,.10) 6px 9px); }
+.card[data-set="cars"] .cb { background: url('../assets/sets/cars/card-back-art.svg') center / cover no-repeat #0b1220; }
+.card[data-set="cars"] .cb-emblem, .card[data-set="cars"] .cb-name { display: none; }
