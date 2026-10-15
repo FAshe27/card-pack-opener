@@ -34,6 +34,11 @@
    * Hotspot x/y is where the chip sits (cell centres, shared borders and
    * corners — the same places a real chip goes).                           */
   var TX = 14.15; // total table width in units (incl. the column-bet slot)
+  // On phone-width screens the whole table transposes to a vertical layout
+  // (zero strip on top, streets as rows, 2:1 bets along the bottom) so the
+  // page scrolls vertically instead of the table scrolling sideways.
+  var VMQ = (typeof window !== 'undefined' && window.matchMedia)
+    ? window.matchMedia('(max-width: 640px)') : { matches: false };
   function streetOf(n) { return Math.ceil(n / 3); }            // 1..12
   function rowOf(n) { var p = n - 3 * (streetOf(n) - 1); return 3 - p; } // 0 top, 2 bottom
 
@@ -190,29 +195,38 @@
   function draw() {
     if (!root || !state) return;
     var st = stake();
+    // Layout transform: horizontal units are (x: 0..TX, y: 0..3). Vertical
+    // mode swaps the axes, so every cell and chip lands in its transposed
+    // place with the same code — coverage and adjacency are untouched.
+    var V = !!VMQ.matches;
+    function LX(x, y) { return V ? ((3 - y) / 3 * 100) : (x / TX * 100); }
+    function TY(x, y) { return V ? (x / TX * 100) : (y / 3 * 100); }
+    function CW(w, h) { return V ? (h / 3 * 100) : (w / TX * 100); }
+    function LXr(x, y, w, h) { return V ? ((3 - (y + h)) / 3 * 100) : (x / TX * 100); }
+    function CH(w, h) { return V ? (w / TX * 100) : (h / 3 * 100); }
     var cells = [], i, n;
-    cells.push('<div class="rlt-cell rlt-green" data-num="0" style="left:0%;top:0%;width:' + (100 / TX) +
-      '%;height:100%"><span>0</span></div>');
+    cells.push('<div class="rlt-cell rlt-green" data-num="0" style="left:' + LXr(0, 0, 1, 3) + '%;top:' + TY(0, 0) +
+      '%;width:' + CW(1, 3) + '%;height:' + CH(1, 3) + '%"><span>0</span></div>');
     for (n = 1; n <= 36; n++) {
       cells.push('<div class="rlt-cell rlt-' + colorOf(n) + (state.last && state.last.n === n ? ' rlt-hit' : '') +
-        '" data-num="' + n + '" style="left:' + ((streetOf(n)) / TX * 100) + '%;top:' + (rowOf(n) / 3 * 100) +
-        '%;width:' + (100 / TX) + '%;height:' + (100 / 3) + '%"><span>' + n + '</span></div>');
+        '" data-num="' + n + '" style="left:' + LXr(streetOf(n), rowOf(n), 1, 1) + '%;top:' + TY(streetOf(n), rowOf(n)) +
+        '%;width:' + CW(1, 1) + '%;height:' + CH(1, 1) + '%"><span>' + n + '</span></div>');
     }
     for (i = 0; i < 3; i++) {
-      cells.push('<div class="rlt-cell rlt-colbet" style="left:' + (13.1 / TX * 100) + '%;top:' + (i / 3 * 100) +
-        '%;width:' + (0.95 / TX * 100) + '%;height:' + (100 / 3) + '%"><span>2:1</span></div>');
+      cells.push('<div class="rlt-cell rlt-colbet" style="left:' + LXr(13.1, i, 0.95, 1) + '%;top:' + TY(13.1, i) +
+        '%;width:' + CW(0.95, 1) + '%;height:' + CH(0.95, 1) + '%"><span>2:1</span></div>');
     }
     var spots = SPOTS.map(function (b) {
       var on = state.placed.has(b.key);
       return '<button type="button" class="rlt-spot' + (on ? ' rlt-on' : '') + '" data-key="' + b.key + '"' +
         (state.spinning ? ' disabled' : '') + ' title="' + esc(b.kind + ' ' + b.label + ' — pays ' + b.mult + ':1') +
-        '" style="left:' + (b.x / TX * 100) + '%;top:' + (b.y / 3 * 100) + '%">' + (on ? '🪙' : '') + '</button>';
+        '" style="left:' + LX(b.x, b.y) + '%;top:' + TY(b.x, b.y) + '%">' + (on ? '🪙' : '') + '</button>';
     }).join('');
     var colSpots = OUTSIDE.filter(function (b) { return b.kind === 'column'; }).map(function (b, i) {
       var on = state.placed.has(b.key);
       return '<button type="button" class="rlt-spot rlt-colspot' + (on ? ' rlt-on' : '') + '" data-key="' + b.key + '"' +
-        (state.spinning ? ' disabled' : '') + ' title="Column — pays 2:1" style="left:' + (13.575 / TX * 100) +
-        '%;top:' + ((i + 0.5) / 3 * 100) + '%">' + (on ? '🪙' : '') + '</button>';
+        (state.spinning ? ' disabled' : '') + ' title="Column — pays 2:1" style="left:' + LX(13.575, i + 0.5) +
+        '%;top:' + TY(13.575, i + 0.5) + '%">' + (on ? '🪙' : '') + '</button>';
     }).join('');
     function outBtn(b) {
       var on = state.placed.has(b.key);
@@ -246,13 +260,18 @@
       '<div class="panel rlt-wrap">' +
         '<div class="rlt-backrow"><button class="btn ghost" id="rltBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🎡 Roulette</h2>' +
-        '<p class="muted small">Standard European roulette. Click any bet space to place a token on it ' +
+        '<p class="muted small rlt-intro">Standard European roulette. Click any bet space to place a token on it ' +
         '(splits, corners and lines sit on the borders, just like a real table); click again to pick it back up. ' +
         '<strong>Real tokens — the server validates every bet and draws the number.</strong></p>' +
         '<div class="rlt-top">' +
-          '<div class="rlt-wheelbox"><div class="rlt-pointer">▼</div>' +
-            '<div class="rlt-rotor" id="rltRotor">' + wheelSVG() + '</div>' +
-            '<div class="rlt-center" id="rltCenter">' + (state.last ? state.last.n : '🎯') + '</div></div>' +
+          (V
+            ? '<div class="rlt-lastbox"><span class="rlt-lastlabel">Last spin</span>' +
+              (state.last
+                ? '<span class="rlt-lastnum" style="background:' + (colorOf(state.last.n) === 'green' ? '#1d7a3a' : colorOf(state.last.n) === 'red' ? '#b3232a' : '#20242c') + '">' + state.last.n + '</span>'
+                : '<span class="rlt-lastnum rlt-none">–</span>') + '</div>'
+            : '<div class="rlt-wheelbox"><div class="rlt-pointer">▼</div>' +
+              '<div class="rlt-rotor" id="rltRotor">' + wheelSVG() + '</div>' +
+              '<div class="rlt-center" id="rltCenter">' + (state.last ? state.last.n : '🎯') + '</div></div>') +
           '<div class="rlt-side">' +
             '<div class="rlt-balance">Tokens: <strong id="rltBal">' + (state.loaded ? state.tokens : '…') + '</strong> 🪙</div>' +
             '<div class="rlt-stake">On the table: <strong id="rltStake">' + st + '</strong> token' + (st === 1 ? '' : 's') + '</div>' +
@@ -261,13 +280,14 @@
               '<button type="button" class="btn" id="rltClear"' + (state.spinning || st === 0 ? ' disabled' : '') + '>Clear table</button>' +
             '</div>' +
             (state.loaded && st > state.tokens ? '<p class="rlt-warn">That\'s more tokens than you have — pick some back up.</p>' : '') +
-            result + history +
-            '<p class="rlt-session">Session: ' + state.spins + ' spins · staked ' + state.staked + ' · returned ' + state.returned + '</p>' +
+            (V ? '' : result + history +
+            '<p class="rlt-session">Session: ' + state.spins + ' spins · staked ' + state.staked + ' · returned ' + state.returned + '</p>') +
           '</div>' +
         '</div>' +
-        '<div class="rlt-tablescroll"><div class="rlt-table">' + cells.join('') + spots + colSpots + '</div></div>' +
+        '<div class="rlt-tablescroll"><div class="rlt-table' + (V ? ' rlt-vertical' : '') + '">' + cells.join('') + spots + colSpots + '</div></div>' +
         '<div class="rlt-outrow">' + dozens + '</div>' +
         '<div class="rlt-outrow">' + evens + '</div>' +
+        (V ? result + history + '<p class="rlt-session">Session: ' + state.spins + ' spins · staked ' + state.staked + ' · returned ' + state.returned + '</p>' : '') +
         '<details class="rlt-odds"><summary>Bet guide &amp; odds</summary><div class="rlt-oddsgrid">' +
           '<div><strong>Straight</strong> 1 number · 35:1</div><div><strong>Split</strong> 2 numbers · 17:1</div>' +
           '<div><strong>Street / Trio</strong> 3 numbers · 11:1</div><div><strong>Corner / First four</strong> 4 numbers · 8:1</div>' +
@@ -284,6 +304,13 @@
     }
     root.querySelectorAll('.rlt-spot, .rlt-out').forEach(function (btn) {
       btn.addEventListener('click', function () { toggle(btn.dataset.key); });
+    });
+    // Tapping a number's face places its straight bet too — the chip spot
+    // is small, the cell is the natural target (spots sit above cells, so
+    // border chips still win their own taps).
+    root.querySelectorAll('.rlt-cell[data-num]').forEach(function (c) {
+      c.style.cursor = 'pointer';
+      c.addEventListener('click', function () { toggle('straight:' + c.getAttribute('data-num')); });
     });
     var bk = root.querySelector('#rltBack');
     if (bk) bk.addEventListener('click', function () {
@@ -331,15 +358,12 @@
     var targetNorm = ((-(idx * step + step / 2)) % 360 + 360) % 360;
     state.rotation = prev + 360 * 5 + ((targetNorm - (prev % 360)) + 360) % 360;
     draw();
-    var rotor = root && root.querySelector('#rltRotor');
-    if (rotor) { // draw() rebuilt the DOM: restart the rotor at the old angle
-      rotor.style.transition = 'none';
-      rotor.style.transform = 'rotate(' + prev + 'deg)';
-      void rotor.offsetWidth;
-      rotor.style.transition = 'transform ' + spinMs + 'ms cubic-bezier(.12,.8,.16,1)';
-      rotor.style.transform = 'rotate(' + state.rotation + 'deg)';
-    }
-    setTimeout(function () {
+    var settled = false;
+    function settle() {
+      if (settled) return;
+      settled = true;
+      var pop = root && root.querySelector('.rlt-pop');
+      if (pop) pop.remove();
       state.spinning = false;
       state.tokens = resp.tokens_now;
       state.spins += 1; state.staked += resp.stake; state.returned += resp.returned;
@@ -349,8 +373,38 @@
       state.placed.clear();
       syncBadges();
       draw();
-    }, spinMs + 30);
+    }
+    if (VMQ.matches) {
+      // Compact mode: the wheel lives in a popup for the spin (tap to skip).
+      var pop = document.createElement('div');
+      pop.className = 'rlt-pop';
+      pop.innerHTML = '<div class="rlt-popbox"><div class="rlt-pointer">▼</div>' +
+        '<div class="rlt-rotor" id="rltPopRotor">' + wheelSVG() + '</div>' +
+        '<div class="rlt-center">🎯</div></div><p class="rlt-popnote">Spinning… tap to skip</p>';
+      root.appendChild(pop);
+      var pr = pop.querySelector('#rltPopRotor');
+      pr.style.transition = 'none';
+      pr.style.transform = 'rotate(' + prev + 'deg)';
+      void pr.offsetWidth;
+      pr.style.transition = 'transform ' + spinMs + 'ms cubic-bezier(.12,.8,.16,1)';
+      pr.style.transform = 'rotate(' + state.rotation + 'deg)';
+      var timer = setTimeout(settle, spinMs + 30);
+      pop.addEventListener('click', function () { clearTimeout(timer); settle(); });
+      return;
+    }
+    var rotor = root && root.querySelector('#rltRotor');
+    if (rotor) { // draw() rebuilt the DOM: restart the rotor at the old angle
+      rotor.style.transition = 'none';
+      rotor.style.transform = 'rotate(' + prev + 'deg)';
+      void rotor.offsetWidth;
+      rotor.style.transition = 'transform ' + spinMs + 'ms cubic-bezier(.12,.8,.16,1)';
+      rotor.style.transform = 'rotate(' + state.rotation + 'deg)';
+    }
+    setTimeout(settle, spinMs + 30);
   }
+
+  if (VMQ.addEventListener) VMQ.addEventListener('change', function () { draw(); });
+  else if (VMQ.addListener) VMQ.addListener(function () { draw(); });
 
   function teardown() { root = null; }
 
