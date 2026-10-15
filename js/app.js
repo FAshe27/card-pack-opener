@@ -1039,14 +1039,14 @@
   }
 
 
-  function tradeMiniCard(setId, cardId, holo, qty) {
+  function tradeMiniCard(setId, cardId, holo, qty, variant) {
     var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
     if (!set || !card) return '<span class="muted">?</span>';
-    return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo, count: qty > 1 ? qty : 0 }) + '</div>';
+    return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo, count: qty > 1 ? qty : 0, variant: variant || null }) + '</div>';
   }
   function tradeItemsHtml(items) {
     return '<div class="trade-items">' + (items || []).map(function (it) {
-      return tradeMiniCard(it.set_id, it.card_id, it.holo, it.qty);
+      return tradeMiniCard(it.set_id, it.card_id, it.holo, it.qty, it.tier ? { tier: it.tier, serial: it.serial } : null);
     }).join('') + '</div>';
   }
 
@@ -1185,6 +1185,7 @@
     $('#tradeReview').classList.add('hidden');
     $('#tradeGrid').classList.remove('hidden');
     if (TB.step === 3) {
+      if (CPS.tradeCopies) CPS.tradeCopies.hide();
       renderTradeReview();
       return;
     }
@@ -1216,18 +1217,12 @@
     });
     $('#tradeCount').textContent = list.length + ' shown';
     $('#tradeGrid').innerHTML = list.length ? list.map(function (it) {
-      var sel = TB.picks.some(function (p) { return p.setId === it.set.id && p.cardId === it.card.id; });
+      var sel = TB.picks.some(function (p) { return p.setId === it.set.id && p.cardId === it.card.id && !p.tier; });
       return '<button class="trade-pick' + (sel ? ' selected' : '') + '" data-set="' + esc(it.set.id) +
         '" data-card="' + esc(it.card.id) + '">' + CPS.cards.collected(it.set, it.card, it.n, it.h) + '</button>';
     }).join('') : '<div class="empty">' + (TB.step === 1 ? 'You don\'t own any cards yet.' : esc(TB.toName) + ' doesn\'t own any cards yet.') + '</div>';
     tbRenderDock();
-  }
-
-  function pickTravelVariant(p) {
-    var s = (S.myVariants || []).filter(function (v) { return v.set_id === p.setId && v.card_id === p.cardId; })
-      .sort(function (a, b) { return a.serial - b.serial; })
-      .filter(function (v) { return !v.vaulted; });
-    return s.length ? { tier: s[0].tier, serial: s[0].serial } : null;
+    if (CPS.tradeCopies) CPS.tradeCopies.render(TB, tbRenderGrid);
   }
   function tbRenderDock() {
     var dock = $('#tradeDock');
@@ -1236,7 +1231,7 @@
     $('#tradeChips').innerHTML = TB.picks.map(function (p, i) {
       var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
       if (!set || !card) return '';
-      var tv = TB.step === 1 ? pickTravelVariant(p) : null;
+      var tv = p.tier ? { tier: p.tier, serial: p.serial } : null;
       return '<span class="trade-chip"><b>' + esc(card.name) + '</b>' +
         (tv ? '<span class="chip-variant" title="' + esc(CPS.cards.variantLabel(tv.tier, tv.serial)) + ' travels with this card">' + CPS.cards.VARIANTS[tv.tier].emoji + ' #' + tv.serial + '</span>' : '') +
         (p.h > 0 ? '<button class="chip-holo' + (p.holo ? ' on' : '') + '" data-chip-holo="' + i + '" title="Toggle holographic">\u2726</button>' : '') +
@@ -1263,7 +1258,7 @@
       return '<div class="trade-review-cards">' + picks.map(function (p) {
         var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
         if (!set || !card) return '';
-        var tv = mine ? pickTravelVariant(p) : null;
+        var tv = p.tier ? { tier: p.tier, serial: p.serial } : null;
         return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: p.holo, variant: tv }) +
           '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
           (p.holo ? ' \u00b7 \u2726 holo' : '') +
@@ -1288,8 +1283,8 @@
       try {
         await CPS.cloud.call('propose_trade', {
           p_to: TB.to,
-          p_offer: TB.offer.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo }; }),
-          p_want: TB.want.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo }; })
+          p_offer: TB.offer.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo, tier: p.tier, serial: p.serial }; }),
+          p_want: TB.want.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo, tier: p.tier, serial: p.serial }; })
         });
         toast('Trade offer sent to ' + TB.toName + '!');
         showView('players');
@@ -2050,7 +2045,7 @@
       var b = e.target.closest('.trade-pick');
       if (!b) return;
       var setId = b.dataset.set, cardId = b.dataset.card;
-      var idx = TB.picks.findIndex(function (p) { return p.setId === setId && p.cardId === cardId; });
+      var idx = TB.picks.findIndex(function (p) { return p.setId === setId && p.cardId === cardId && !p.tier; });
       if (idx >= 0) { TB.picks.splice(idx, 1); }
       else {
         if (TB.picks.length >= 10) { toast('Up to 10 cards per side.'); return; }
