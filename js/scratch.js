@@ -5,7 +5,9 @@
    admin-only while the game is in the Sandbox, decides the ticket at
    purchase time and stores it (scratching is reveal-only — a refresh
    resumes the same open ticket, never a re-roll), and pays the prize
-   exactly once on claim when the ticket is fully scratched.
+   exactly once on claim when the ticket is fully scratched. Which spots
+   have been scratched is remembered locally (per ticket) so a refresh
+   mid-ticket keeps your scratch progress too.
 
    Prize/cost tables below are DISPLAY copies of cps.scratch_cost /
    cps.scratch_prize in supabase/migrations/129_scratchoffs.sql — the
@@ -53,6 +55,23 @@
   }
   function q(sel) { return root ? root.querySelector(sel) : null; }
   function qa(sel) { return root ? Array.prototype.slice.call(root.querySelectorAll(sel)) : []; }
+  /* Scratch progress lives client-side (revealing is cosmetic — the server
+     stored the ticket at purchase), so persist it per ticket to survive a
+     page refresh. Best-effort: storage may be unavailable (privacy mode). */
+  function lsKey(tid) { return 'cps_scratch_revealed_' + tid; }
+  function lsLoad(tid) {
+    try {
+      var v = JSON.parse(localStorage.getItem(lsKey(tid)) || 'null');
+      return (v && v.length === 9) ? v.map(Boolean) : null;
+    } catch (e) { return null; }
+  }
+  function lsSave() {
+    if (!current) return;
+    try { localStorage.setItem(lsKey(current.ticket_id), JSON.stringify(current.revealed)); } catch (e) { /* ignore */ }
+  }
+  function lsClear(tid) {
+    try { localStorage.removeItem(lsKey(tid)); } catch (e) { /* ignore */ }
+  }
   function tierById(id) {
     for (var i = 0; i < CONFIG.tiers.length; i++) if (CONFIG.tiers[i].id === id) return CONFIG.tiers[i];
     return null;
@@ -129,11 +148,15 @@
   function adoptTicket(t, resumed) {
     var tier = tierById(t.tier);
     if (!tier) return;
+    var saved = lsLoad(t.ticket_id);
     current = { ticket_id: t.ticket_id, tier: tier, cells: t.cells.slice(),
-                revealed: t.cells.map(function () { return false; }), settled: false };
+                revealed: saved || t.cells.map(function () { return false; }), settled: false };
     if (resumed) setResult('<span class="muted small">You have an unfinished ' + esc(tier.name) +
       ' ticket — scratch it!</span>');
     renderStage();
+    // Fully scratched before a refresh but never settled: settle now
+    // (the server pays exactly once, so this is safe).
+    if (current.revealed.every(function (r) { return r; })) settleIfDone();
   }
 
   function renderTuning() {
@@ -219,6 +242,7 @@
     var all = q('#scrAll');
     if (all) all.addEventListener('click', function () {
       current.revealed = current.revealed.map(function () { return true; });
+      lsSave();
       renderStage(); settleIfDone();
     });
   }
@@ -226,6 +250,7 @@
   function reveal(i) {
     if (!current || current.settled || current.revealed[i]) return;
     current.revealed[i] = true;
+    lsSave();
     renderStage();
     settleIfDone();
   }
@@ -245,6 +270,7 @@
       } else {
         setResult('<span class="muted">No match this time — better luck on the next ticket.</span>');
       }
+      lsClear(current.ticket_id);
       current = null;
       // Do NOT ctx.refreshCloud() while launched inside the Sandbox test
       // stage: refreshCloud() re-renders the current app view, and for the
