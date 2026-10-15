@@ -9,8 +9,9 @@
    renderView branch calls render(), and setTokens/updateBadge are the only
    touchpoints other modules use.
    Higher/Lower is server-driven via cps_game_* RPCs; Slots mounts from
-   CPS.slots (js/slots.js) on its own page. Plinko + Scratchoffs are still
-   testing in the Sandbox, so their tiles are greyed 'In testing' tiles —
+   CPS.slots (js/slots.js) on its own page. Scratchoffs graduated to its
+   own public tab (2026-10-14) — its tile links there. Plinko is still
+   testing in the Sandbox, so its tile is a greyed 'In testing' tile —
    admins can click through to the Sandbox, everyone else sees Coming soon. */
 (function (CPS) {
   var ctx = CPS.appCtx;
@@ -88,7 +89,7 @@
       blurb: 'Match three rarity symbols to win packs. Legendary and Chase triples are announced to everyone!' },
     { id: 'plinko', title: 'PLINKO', tag: 'IN TESTING', accent: 'plinko', testing: true,
       blurb: 'Drop a chip down 8 rows of pegs — centre bins pay tokens, edge bins pay big packs.' },
-    { id: 'scratchoffs', title: 'SCRATCHOFFS', tag: 'IN TESTING', accent: 'scratch', testing: true,
+    { id: 'scratchoffs', title: 'SCRATCHOFFS', tag: '2 🪙 a ticket', accent: 'scratch', view: 'sbx-scratchoffs',
       blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.' }
   ];
 
@@ -102,7 +103,7 @@
         : '<span class="arc-play">Play →</span>';
       var attrs = t.testing
         ? (admin ? ' data-arc-sandbox="1"' : ' disabled aria-disabled="true"')
-        : ' data-arc-open="' + t.id + '"';
+        : (t.view ? ' data-arc-view="' + t.view + '"' : ' data-arc-open="' + t.id + '"');
       return '<button type="button" class="' + cls + '"' + attrs + '>' +
         '<span class="arc-tile-head"><span class="arc-tile-title">' + t.title + '</span>' +
         '<span class="arc-tile-tag' + (t.testing ? ' testing' : '') + '">' + t.tag + '</span></span>' +
@@ -122,6 +123,11 @@
     box.querySelectorAll('[data-arc-sandbox]').forEach(function (b) {
       b.addEventListener('click', function () {
         if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('sandbox');
+      });
+    });
+    box.querySelectorAll('[data-arc-view]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView(b.getAttribute('data-arc-view'));
       });
     });
   }
