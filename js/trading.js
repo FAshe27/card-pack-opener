@@ -98,16 +98,18 @@
 
   /* Market nav badge, trading half (see bounties.js): my listings that
      have offers waiting. Called by bounties.navBadge on state loads;
-     20s cache, best-effort. */
+     20s cache, best-effort. Uses the same cps_market_nav counts RPC —
+     NOT trading_post, whose quest bump would complete the visit_market
+     daily without a real visit. */
   var navAt = 0, navBusy = false;
   async function navBadge() {
     if (!ctx.isCloud()) { CPS._tradeNav = 0; if (CPS.paintMarketNav) CPS.paintMarketNav(); return; }
     if (navBusy || Date.now() - navAt < 20000) { if (CPS.paintMarketNav) CPS.paintMarketNav(); return; }
     navBusy = true;
     try {
-      var r = await CPS.cloud.call('trading_post', {});
+      var r = await CPS.cloud.call('market_nav', {});
       navAt = Date.now();
-      CPS._tradeNav = (r.listings || []).filter(function (l) { return l.mine && l.offer_count > 0; }).length;
+      CPS._tradeNav = r.trade_offers || 0;
       if (CPS.paintMarketNav) CPS.paintMarketNav();
     } catch (e) { /* badge is best-effort */ }
     navBusy = false;
