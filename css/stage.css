@@ -1,0 +1,56 @@
+/* pack skin "stage": the Broadway marquee — near-black plum under rows
+   of warm bulb gold, deep burgundy velvet below the lights (class
+   pack-skin-stage).
+   Scoped set CSS only — no shared stylesheet changes. Card art fills
+   its panel (theme artFit cover); section 2 only adds a slim gold
+   frame line around the art. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-stage .pack-top {
+  background:
+    /* marquee bulb glows burning along the tear edge */
+    radial-gradient(ellipse 120px 28px at 18% 16%, rgba(255,214,120,.42), transparent 70%),
+    radial-gradient(ellipse 90px 22px at 50% 10%, rgba(227,168,28,.38), transparent 70%),
+    radial-gradient(ellipse 110px 26px at 82% 18%, rgba(255,205,95,.34), transparent 70%),
+    /* faint chase-light shimmer running down the face */
+    repeating-linear-gradient(105deg, transparent 0 26px, rgba(227,168,28,.05) 26px 28px),
+    linear-gradient(180deg, #7a1f2b 0%, #471521 55%, #24101a 100%);
+}
+.pack-skin-stage .pack-body {
+  background:
+    /* gold house-light glow rising from the footlights below */
+    radial-gradient(ellipse 80% 28% at 50% 112%, rgba(227,168,28,.30), transparent 70%),
+    radial-gradient(ellipse 42% 16% at 50% 116%, rgba(255,190,80,.16), transparent 70%),
+    repeating-linear-gradient(95deg, transparent 0 30px, rgba(227,168,28,.045) 30px 32px),
+    linear-gradient(180deg, #1d1016 0%, #17101a 55%, #0d0810 100%);
+}
+.pack-skin-stage .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,205,95,.20), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-stage .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.5) 0 4px, rgba(227,168,28,.5) 4px 6px, rgba(255,225,160,.18) 6px 9px); }
+.pack-skin-stage .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.62) 0 4px, rgba(122,31,43,.55) 4px 6px, rgba(227,168,28,.10) 6px 9px); }
+.pack-skin-stage .pack-top::after { border-bottom-color: rgba(255,205,95,.6); }
+.pack-skin-stage .pack-code { color: #ffd77a; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.6), 0 0 12px rgba(227,168,28,.85); }
+.pack-skin-stage .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(255,214,120,.40), rgba(23,16,26,.94) 72%);
+  border-color: rgba(255,205,95,.85); box-shadow: 0 0 26px rgba(227,168,28,.55), inset 0 0 18px rgba(227,168,28,.22); text-shadow: 0 0 16px rgba(255,220,150,.9); }
+.pack-skin-stage .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(227,168,28,.55), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-stage .pack-sub { color: #f0dfba; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Posters, Playbills and production stills fill the art panel edge to
+   edge (artFit cover, near-black art panel #0d0810 behind them). The
+   frame only swaps the stock translucent border for a slim marquee-gold
+   line with a faint warm inset. */
+.card[data-set="stage"] .cf-art {
+  border-color: rgba(227,168,28,.5);
+  box-shadow: inset 0 0 18px rgba(13,8,16,.35);
+}
+/* Slips (ticket/token/credit cards borrowed into a stage pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="stage"].ticket-card .cf-art,
+.card[data-set="stage"].token-card .cf-art,
+.card[data-set="stage"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
