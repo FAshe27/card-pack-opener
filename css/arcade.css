@@ -174,3 +174,11 @@
   position: absolute; inset: 24px; border-radius: 50%;
   background: #14161c; border: 2px solid #39404e;
 }
+
+/* High / Low pre-run preview: the face-down card on the idle table. */
+.numcard.back { background:
+  repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 10px, rgba(255,255,255,0) 10px 20px),
+  repeating-linear-gradient(-45deg, rgba(255,255,255,.05) 0 10px, rgba(255,255,255,0) 10px 20px),
+  linear-gradient(135deg, #232342, #2e2e5a);
+  box-shadow: inset 0 0 0 6px rgba(255,255,255,.08), inset 0 0 0 8px rgba(0,0,0,.25); }
+.numcard.back span { opacity: .55; }
