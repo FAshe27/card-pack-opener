@@ -63,19 +63,24 @@ async function openProfile(accountId) {
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
 }
 
+var VRANK = { oneofone: 0, obsidian: 1, prism: 2, rainbow: 3 };
+function bestVaultedVariant(variants) {
+  var vs = (variants || []).filter(function (v) { return v.vaulted; }).sort(function (x, y) {
+    var rx = VRANK[x.tier] != null ? VRANK[x.tier] : 9, ry = VRANK[y.tier] != null ? VRANK[y.tier] : 9;
+    return (rx - ry) || (x.serial - y.serial);
+  });
+  return vs.length ? vs[0] : null;
+}
+
 function favsHtml(p) {
   // A vaulted NUMBERED copy should show as numbered. The favorites
   // rows carry no tier/serial, but the same payload's collection
   // entries list every variant with its vaulted flag -- the tile
   // wears the best vaulted variant (tier rank, then lowest serial).
-  var vrank = { oneofone: 0, obsidian: 1, prism: 2, rainbow: 3 };
   var vaultedVariant = {};
   (p.collection || []).forEach(function (e) {
-    var vs = (e.variants || []).filter(function (v) { return v.vaulted; }).sort(function (x, y) {
-      var rx = vrank[x.tier] != null ? vrank[x.tier] : 9, ry = vrank[y.tier] != null ? vrank[y.tier] : 9;
-      return (rx - ry) || (x.serial - y.serial);
-    });
-    if (vs.length) vaultedVariant[e.set_id + ':' + e.card_id] = vs[0];
+    var b = bestVaultedVariant(e.variants);
+    if (b) vaultedVariant[e.set_id + ':' + e.card_id] = b;
   });
   return (p.favorites || []).map(function (f) {
     var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
@@ -207,17 +212,20 @@ function openFavManager(accountId, seedFavs) {
   myFavs.forEach(function (f) { favKeys[f.set_id + ':' + f.card_id] = true; });
   var all = ownedCards();
 
+  function myVaultedVariant(setId, cardId) {
+    return bestVaultedVariant((ctx.S.myVariants || []).filter(function (v) {
+      return v.set_id === setId && v.card_id === cardId;
+    }));
+  }
+
   function renderFavs(box) {
     box.querySelector('.favmgr-grid').innerHTML = myFavs.map(function (f, i) {
       var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
       if (!set || !card) return '';
+      var v = myVaultedVariant(f.set_id, f.card_id);
       return '<div class="favmgr-item" data-k="' + ctx.esc(f.set_id + ':' + f.card_id) + '">' +
-        CPS.cards.render(set, card, { holo: !!f.holo }) +
-        '<button class="favmgr-x" aria-label="Release from Vault">×</button>' +
-        '<div class="favmgr-mv">' +
-          '<button data-mv="-1" aria-label="Move earlier"' + (i === 0 ? ' disabled' : '') + '>‹</button>' +
-          '<button data-mv="1" aria-label="Move later"' + (i === myFavs.length - 1 ? ' disabled' : '') + '>›</button>' +
-        '</div></div>';
+        CPS.cards.render(set, card, { holo: !!f.holo, variant: v ? { tier: v.tier, serial: v.serial } : undefined }) +
+        '<button class="favmgr-x" aria-label="Release from Vault">×</button></div>';
     }).join('') || '<div class="empty">Your Vault is empty — search below to vault copies.</div>';
     box.querySelector('#favmgrCount').textContent = myFavs.length + (myFavs.length === 1 ? ' card' : ' cards');
     box.querySelectorAll('.favmgr-x').forEach(function (x) {
@@ -226,25 +234,66 @@ function openFavManager(accountId, seedFavs) {
         toggle(k2[0], k2[1], box);
       });
     });
-    box.querySelectorAll('.favmgr-mv button').forEach(function (b) {
-      b.addEventListener('click', function () { moveFav(b, box); });
-    });
+    box.querySelectorAll('.favmgr-item').forEach(function (item) { bindDrag(item, box); });
   }
 
-  async function moveFav(btn, box) {
-    var k = btn.closest('.favmgr-item').dataset.k;
-    var i = -1;
-    myFavs.forEach(function (f, j) { if (f.set_id + ':' + f.card_id === k) i = j; });
-    if (i < 0) return;
-    var j = i + parseInt(btn.dataset.mv, 10);
-    if (j < 0 || j >= myFavs.length) return;
-    var t = myFavs[i]; myFavs[i] = myFavs[j]; myFavs[j] = t;
-    renderFavs(box);
+  async function saveOrder() {
     try {
       await CPS.cloud.call('reorder_favorites', { p_order: myFavs.map(function (f) {
         return { set_id: f.set_id, card_id: f.card_id };
       }) });
     } catch (e) { ctx.cloudError(e); }
+  }
+
+  // Drag to reorder (pointer events: mouse + touch). The dragged
+  // tile live-shuffles among its siblings; on release, if the
+  // order changed, it is saved once via reorder_favorites.
+  function bindDrag(item, box) {
+    item.addEventListener('dragstart', function (ev) { ev.preventDefault(); });
+    item.addEventListener('pointerdown', function (ev) {
+      if (ev.button != null && ev.button > 0) return;
+      if (ev.target.closest && ev.target.closest('.favmgr-x')) return;
+      var grid = item.parentNode;
+      var startX = ev.clientX, startY = ev.clientY, dragging = false;
+      function onMove(e2) {
+        if (!dragging) {
+          if (Math.abs(e2.clientX - startX) + Math.abs(e2.clientY - startY) < 7) return;
+          dragging = true;
+          item.classList.add('dragging');
+          grid.classList.add('drag-active');
+          item.style.pointerEvents = 'none';
+          if (item.setPointerCapture && ev.pointerId != null) { try { item.setPointerCapture(ev.pointerId); } catch (err) {} }
+        }
+        var under = document.elementFromPoint(e2.clientX, e2.clientY);
+        var over = under && under.closest ? under.closest('.favmgr-item') : null;
+        if (!over || over === item || !grid.contains(over)) return;
+        var r = over.getBoundingClientRect();
+        var after = e2.clientY > r.bottom ? true : e2.clientY < r.top ? false : e2.clientX > r.left + r.width / 2;
+        if (after) { if (over.nextSibling !== item) grid.insertBefore(item, over.nextSibling); }
+        else if (over !== item.nextSibling) grid.insertBefore(item, over);
+      }
+      function onUp() {
+        item.removeEventListener('pointermove', onMove);
+        item.removeEventListener('pointerup', onUp);
+        item.removeEventListener('pointercancel', onUp);
+        if (!dragging) return;
+        item.classList.remove('dragging');
+        grid.classList.remove('drag-active');
+        item.style.pointerEvents = '';
+        var order = [];
+        grid.querySelectorAll('.favmgr-item').forEach(function (el) { order.push(el.dataset.k); });
+        var changed = order.some(function (k, i2) { return !myFavs[i2] || myFavs[i2].set_id + ':' + myFavs[i2].card_id !== k; });
+        if (!changed) return;
+        var byKey = {};
+        myFavs.forEach(function (f) { byKey[f.set_id + ':' + f.card_id] = f; });
+        myFavs = order.map(function (k) { return byKey[k]; }).filter(Boolean);
+        saveOrder();
+        renderFavs(box);
+      }
+      item.addEventListener('pointermove', onMove);
+      item.addEventListener('pointerup', onUp);
+      item.addEventListener('pointercancel', onUp);
+    });
   }
 
   function renderResults(box, q) {
@@ -291,6 +340,7 @@ function openFavManager(accountId, seedFavs) {
 
   ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
     '<h2>Manage your Vault <span class="muted small" id="favmgrCount"></span></h2>' +
+    '<div class="muted small">Drag a card to reorder your Vault. × releases a copy.</div>' +
     '<div class="favmgr-grid"></div>' +
     '<h3>Vault a copy</h3>' +
     '<div class="favmgr-search"><input type="search" placeholder="Search your cards…" aria-label="Search your cards"></div>' +
@@ -299,6 +349,9 @@ function openFavManager(accountId, seedFavs) {
     '</div>', function (box) {
     renderFavs(box);
     renderResults(box, '');
+    if (ctx.isCloud && ctx.isCloud() && !ctx.S.myVariants) {
+      ctx.ensureVariants().then(function () { if (box.isConnected) renderFavs(box); });
+    }
     var inp = box.querySelector('.favmgr-search input');
     inp.addEventListener('input', function () { renderResults(box, inp.value); });
     box.querySelector('#favmgrDone').addEventListener('click', function () { openProfile(accountId); });
