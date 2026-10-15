@@ -92,7 +92,7 @@
       '<div class="cotd-big">🎯</div>' +
       '<h2>Card of the Day</h2>' +
       '<p class="cotd-sub">A <b>' + esc(cap(st.rarity)) + '</b> is hiding in the <b>' + esc(st.set_name) + '</b> set.</p>' +
-      '<p class="cotd-prize">Pull it from any pack to win <b>+' + st.prize + ' 🎟️ spin tickets</b>.</p>';
+      '<p class="cotd-prize">Pull it from a pack to win <b>+' + st.prize + ' 🎟️ spin tickets</b>.</p>';
     if (st.found) {
       html += '<p class="cotd-found">First found by <b>' + esc(st.found_by || 'someone') + '</b>' +
         (st.card_name ? ': <b>' + esc(st.card_name) + '</b>' : '') + '.</p>';
