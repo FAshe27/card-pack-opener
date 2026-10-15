@@ -45,5 +45,7 @@ CardSets.manifest = [
   'hero.js',
   'hero-additions.js',
   'stage.js',
-  'stage-additions.js'
+  'stage-additions.js',
+  'indy.js',
+  'indy-additions.js'
 ];
