@@ -17,6 +17,9 @@
  *   automatically gives the item its own public tab (ahead of the Sandbox tab),
  *   its own view section, and hash routing. No index.html or app.js edits.
  *   Flip it back to 'testing' to pull it out of public again.
+ *   An item with noTab: true still gets its view section and hash routing but
+ *   NO top-bar tab — for features reached from somewhere else instead (the
+ *   Arcade games Plinko + Scratchoffs, whose tiles link to their views).
  *
  * Visibility: the Sandbox tab itself uses the same admin-tab gating as the
  * Admin tab (hidden unless the account is an admin, or in local/guest mode).
@@ -33,11 +36,11 @@
       render: function (el) { CPS.shop.render(el); },
       teardown: function () { CPS.shop.teardown(); } },
     { id: 'plinko', title: 'Plinko', blurb: 'Drop a chip down 8 rows of pegs — centre bins pay tokens, edge bins pay big packs.',
-      status: 'public',
+      status: 'public', noTab: true,
       render: function (el) { CPS.plinko.render(el); },
       teardown: function () { CPS.plinko.teardown(); } },
     { id: 'scratchoffs', title: 'Scratchoffs', blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.',
-      status: 'public',
+      status: 'public', noTab: true,
       render: function (el) { CPS.scratch.render(el); },
       teardown: function () { CPS.scratch.teardown(); } },
   ];
@@ -86,9 +89,9 @@
           '<h3>' + esc(it.title) + '</h3>' +
           (it.blurb ? '<p class="muted small">' + esc(it.blurb) + '</p>' : '') +
           '<p class="sandbox-status ' + (pub ? 'is-public' : 'is-testing') + '">' +
-            (pub ? '● Live on its own public tab' : '● In testing') + '</p>' +
+            (pub ? (it.noTab ? '● Live in the Arcade' : '● Live on its own public tab') : '● In testing') + '</p>' +
           (pub
-            ? '<button class="btn" data-sbx-open="' + esc(it.id) + '">Open public tab</button>'
+            ? '<button class="btn" data-sbx-open="' + esc(it.id) + '">' + (it.noTab ? 'Open game' : 'Open public tab') + '</button>'
             : '<button class="btn primary" data-sbx-launch="' + esc(it.id) + '">Launch test</button>') +
           '</div>';
       }).join('') + '</div>';
@@ -130,7 +133,7 @@
     var sandboxBtn = $('#sandboxTabBtn');
     var main = $('main');
     var sbxSec = $('#view-sandbox');
-    if (nav && sandboxBtn && !document.getElementById('sbx-tab-' + it.id)) {
+    if (!it.noTab && nav && sandboxBtn && !document.getElementById('sbx-tab-' + it.id)) {
       var b = document.createElement('button');
       b.className = 'tab';
       b.id = 'sbx-tab-' + it.id;
