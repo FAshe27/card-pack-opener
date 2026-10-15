@@ -39,5 +39,7 @@ CardSets.manifest = [
   'pixar-additions.js',
   'water.js',
   'water-additions.js',
-  'gas.js'
+  'gas.js',
+  'hwy.js',
+  'hwy-additions.js'
 ];
