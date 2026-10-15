@@ -230,6 +230,8 @@
       '<label>Search <input id="pbCardSearch" placeholder="card name or #" size="18"></label></div>' +
       '<div id="pbOfferCount" class="muted small picker-count"></div>' +
       '<div id="pbOfferGrid" class="bounty-pick-grid"></div>' +
+      '<div id="pbVariantHead" class="muted small" style="margin-top:8px"></div>' +
+      '<div id="pbVariantGrid" class="bounty-pick-grid"></div>' +
       '<div class="row wrap"><span class="muted small">tap Add — or Add ✦ for a holo copy (up to 5 cards)</span></div>' +
       '<div id="pbOfferCards" class="bounty-offer-chips"></div>' +
       '<p class="muted small">Your offer is held in escrow until the bounty is claimed, cancelled, or expires (7 days).</p>' +
@@ -279,7 +281,7 @@
     var offer = {
       offer_tokens: BD.tokens, offer_tickets: BD.tickets,
       offer_packs: BD.packSet ? BD.packs : 0, offer_pack_set: BD.packSet || null,
-      offer_cards: BD.offerCards.map(function (o) { return { set_id: o.set, card_id: o.card, holo: o.holo }; })
+      offer_cards: BD.offerCards.map(function (o) { var c = { set_id: o.set, card_id: o.card, holo: o.holo }; if (o.tier) { c.tier = o.tier; c.serial = o.serial; } return c; })
     };
     var want = {
       want_set: BD.wantCard.set, want_card: BD.wantCard.id, want_holo: BD.holo,
@@ -316,7 +318,7 @@
                   tier: BD.tier || null, serial: BD.anyMode ? null : (serial || null) },
         p_offer: { tokens: BD.tokens, tickets: BD.tickets, pack_set: BD.packSet || null,
                    packs: BD.packSet ? BD.packs : 0,
-                   cards: BD.offerCards.map(function (o) { return { set: o.set, card: o.card, holo: o.holo }; }) }
+                   cards: BD.offerCards.map(function (o) { var c = { set: o.set, card: o.card, holo: o.holo }; if (o.tier) { c.tier = o.tier; c.serial = o.serial; } return c; }) }
       });
     } catch (e) {
       btn.disabled = false;
@@ -370,7 +372,7 @@
     }
     BD.offerCards.forEach(function (o) {
       var oc = cardObj(o.set, o.card);
-      bits.push('🃏 ' + (oc ? oc.name : o.card) + (o.holo ? ' ✦' : ''));
+      bits.push('🃏 ' + (oc ? oc.name : o.card) + (o.tier ? ' ' + pbVariantLabel(o) : (o.holo ? ' ✦' : '')));
     });
     t.textContent = want + ' · Offering ' + (bits.length ? bits.join(' + ') : 'nothing yet');
   }
@@ -649,7 +651,7 @@
   }
   function pbHoloLeft(sid, cid) {
     var e = pbOfferEntry(sid, cid);
-    var used = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo; }).length;
+    var used = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo && !o.tier; }).length;
     return holoOn(e) - used;
   }
 
@@ -658,11 +660,11 @@
     t.innerHTML = BD.offerCards.map(function (o, i) {
       var card = cardObj(o.set, o.card), s = setObj(o.set);
       var e = pbOfferEntry(o.set, o.card);
-      var plainUsed = BD.offerCards.filter(function (x) { return x.set === o.set && x.card === o.card && !x.holo; }).length - (o.holo ? 0 : 1);
-      var holoUsed = BD.offerCards.filter(function (x) { return x.set === o.set && x.card === o.card && x.holo; }).length - (o.holo ? 1 : 0);
-      var canFlip = o.holo ? (plainUsed < plainOn(e)) : (holoUsed < holoOn(e));
+      var plainUsed = BD.offerCards.filter(function (x) { return x.set === o.set && x.card === o.card && !x.holo && !x.tier; }).length - (o.holo ? 0 : 1);
+      var holoUsed = BD.offerCards.filter(function (x) { return x.set === o.set && x.card === o.card && x.holo && !x.tier; }).length - (o.holo ? 1 : 0);
+      var canFlip = o.tier ? false : (o.holo ? (plainUsed < plainOn(e)) : (holoUsed < holoOn(e)));
       return '<span class="trade-chip"><b>' + esc(card ? card.name : o.card) + '</b>' +
-        (o.holo ? ' ✦' : '') +
+        (o.tier ? ' ' + pbVariantLabel(o) : (o.holo ? ' ✦' : '')) +
         ' <span class="muted small">(' + esc(s ? s.name : o.set) + ')</span>' +
         (canFlip ? '<button class="chip-flip" data-flip="' + i + '" title="Flip between plain and holo">' + (o.holo ? 'make plain' : 'make ✦') + '</button>' : '') +
         '<button class="chip-x" data-rm="' + i + '" title="Remove">×</button></span>';
@@ -694,9 +696,9 @@
       var e = st.cards[c.id];
       var avail = e ? e.n - (e.v || 0) - (vmap[s.id + ':' + c.id] || 0) : 0;
       if (avail <= 0) return;
-      var used = BD.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id; }).length;
+      var used = BD.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id && !o.tier; }).length;
       if (avail - used <= 0) return;
-      var usedPlain = BD.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id && !o.holo; }).length;
+      var usedPlain = BD.offerCards.filter(function (o) { return o.set === s.id && o.card === c.id && !o.holo && !o.tier; }).length;
       if (q) {
         var hay = ('#' + c.num + ' ' + c.num + ' ' + c.name + ' ' + (c.subtitle || '')).toLowerCase();
         if (hay.indexOf(q) < 0) return;
@@ -727,6 +729,7 @@
     grid.querySelectorAll('[data-card]').forEach(function (row) {
       row.addEventListener('click', function () { pbOfferAdd(box, s.id, row.getAttribute('data-card'), false); });
     });
+    pbRenderVariantGrid(box);
   }
 
   function pbOfferAdd(box, sid, cid, asHolo) {
@@ -734,10 +737,10 @@
     var st = ctx.ps({ id: sid }), e = st.cards[cid] || { n: 0, h: 0 };
     var vmap = variantCountMap();
     var avail = e.n - (e.v || 0) - (vmap[sid + ':' + cid] || 0);
-    var used = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid; }).length;
+    var used = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid && !o.tier; }).length;
     if (used >= avail) { showErrors(box, 'pbErrors', ['No more copies to offer.']); return; }
     if (asHolo) {
-      var holoUsed = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo; }).length;
+      var holoUsed = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid && o.holo && !o.tier; }).length;
       if (holoUsed >= holoOn(e)) { showErrors(box, 'pbErrors', ['You don\'t have another holo copy on hand.']); return; }
       BD.offerCards.push({ set: sid, card: cid, holo: true });
     } else {
@@ -745,10 +748,71 @@
       // This is the client half of the migration-139 incident: offering
       // the plain copy of a holo-only card used to sail through and
       // die on the server.
-      var plainUsed = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid && !o.holo; }).length;
+      var plainUsed = BD.offerCards.filter(function (o) { return o.set === sid && o.card === cid && !o.holo && !o.tier; }).length;
       if (plainUsed >= plainOn(e)) { showErrors(box, 'pbErrors', ['You don\'t have another plain copy on hand.']); return; }
       BD.offerCards.push({ set: sid, card: cid, holo: false });
     }
+    showErrors(box, 'pbErrors', null);
+    pbRenderOfferCards(box);
+    pbRenderOfferGrid(box);
+  }
+
+  function pbVariantLabel(o) {
+    var v = CPS.cards.VARIANTS[o.tier];
+    return v ? v.emoji + ' #' + o.serial + '/' + v.run : o.tier + ' #' + o.serial;
+  }
+
+  /* Your numbered copies in the offer set (151): each row is ONE
+     specific copy, offered as itself -- the server escrows that exact
+     serial. Vaulted copies are not offerable (release them first). */
+  function pbRenderVariantGrid(box) {
+    var head = box.querySelector('#pbVariantHead'), grid = box.querySelector('#pbVariantGrid');
+    if (!head || !grid) return;
+    var s = setObj(BD.offerSet);
+    var mine = (ctx.S.myVariants || []).filter(function (v) {
+      return s && v.set_id === s.id && !v.vaulted;
+    });
+    var q = (BD.offerQ || '').trim().toLowerCase();
+    if (q) mine = mine.filter(function (v) {
+      var c = cardObj(v.set_id, v.card_id);
+      var hay = ('#' + (c ? c.num : '') + ' ' + (c ? c.name : v.card_id) + ' ' + v.tier + ' #' + v.serial).toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+    mine.sort(function (x, y) {
+      var cx = cardObj(x.set_id, x.card_id), cy = cardObj(y.set_id, y.card_id);
+      var nx = cx ? cx.num : 0, ny = cy ? cy.num : 0;
+      if (nx !== ny) return nx - ny;
+      if (x.tier !== y.tier) return x.tier < y.tier ? -1 : 1;
+      return x.serial - y.serial;
+    });
+    head.textContent = mine.length ? 'Your numbered copies in this set — each is a specific copy, offered as itself:' : '';
+    grid.innerHTML = mine.map(function (v) {
+      var c = cardObj(v.set_id, v.card_id), vt = CPS.cards.VARIANTS[v.tier];
+      var inOffer = BD.offerCards.some(function (o) { return o.tier === v.tier && o.serial === v.serial && o.set === v.set_id && o.card === v.card_id; });
+      return '<div class="bounty-pick">' +
+        '<span class="bounty-pick-name">' + (vt ? vt.emoji : '') + ' ' + esc(c ? c.name : v.card_id) + ' <b>#' + v.serial + '/' + (vt ? vt.run : '') + '</b></span>' +
+        '<span class="cmp-rowacts"><span class="pill r-' + (c ? c.rarity : 'rare') + '">' + esc(c ? c.rarity : '') + '</span> ' +
+        (inOffer ? '<span class="muted small">in offer ✓</span>' : '<button type="button" class="btn small" data-vadd="' + esc(v.tier + ':' + v.serial + ':' + v.card_id) + '">Add</button>') +
+        '</span></div>';
+    }).join('');
+    grid.querySelectorAll('[data-vadd]').forEach(function (btn) {
+      btn.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        var parts = btn.getAttribute('data-vadd').split(':');
+        var v = (ctx.S.myVariants || []).filter(function (x) {
+          return x.set_id === BD.offerSet && x.card_id === parts[2] && x.tier === parts[0] && x.serial === +parts[1];
+        })[0];
+        if (v) pbVariantAdd(box, v);
+      });
+    });
+  }
+
+  function pbVariantAdd(box, v) {
+    if (BD.offerCards.length >= 5) { showErrors(box, 'pbErrors', ['At most 5 cards per bounty.']); return; }
+    if (v.vaulted) { showErrors(box, 'pbErrors', ['That numbered copy is in your Vault — release it first.']); return; }
+    var dup = BD.offerCards.some(function (o) { return o.tier === v.tier && o.serial === v.serial && o.set === v.set_id && o.card === v.card_id; });
+    if (dup) { showErrors(box, 'pbErrors', ['That numbered copy is already in your offer.']); return; }
+    BD.offerCards.push({ set: v.set_id, card: v.card_id, holo: false, tier: v.tier, serial: v.serial });
     showErrors(box, 'pbErrors', null);
     pbRenderOfferCards(box);
     pbRenderOfferGrid(box);
