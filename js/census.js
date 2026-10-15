@@ -44,7 +44,7 @@
     var got = await Promise.all([ensureCensus(set.id), ensureMisprints(set.id)]);
     if (!box.isConnected) return;
     var census = got[0], misprints = got[1];
-    var c = census[card.id] || { rainbow: 0, prism: 0, obsidian: 0, oneofone: 0, oneofone_by: null };
+    var c = census[card.id] || { rainbow: 0, prism: 0, obsidian: 0, oneofone: 0, oneofone_by: null, oneofone_puller: null };
     // Variants mint rare+ only, but a numbered copy can sit on any rarity
     // (set regrades, grants, trades). Show the census whenever this card was
     // opened as a numbered copy, the player owns one, any exist in the wild,
@@ -67,8 +67,16 @@
     var rows = ORDER.map(function (t) {
       var vt = CPS.cards.VARIANTS[t];
       if (t === 'oneofone') {
-        return '<div class="vc-row"><span>One-of-one variant</span><span class="vc-n ' + (c.oneofone_by ? 'vc-done' : '') + '">' +
-          (c.oneofone_by ? 'found by <b>' + esc(c.oneofone_by) + '</b>' : 'not found') + '</span></div>';
+        // 153: provenance -- who pulled the 1/1 vs who owns it now.
+        var prov = 'not found';
+        if (c.oneofone_by && c.oneofone_puller && c.oneofone_puller !== c.oneofone_by) {
+          prov = 'Pulled by <b>' + esc(c.oneofone_puller) + '</b>, owned by <b>' + esc(c.oneofone_by) + '</b>';
+        } else if (c.oneofone_by && c.oneofone_puller) {
+          prov = 'Pulled and owned by <b>' + esc(c.oneofone_by) + '</b>';
+        } else if (c.oneofone_by) {
+          prov = 'Owned by <b>' + esc(c.oneofone_by) + '</b>';
+        }
+        return '<div class="vc-row"><span>One-of-one variant</span><span class="vc-n ' + (c.oneofone_by ? 'vc-done' : '') + '">' + prov + '</span></div>';
       }
       var n = c[t] || 0;
       if (n >= 1) {
@@ -116,8 +124,14 @@
           if (r.misprint && tier !== 'misprint') tags += ' <span class="owners-misprint">MISPRINT</span>';
           if (r.vaulted) tags += ' <span class="owners-tag">in Vault</span>';
           if (r.escrowed) tags += ' <span class="owners-tag">in escrow</span>';
+          var nameHtml = esc(r.owner) + (r.mine ? ' <span class="owners-you">(you)</span>' : '');
+          if (r.tier === 'oneofone' && r.puller) {
+            nameHtml = r.puller === r.owner
+              ? 'Pulled and owned by ' + nameHtml
+              : 'Pulled by ' + esc(r.puller) + ', owned by ' + nameHtml;
+          }
           return '<div class="owners-row"><span class="owners-serial">' + esc(serial) + tags + '</span>' +
-            '<span class="owners-name">' + esc(r.owner) + (r.mine ? ' <span class="owners-you">(you)</span>' : '') + '</span></div>';
+            '<span class="owners-name">' + nameHtml + '</span></div>';
         }).join('');
       }).catch(function (e) {
         var list = box.querySelector('#ownersList');
