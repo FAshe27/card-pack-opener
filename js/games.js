@@ -146,9 +146,21 @@
     var html = headerHTML() + backHTML();
     html += '<div class="panel"><h3>High / Low</h3>';
     if (!G) {
+      // Show the game itself before a run starts — the table laid out
+      // exactly as it looks mid-run, with a face-down card and the guess
+      // buttons waiting — instead of a bare start box.
       html += '<p class="muted">Guess whether the next number is <b>higher</b> or <b>lower</b>. ' +
         'Every round is win-or-bust &mdash; one wrong guess loses the whole bank. Claim your prizes any time!</p>';
-      html += '<button class="btn primary" id="gameStartBtn"' + (tokens > 0 ? '' : ' disabled') + '>New run (1 token)</button>';
+      html += '<div class="game-table">';
+      html += '<div class="game-card"><div class="numcard back"><span>?</span></div></div>';
+      html += '<div class="game-streak">Streak: <b>0</b></div>';
+      html += '<button class="btn primary big" id="gameStartBtn"' + (tokens > 0 ? '' : ' disabled') + '>Start a run (1 token)</button>';
+      html += '<div class="row wrap"><button class="btn big" disabled>&#9650; Higher</button>' +
+              '<button class="btn big" disabled>&#9660; Lower</button></div>';
+      html += '<button class="btn ghost" disabled>Claim prizes &amp; end run</button>';
+      html += '<div class="prize-box"><b>Prize bank</b><div id="gameBank">' + bankHTML([]) + '</div></div>';
+      html += '<p class="muted small">Cards are numbered 1&ndash;10.</p>';
+      html += '</div>';
       if (!(tokens > 0)) html += '<p class="muted small">Earn tokens from packs (5 on a token slip, ~1 in 10 packs).</p>';
     } else {
       html += '<div class="game-table">';
