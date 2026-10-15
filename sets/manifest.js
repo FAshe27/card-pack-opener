@@ -41,5 +41,7 @@ CardSets.manifest = [
   'water-additions.js',
   'gas.js',
   'hwy.js',
-  'hwy-additions.js'
+  'hwy-additions.js',
+  'hero.js',
+  'hero-additions.js'
 ];
