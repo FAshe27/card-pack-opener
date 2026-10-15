@@ -1,8 +1,8 @@
-/* Plinko arcade game — SANDBOX, REAL ECONOMY (Franklin, 2026-10-14).
-   Still an admin-only Sandbox 'testing' item, but now playing for real:
-   real game tokens in, real packs out, via migration 145's RPCs
-   (plinko_state / plinko_drop). The server enforces admin-only while
-   the game is in the Sandbox, rolls every drop path itself, stores each
+/* Plinko arcade game — PUBLIC, REAL ECONOMY (graduated 2026-10-14).
+   Real game tokens in, real packs out, via migration 145's RPCs
+   (plinko_state / plinko_drop); migration 147 removed the Sandbox-phase
+   admin gate, so any signed-in player can play. The server rolls every
+   drop path itself, stores each
    drop in cps.plinko_drops and pays at once — this module only animates
    the paths it is handed and mirrors the server's balance.
 
@@ -139,7 +139,7 @@
     }
     el.innerHTML =
       '<div class="panel plk-wrap">' +
-        '<h2>🪙 Plinko <span class="plk-badge">SANDBOX · REAL TOKENS &amp; PACKS</span></h2>' +
+        '<h2>🪙 Plinko</h2>' +
         '<p class="muted small">Drop a chip, watch it bounce. Centre bins pay tokens, ' +
         'outer bins pay packs, the very edges are the jackpot. ' +
         '<b>Real tokens &amp; packs — the server rolls every drop.</b></p>' +
