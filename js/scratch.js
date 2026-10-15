@@ -187,6 +187,25 @@
   }
 
   function setResult(html) { var r = q('#scrResult'); if (r) r.innerHTML = html; }
+  // Pull the account's fresh pack inventory and apply it the same way
+  // cloud entry does, then re-render just the packs side — the top-bar
+  // Open Packs count catches up with a claimed win immediately, with no
+  // view remount (mirrors js/plinko.js).
+  async function refreshPackCounts() {
+    if (!ctx.S || !ctx.S.player || !ctx.S.player.sets) return;
+    var st = await CPS.cloud.call('get_state', {});
+    var inv = st && st.inventory;
+    var sets = ctx.S.player.sets;
+    if (!sets || !inv) return;
+    Object.keys(sets).forEach(function (k) { if (!(k in inv)) sets[k].packs = 0; });
+    Object.keys(inv).forEach(function (k) {
+      if (sets[k]) sets[k].packs = inv[k];
+      else sets[k] = { packs: inv[k], cards: {}, recent: [],
+        stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
+    });
+    if (ctx.renderPacksSide) ctx.renderPacksSide();
+    else if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
+  }
   function syncBadges() {
     try {
       if (ctx.S) ctx.S.gameTokens = tokensNow; // freshest server value we have
@@ -288,25 +307,21 @@
       lsClear(current.ticket_id);
       // Keep the finished ticket on screen — grid and result stay visible
       // until the player buys the next ticket (Franklin, 2026-10-14). The
-      // snapshot also survives the refreshCloud remount below and any
+      // snapshot also survives any later remount (e.g. leave-and-return) and any
       // leave-and-return, because loadState restores it when the server
       // has no open ticket.
       lastSettled = { ticket_id: current.ticket_id, tier: current.tier,
                       cells: current.cells.slice(), revealed: current.revealed.slice(),
                       settled: true, resultHtml: resultHtml };
       current = lastSettled;
-      // Do NOT ctx.refreshCloud() while launched inside the Sandbox test
-      // stage: refreshCloud() re-renders the current app view, and for the
-      // Sandbox view that means renderHome() — it bounces the player out of
-      // the game back to the Sandbox list (Franklin, 2026-10-13). The claim
-      // response already carries the fresh token balance, and pack counts
-      // refresh on the next natural state load (same as Slots). In a public
-      // tab (after graduation) a full refresh is safe and keeps counts live.
-      var inTestStage = !!(root && root.closest && root.closest('#sbxStage'));
-      if (!inTestStage && ctx.refreshCloud) {
-        try { await ctx.refreshCloud(); } catch (e) { /* non-fatal */ }
-        if (ctx.S && typeof ctx.S.gameTokens === 'number') tokensNow = ctx.S.gameTokens;
-      }
+      // Refresh the top-bar pack counts WITHOUT remounting this view: the
+      // old full refreshCloud() rebuilt the panel mid-settle, so the
+      // finished ticket flashed away ("Loading… / No ticket yet") before
+      // the restore painted (Franklin, 2026-10-14). Targeted instead:
+      // pull fresh pack inventory and re-render just the packs side, the
+      // same approach Plinko uses. The finished grid + result never leave
+      // the screen, and tokens already came back with the claim.
+      try { await refreshPackCounts(); } catch (e) { /* non-fatal */ }
     } catch (e) {
       try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
       setResult('<span class="muted small">Claim failed — reopen Scratchoffs and your ticket will resume.</span>');
