@@ -98,7 +98,11 @@
      into #marketBadge by paintMarketNav. app.js's applyPrefsUI calls
      navBadge() on every state load — the games-badge pattern — so the
      count stays fresh app-wide, not just inside the Market view. A 20s
-     cache keeps state-load bursts from re-fetching the board. */
+     cache keeps state-load bursts from re-fetching the counts.
+     The counts come from cps_market_nav (155), a dedicated badge RPC
+     that does NOT bump the visit_market daily — the board RPCs it used
+     to call (list_bounties / trading_post) do bump it, which made
+     'Visit the Market' auto-complete on login. */
   var navAt = 0, navBusy = false;
   function paintMarketNav() {
     var b = ctx.$('#marketBadge'); if (!b) return;
@@ -112,9 +116,9 @@
     if (navBusy || Date.now() - navAt < 20000) { paintMarketNav(); return; }
     navBusy = true;
     try {
-      var r = await CPS.cloud.call('list_bounties', {});
+      var r = await CPS.cloud.call('market_nav', {});
       navAt = Date.now();
-      CPS._bountyNav = (r.bounties || []).filter(function (x) { return x.can_claim; }).length;
+      CPS._bountyNav = r.claimable || 0;
       paintMarketNav();
     } catch (e) { /* badge is best-effort */ }
     navBusy = false;
