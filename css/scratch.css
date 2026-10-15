@@ -57,3 +57,14 @@
 
 /* Back to Arcade row (2026-10-14) */
 .scr-backrow { text-align: left; margin-bottom: 10px; }
+
+/* Phones: keep the three tier boxes in one row instead of a stacked
+   tower (Franklin, 2026-10-14) — the same 3-across look desktop gets
+   from the auto-fit grid, with compact type to fit ~110px boxes. */
+@media (max-width: 640px) {
+  .scr-tiers { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .scr-tier { padding: 10px 7px; min-width: 0; }
+  .scr-tier h3 { font-size: 12.5px; letter-spacing: 0.04em; }
+  .scr-tier p { font-size: 11px; line-height: 1.4; }
+  .scr-tier .scr-buy { font-size: 12.5px; padding: 8px 2px; white-space: normal; line-height: 1.25; }
+}
