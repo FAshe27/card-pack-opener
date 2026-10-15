@@ -1,8 +1,8 @@
-/* Scratchoffs arcade game — SANDBOX, REAL ECONOMY (Franklin, 2026-10-13).
-   Still an admin-only Sandbox 'testing' item, but now playing for real:
-   real game tokens in, real packs out, via migration 129's RPCs
-   (scratch_state / scratch_buy / scratch_claim). The server enforces
-   admin-only while the game is in the Sandbox, decides the ticket at
+/* Scratchoffs arcade game — PUBLIC, REAL ECONOMY (graduated 2026-10-14).
+   Real game tokens in, real packs out, via migration 129's RPCs
+   (scratch_state / scratch_buy / scratch_claim); migration 146 removed
+   the Sandbox-phase admin gate, so any signed-in player can play. The
+   server decides the ticket at
    purchase time and stores it (scratching is reveal-only — a refresh
    resumes the same open ticket, never a re-roll), and pays the prize
    exactly once on claim when the ticket is fully scratched. Which spots
@@ -112,10 +112,10 @@
     }).join('');
     el.innerHTML =
       '<div class="panel scr-wrap">' +
-        '<h2>🎟️ Scratchoffs <span class="scr-badge">SANDBOX · REAL TOKENS &amp; PACKS</span></h2>' +
+        '<h2>🎟️ Scratchoffs</h2>' +
         '<p class="muted small">Buy a ticket, scratch the 9 foil spots, match 3 of a rarity to win its prize. ' +
         'The server decides the ticket when you buy it — scratching only reveals it, and an unfinished ' +
-        'ticket is still here when you come back. <b>Admin-only while it\'s in the Sandbox.</b></p>' +
+        'ticket is still here when you come back.</p>' +
         '<div class="scr-balance" id="scrBalance"></div>' +
         '<div class="scr-tiers">' + tierCards + '</div>' +
         '<div class="scr-stage" id="scrStage"></div>' +
