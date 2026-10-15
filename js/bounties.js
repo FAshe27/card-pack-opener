@@ -129,6 +129,12 @@
     return Math.floor(h / 24) + 'd';
   }
 
+  function variantTag(c) {
+    if (!c.tier) return '';
+    var v = CPS.cards.VARIANTS[c.tier];
+    return ' ' + (v ? v.emoji : '') + ' #' + c.serial + '/' + (v ? v.run : '');
+  }
+
   function offerLines(b) {
     var out = [];
     if (b.offer_tokens > 0) out.push('<span class="bounty-offer-line">🪙 <b>' + b.offer_tokens + '</b> game token' + (b.offer_tokens === 1 ? '' : 's') + '</span>');
@@ -141,7 +147,7 @@
       var s = setObj(c.set_id), card = s && s.byId.get(c.card_id);
       var rar = c.rarity || (card && card.rarity);
       out.push('<span class="bounty-offer-line">🃏 <b>' + esc(c.card_name || (card && card.name) || c.card_id) + '</b>' +
-        (c.holo ? ' ✦ holo' : '') + ' <span class="muted">(' + esc(c.set_name || (s && s.name) || c.set_id) +
+        (c.holo ? ' ✦ holo' : '') + variantTag(c) + ' <span class="muted">(' + esc(c.set_name || (s && s.name) || c.set_id) +
         (rar ? ' · ' + esc(rar) : '') + ')</span></span>');
     });
     return out.join('');
@@ -179,7 +185,7 @@
         var s = setObj(c.set_id), card = s && s.byId.get(c.card_id);
         var rar = c.rarity || (card && card.rarity);
         lines.push('<span class="bounty-offer-line">🃏 <b>' + esc(c.card_name || (card && card.name) || c.card_id) + '</b>' +
-          (c.holo ? ' ✦ holo' : '') + ' <span class="muted">(' + esc(c.set_name || (s && s.name) || c.set_id) +
+          (c.holo ? ' ✦ holo' : '') + variantTag(c) + ' <span class="muted">(' + esc(c.set_name || (s && s.name) || c.set_id) +
           (rar ? ' · ' + esc(rar) : '') + ')</span></span>');
       }
     });
