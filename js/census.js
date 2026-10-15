@@ -115,6 +115,7 @@
           var tags = '';
           if (r.misprint && tier !== 'misprint') tags += ' <span class="owners-misprint">MISPRINT</span>';
           if (r.vaulted) tags += ' <span class="owners-tag">in Vault</span>';
+          if (r.escrowed) tags += ' <span class="owners-tag">in escrow</span>';
           return '<div class="owners-row"><span class="owners-serial">' + esc(serial) + tags + '</span>' +
             '<span class="owners-name">' + esc(r.owner) + (r.mine ? ' <span class="owners-you">(you)</span>' : '') + '</span></div>';
         }).join('');
