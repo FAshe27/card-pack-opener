@@ -73,6 +73,9 @@
         '<span class="arc-pegs"><i></i><i></i><i></i><i></i><i></i></span>' +
         '<span class="arc-bins"><i></i><i></i><i></i><i></i><i></i></span></div>';
     }
+    if (key === 'roulette') {
+      return '<div class="arc-art-roulette" aria-hidden="true"><span class="arc-wheel"><i></i></span></div>';
+    }
     // scratchoffs
     return '<div class="arc-art-scratch" aria-hidden="true"><div class="arc-ticket">' +
       '<span class="arc-foil"></span><span class="arc-foil"></span><span class="arc-foil"></span>' +
@@ -90,22 +93,28 @@
       blurb: 'Drop a chip down 8 rows of pegs — centre bins pay tokens, edge bins pay big packs.' },
     { id: 'scratchoffs', title: 'SCRATCHOFFS', tag: '2 🪙 a ticket', accent: 'scratch', view: 'sbx-scratchoffs',
       blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.' }
+    ,{ id: 'roulette', title: 'ROULETTE', tag: 'Coming soon', accent: 'roulette', soon: true,
+      blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds. In testing now.' }
   ];
 
   function renderLobby(box) {
     var admin = false;
     try { admin = !!ctx.isAdmin(); } catch (e) { /* local/guest: not admin */ }
     var tiles = TILES.map(function (t) {
-      var cls = 'arc-tile arc-tile-' + t.accent + (t.testing ? ' is-testing' : '');
-      var foot = t.testing
-        ? (admin ? '<span class="arc-play">Open in Sandbox →</span>' : '<span class="arc-soon">Coming soon</span>')
-        : '<span class="arc-play">Play →</span>';
-      var attrs = t.testing
-        ? (admin ? ' data-arc-sandbox="1"' : ' disabled aria-disabled="true"')
-        : (t.view ? ' data-arc-view="' + t.view + '"' : ' data-arc-open="' + t.id + '"');
+      var cls = 'arc-tile arc-tile-' + t.accent + ((t.testing || t.soon) ? ' is-testing' : '');
+      var foot = t.soon
+        ? '<span class="arc-soon">Coming soon</span>'
+        : (t.testing
+          ? (admin ? '<span class="arc-play">Open in Sandbox →</span>' : '<span class="arc-soon">Coming soon</span>')
+          : '<span class="arc-play">Play →</span>');
+      var attrs = t.soon
+        ? ' disabled aria-disabled="true"'
+        : (t.testing
+          ? (admin ? ' data-arc-sandbox="1"' : ' disabled aria-disabled="true"')
+          : (t.view ? ' data-arc-view="' + t.view + '"' : ' data-arc-open="' + t.id + '"'));
       return '<button type="button" class="' + cls + '"' + attrs + '>' +
         '<span class="arc-tile-head"><span class="arc-tile-title">' + t.title + '</span>' +
-        '<span class="arc-tile-tag' + (t.testing ? ' testing' : '') + '">' + t.tag + '</span></span>' +
+        '<span class="arc-tile-tag' + ((t.testing || t.soon) ? ' testing' : '') + '">' + t.tag + '</span></span>' +
         '<span class="arc-tile-art">' + artHTML(t.id) + '</span>' +
         '<span class="arc-tile-foot"><span class="arc-tile-blurb">' + t.blurb + '</span>' + foot + '</span>' +
         '</button>';

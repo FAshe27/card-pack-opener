@@ -50,6 +50,7 @@
 .arc-tile-highlow { --tile: var(--accent2); }
 .arc-tile-plinko { --tile: var(--c-legendary); }
 .arc-tile-scratch { --tile: var(--c-uncommon); }
+.arc-tile-roulette { --tile: var(--c-epic); }
 
 .arc-tile-head {
   display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
@@ -158,4 +159,18 @@
   .arc-ticket { grid-template-columns: repeat(3, 21px); gap: 5px; padding: 9px; }
   .arc-foil { width: 21px; height: 21px; }
   .arc-coin { font-size: 1.5rem; right: -8px; }
+}
+
+/* Roulette coming-soon tile art: a CSS wheel (red/black pockets, green zero). */
+.arc-art-roulette { display: grid; place-items: center; }
+.arc-wheel {
+  position: relative; width: 82px; height: 82px; border-radius: 50%;
+  background:
+    conic-gradient(from -6deg, #1d7a3a 0deg 10deg, transparent 10deg),
+    repeating-conic-gradient(#b3232a 0deg 19.46deg, #20242c 19.46deg 38.9deg);
+  border: 3px solid #39404e; box-shadow: 0 4px 14px rgba(0,0,0,.45);
+}
+.arc-wheel i {
+  position: absolute; inset: 24px; border-radius: 50%;
+  background: #14161c; border: 2px solid #39404e;
 }
