@@ -1,3 +1,6 @@
+-- ⚠️ DO NOT RUN — superseded by migration 156 (Franklin switched the
+-- activity test from opened-a-pack to logged-in). This version was
+-- never run; run 156_cotd_activity_bonus.sql instead.
 -- =====================================================================
 -- PackRipper — migration 155: Card of the Day wording + activity grants
 -- Run AFTER 154. Rebuilds ONLY cps.ensure_cotd_today (125's body, with
