@@ -54,3 +54,6 @@
 @media (max-width: 480px) {
   .scr-sym { font-size: 10px; padding: 5px 8px; }
 }
+
+/* Back to Arcade row (2026-10-14) */
+.scr-backrow { text-align: left; margin-bottom: 10px; }
