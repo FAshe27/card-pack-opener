@@ -69,3 +69,32 @@
 .card[data-set="hero"].ticket-card .cf-art img,
 .card[data-set="hero"].token-card .cf-art img,
 .card[data-set="hero"].credit-card .cf-art img { object-position: 50% 50%; }
+
+/* ---------- 4. Per-card framing (tall full-body portraits) ---------- */
+/* These 24 are tall full-body shots whose heads sit in the top sliver
+   of the source — even the 28% set-wide bias leaves them headless.
+   Each gets a near-top crop window; verified side-by-side 2026-10-14. */
+.card[data-set="hero"][data-card="thor"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="kingpin"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="professor-x"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="punisher"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="red-skull"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="invisible-woman"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="vision"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="batgirl-barbara-gordon"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="falcon"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="luke-cage"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="amanda-waller"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="huntress"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="blade"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="betty-ross"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="flash-thompson"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="foggy-nelson"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="gwen-stacy"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="hydro-man"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="tombstone"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="whiplash"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="dupli-kate"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="baron-zemo"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="pepper-potts"] .cf-art img { object-position: 50% 5%; }
+.card[data-set="hero"][data-card="aunt-may"] .cf-art img { object-position: 50% 5%; }
