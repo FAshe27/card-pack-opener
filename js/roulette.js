@@ -1,22 +1,23 @@
 /* ============================================================================
- * PackRipper Arcade — Roulette (SANDBOX PROTOTYPE)
+ * PackRipper Arcade — Roulette (REAL ECONOMY, Sandbox testing phase)
  * ----------------------------------------------------------------------------
  * Standard European roulette with real numbers and a real betting table:
- * click a bet space to place ONE test token on it, click again to remove it.
+ * click a bet space to place ONE token on it, click again to remove it.
  * Every standard bet is here — straights, splits, streets, trios, corners,
- * the first four, lines, dozens, columns and the even-money chances — paying
- * the standard odds (35:1 down to 1:1). For every bet on the table,
+ * the first four, lines, dozens, columns and the even-money chances —
+ * paying the standard odds (35:1 down to 1:1). For every bet on the table,
  * coverage x (odds + 1) = 36, so the theoretical return is a uniform 36/37.
  *
- * FAKE MONEY ONLY (Franklin, 2026-10-14): a Sandbox test balance that lives
- * in this module (starts at 100, Reset restores it). No server RPCs, no real
- * tokens, no packs — exactly like the original Plinko/Scratchoffs prototypes.
- * If it graduates, the spin + settlement move server-side the way
- * Scratchoffs did (migration + cps_roulette_spin validating every bet).
+ * Real tokens: migration 150's cps_roulette_state / cps_roulette_spin.
+ * The client only collects the layout and animates the result; the
+ * SERVER validates every bet (kind + exact number set), charges the
+ * stake, draws the number and pays out. Admin-only server-side while
+ * Roulette is in the Sandbox; the gate drops at graduation.
  * ========================================================================== */
 (function () {
   'use strict';
   window.CPS = window.CPS || {};
+  var ctx = CPS.appCtx || {};
 
   /* ------------------------------ the wheel ------------------------------ */
   // European single-zero wheel order, clockwise.
@@ -43,7 +44,7 @@
       spots.push({ key: kind + ':' + nums.join('-'), kind: kind, label: label,
         mult: mult, nums: nums.slice(), x: x, y: y });
     }
-    var n, s, r;
+    var n, s;
     // Straights (incl. zero)
     add('straight', '0', 35, [0], 0.5, 1.5);
     for (n = 1; n <= 36; n++) add('straight', String(n), 35, [n], streetOf(n) + 0.5, rowOf(n) + 0.5);
@@ -100,30 +101,27 @@
   var BY_KEY = {};
   ALL.forEach(function (b) { BY_KEY[b.key] = b; });
 
-  /* --------------------------------- state -------------------------------- */
-  var START_BALANCE = 100;
-  function storeKey() {
-    var a = 'guest';
-    try {
-      var S = CPS.appCtx && CPS.appCtx.S;
-      if (S && S.acct && S.acct.id) a = S.acct.id;
-    } catch (e) { /* guest */ }
-    return 'cps_roulette_' + a;
+  // The wire format the server validates: {kind, nums}. Inside bets keep
+  // their kind; outside bets map to their canonical server names.
+  function wireKind(b) {
+    if (b.kind === 'dozen') return 'dozen' + b.key.split(':')[1];
+    if (b.kind === 'column') return 'column' + b.key.split(':')[1];
+    if (b.kind === 'evenmoney') return b.key;
+    return b.kind;
   }
-  function loadBalance() {
-    try {
-      var v = JSON.parse(localStorage.getItem(storeKey()) || 'null');
-      if (v && typeof v.b === 'number' && v.b >= 0) return v.b;
-    } catch (e) { /* fall through */ }
-    return START_BALANCE;
-  }
-  function saveBalance() {
-    try { localStorage.setItem(storeKey(), JSON.stringify({ b: state.balance })); } catch (e) { /* non-fatal */ }
+  function wireBet(b) { return { kind: wireKind(b), nums: b.nums.slice().sort(function (x, y) { return x - y; }) }; }
+  // Reverse lookup for naming server-returned wins.
+  var BY_WIRE = {};
+  ALL.forEach(function (b) { var w = wireBet(b); BY_WIRE[w.kind + ':' + w.nums.join('-')] = b; });
+  function winLabel(w) {
+    var b = BY_WIRE[w.kind + ':' + w.nums.slice().sort(function (x, y) { return x - y; }).join('-')];
+    return b ? b.label : w.kind;
   }
 
+  /* --------------------------------- state -------------------------------- */
   var state = null;
   function freshState() {
-    return { balance: loadBalance(), placed: new Set(), spinning: false,
+    return { tokens: 0, loaded: false, loadError: '', placed: new Set(), spinning: false,
       rotation: 0, last: null, history: [], spins: 0, staked: 0, returned: 0 };
   }
   var spinMs = 4600;
@@ -133,39 +131,27 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
-  function stake() {
-    if (!state) return 0;
-    return state.placed.size; // one test token per space
+  function stake() { return state ? state.placed.size : 0; } // one token per space
+
+  function syncBadges() {
+    try {
+      if (ctx.S) ctx.S.gameTokens = state.tokens;
+      if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(state.tokens);
+      if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
+    } catch (e) { /* non-fatal */ }
   }
 
-  /* ------------------------------- settlement ------------------------------ */
-  // Pure settlement: given the winning number, what does the current layout
-  // return? Returns {returned, wins:[{key,label,mult,pay}]} where pay is the
-  // total returned for that space (stake back + winnings).
-  function settleFor(n) {
-    var returned = 0, wins = [];
-    state.placed.forEach(function (key) {
-      var b = BY_KEY[key];
-      if (b && b.nums.indexOf(n) >= 0) {
-        var pay = b.mult + 1;
-        returned += pay;
-        wins.push({ key: key, label: b.label, kind: b.kind, mult: b.mult, pay: pay });
-      }
-    });
-    return { returned: returned, wins: wins };
-  }
-
-  function applySettle(n) {
-    var st = stake();
-    var res = settleFor(n);
-    state.balance += res.returned;
-    state.spins += 1; state.staked += st; state.returned += res.returned;
-    state.last = { n: n, staked: st, returned: res.returned, wins: res.wins };
-    state.history.unshift(n);
-    if (state.history.length > 14) state.history.length = 14;
-    state.placed.clear();
-    saveBalance();
-    return state.last;
+  async function loadState() {
+    try {
+      var r = await CPS.cloud.call('roulette_state', {});
+      state.tokens = r.tokens;
+      state.loaded = true;
+      state.loadError = '';
+      syncBadges();
+    } catch (e) {
+      state.loadError = (e && e.message) || 'Could not reach the server.';
+    }
+    draw();
   }
 
   /* --------------------------------- render -------------------------------- */
@@ -193,14 +179,19 @@
   function render(el) {
     root = el;
     if (!state) state = freshState();
+    if (!ctx || !ctx.isCloud || !ctx.isCloud()) {
+      el.innerHTML = '<div class="panel"><h2>🎡 Roulette</h2>' +
+        '<p class="muted">Roulette plays for real tokens — log in online to play.</p></div>';
+      return;
+    }
     draw();
+    if (!state.loaded && !state.spinning) loadState();
   }
 
   function draw() {
-    if (!root) return;
+    if (!root || !state) return;
     var st = stake();
     var cells = [], i, n;
-    // number cells (zero spans all three rows)
     cells.push('<div class="rlt-cell rlt-green" data-num="0" style="left:0%;top:0%;width:' + (100 / TX) +
       '%;height:100%"><span>0</span></div>');
     for (n = 1; n <= 36; n++) {
@@ -208,44 +199,41 @@
         '" data-num="' + n + '" style="left:' + ((streetOf(n)) / TX * 100) + '%;top:' + (rowOf(n) / 3 * 100) +
         '%;width:' + (100 / TX) + '%;height:' + (100 / 3) + '%"><span>' + n + '</span></div>');
     }
-    // column-bet cells (visual only; the bet itself is a hotspot at x 13.55)
     for (i = 0; i < 3; i++) {
       cells.push('<div class="rlt-cell rlt-colbet" style="left:' + (13.1 / TX * 100) + '%;top:' + (i / 3 * 100) +
         '%;width:' + (0.95 / TX * 100) + '%;height:' + (100 / 3) + '%"><span>2:1</span></div>');
     }
-    // hotspots over the number area
     var spots = SPOTS.map(function (b) {
       var on = state.placed.has(b.key);
       return '<button type="button" class="rlt-spot' + (on ? ' rlt-on' : '') + '" data-key="' + b.key + '"' +
         (state.spinning ? ' disabled' : '') + ' title="' + esc(b.kind + ' ' + b.label + ' — pays ' + b.mult + ':1') +
         '" style="left:' + (b.x / TX * 100) + '%;top:' + (b.y / 3 * 100) + '%">' + (on ? '🪙' : '') + '</button>';
     }).join('');
-    // column bets are hotspots too (they live outside SPOTS' x range logic)
     var colSpots = OUTSIDE.filter(function (b) { return b.kind === 'column'; }).map(function (b, i) {
       var on = state.placed.has(b.key);
       return '<button type="button" class="rlt-spot rlt-colspot' + (on ? ' rlt-on' : '') + '" data-key="' + b.key + '"' +
         (state.spinning ? ' disabled' : '') + ' title="Column — pays 2:1" style="left:' + (13.575 / TX * 100) +
         '%;top:' + ((i + 0.5) / 3 * 100) + '%">' + (on ? '🪙' : '') + '</button>';
     }).join('');
-    var dozens = OUTSIDE.filter(function (b) { return b.kind === 'dozen'; }).map(function (b) {
+    function outBtn(b) {
       var on = state.placed.has(b.key);
       return '<button type="button" class="rlt-out' + (on ? ' rlt-on' : '') + '" data-key="' + b.key + '"' +
         (state.spinning ? ' disabled' : '') + '>' + esc(b.label) + (on ? ' 🪙' : '') + '</button>';
-    }).join('');
-    var evens = OUTSIDE.filter(function (b) { return b.kind === 'evenmoney'; }).map(function (b) {
-      var on = state.placed.has(b.key);
-      return '<button type="button" class="rlt-out' + (on ? ' rlt-on' : '') + '" data-key="' + b.key + '"' +
-        (state.spinning ? ' disabled' : '') + '>' + esc(b.label) + (on ? ' 🪙' : '') + '</button>';
-    }).join('');
+    }
+    var dozens = OUTSIDE.filter(function (b) { return b.kind === 'dozen'; }).map(outBtn).join('');
+    var evens = OUTSIDE.filter(function (b) { return b.kind === 'evenmoney'; }).map(outBtn).join('');
 
     var result = '';
-    if (state.last) {
+    if (state.loadError && !state.loaded) {
+      result = '<div class="rlt-result" role="status">⚠️ ' + esc(state.loadError) +
+        ' — if this is a fresh deploy, has migration 150 been run?</div>';
+    } else if (state.last) {
       var L = state.last;
       result = '<div class="rlt-result" role="status">' +
         '<span class="rlt-ball rlt-' + colorOf(L.n) + '">' + L.n + '</span> ' +
         (L.returned > 0
-          ? '<strong>' + L.n + ' ' + colorOf(L.n) + ' — you won ' + L.returned + ' test tokens!</strong> ' +
-            '<span class="rlt-wins">' + L.wins.map(function (w) { return esc(w.label) + ' (' + w.mult + ':1)'; }).join(' · ') + '</span>'
+          ? '<strong>' + L.n + ' ' + colorOf(L.n) + ' — you won ' + L.returned + ' tokens!</strong> ' +
+            '<span class="rlt-wins">' + L.wins.map(function (w) { return esc(winLabel(w)) + ' (' + w.mult + ':1)'; }).join(' · ') + '</span>'
           : '<strong>' + L.n + ' ' + colorOf(L.n) + ' — no win this spin.</strong>') +
         ' <span class="rlt-net">(staked ' + L.staked + ', net ' + (L.returned - L.staked >= 0 ? '+' : '') + (L.returned - L.staked) + ')</span></div>';
     }
@@ -257,20 +245,19 @@
 
     root.innerHTML =
       '<div class="rlt-wrap">' +
-        '<p class="sbx-note">Standard European roulette — fake test tokens, Sandbox only. Click any bet space to place a token on it (splits, corners and lines sit on the borders, just like a real table); click again to pick it back up. The wheel pays the standard odds.</p>' +
+        '<p class="sbx-note">Standard European roulette — <b>real tokens</b>, Sandbox testing. Click any bet space to place a token on it (splits, corners and lines sit on the borders, just like a real table); click again to pick it back up. The server validates every bet and draws the number.</p>' +
         '<div class="rlt-top">' +
           '<div class="rlt-wheelbox"><div class="rlt-pointer">▼</div>' +
             '<div class="rlt-rotor" id="rltRotor">' + wheelSVG() + '</div>' +
             '<div class="rlt-center" id="rltCenter">' + (state.last ? state.last.n : '🎯') + '</div></div>' +
           '<div class="rlt-side">' +
-            '<div class="rlt-balance">Test tokens: <strong id="rltBal">' + state.balance + '</strong> 🪙</div>' +
+            '<div class="rlt-balance">Tokens: <strong id="rltBal">' + (state.loaded ? state.tokens : '…') + '</strong> 🪙</div>' +
             '<div class="rlt-stake">On the table: <strong id="rltStake">' + st + '</strong> token' + (st === 1 ? '' : 's') + '</div>' +
             '<div class="rlt-actions">' +
-              '<button type="button" class="btn primary" id="rltSpin"' + (state.spinning || st === 0 || st > state.balance ? ' disabled' : '') + '>🎡 Spin</button>' +
+              '<button type="button" class="btn primary" id="rltSpin"' + (state.spinning || !state.loaded || st === 0 || st > state.tokens ? ' disabled' : '') + '>🎡 Spin</button>' +
               '<button type="button" class="btn" id="rltClear"' + (state.spinning || st === 0 ? ' disabled' : '') + '>Clear table</button>' +
-              '<button type="button" class="btn" id="rltReset">Reset test balance</button>' +
             '</div>' +
-            (st > state.balance ? '<p class="rlt-warn">That\'s more tokens than you have — pick some back up.</p>' : '') +
+            (state.loaded && st > state.tokens ? '<p class="rlt-warn">That\'s more tokens than you have — pick some back up.</p>' : '') +
             result + history +
             '<p class="rlt-session">Session: ' + state.spins + ' spins · staked ' + state.staked + ' · returned ' + state.returned + '</p>' +
           '</div>' +
@@ -289,7 +276,7 @@
 
     var rotor = root.querySelector('#rltRotor');
     if (rotor) {
-      rotor.style.transition = state.spinning ? 'transform ' + spinMs + 'ms cubic-bezier(.12,.8,.16,1)' : 'none';
+      rotor.style.transition = 'none';
       rotor.style.transform = 'rotate(' + state.rotation + 'deg)';
     }
     root.querySelectorAll('.rlt-spot, .rlt-out').forEach(function (btn) {
@@ -297,9 +284,6 @@
     });
     var spin = root.querySelector('#rltSpin'); if (spin) spin.addEventListener('click', function () { spinWheel(); });
     var clear = root.querySelector('#rltClear'); if (clear) clear.addEventListener('click', function () { state.placed.clear(); draw(); });
-    var reset = root.querySelector('#rltReset'); if (reset) reset.addEventListener('click', function () {
-      state.balance = START_BALANCE; state.placed.clear(); saveBalance(); draw();
-    });
   }
 
   function toggle(key) {
@@ -309,23 +293,36 @@
     draw();
   }
 
-  function spinWheel(resultOverride) {
-    if (!state || state.spinning) return null;
+  async function spinWheel() {
+    if (!state || state.spinning || !state.loaded) return;
     var st = stake();
-    if (st === 0 || st > state.balance) return null;
-    state.balance -= st;
-    saveBalance();
-    var n = (typeof resultOverride === 'number') ? resultOverride : WHEEL[Math.floor(Math.random() * 37)];
+    if (st === 0 || st > state.tokens) return;
+    state.spinning = true;
+    draw();
+    var resp;
+    try {
+      var bets = [];
+      state.placed.forEach(function (key) { bets.push(wireBet(BY_KEY[key])); });
+      resp = await CPS.cloud.call('roulette_spin', { p_bets: bets });
+    } catch (e) {
+      state.spinning = false;
+      state.last = null;
+      draw();
+      var box = root && root.querySelector('.rlt-side');
+      if (box) {
+        var warn = document.createElement('div');
+        warn.className = 'rlt-result'; warn.setAttribute('role', 'status');
+        warn.textContent = '⚠️ ' + ((e && e.message) || 'Spin failed — try again.');
+        box.appendChild(warn);
+      }
+      return;
+    }
+    var n = resp.result;
     var idx = WHEEL.indexOf(n);
     var step = 360 / 37;
-    // Land the winning pocket under the top pointer: pocket centre starts at
-    // idx*step + step/2 (SVG is drawn from -90deg), so the final resting
-    // angle must be the negative of that, mod 360. Spin 5 full turns from
-    // wherever the wheel currently rests.
     var prev = state.rotation;
     var targetNorm = ((-(idx * step + step / 2)) % 360 + 360) % 360;
     state.rotation = prev + 360 * 5 + ((targetNorm - (prev % 360)) + 360) % 360;
-    state.spinning = true;
     draw();
     var rotor = root && root.querySelector('#rltRotor');
     if (rotor) { // draw() rebuilt the DOM: restart the rotor at the old angle
@@ -337,10 +334,15 @@
     }
     setTimeout(function () {
       state.spinning = false;
-      applySettle(n);
+      state.tokens = resp.tokens_now;
+      state.spins += 1; state.staked += resp.stake; state.returned += resp.returned;
+      state.last = { n: n, staked: resp.stake, returned: resp.returned, wins: resp.wins || [] };
+      state.history.unshift(n);
+      if (state.history.length > 14) state.history.length = 14;
+      state.placed.clear();
+      syncBadges();
       draw();
     }, spinMs + 30);
-    return n;
   }
 
   function teardown() { root = null; }
@@ -351,11 +353,16 @@
     _test: {
       state: function () { return state; },
       spots: function () { return ALL; },
-      settleFor: settleFor,
+      wireBets: function () {
+        var out = [];
+        if (state) state.placed.forEach(function (k) { out.push(wireBet(BY_KEY[k])); });
+        return out;
+      },
+      allWireBets: function () { return ALL.map(wireBet); },
       toggle: toggle,
       spin: spinWheel,
       setSpinMs: function (ms) { spinMs = ms; },
-      resetState: function () { state = freshState(); state.balance = START_BALANCE; }
+      resetState: function () { state = freshState(); }
     }
   };
 })();

@@ -43,7 +43,7 @@
       status: 'public', noTab: true,
       render: function (el) { CPS.scratch.render(el); },
       teardown: function () { CPS.scratch.teardown(); } },
-    { id: 'roulette', title: 'Roulette', blurb: 'Standard European roulette on fake test tokens — place a token on any bet space, standard odds.',
+    { id: 'roulette', title: 'Roulette', blurb: 'Standard European roulette — real tokens. Place a token on any bet space, standard odds. Final testing before release.',
       status: 'testing',
       render: function (el) { CPS.roulette.render(el); },
       teardown: function () { CPS.roulette.teardown(); } },
