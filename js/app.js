@@ -1669,7 +1669,8 @@
     var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
       .sort(function (a, b) { return a.name.localeCompare(b.name); })
       .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') +
-      '<option value="jumbled">Jumbled Mess</option>';
+      '<option value="jumbled">Jumbled Mess</option>' +
+      '<option value="__random">🎲 Random Packs</option>';
 
 
     $('#gaAllSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
@@ -2212,17 +2213,17 @@
       var sid = $('#gaAllSet').value, n = parseInt($('#gaAllN').value, 10);
       var who = $('#grantPacksWho').value;
       if (!sid || !(n >= 1)) { toast('Pick a set and a number of packs.', 'warn'); return; }
-      var setName = (window.CardSets.get(sid) || {}).name || sid;
+      var setName = sid === '__random' ? 'Random' : ((window.CardSets.get(sid) || {}).name || sid);
       var whoName = who === 'everyone' ? 'every non-admin player' : ($('#grantPacksWho').selectedOptions[0].textContent || 'player');
       if (!confirm('Give ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to ' + whoName + '?')) return;
       var btn = this; btn.disabled = true;
       try {
         var r;
         if (who === 'everyone') {
-          r = await CPS.cloud.call('admin_grant_packs_all', { p_set: sid, p_packs: n });
+          r = await CPS.cloud.call(sid === '__random' ? 'admin_grant_random_packs_all' : 'admin_grant_packs_all', sid === '__random' ? { p_packs: n } : { p_set: sid, p_packs: n });
           toast('Gave ' + n + ' pack' + (n === 1 ? '' : 's') + ' to ' + r.players + ' player' + (r.players === 1 ? '' : 's') + '.', 'good');
         } else {
-          r = await CPS.cloud.call('admin_grant_packs', { p_set: sid, p_packs: n, p_account: who });
+          r = await CPS.cloud.call(sid === '__random' ? 'admin_grant_random_packs' : 'admin_grant_packs', sid === '__random' ? { p_packs: n, p_account: who } : { p_set: sid, p_packs: n, p_account: who });
           toast('Gave ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to ' + whoName + '.', 'good');
         }
         renderAdmin();
