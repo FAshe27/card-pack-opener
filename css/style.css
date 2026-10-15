@@ -1194,6 +1194,12 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 /* wheel/arcade counts now show as tab badges (see .tab-badge) */
 .wheel-wrap { max-width: 640px; margin: 0 auto; text-align: center; padding: 12px 0 48px; }
 .spin-btns { display: flex; gap: 10px; justify-content: center; margin-top: 20px; } .spin-btns .btn.big { flex: 1 1 0; width: 0; margin: 0; }
+@media (max-width: 480px) {
+  /* four-across squeezes each button to ~1/4 of a phone screen and the
+     nowrap labels burst out (AUTOSPIN most of all) — go two-by-two */
+  .spin-btns { flex-wrap: wrap; }
+  .spin-btns .btn.big { flex: 1 1 40%; width: auto; }
+}
 .wheel-title { margin: 6px 0 2px; }
 .ticket-box {
   display: inline-flex; align-items: center; gap: 10px;
