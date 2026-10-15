@@ -1,26 +1,31 @@
-/* Plinko arcade game — SANDBOX PROTOTYPE (Franklin, 2026-10-12).
-   Admin-only Sandbox 'testing' item. NO real economy: it runs on a fake
-   test-token balance held in this module, never touches CPS.appCtx state,
-   server RPCs, packs, or tokens. Prizes below are PLACEHOLDERS — Franklin
-   will tweak rewards/odds before this graduates out of the Sandbox.
+/* Plinko arcade game — SANDBOX, REAL ECONOMY (Franklin, 2026-10-14).
+   Still an admin-only Sandbox 'testing' item, but now playing for real:
+   real game tokens in, real packs out, via migration 145's RPCs
+   (plinko_state / plinko_drop). The server enforces admin-only while
+   the game is in the Sandbox, rolls every drop path itself, stores each
+   drop in cps.plinko_drops and pays at once — this module only animates
+   the paths it is handed and mirrors the server's balance.
 
    Board maths: 8 rows of pegs, each row the chip falls left or right with
    50/50 odds, so the 9 bins land with binomial odds C(8,k)/256 — the centre
-   bin is 70/256 (27.3%), the edge bins 1/256 (0.4%) each. The drop path is
-   decided up front and the animation just follows it (same shape the live
-   version will use, with the server deciding the path instead).
+   bin is 70/256 (27.3%), the edge bins 1/256 (0.4%) each.
 
+   Prize table below is a DISPLAY copy of cps.plinko_prize in
+   supabase/migrations/145_plinko.sql — the server is authoritative;
+   change both together when tweaking.
+   Consumes CPS.appCtx + CPS.cloud.call like js/slots.js.
    Mount with CPS.plinko.render(el) / .mount(el); teardown() stops timers. */
 (function (CPS) {
   'use strict';
+  var ctx = CPS.appCtx;
 
   /* ================= PLACEHOLDER CONFIG — tweak freely ================= */
   var CONFIG = {
-    cost: 2,               // test tokens per drop
-    startTokens: 100,      // fake sandbox balance
-    rows: 8,               // peg rows -> rows + 1 bins
-    // One entry per bin, left to right. tokens = test tokens paid back,
-    // pr = random packs, pj = Jumbled Mess packs (all tallied, not real).
+    cost: 2,               // real tokens per drop (server charges the same)
+    rows: 8,                 // peg rows -> rows + 1 bins
+    // One entry per bin, left to right. tokens = tokens paid back,
+    // pr = random packs, pj = Jumbled Mess packs. Display copy of
+    // cps.plinko_prize (migration 145) — the server pays its own table.
     bins: [
       { label: '20 random packs',                  tokens: 0, pr: 20, pj: 0 },
       { label: '3 random packs + 3 jumbled packs', tokens: 0, pr: 3,  pj: 3 },
@@ -48,8 +53,9 @@
   var rafId = null;
 
   var state = {
-    tokens: CONFIG.startTokens,
-    drops: 0, spent: 0,
+    tokens: 0,          // mirror of the server balance (authoritative there)
+    loaded: false,      // true once plinko_state has answered
+    drops: 0, spent: 0, // session tallies (this visit only)
     wonTokens: 0, wonRandom: 0, wonJumbled: 0,
     binCounts: CONFIG.bins.map(function () { return 0; })
   };
@@ -109,6 +115,11 @@
     root = el;
     clearTimers();
     dropping = false;
+    if (!ctx || !ctx.isCloud || !ctx.isCloud()) {
+      el.innerHTML = '<div class="panel"><h2>🪙 Plinko</h2>' +
+        '<p class="muted">Plinko plays for real tokens and packs — log in online to play.</p></div>';
+      return;
+    }
     var binCells = CONFIG.bins.map(function (b, i) {
       var cls = i === 0 || i === CONFIG.bins.length - 1 ? ' plk-bin-edge'
         : (b.pr + b.pj > 0 ? ' plk-bin-pack' : ' plk-bin-token');
@@ -128,10 +139,10 @@
     }
     el.innerHTML =
       '<div class="panel plk-wrap">' +
-        '<h2>🪙 Plinko <span class="plk-badge">SANDBOX TEST</span></h2>' +
+        '<h2>🪙 Plinko <span class="plk-badge">SANDBOX · REAL TOKENS &amp; PACKS</span></h2>' +
         '<p class="muted small">Drop a chip, watch it bounce. Centre bins pay tokens, ' +
         'outer bins pay packs, the very edges are the jackpot. ' +
-        '<b>Test tokens only — nothing here is real yet.</b></p>' +
+        '<b>Real tokens &amp; packs — the server rolls every drop.</b></p>' +
         '<div class="plk-balance" id="plkBalance"></div>' +
         '<div class="plk-board" id="plkBoard">' +
           '<div class="plk-field" id="plkField">' +
@@ -143,11 +154,11 @@
         '<div class="plk-controls">' +
           '<button class="btn primary" id="plkDrop1" type="button">Drop 1 — ' + CONFIG.cost + ' 🪙</button>' +
           '<button class="btn" id="plkDrop10" type="button">Drop 10 — ' + (CONFIG.cost * 10) + ' 🪙</button>' +
-          '<button class="btn" id="plkReset" type="button">Reset test balance</button>' +
+          '<button class="btn" id="plkReset" type="button">Clear session stats</button>' +
         '</div>' +
         '<div class="plk-result" id="plkResult"><span class="muted small">Pick a drop to play.</span></div>' +
         '<div class="plk-stats muted small" id="plkStats"></div>' +
-        '<details class="plk-tuning"><summary>Tuning tools (placeholder odds &amp; prizes)</summary>' +
+        '<details class="plk-tuning"><summary>Odds &amp; prizes</summary>' +
           '<div id="plkTuning"></div>' +
           '<button class="btn" id="plkSim" type="button">Simulate 1,000 drops (free, no prizes)</button>' +
           '<div class="plk-sim muted small" id="plkSimOut"></div>' +
@@ -156,14 +167,36 @@
     q('#plkDrop1').addEventListener('click', function () { playDrops(1, false); });
     q('#plkDrop10').addEventListener('click', function () { playDrops(10, true); });
     q('#plkReset').addEventListener('click', function () {
-      state = { tokens: CONFIG.startTokens, drops: 0, spent: 0, wonTokens: 0,
+      var keep = state.tokens, wasLoaded = state.loaded;
+      state = { tokens: keep, loaded: wasLoaded, drops: 0, spent: 0, wonTokens: 0,
         wonRandom: 0, wonJumbled: 0, binCounts: CONFIG.bins.map(function () { return 0; }) };
-      setResult('<span class="muted small">Test balance reset.</span>');
+      setResult('<span class="muted small">Session stats cleared.</span>');
       updateHud();
     });
     q('#plkSim').addEventListener('click', simulate);
     renderTuning();
     updateHud();
+    loadState();
+  }
+
+  async function loadState() {
+    try {
+      var r = await CPS.cloud.call('plinko_state', {});
+      state.tokens = r.tokens;
+      state.loaded = true;
+    } catch (e) {
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      setResult('<span class="muted small">Could not load Plinko — has migration 145 been run?</span>');
+    }
+    updateHud();
+  }
+
+  function syncBadges() {
+    try {
+      if (ctx.S) ctx.S.gameTokens = state.tokens; // freshest server value we have
+      if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(state.tokens);
+      if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
+    } catch (e) { /* non-fatal */ }
   }
 
   function renderTuning() {
@@ -197,29 +230,45 @@
   function setResult(html) { var r = q('#plkResult'); if (r) r.innerHTML = html; }
   function updateHud() {
     var bal = q('#plkBalance');
-    if (bal) bal.innerHTML = '🪙 <b>' + state.tokens + ' test tokens</b>' +
-      ' &nbsp;·&nbsp; 🎁 <b>' + (state.wonRandom + state.wonJumbled) + ' test packs won</b>' +
+    if (bal) bal.innerHTML = '🪙 <b>' + state.tokens + ' tokens</b>' +
+      ' &nbsp;·&nbsp; 🎁 <b>' + (state.wonRandom + state.wonJumbled) + ' packs won</b>' +
       (state.wonTokens ? ' &nbsp;·&nbsp; ↩️ ' + state.wonTokens + ' tokens won back' : '');
     var st = q('#plkStats');
     if (st) st.textContent = state.drops
       ? 'Drops: ' + state.drops + ' · Spent: ' + state.spent + ' tokens · Bins hit (L→R): ' + state.binCounts.join(' · ')
       : '';
     var d1 = q('#plkDrop1'), d10 = q('#plkDrop10');
-    if (d1) d1.disabled = dropping || state.tokens < CONFIG.cost;
-    if (d10) d10.disabled = dropping || state.tokens < CONFIG.cost * 10;
+    if (d1) d1.disabled = dropping || !state.loaded || state.tokens < CONFIG.cost;
+    if (d10) d10.disabled = dropping || !state.loaded || state.tokens < CONFIG.cost * 10;
   }
 
-  function playDrops(n, fast) {
-    if (dropping || !root) return;
+  async function playDrops(n, fast) {
+    if (dropping || !root || !state.loaded) return;
     var cost = CONFIG.cost * n;
-    if (state.tokens < cost) { setResult('<span class="muted small">Not enough test tokens — reset the balance.</span>'); return; }
+    if (state.tokens < cost) { setResult('<span class="muted small">Not enough tokens — packs, quests and the Prize Wheel can earn more.</span>'); return; }
     dropping = true;
+    updateHud();
+    var r;
+    try {
+      r = await CPS.cloud.call('plinko_drop', { p_drops: n });
+    } catch (e) {
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      setResult('<span class="muted small">That drop did not go through — no tokens were charged.</span>');
+      dropping = false;
+      loadState(); // resync the balance mirror with the server
+      return;
+    }
+    // The server has charged and paid already; mirror the cost locally,
+    // animate its paths, and let the per-drop settles add winnings back
+    // before the authoritative tokens_now lands at the end.
     state.tokens -= cost; state.spent += cost;
     updateHud();
-    var done = 0, wins = [];
+    var results = r.results || [], done = 0, wins = [];
     (function next() {
-      if (done >= n) {
+      if (done >= results.length) {
         dropping = false;
+        state.tokens = r.tokens_now;
+        syncBadges();
         if (wins.length) {
           setResult('<span class="plk-win">' + esc(wins[wins.length - 1]) + '</span>' +
             (n > 1 ? '<div class="muted small">' + n + ' drops done.</div>' : ''));
@@ -227,7 +276,10 @@
         updateHud();
         return;
       }
-      dropOnce(fast, function (b, binIdx) {
+      var res = results[done];
+      var path = { steps: res.steps, bin: res.bin };
+      var prize = { tokens: res.tokens, pr: res.pr, pj: res.pj };
+      dropOnce(fast, path, prize, function (b, binIdx) {
         done++;
         if (b.pr + b.pj > 0) wins.push('Bin ' + (binIdx + 1) + ' — ' + prizeText(b) + '!');
         next();
@@ -270,10 +322,9 @@
   /* Animate the chip through the pre-decided path, bouncing peg to peg,
      then settle the prize. Points: drop point -> top peg -> each next peg
      row (one path step per hop) -> a final dive into the bin. */
-  function dropOnce(fast, done) {
-    var path = decidePath();
+  function dropOnce(fast, path, prize, done) {
     var chip = q('#plkChip');
-    if (!chip || !root) { settle(path, done); return; }
+    if (!chip || !root) { settle(path, prize, done); return; }
     qa('.plk-bin').forEach(function (b) { b.classList.remove('plk-bin-hit'); });
     var hopMs = fast ? 50 : 185;
     // offsets[r] = chip offset (in u) when it sits on peg row r
@@ -292,7 +343,7 @@
             var binEl = q('.plk-bin[data-bin="' + path.bin + '"]');
             if (binEl) binEl.classList.add('plk-bin-hit');
             chip.style.display = 'none';
-            settle(path, done);
+            settle(path, prize, done);
           });
           return;
         }
@@ -307,8 +358,8 @@
     });
   }
 
-  function settle(path, done) {
-    var b = CONFIG.bins[path.bin];
+  function settle(path, prize, done) {
+    var b = { tokens: prize.tokens, pr: prize.pr, pj: prize.pj };
     state.drops++;
     state.binCounts[path.bin]++;
     state.tokens += b.tokens;
