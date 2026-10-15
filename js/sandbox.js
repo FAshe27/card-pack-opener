@@ -36,8 +36,8 @@
       status: 'testing',
       render: function (el) { CPS.plinko.render(el); },
       teardown: function () { CPS.plinko.teardown(); } },
-    { id: 'scratchoffs', title: 'Scratchoffs', blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs. Real tokens & packs — final testing before release.',
-      status: 'testing',
+    { id: 'scratchoffs', title: 'Scratchoffs', blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.',
+      status: 'public',
       render: function (el) { CPS.scratch.render(el); },
       teardown: function () { CPS.scratch.teardown(); } },
   ];
