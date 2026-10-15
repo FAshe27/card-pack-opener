@@ -1,7 +1,8 @@
-/* js/turninrewards.js — Turn-In Rewards (migration 126).
-   Prizes for turning in 25% / 50% / 75% of a set (Franklin's table:
-   25% = 5 spin tickets + 5 Jumbled Mess packs; 50% = 10 tickets +
-   5 Jumbled; 75% = 10 tickets + 10 packs of that set + 5 Jumbled).
+/* js/turninrewards.js — Turn-In Rewards (migrations 126 + 144).
+   Prizes for turning in 25% / 50% / 75% / 100% of a set (Franklin's
+   table: 25% = 5 spin tickets + 5 Jumbled Mess packs; 50% = 10 tickets
+   + 5 Jumbled; 75% = 10 tickets + 10 packs of that set + 5 Jumbled;
+   100% = 100 random packs + 25 spin tickets — migration 144).
    One time per player per set per threshold, turned-in only.
    NO claim button by design: after every state load this asks the
    server (cps_award_turnin_rewards) to pay anything owed — the server
@@ -46,15 +47,16 @@
   }
 
   function prizeText(paid, setName) {
-    var t = 0, j = 0, p = 0;
-    paid.forEach(function (r) { t += r.tickets || 0; j += r.jumbled || 0; p += r.set_packs || 0; });
+    var t = 0, j = 0, p = 0, rp = 0;
+    paid.forEach(function (r) { t += r.tickets || 0; j += r.jumbled || 0; p += r.set_packs || 0; rp += r.random_packs || 0; });
     var parts = [];
     if (t) parts.push(t + ' spin tickets');
     if (j) parts.push(j + ' Jumbled Mess packs');
     if (p) parts.push(p + ' ' + setName + ' packs');
+    if (rp) parts.push(rp + ' random packs');
+    if (parts.length === 1) return parts[0];
     if (parts.length === 2) return parts[0] + ' and ' + parts[1];
-    if (parts.length === 3) return parts[0] + ', ' + parts[1] + ', and ' + parts[2];
-    return parts.join(', ');
+    return parts.slice(0, -1).join(', ') + ', and ' + parts[parts.length - 1];
   }
 
   function showPopups(queue) {
@@ -69,7 +71,9 @@
       '<h2>Turn-In Reward!</h2>' +
       '<p>You\'ve turned in <b>' + top + '%</b> of <b>' + ctx.esc(item.set.name) + '</b>!</p>' +
       '<p><b>' + ctx.esc(prizeText(item.paid, item.set.name)) + '</b> have been added to your account.</p>' +
-      '<p class="muted">Rewards are one time per set — turn in more of the set for the next one!</p>' +
+      (top >= 100
+        ? '<p class="muted">That is the ENTIRE set turned in — every last card. Incredible!</p>'
+        : '<p class="muted">Rewards are one time per set — turn in more of the set for the next one!</p>') +
       '<div class="confirm-btns" style="justify-content:center"><button class="btn primary" data-close>Awesome!</button></div></div>');
     var box = document.getElementById('modalBox');
     if (box) box.querySelectorAll('[data-close]').forEach(function (b) {
