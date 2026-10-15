@@ -133,9 +133,9 @@
       var oo = t.oneofone;
       var desc = 'You pulled ' + esc(oo.card_name || 'a one-of-one') + (oo.set_name ? ' · ' + esc(oo.set_name) : '') +
         (oo.serial ? ' · #' + esc(oo.serial) + '/1' : '');
-      specialHtml += tile(medal('oneofone', '💠', 'prism'), 'One-of-One Pull', desc, oo.at, false);
+      specialHtml += tile(medal('oneofone', '👑', 'prism'), 'One-of-One Pull', desc, oo.at, false);
     } else {
-      specialHtml += tile(medal('oneofone', '💠', 'prism'), 'One-of-One Pull', 'Pull a One-of-One variant', null, true);
+      specialHtml += tile(medal('oneofone', '👑', 'prism'), 'One-of-One Pull', 'Pull a One-of-One variant', null, true);
     }
     var cotdDays = t.cotd_days || 0;
     if (cotdDays > 0) {
