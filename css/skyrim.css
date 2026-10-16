@@ -1,0 +1,69 @@
+/* pack skin "skyrim": PLACEHOLDER pure-CSS skin — Night over Skyrim.
+   An aurora-lit night sky over dark slate: teal and violet aurora
+   ribbons and faint stars across the tear top, a cold snow-glow rising
+   at the foot of the pack, frost-silver crimps (class pack-skin-skyrim).
+   This is a stand-in until Franklin's own baked pack art replaces it;
+   it touches nothing shared — this file is scoped to the skyrim set.
+   Card art is in-game imagery and fills its panel edge to edge (theme
+   artFit cover, near-black panel #10151d behind it); section 2 only
+   adds a slim frost-blue frame line around the art. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-skyrim .pack-top {
+  background:
+    /* aurora ribbons sweeping the night sky */
+    linear-gradient(115deg, transparent 26%, rgba(64,224,190,.20) 40%, rgba(90,170,255,.16) 52%, rgba(168,110,255,.13) 63%, transparent 76%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(120,255,214,.22), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(150,120,255,.16), transparent 70%),
+    /* faint stars */
+    radial-gradient(rgba(255,255,255,.75) 1px, transparent 1.5px),
+    radial-gradient(rgba(200,225,255,.55) 1px, transparent 1.5px),
+    linear-gradient(180deg, #131f3d 0%, #0d1526 60%, #0a0f1c 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-skyrim .pack-body {
+  background:
+    /* snow-glow rising off the ground below */
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(143,193,227,.38), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(230,244,255,.14), transparent 70%),
+    /* the aurora's last wash at the top of the body */
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(64,224,190,.13), transparent 70%),
+    /* faint stars, sparser than the top */
+    radial-gradient(rgba(255,255,255,.5) 1px, transparent 1.5px),
+    radial-gradient(rgba(200,225,255,.38) 1px, transparent 1.5px),
+    linear-gradient(180deg, #131c2e 0%, #0d1424 55%, #070a13 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-skyrim .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(190,225,250,.13), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-skyrim .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(143,193,227,.50) 4px 6px, rgba(235,246,255,.20) 6px 9px); }
+.pack-skin-skyrim .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.66) 0 4px, rgba(90,130,175,.55) 4px 6px, rgba(235,246,255,.10) 6px 9px); }
+.pack-skin-skyrim .pack-top::after { border-bottom-color: rgba(180,220,245,.65); }
+.pack-skin-skyrim .pack-code { color: #d7ecfa; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.65), 0 0 12px rgba(110,180,230,.8); }
+.pack-skin-skyrim .pack-emblem { background: radial-gradient(circle at 35% 30%, rgba(190,225,250,.42), rgba(9,13,23,.94) 72%);
+  border-color: rgba(180,220,245,.85); box-shadow: 0 0 26px rgba(110,180,230,.55), inset 0 0 18px rgba(64,224,190,.22); text-shadow: 0 0 16px rgba(210,240,255,.9); }
+.pack-skin-skyrim .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(110,180,230,.85), 0 2px 8px rgba(0,0,0,.7); }
+.pack-skin-skyrim .pack-sub { color: #b9cbdd; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   In-game imagery fills the art panel edge to edge (artFit cover,
+   near-black panel #10151d behind it). The frame only swaps the
+   stock translucent border for a slim frost-blue line with a faint
+   cold inset. */
+.card[data-set="skyrim"] .cf-art {
+  border-color: rgba(143,193,227,.50);
+  box-shadow: inset 0 0 18px rgba(5,8,14,.4);
+}
+/* Slips (ticket/token/credit cards borrowed into a skyrim pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="skyrim"].ticket-card .cf-art,
+.card[data-set="skyrim"].token-card .cf-art,
+.card[data-set="skyrim"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
