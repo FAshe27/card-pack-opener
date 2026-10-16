@@ -67,3 +67,20 @@
   border-color: rgba(255,255,255,.16);
   box-shadow: none;
 }
+
+/* ---------- 3. Art framing (faces) ---------- */
+/* Skyrim's NPC portraits are square full-body shots: the stock centre
+   crop (object-position 50%) beheads them in the landscape art panel —
+   Belethor, Nazir and friends showed as headless torsos. Bias this
+   set's crop window high so faces stay in frame (verified by simulated
+   crops of all 110 character portraits at the panel aspect, 2026-10-15).
+   Slips keep the stock framing (they are not set cards). */
+.card[data-set="skyrim"] .cf-art img { object-position: 50% 12%; }
+.card[data-set="skyrim"].ticket-card .cf-art img,
+.card[data-set="skyrim"].token-card .cf-art img,
+.card[data-set="skyrim"].credit-card .cf-art img { object-position: 50% 50%; }
+
+/* ---------- 4. Per-card framing ---------- */
+/* Derkeethus's head sits in the very top sliver of his square portrait;
+   even the 12% set-wide bias clips his crown. Anchor him to the top. */
+.card[data-set="skyrim"][data-card="derkeethus"] .cf-art img { object-position: 50% 0%; }
