@@ -91,7 +91,7 @@
       window.CardSets.all().forEach(function (set) {
         if (!set || set.id === 'jumbled') return;
         var p = prog[set.id];
-        var total = p ? p.total : (set.cards ? set.cards.length : 0);
+        var total = p ? p.total : (set.total || (set.cards ? set.cards.length : 0));
         setRows.push({ id: set.id, name: set.name || set.id, emblem: set.emblem, turned: p ? p.turned : 0, total: total, done: set.id in doneSets, at: doneSets[set.id] });
       });
     }
