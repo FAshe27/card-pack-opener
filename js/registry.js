@@ -105,6 +105,82 @@
     }).filter(function (row) { return row.count > 0; });
   }
 
+  /* --- lazy set loading (boot diet) --------------------------------
+     sets/boot-index.js (generated; see tools/build-boot-index.js)
+     carries display metadata for every set. installBootIndex() plants
+     metadata stubs in manifest order so every list-type surface works
+     instantly; load(id) fetches the set's real file(s) on demand and
+     register() swaps the stub for the real set in place. If the index
+     never loads, nothing here runs and the caller falls back to the
+     old load-everything boot. */
+  var bootIdx = null;
+  var inflight = {};
+
+  function loadSetFile(src) {
+    return new Promise(function (res) {
+      var s = document.createElement('script');
+      s.src = src; s.async = false;
+      s.onload = function () { res(true); };
+      s.onerror = function () { res(false); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function stubFor(id, meta) {
+    var pools = {};
+    R.RARITIES.forEach(function (r) { pools[r.key] = []; });
+    return {
+      id: id, name: meta.name, code: meta.code, description: '',
+      theme: { primary: meta.primary, secondary: meta.secondary, artBackground: '', artFit: '' },
+      cards: [], byId: new Map(), pools: pools, numWidth: 3,
+      pack: { name: meta.packName || 'Booster Pack', emblem: meta.emblem, skin: meta.skin,
+              slots: [], holo: {}, size: 9 },
+      source: 'stub', stub: true, total: meta.total, raw: null
+    };
+  }
+
+  function installBootIndex(idx) {
+    if (!idx || !idx.sets || !idx.order) return 0;
+    bootIdx = idx;
+    var n = 0;
+    idx.order.forEach(function (id) {
+      if (!sets.has(id) && idx.sets[id]) { sets.set(id, stubFor(id, idx.sets[id])); order.push(id); n++; }
+    });
+    return n;
+  }
+
+  function loadSet(id) {
+    var cur = sets.get(id);
+    if (cur && !cur.stub) return Promise.resolve(cur);
+    if (!bootIdx || !bootIdx.sets[id]) return Promise.resolve(cur || null);
+    if (inflight[id]) return inflight[id];
+    var files = bootIdx.sets[id].files;
+    var p = Promise.resolve(true);
+    files.forEach(function (f) {
+      p = p.then(function (ok) { return ok ? loadSetFile('sets/' + f) : false; });
+    });
+    inflight[id] = p.then(function () {
+      delete inflight[id];
+      var s = sets.get(id);
+      return (s && !s.stub) ? s : null;
+    });
+    return inflight[id];
+  }
+
+  function loadIds(ids) {
+    return Promise.all((ids || []).map(loadSet));
+  }
+
+  function loadAllSets() {
+    return bootIdx ? loadIds(bootIdx.order.slice()) : Promise.resolve([]);
+  }
+
+  function pendingStubs() {
+    var n = 0;
+    order.forEach(function (id) { var s = sets.get(id); if (s && s.stub) n++; });
+    return n;
+  }
+
   window.CardSets = {
     manifest: [],
     DEFAULT_PACK: DEFAULT_PACK,
@@ -124,6 +200,11 @@
     validate: function (raw) { return normalize(raw, 'preview'); },
     unregister: function (id) { sets.delete(id); var i = order.indexOf(id); if (i >= 0) order.splice(i, 1); },
     get: function (id) { return sets.get(id); },
+    installBootIndex: installBootIndex,
+    load: loadSet,
+    loadIds: loadIds,
+    loadAll: loadAllSets,
+    pending: pendingStubs,
     all: function () { return order.map(function (id) { return sets.get(id); }); },
     ids: function () { return order.slice(); },
     oddsTable: oddsTable
