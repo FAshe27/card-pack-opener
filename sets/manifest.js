@@ -51,5 +51,7 @@ CardSets.manifest = [
   'mkrt.js',
   'mkrt-additions.js',
   'skyrim.js',
-  'skyrim-additions.js'
+  'skyrim-additions.js',
+  'acrs.js',
+  'acrs-additions.js'
 ];
