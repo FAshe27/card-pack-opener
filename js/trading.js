@@ -59,6 +59,11 @@
     try {
       T = await CPS.cloud.call('trading_post', {});
       if (!T || !Array.isArray(T.listings)) throw new Error('Bad response from server (got ' + JSON.stringify(T).slice(0, 80) + ')');
+      if (window.CardSets && window.CardSets.loadIds) {
+        var tIds = {};
+        T.listings.forEach(function (l) { tIds[l.set_id] = 1; });
+        await window.CardSets.loadIds(Object.keys(tIds));
+      }
       fillSetFilter();
       updateBadge();
       renderList();
@@ -250,6 +255,13 @@
 
   function openDetail(id) {
     var l = findListing(id); if (!l) return;
+    if (window.CardSets && window.CardSets.loadIds) {
+      var dIds = {};
+      dIds[l.set_id] = 1;
+      (l.offers || []).forEach(function (o) { (o.cards || []).forEach(function (c) { dIds[c.set_id] = 1; }); });
+      var missing = Object.keys(dIds).filter(function (sid) { var s = window.CardSets.get(sid); return s && s.stub; });
+      if (missing.length) { window.CardSets.loadIds(missing).then(function () { openDetail(id); }); return; }
+    }
     var myOffer = (l.offers || []).filter(function (o) { return o.mine; })[0];
     var offersHtml = (l.offers || []).map(function (o) {
       return '<div class="panel trade-offerbox">' +
