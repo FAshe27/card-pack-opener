@@ -371,7 +371,7 @@
     var set = S.set, st = ps();
     var busy = (S.opening && !S.opening.finished) || S.busy;
     $('#openBtn').disabled = !st.packs || busy;
-    $('#openBtn').textContent = st.packs ? (set.id === 'jumbled' ? 'Open Jumbled Mess' : 'Open a pack') : 'No packs left';
+    $('#openBtn').textContent = st.packs ? (set.id === 'jumbled' ? 'Open Jumbled Mess' : (S.opening && S.opening.finished && S.opening.set.id === set.id ? 'Open next pack (' + st.packs + ' left)' : 'Open a pack')) : 'No packs left';
     var qb = $('#quickOpenBtn'); if (qb) qb.disabled = !st.packs || busy;
     if (CPS.jumbled) CPS.jumbled.renderBox();
     if (CPS.packsBadge) CPS.packsBadge.update();
