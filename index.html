@@ -79,26 +79,8 @@
     <!-- ============ OPEN PACKS ============ -->
     <section id="view-packs" class="view active">
       <div class="packs-layout">
-        <aside class="panel inventory">
-          <h2>Your packs</h2>
-          <div class="inv-pack" id="invPack"></div>
-          <div class="inv-count"><span id="packCount">0</span> <span id="packCountLabel">unopened packs</span></div>
-          <button id="openBtn" class="btn primary big">Open a pack</button>
-          <button id="quickOpenBtn" class="btn" style="width:100%;margin-top:8px" title="Skip the tear and flip every card at once">⚡ Quick Open</button>
-
-          <div class="dev-only dev-box">
-            <div class="dev-title">Dev tools</div>
-            <div class="row">
-              <button id="freePackBtn" class="btn small">+1 free pack</button>
-              <button id="free10Btn" class="btn small">+10</button>
-            </div>
-          </div>
-
-          <div class="mini-stats" id="miniStats"></div>
-          <button class="btn small ghost" style="width:100%;margin-top:10px" onclick="CPS.app.showView('odds')">Odds &amp; pack contents</button>
-        </aside>
-
-        <section class="panel stage" id="stage">
+        <section class="panel packs-panel">
+        <div class="stage" id="stage">
           <div class="stage-idle" id="stageIdle"></div>
           <div class="stage-pack hidden" id="stagePack"></div>
           <div class="reveal-grid hidden" id="revealGrid" aria-live="polite"></div>
@@ -110,6 +92,21 @@
               <button id="doneBtn" class="btn ghost hidden">Done</button>
             </div>
           </div>
+        </div>
+        <div class="packs-controls">
+          <div class="packs-controls-row">
+            <button id="openBtn" class="btn primary big">Open a pack</button>
+            <button id="quickOpenBtn" class="btn" title="Skip the tear and flip every card at once">⚡ Quick Open</button>
+            <button class="btn small ghost" onclick="CPS.app.showView('odds')">Odds &amp; pack contents</button>
+          </div>
+          <div class="dev-only dev-box">
+            <div class="dev-title">Dev tools</div>
+            <div class="row">
+              <button id="freePackBtn" class="btn small">+1 free pack</button>
+              <button id="free10Btn" class="btn small">+10</button>
+            </div>
+          </div>
+        </div>
         </section>
       </div>
     </section>
