@@ -1,0 +1,73 @@
+/* pack skin "zelda": PLACEHOLDER pure-CSS skin — Triforce over Hyrule.
+   Deep Hyrule green under a shaft of Triforce-gold light: gold dust and
+   pale forest wisps drifting across the tear top, a warm golden glow
+   rising at the foot of the pack, antique-gold crimps (class
+   pack-skin-zelda). This is a stand-in until Franklin's own baked pack
+   art replaces it; it touches nothing shared — this file is scoped to
+   the zelda set. Card art is mostly transparent renders on the theme's
+   warm parchment panel (artFit contain, #f3ecd9); section 2 only adds a
+   slim gold frame line around the art. No art-framing rules: contain
+   never crops, so there are no faces to rescue. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-zelda .pack-top {
+  background:
+    /* a shaft of golden light falling through the canopy */
+    linear-gradient(115deg, transparent 28%, rgba(232,200,74,.15) 44%, rgba(201,162,39,.11) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(232,200,74,.20), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(120,220,160,.14), transparent 70%),
+    /* drifting gold dust and pale wisps */
+    radial-gradient(rgba(243,236,217,.75) 1px, transparent 1.5px),
+    radial-gradient(rgba(232,200,74,.55) 1px, transparent 1.5px),
+    linear-gradient(180deg, #14382a 0%, #0e241a 60%, #08170f 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-zelda .pack-body {
+  background:
+    /* Triforce-gold glow rising off the ground below */
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(201,162,39,.34), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(243,236,217,.13), transparent 70%),
+    /* the last of the light shaft washing the top of the body */
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(232,200,74,.10), transparent 70%),
+    /* faint dust, sparser than the top */
+    radial-gradient(rgba(243,236,217,.45) 1px, transparent 1.5px),
+    radial-gradient(rgba(232,200,74,.35) 1px, transparent 1.5px),
+    linear-gradient(180deg, #16382a 0%, #0e241a 55%, #060f0a 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-zelda .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(232,200,74,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-zelda .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(201,162,39,.55) 4px 6px, rgba(232,200,74,.28) 6px 9px); }
+.pack-skin-zelda .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.66) 0 4px, rgba(146,118,32,.55) 4px 6px, rgba(232,200,74,.14) 6px 9px); }
+.pack-skin-zelda .pack-top::after { border-bottom-color: rgba(232,200,74,.65); }
+.pack-skin-zelda .pack-code { color: #f3ecd9; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.65), 0 0 12px rgba(201,162,39,.85); }
+.pack-skin-zelda .pack-emblem { background:
+  /* a faint golden wedge rising in the ring — the Triforce's triangle */
+  conic-gradient(from -35deg at 50% 70%, rgba(232,200,74,.30) 0deg 70deg, transparent 70deg),
+  radial-gradient(circle at 35% 30%, rgba(232,200,74,.38), rgba(8,23,15,.94) 72%);
+  border-color: rgba(232,200,74,.9); box-shadow: 0 0 26px rgba(201,162,39,.55), inset 0 0 18px rgba(201,162,39,.25); text-shadow: 0 0 16px rgba(243,236,217,.9); }
+.pack-skin-zelda .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(201,162,39,.85), 0 2px 8px rgba(0,0,0,.7); }
+.pack-skin-zelda .pack-sub { color: #b9d2c0; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Transparent renders sit whole on the theme's parchment panel (artFit
+   contain, panel #f3ecd9 behind them). The frame only swaps the stock
+   translucent border for a slim antique-gold line with a faint warm
+   inset. */
+.card[data-set="zelda"] .cf-art {
+  border-color: rgba(201,162,39,.55);
+  box-shadow: inset 0 0 18px rgba(62,48,10,.25);
+}
+/* Slips (ticket/token/credit cards borrowed into a zelda pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="zelda"].ticket-card .cf-art,
+.card[data-set="zelda"].token-card .cf-art,
+.card[data-set="zelda"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
