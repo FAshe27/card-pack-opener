@@ -56,6 +56,14 @@
   async function load() {
     try {
       B = await CPS.cloud.call('list_bounties', {});
+      if (window.CardSets && window.CardSets.loadIds) {
+        var bIds = {};
+        (B.bounties || []).forEach(function (b) {
+          bIds[b.want_set] = 1;
+          (b.offer_cards || []).forEach(function (c) { bIds[c.set_id] = 1; });
+        });
+        await window.CardSets.loadIds(Object.keys(bIds));
+      }
       fillSetFilter();
       updateBadge();
       renderList();
