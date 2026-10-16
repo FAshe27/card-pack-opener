@@ -39,6 +39,12 @@
     var bD = document.getElementById('turnInDupesAllBtn');
     if (!bA || !bD) return;
     if (!C.isCloud()) { bA.classList.add('hidden'); bD.classList.add('hidden'); return; }
+    /* Lazy sets: counts need the owned sets' card lists — load any that
+       are still stubs, then repaint with the full picture. */
+    var stubOwned = Object.keys(C.S.player.sets || {}).some(function (id) {
+      var s = window.CardSets.get(id); return s && s.stub;
+    });
+    if (stubOwned && C.ensureOwnedSets) C.ensureOwnedSets().then(function () { refresh(); });
     var p = previews();
     bD.classList.toggle('hidden', !p.dupes.eligible);
     bD.textContent = 'Turn in duplicates from all sets (' + p.dupes.eligible + ')';
@@ -58,6 +64,7 @@
     var C = ctx();
     if (!C.isCloud()) return;
     await C.ensureVariants();
+    if (C.ensureOwnedSets) await C.ensureOwnedSets();
     var p = previews().sweep;
     if (!p.eligible) { C.toast('Nothing to turn in — everything you own is already turned in, vaulted, or numbered.', 'warn'); return; }
     var ok = await C.confirmDialog('Turn in cards from ALL sets',
@@ -82,6 +89,7 @@
     var C = ctx();
     if (!C.isCloud()) return;
     await C.ensureVariants();
+    if (C.ensureOwnedSets) await C.ensureOwnedSets();
     var p = previews().dupes;
     if (!p.eligible) { C.toast('No duplicates to turn in — every card is a single copy, already turned in, vaulted, or numbered.', 'warn'); return; }
     var ok = await C.confirmDialog('Turn in duplicates from ALL sets',
