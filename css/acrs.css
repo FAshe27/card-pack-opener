@@ -77,3 +77,55 @@
 .card[data-set="acrs"].ticket-card .cf-art img,
 .card[data-set="acrs"].token-card .cf-art img,
 .card[data-set="acrs"].credit-card .cf-art img { object-position: 50% 50%; }
+
+/* ---------- 4. Baked-in pack art (Franklin's own artwork, 2026-10-16) ----------
+   The pack art is sliced into FOUR bands (assets/sets/acrs/pack-art-1..4.svg,
+   rows 0-210 / 210-1120 / 1120-1400 / 1400-1600) with the seams placed clear
+   of the whole wooden-sign block (art rows ~290-990: logo, leaf badge and
+   the hanging '9 Cards per Pack' plank) so no seam can shear any lettering.
+   Band heights carry a hair of overlap (+.006) so no gap can open at a join.
+   Everything is baked into the art, so the site-printed emblem/name/count
+   and the card-back dressing are off; the placeholder skin's wood-brown
+   crimps stay (they suit the sign). Sections 2-3 (card faces) are
+   untouched. Back art sits inside the site frame (the standing default). */
+.pack-skin-acrs .pack-top,
+.pack-skin-acrs .pack-body {
+  background-image:
+    url('../assets/sets/acrs/pack-art-1.svg'),
+    url('../assets/sets/acrs/pack-art-2.svg'),
+    url('../assets/sets/acrs/pack-art-3.svg'),
+    url('../assets/sets/acrs/pack-art-4.svg');
+  background-repeat: no-repeat;
+  background-color: #14532d;
+  background-size:
+    calc(var(--pw) * 1) calc(var(--pw) * .216),
+    calc(var(--pw) * 1) calc(var(--pw) * .916),
+    calc(var(--pw) * 1) calc(var(--pw) * .286),
+    calc(var(--pw) * 1) calc(var(--pw) * .206);
+}
+.pack-skin-acrs .pack-top {
+  background-position:
+    0 0,
+    0 calc(var(--pw) * .21),
+    0 calc(var(--pw) * 1.12),
+    0 calc(var(--pw) * 1.4);
+}
+.pack-skin-acrs .pack-body {
+  background-position:
+    0 calc(var(--pw) * -.176),
+    0 calc(var(--pw) * .034),
+    0 calc(var(--pw) * .944),
+    0 calc(var(--pw) * 1.224);
+}
+.pack-skin-acrs .pack-body::before { background: none; }
+.pack-skin-acrs .pack-emblem,
+.pack-skin-acrs .pack-name,
+.pack-skin-acrs .pack-sub { display: none; }
+.card[data-set="acrs"] .cb {
+  background-image: url('../assets/sets/acrs/card-back-art.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.card[data-set="acrs"] .cb-emblem,
+.card[data-set="acrs"] .cb-name { display: none; }
