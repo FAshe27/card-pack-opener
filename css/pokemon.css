@@ -1,0 +1,89 @@
+/* pack skin "pokemon": PLACEHOLDER pure-CSS skin — Pokémon yellow over
+   Pokémon blue (class pack-skin-pokemon). A stand-in until Franklin's own
+   baked pack art replaces it; it touches nothing shared — this file is
+   scoped to the pokemon set. The set's cards are full-face TCG scans:
+   section 2 hides all site-printed face chrome so the scan IS the card,
+   and section 3 wires the real Pokémon card back, full-bleed. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-pokemon .pack-top {
+  background:
+    /* a shaft of starter-yellow light across the blue */
+    linear-gradient(115deg, transparent 30%, rgba(255,203,5,.20) 46%, rgba(255,203,5,.13) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 28% 20%, rgba(255,203,5,.22), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 74% 30%, rgba(255,255,255,.12), transparent 70%),
+    radial-gradient(rgba(255,255,255,.7) 1px, transparent 1.5px),
+    radial-gradient(rgba(255,203,5,.5) 1px, transparent 1.5px),
+    linear-gradient(180deg, #2a75bb 0%, #1d5a94 60%, #144a7d 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-pokemon .pack-body {
+  background:
+    /* yellow glow rising off the ground below */
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(255,203,5,.30), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(255,255,255,.10), transparent 70%),
+    /* the last of the light shaft washing the top of the body */
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,203,5,.10), transparent 70%),
+    radial-gradient(rgba(255,255,255,.4) 1px, transparent 1.5px),
+    radial-gradient(rgba(255,203,5,.32) 1px, transparent 1.5px),
+    linear-gradient(180deg, #256cae 0%, #1a558c 55%, #113f68 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-pokemon .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,203,5,.14), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-pokemon .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(255,203,5,.55) 4px 6px, rgba(255,222,89,.28) 6px 9px); }
+.pack-skin-pokemon .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.66) 0 4px, rgba(204,162,0,.5) 4px 6px, rgba(255,222,89,.14) 6px 9px); }
+.pack-skin-pokemon .pack-top::after { border-bottom-color: rgba(255,222,89,.65); }
+.pack-skin-pokemon .pack-code { color: #ffffff; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.5), 0 0 12px rgba(255,203,5,.8); }
+.pack-skin-pokemon .pack-emblem { background:
+  radial-gradient(circle at 35% 30%, rgba(255,203,5,.38), rgba(10,32,56,.94) 72%);
+  border-color: rgba(255,203,5,.9); box-shadow: 0 0 26px rgba(255,203,5,.5), inset 0 0 18px rgba(255,203,5,.25); text-shadow: 0 0 16px rgba(255,255,255,.9); }
+.pack-skin-pokemon .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(255,203,5,.8), 0 2px 8px rgba(0,0,0,.6); }
+.pack-skin-pokemon .pack-sub { color: #cfe4f7; }
+
+/* ---------- 2. Full-face fronts (the scan IS the card) ----------
+   Following the Periodic Table pattern: the site's printed chrome
+   (name row, subtitle/rarity row, details box, footer) is hidden for
+   this set only — name/subtitle/details/rarity still live in the set
+   data and show in the collection and card modal. The art fills the
+   whole inner panel; what remains of the stock face is the rarity
+   ring itself: .front's padding, painted by the stock rarity
+   backgrounds (var(--rc) gradients). Prototype v2 (Franklin-approved)
+   cut the ring at ~2.2% of card width, Chase ~50% thicker in solid
+   PackRipper chase pink #ff4fa3 — the stock chase ring is a rainbow
+   conic, so Chase is re-pinned to pink here. Holo / variant overlays
+   are .front/.card pseudo-elements and keep working over the scan.
+   (Slips borrowed into a pokemon pack render full-face too — same as
+   Periodic, the site's other full-face set, which has no slip guard.) */
+.card[data-set="pokemon"] .front { padding: 2.2cqw; }
+.card[data-set="pokemon"].r-chase .front {
+  padding: 3.3cqw;
+  background-image: linear-gradient(155deg, #ff8ac2, #ff4fa3 45%, #c2187a);
+}
+.card[data-set="pokemon"] .cf {
+  padding: 0; gap: 0; background: #000; border-radius: 2.4cqw; overflow: hidden;
+}
+.card[data-set="pokemon"] .cf-top,
+.card[data-set="pokemon"] .cf-type,
+.card[data-set="pokemon"] .cf-details,
+.card[data-set="pokemon"] .cf-foot { display: none; }
+.card[data-set="pokemon"] .cf-art {
+  flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #000;
+}
+
+/* ---------- 3. Card back: the real Pokémon back, full-bleed ----------
+   Same wiring as the Space back in style.css: the back art (the classic
+   blue Poké Ball back; its own blue border is the card edge, and the
+   source scan's white corner triangles were flooded with that border
+   blue) fills the whole back — no site frame, no printed emblem/name. */
+.card[data-set="pokemon"] .back { padding: 0; background: #01488e; }
+.card[data-set="pokemon"] .cb {
+  background: url('../assets/sets/pokemon/card-back-art.svg') center / cover no-repeat #01488e;
+  border: none; border-radius: 12px;
+}
+.card[data-set="pokemon"] .cb-emblem, .card[data-set="pokemon"] .cb-name { display: none; }
