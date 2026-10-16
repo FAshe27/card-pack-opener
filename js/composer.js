@@ -171,7 +171,25 @@
     });
   }
 
+  /* Lazy sets (boot diet): the bounty want-picker spans every set;
+     listing/offer pickers span the sets the player owns cards in (plus
+     the listing's own set for offers). Each opener loads what it
+     needs first and re-enters itself when the data lands. */
+  function ownedStubsPending() {
+    var psets = (ctx.S && ctx.S.player && ctx.S.player.sets) || {};
+    return Object.keys(psets).some(function (id) {
+      var s = window.CardSets.get(id), st = psets[id];
+      return !!(s && s.stub && st && st.cards && Object.keys(st.cards).length);
+    });
+  }
+
   function openBounty(host, prefill) {
+    if (window.CardSets && window.CardSets.pending && window.CardSets.pending()) {
+      ctx.openModal('<div class="muted" style="padding:24px">Loading set data…</div>');
+      var hb = host, pf = prefill;
+      window.CardSets.loadAll().then(function () { openBounty(hb, pf); });
+      return;
+    }
     HB = host;
     prefill = sanePrefill(prefill);
     var sets = allSets();
@@ -837,6 +855,12 @@
   }
 
   function openListing(host, prefill) {
+    if (ctx.ensureOwnedSets && window.CardSets && window.CardSets.pending && ownedStubsPending()) {
+      ctx.openModal('<div class="muted" style="padding:24px">Loading set data…</div>');
+      var ht = host, pf2 = prefill;
+      ctx.ensureOwnedSets().then(function () { openListing(ht, pf2); });
+      return;
+    }
     HT = host;
     prefill = sanePrefill(prefill);
     var sets = HT.ownedSets();
@@ -1173,6 +1197,16 @@
   var OS = null;        // offer return-nav session
 
   function openOffer(host, listing, prefill) {
+    var lset = listing && listing.set_id ? window.CardSets.get(listing.set_id) : null;
+    if ((ctx.ensureOwnedSets && ownedStubsPending()) || (lset && lset.stub)) {
+      ctx.openModal('<div class="muted" style="padding:24px">Loading set data…</div>');
+      var ho = host, li = listing, pf3 = prefill;
+      var jobs = [];
+      if (ctx.ensureOwnedSets) jobs.push(ctx.ensureOwnedSets());
+      if (lset && lset.stub) jobs.push(window.CardSets.load(listing.set_id));
+      Promise.all(jobs).then(function () { openOffer(ho, li, pf3); });
+      return;
+    }
     HT = host;
     prefill = sanePrefill(prefill);
     var sets = HT.ownedSets();
