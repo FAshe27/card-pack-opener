@@ -1950,12 +1950,14 @@
     CPS.wheel.draw($('#wheelCanvas'), cfg.wheels[0], 0);
     $('#wheelName').textContent = cfg.wheels[0].name;
     renderWheel();
+    if (CPS.wheel.startIdle) CPS.wheel.startIdle($('#wheelCanvas'), cfg.wheels[0]);
     var canvas = $('#wheelCanvas'), out = null;
     try {
       out = await CPS.cloud.call('spin_wheel', {});
       S.spins = out.spins_left;
       refreshQuests();
     } catch (e) {
+      if (CPS.wheel.stopIdle) CPS.wheel.stopIdle(canvas);
       S.spinning = false;
       renderWheel();
       cloudError(e);
