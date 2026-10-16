@@ -48,9 +48,8 @@
     $('#toasts').appendChild(t);
     setTimeout(function () { t.classList.add('out'); setTimeout(function () { t.remove(); }, 400); }, ms || 3200);
   }
-  /* Two-wave boot (2026-10-14): the set files (the bulk of the payload)
-     stream in parallel from the moment boot starts; boot's tail and the
-     login paths await this promise, but the login gate no longer does. */
+  /* Two-wave boot: the login gate renders on core scripts alone;
+     setsReadyP (below) resolves when the set registry is usable. */
   var setsReadyP = null;
   function loadScript(src) {
     return new Promise(function (res) {
@@ -67,8 +66,17 @@
     var files = window.CardSets.manifest || [];
     setsReadyP = (async function () {
       try {
-        var oks = await Promise.all(files.map(function (f) { return loadScript('sets/' + f); }));
-        oks.forEach(function (ok, i) { if (!ok) S.loadWarnings.push('Could not load sets/' + files[i]); });
+        var CS = window.CardSets;
+        if (CS.installBootIndex && CS.bootIndex) {
+          /* Lazy boot: stubs carry every set's display metadata; only
+             the landing set's full file loads now, the rest on demand. */
+          CS.installBootIndex(CS.bootIndex);
+          var last0 = Store.getPref('set', null);
+          await CS.load(last0 && CS.bootIndex.sets[last0] ? last0 : CS.bootIndex.order[0]);
+        } else {
+          var oks = await Promise.all(files.map(function (f) { return loadScript('sets/' + f); }));
+          oks.forEach(function (ok, i) { if (!ok) S.loadWarnings.push('Could not load sets/' + files[i]); });
+        }
         var custom = await Store.listCustomSets();
         custom.forEach(function (raw) { window.CardSets.register(raw, 'imported'); });
       } catch (e) { /* the count below reports whatever did load */ }
@@ -96,6 +104,7 @@
     S.set = window.CardSets.get(last) ||
       (last === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null) ||
       window.CardSets.all()[0];
+    if (S.set && S.set.stub) { var realSet = await window.CardSets.load(S.set.id); if (realSet) S.set = realSet; }
     bind();
     fillSetSelect();
     applyPrefsUI();
@@ -254,6 +263,7 @@
     if (without.length) html += '<div class="set-dd-group">No packs</div>' + without.map(item).join('');
     if (!html) html = sets.map(item).join('');
     var list = $('#setDDList'); if (list) list.innerHTML = html;
+    prefetchSetDD();
     var lbl = $('#setDDLabel');
     if (lbl && S.set) {
       var cn = packCount(S.set);
@@ -261,6 +271,13 @@
     }
   }
 
+  function prefetchSetDD() {
+    var list = $('#setDDList'); if (!list || list._pf) return; list._pf = 1;
+    list.addEventListener('mouseover', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-set-id]') : null;
+      if (b && window.CardSets.load) window.CardSets.load(b.getAttribute('data-set-id'));
+    });
+  }
   function closeSetDD() {
     var list = $('#setDDList'), btn = $('#setDDBtn');
     if (list) list.classList.add('hidden');
@@ -292,6 +309,14 @@
   function selectSet(id) {
     var set = id === 'jumbled' && typeof CPS !== 'undefined' && CPS.jumbled ? CPS.jumbled.pseudoSet() : window.CardSets.get(id);
     if (!set) return;
+    if (set.stub) {
+      closeSetDD();
+      window.CardSets.load(id).then(function (s2) {
+        if (s2) selectSet(id);
+        else toast('Could not load that set — check your connection and try again.', 'warn', 5000);
+      });
+      return;
+    }
     if (S.opening && !S.opening.finished) { toast('Finish this pack first — its cards are already in your collection.', 'warn'); return; }
     S.set = set; Store.setPref('set', id);
     closeSetDD();
@@ -328,7 +353,7 @@
     else if (S.view === 'players') renderPlayers();
     else if (S.view === 'trade') renderTradeBuilder();
     else if (S.view === 'trade-history') renderTradeHistory();
-    else if (S.view === 'stats') renderStats();
+    else if (S.view === 'stats') renderStatsLazy();
     else if (S.view === 'odds') renderOdds();
     else if (S.view === 'admin') renderAdminArea();
     else if (S.view === 'arcade') { if (typeof CPS !== 'undefined' && CPS.games) CPS.games.render(); }
@@ -919,9 +944,17 @@
       }).join('') || '<div class="empty">No players yet.</div>';
     } catch (e) { cloudError(e); }
   }
-  /* --- notifications */
-  var NOTIF_KIND_ICON = { gift_card: '🎁', gift_pack: '📦', gift_spin: '🎟️',
-    trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌', variant_pull: '🌈', chase_pull: '🎯' };
+  function ownedSetIds() {
+    var ids = [];
+    Object.keys((S.player && S.player.sets) || {}).forEach(function (id) {
+      var st = S.player.sets[id];
+      if (st && ((st.cards && Object.keys(st.cards).length) || (st.stats && st.stats.pulled > 0))) ids.push(id);
+    });
+    return ids;
+  }
+  function ensureOwnedSets() {
+    return window.CardSets.loadIds ? window.CardSets.loadIds(ownedSetIds()) : Promise.resolve();
+  }
 
   async function refreshNotifBadge() {
     if (!isCloud()) return;
@@ -931,75 +964,6 @@
       b.textContent = n.unread > 99 ? '99+' : n.unread;
       b.classList.toggle('hidden', !n.unread);
     } catch (e) {  }
-  }
-
-  function notifTime(iso) {
-    var ms = Date.now() - new Date(iso).getTime();
-    if (ms < 0) ms = 0;
-    var m = Math.floor(ms / 60000);
-    if (m < 1) return 'just now';
-    if (m < 60) return m + 'm ago';
-    var hh = Math.floor(m / 60);
-    if (hh < 24) return hh + 'h ago';
-    var d = Math.floor(hh / 24);
-    if (d < 7) return d + 'd ago';
-    try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
-    catch (e) { return ''; }
-  }
-
-  async function openNotifications() {
-    openModal('<div class="muted" style="padding:24px">Loading…</div>');
-    try {
-      var n = await CPS.cloud.call('list_notifications');
-      var items = n.items || [];
-      var isAnn = function (it) { return !it.read && (it.kind === 'admin' || it.kind === 'turnin_rewards'); };
-      var pins = items.filter(isAnn);
-      if (pins.length) items = pins.concat(items.filter(function (it) { return !isAnn(it); }));
-      openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
-        '<h2>Notifications</h2>' +
-        (pins.length ? '<p class="muted small" style="margin:2px 0 0">📌 Announcements stay pinned to the top until you read them.</p>' : '') +
-        (items.length ? '<div class="notif-list">' + items.map(function (it) {
-          return '<button class="notif' + (it.read ? '' : ' unread') + (isAnn(it) ? ' pinned' : '') + '" data-notif="' + it.id + '"' +
-            (it.view ? ' data-view="' + esc(it.view) + '"' : '') +
-            (it.meta && it.meta.set_id ? ' data-nset="' + esc(it.meta.set_id) + '" data-ncard="' + esc(it.meta.card_id) + '"' +
-              ' data-nholo="' + (it.meta.holo ? '1' : '0') + '"' +
-              (it.meta.tier ? ' data-ntier="' + esc(it.meta.tier) + '" data-nserial="' + it.meta.serial + '"' : '') : '') + '>' +
-            '<span class="notif-icon">' + ((CPS.notifIcon && CPS.notifIcon(it)) || NOTIF_KIND_ICON[it.kind] || '🔔') + '</span>' +
-            '<span class="notif-text">' + esc(it.text) +
-            '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
-        }).join('') + '</div><div class="notif-actions"><button class="btn small" id="notifReadAll">Mark all read</button>' +
-        (items.some(function (it) { return it.read; }) ? '<button class="btn small" id="notifClearRead">Clear read</button>' : '') + '<button class="btn small" id="notifSettingsBtn">⚙ Settings</button></div>'
-        : '<div class="empty">No notifications yet.</div><div class="notif-actions"><button class="btn small" id="notifSettingsBtn">⚙ Notification Settings</button></div>') +
-        '</div>', function (box) {
-          box.querySelectorAll('.notif').forEach(function (el) {
-            el.addEventListener('click', async function () {
-              var id = el.dataset.notif, view = el.dataset.view;
-              try { await CPS.cloud.call('read_notifications', { p_ids: [id] }); } catch (e) {}
-              el.classList.remove('unread');
-              refreshNotifBadge();
-              if (el.dataset.nset) {
-                var vt = el.dataset.ntier;
-                closeModal();
-                openCardModal(el.dataset.nset, el.dataset.ncard, el.dataset.nholo === '1',
-                  vt ? { tier: vt, serial: parseInt(el.dataset.nserial, 10) } : null);
-              } else if (view) { closeModal(); showView(view); }
-            });
-          });
-          var ra = box.querySelector('#notifReadAll');
-          if (ra) ra.addEventListener('click', async function () {
-            try { await CPS.cloud.call('read_notifications', {}); } catch (e) { cloudError(e); return; }
-            refreshNotifBadge();
-            openNotifications();
-          });
-          var cr = box.querySelector('#notifClearRead');
-          if (cr) cr.addEventListener('click', async function () {
-            try { await CPS.cloud.call('clear_notifications', {}); } catch (e) { cloudError(e); return; }
-            openNotifications();
-          });
-          var sb = box.querySelector('#notifSettingsBtn');
-          if (sb) sb.addEventListener('click', function () { if (CPS.notifSettings) CPS.notifSettings.open(); });
-        });
-    } catch (e) { closeModal(true); cloudError(e); }
   }
 
   /* --- variants */
@@ -1143,6 +1107,7 @@
   async function openTradeBuilder(prefillTo) {
     if (!isCloud()) return;
     openModal('<div class="muted" style="padding:24px">Loading…</div>');
+    if (window.CardSets.loadAll) await window.CardSets.loadAll();
     try {
       var players = await CPS.cloud.call('list_players');
       var others = players.filter(function (p) { return !p.is_me; });
@@ -1198,7 +1163,7 @@
     var groups = TB.step === 1 ? tbGroup(TB.myColl) : tbGroup(TB.their);
     $('#tradeSetSel').innerHTML = '<option value="">All sets</option>' + groups.map(function (g) {
       return '<option value="' + esc(g.set.id) + '"' + (g.set.id === TB.setId ? ' selected' : '') + '>' +
-        esc(g.set.name) + ' (' + g.cards.length + ')</option>';
+        esc(g.set.name) + ' (' + (g.total || g.cards.length) + ')</option>';
     }).join('');
     tbRenderGrid(groups);
   }
@@ -1343,6 +1308,7 @@
 
   function openCardModal(setId, cardId, forceHolo, variant) {
     var set = window.CardSets.get(setId); if (!set) return;
+    if (set.stub) { window.CardSets.load(setId).then(function (s2) { if (s2) openCardModal(setId, cardId, forceHolo, variant); }); return; }
     var card = set.byId.get(cardId); if (!card) return;
     var st = ps(set), e = st.cards[card.id], owned = e && e.n > 0, r = rarityOf(card.rarity);
     var row = window.CardSets.oddsTable(set).filter(function (x) { return x.rarity.key === card.rarity; })[0];
@@ -1410,6 +1376,19 @@
   /* --- stats */
   var galleryReturnKind = null, galleryScrollTop = 0;
   function showStatGallery(kind, restoreScroll) {
+    if (window.CardSets.load) {
+      var needIds = kind === 'numbered'
+        ? Array.from(new Set((S.myVariants || []).map(function (v) { return v.set_id; })))
+        : null;
+      var gateReady = needIds
+        ? needIds.every(function (id) { var s = window.CardSets.get(id); return s && !s.stub; })
+        : !(window.CardSets.pending && window.CardSets.pending());
+      if (!gateReady) {
+        (needIds ? window.CardSets.loadIds(needIds) : window.CardSets.loadAll())
+          .then(function () { showStatGallery(kind, restoreScroll); });
+        return;
+      }
+    }
     var title, items = [];
     var NT = ['rainbow', 'prism', 'obsidian', 'oneofone'];
     if (kind === 'numbered') {
@@ -1475,6 +1454,14 @@
           });
         });
     }
+  }
+  function renderStatsLazy() {
+    if (window.CardSets.pending && window.CardSets.pending()) {
+      $('#statTiles').innerHTML = '<div class="muted">Loading set data…</div>';
+      window.CardSets.loadAll().then(function () { if (S.view === 'stats') renderStats(); });
+      return;
+    }
+    renderStats();
   }
   function renderStats() {
     var set = S.set, st = ps();
@@ -1564,10 +1551,10 @@
   /* --- sets & settings */
   function renderSets() {
     $('#setList').innerHTML = window.CardSets.all().map(function (s) {
-      var st = S.player.sets[s.id], owned = st ? ownedCount(s, st) : 0;
+      var st = S.player.sets[s.id], owned = st ? (s.stub ? Object.keys(st.cards).length : ownedCount(s, st)) : 0;
       return '<div class="set-item' + (s.id === S.set.id ? ' current' : '') + '">' +
         CPS.cards.swatch(s) +
-        '<div class="set-meta"><b>' + esc(s.name) + '</b><span>' + s.cards.length + ' cards · ' + (S.onlineSets.indexOf(s.id) >= 0 ? 'on the server' : 'not on server') +
+        '<div class="set-meta"><b>' + esc(s.name) + '</b><span>' + (s.total || s.cards.length) + ' cards · ' + (S.onlineSets.indexOf(s.id) >= 0 ? 'on the server' : 'not on server') +
         ' · you have ' + owned + '</span></div>' +
         '<div class="set-actions">' + (s.id === S.set.id ? '<span class="pill">Selected</span>' : '<button class="btn small" data-use="' + esc(s.id) + '">Use</button>') +
         (function(){ var on = S.onlineSets.indexOf(s.id) >= 0; return '<button class="btn small' + (on ? ' ghost' : ' primary') + '" data-sync="' + esc(s.id) + '">' + (on ? 'Re-sync' : 'Upload') + '</button>'; })() +
@@ -2153,7 +2140,7 @@
     });
     var _soundToggle = $('#soundToggle'); if (_soundToggle) _soundToggle.addEventListener('change', function (e) { audio.enabled = e.target.checked; Store.setPref('sound', audio.enabled); applyPrefsUI(); });
     $('#soundBtn').addEventListener('click', function () { audio.enabled = !audio.enabled; Store.setPref('sound', audio.enabled); applyPrefsUI(); if (audio.enabled) audio.click(); });
-    $('#notifBtn').addEventListener('click', openNotifications);
+    $('#notifBtn').addEventListener('click', function () { if (CPS.notifPanel) CPS.notifPanel.open(); });
     refreshNotifBadge();
     setInterval(function () { if (!document.hidden) refreshNotifBadge(); }, 60000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshNotifBadge(); });
@@ -2285,6 +2272,7 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog, quickFinish: quickFinish };
+    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog, quickFinish: quickFinish,
+    showView: showView, refreshNotifBadge: refreshNotifBadge, ensureOwnedSets: ensureOwnedSets };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);
