@@ -56,5 +56,7 @@ CardSets.manifest = [
   'acrs.js',
   'acrs-additions.js',
   'zelda.js',
-  'zelda-additions.js'
+  'zelda-additions.js',
+  'pokemon.js',
+  'pokemon-additions.js'
 ];
