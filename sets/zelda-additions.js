@@ -1,4 +1,4 @@
-/* Zelda set additions — cards appended after zelda.js.
+/* The Legend of Zelda set additions — cards appended after zelda.js.
    (zelda.js exceeds the push size limit, so remaining cards live here instead of being
    edited into it. Must stay directly after 'zelda.js' in sets/manifest.js.) */
 (function () {
