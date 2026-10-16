@@ -169,7 +169,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .panel > h3:first-child { margin-top: 0; }
 #view-players .panel + .panel { margin-top: 16px; }
 #view-arcade .panel + .panel { margin-top: 16px; }
-.packs-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+.packs-layout { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
 
 /* ===================================================== inventory */
 .inventory { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 14px; }
@@ -695,6 +695,35 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .stage-summary b[class^=rt-] { color: inherit; } .stage-summary .rt-rare { color: var(--c-rare); } .stage-summary .rt-epic { color: var(--c-epic); } .stage-summary .rt-legendary { color: var(--c-legendary); } .stage-summary .rt-uncommon { color: var(--c-uncommon); } .stage-summary .rt-common { color: var(--c-common); }
 .stage-summary .rt-chase { color: transparent; }
 
+/* ===== Open Packs single panel: stage + control strip under it (2026-10-16) =====
+   The old 'Your packs' sidebar is gone; the stage reclaims its 300px and keeps
+   its full size (desktop min-height 620px above is unchanged) so a standard
+   9-card reveal renders at today's size in this same box. */
+.packs-panel { padding: 0; overflow: hidden; }
+.packs-controls { border-top: 1px solid var(--line); padding: 16px 20px 18px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: rgba(0,0,0,.14); }
+.packs-controls-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; width: 100%; }
+.packs-controls-row #openBtn { min-width: 230px; }
+.packs-controls-row #quickOpenBtn { min-width: 190px; padding-top: 13px; padding-bottom: 13px; }
+.packs-controls .dev-box { width: 100%; max-width: 520px; }
+/* Unopened-count badge, moved from the deleted sidebar mini-pack onto the stage pack */
+.idle-pack { position: relative; }
+.stage-badge { top: -12px; right: -14px; }
+/* Playing Cards packs hold 6 cards: reveal 3+3 on desktop instead of 5+1.
+   Scoped by the .playing-3x3 class buildGrid() sets only for set 'playing';
+   9-card, 5-card (States) and 3-card (Periodic) grids are untouched.
+   Mechanism: cap the grid at 3 full-size cards wide (3*184 + 2*16 gap = 584px)
+   and size cards in thirds, so exactly 3 fit per row at today's 184px size;
+   below 584px the thirds shrink proportionally, like the normal grid. */
+.reveal-grid.playing-3x3 { max-width: 584px; }
+.reveal-grid.playing-3x3 .card { width: calc((100% - 32px) / 3); }
+@media (max-width: 560px) {
+  .reveal-grid.playing-3x3 .card { width: calc(33.3% - 8px); }  /* match today's phone rule: already 3-across */
+  .packs-controls { padding: 14px 14px 16px; }
+  .packs-controls-row #openBtn, .packs-controls-row #quickOpenBtn { min-width: 0; flex: 1 1 100%; }
+}
+/* Collection header: 'Packs opened' line (relocated from Open Packs) */
+.packs-opened-note { color: var(--muted); font-weight: 600; } .packs-opened-note b { color: var(--text); }
+
 /* ===================================================== card */
 .card {
   --rx: 0deg; --ry: 0deg; --mx: 50%;
@@ -1066,8 +1095,6 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 @media (max-width: 900px) {
   main { padding: 14px; }
   .packs-layout, .stats-layout { grid-template-columns: 1fr; }
-  .inventory { position: static; display: grid; grid-template-columns: 1fr 1fr; align-items: center; }
-  .inventory h2, .redeem, .mini-stats, .dev-box { grid-column: 1 / -1; }
   .stage { min-height: 480px; padding: 16px 10px; }
   .coll-head { grid-template-columns: 1fr; }
   .zoom { grid-template-columns: 1fr; justify-items: center; } .zoom-card { width: min(280px, 80vw); }
