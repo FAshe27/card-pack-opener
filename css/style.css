@@ -680,7 +680,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .pack.gone .pack-body { transform: translateY(120%) rotate(-6deg); opacity: 0; }
 
 /* ===================================================== stage */
-.stage { min-height: 720px; padding: 26px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; position: relative; overflow: hidden; }
+.stage { min-height: 700px; padding: 26px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; position: relative; overflow: hidden; }
 .stage::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(124,108,255,.18), transparent 60%); pointer-events: none; }
 .stage.shake { animation: shakeHard .5s; }
 .stage-idle { display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center; }
@@ -698,7 +698,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 /* ===== Open Packs single panel: stage + control strip under it (2026-10-16) =====
    The old 'Your packs' sidebar is gone; the stage reclaims its 300px and keeps
    its full size so a standard 9-card reveal renders at today's size in this
-   same box. Desktop stage min-height is 720px (raised from 620) with its old
+   same box. Desktop stage min-height is 700px (raised from 620) with its old
    panel padding restored (26px top), so the whole reveal — grid, summary and
    Done — fits from the start: the control strip below never moves between
    idle / tear / reveal (Quick Open stays put for spam-clicking), and the top
@@ -1130,17 +1130,26 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 .stage { scroll-margin-top: 84px; overflow-anchor: none; }   /* stage content is swapped wholesale: never use it as a scroll anchor */
-/* Phones/tablets: reserve the full 9-card reveal (+ its summary and buttons) on the stage from the start, so the page
-   height doesn't change between the idle pack, the tearing pack, the reveal and "Done", and the scroll position can't jump.
-   Stage inner width = 100vw - 28px (main padding) - 22px (stage padding + border). Desktop keeps its 720px stage. */
-@media (max-width: 900px) and (min-width: 654px) {   /* 5 cards per row -> 2 rows; summary up to 2 lines */
-  .stage { min-height: max(480px, calc(170px + 2.8 * clamp(108px, (100vw - 114px) / 5, 184px))); }
+/* Phones/tablets: reserve the full 9-card reveal (+ its one-line summary and the Reveal All row) on the stage
+   from the start, so the page height doesn't change between the tearing pack and the reveal, and the scroll
+   position can't jump. (The finished summary is a single short line since the Top pull segment and the
+   Next Pack / Done buttons were removed 2026-10-16 — the constants below dropped by roughly the old
+   summary's extra wrapped lines.) The idle state gets its own shorter reservation further below.
+   Stage inner width = 100vw - 28px (main padding) - 22px (stage padding + border). Desktop keeps its 700px stage. */
+@media (max-width: 900px) and (min-width: 654px) {   /* 5 cards per row -> 2 rows; summary 1 line */
+  .stage { min-height: max(460px, calc(128px + 2.8 * clamp(108px, (100vw - 114px) / 5, 184px))); }
 }
 @media (max-width: 653px) and (min-width: 561px) {   /* 108px cards, only 4 fit per row -> 3 rows */
-  .stage { min-height: calc(186px + 4.2 * 108px); }
+  .stage { min-height: calc(140px + 4.2 * 108px); }
 }
-@media (max-width: 560px) {                          /* 3 cards per row -> 3 rows; summary up to 3 lines */
-  .stage { min-height: calc(196px + 4.2 * ((100vw - 50px) * .333 - 8px)); }
+@media (max-width: 560px) {                          /* 3 cards per row -> 3 rows; summary 1 line */
+  .stage { min-height: calc(136px + 4.2 * ((100vw - 50px) * .333 - 8px)); }
+}
+/* Idle on phones/tablets needs far less height than a reveal (pack + one text line), and with no Done
+   button nothing returns to idle mid-session — so idle alone may be shorter: the control strip moves
+   once when an open starts, then stays put through the reveal and every Quick Open after it. */
+@media (max-width: 900px) {
+  .stage:has(> #stageIdle:not(.hidden)) { min-height: 448px; }
 }
 
 /* ===================================================== online accounts */
