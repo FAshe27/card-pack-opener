@@ -53,5 +53,7 @@ CardSets.manifest = [
   'skyrim.js',
   'skyrim-additions.js',
   'acrs.js',
-  'acrs-additions.js'
+  'acrs-additions.js',
+  'zelda.js',
+  'zelda-additions.js'
 ];
