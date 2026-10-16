@@ -369,31 +369,19 @@
   function renderPacksSide() {
     fillSetSelect(); // keep the set dropdown's pack counts live
     var set = S.set, st = ps();
-    var ip = $('#invPack');
-    ip.innerHTML = CPS.cards.pack(set, 'mini') + (st.packs ? '<span class="inv-badge">' + st.packs + '</span>' : '');
-    ip.classList.toggle('clickable', st.packs > 0); ip.classList.toggle('empty', !st.packs);
-    ip.setAttribute('role', 'button'); ip.tabIndex = 0;
-    ip.title = st.packs ? 'Click to open and tear a pack' : 'No packs left';
-    ip.setAttribute('aria-label', st.packs ? 'Open a ' + set.name + ' pack' : 'No packs left');
-    $('#packCount').textContent = st.packs;
-    $('#packCountLabel').textContent = st.packs === 1 ? 'unopened pack' : 'unopened packs';
     var busy = (S.opening && !S.opening.finished) || S.busy;
     $('#openBtn').disabled = !st.packs || busy;
     $('#openBtn').textContent = st.packs ? (set.id === 'jumbled' ? 'Open Jumbled Mess' : 'Open a pack') : 'No packs left';
     var qb = $('#quickOpenBtn'); if (qb) qb.disabled = !st.packs || busy;
     if (CPS.jumbled) CPS.jumbled.renderBox();
     if (CPS.packsBadge) CPS.packsBadge.update();
-    var owned = ownedCount(set, st);
-    $('#miniStats').innerHTML =
-      '<div><span>Packs opened</span><b>' + st.stats.opened + '</b></div>' +
-      '<div><span>Collected</span><b>' + owned + ' / ' + set.cards.length + '</b></div>';
   }
 
   function resetStage() {
     S.opening = null;
     var set = S.set, st = ps();
     $('#stageIdle').innerHTML = '<div class="idle-pack' + (st.packs ? ' clickable' : ' empty') + '" role="button" tabindex="0" title="' +
-        (st.packs ? 'Click to open and tear a pack' : 'No packs left') + '">' + CPS.cards.pack(set, 'float') + '</div>' +
+        (st.packs ? 'Click to open and tear a pack' : 'No packs left') + '">' + CPS.cards.pack(set, 'float') + (st.packs ? '<span class="inv-badge stage-badge">' + st.packs + '</span>' : '') + '</div>' +
       '<div class="idle-msg">' + (st.packs
         ? '<b>' + st.packs + ' pack' + (st.packs === 1 ? '' : 's') + ' ready.</b> Click the pack (or press <kbd>Space</kbd>) to open.'
         : '<b>Out of packs!</b> Win or earn more packs!') + '</div>';
@@ -495,6 +483,7 @@
 
   function buildGrid(o) {
     var grid = $('#revealGrid');
+    grid.classList.toggle('playing-3x3', o.set.id === 'playing');
     grid.innerHTML = o.pulls.map(function (p, i) {
       if (CPS.slips.isSlip(p)) return CPS.slips.render(p);
       var rset = p.homeSet || o.set;
@@ -659,7 +648,7 @@
     $('#compRing').style.setProperty('--g', total ? (turnedN / total * 100).toFixed(1) : 0);
     $('#compPct').textContent = (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%';
     $('#compTitle').textContent = set.name;
-    $('#compSub').innerHTML = '<span class="owned-note">' + complete + ' / ' + total + ' unique cards owned (' + (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%)</span>' +
+    $('#compSub').innerHTML = '<span class="packs-opened-note">Packs opened <b>' + st.stats.opened + '</b></span><br><span class="owned-note">' + complete + ' / ' + total + ' unique cards owned (' + (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%)</span>' +
       '<br><span class="turned-note">' + turnedN + ' turned in (' + (total ? (turnedN / total * 100).toFixed(1) : '0.0') + '%)</span>';
 
     $('#rarityProgress').innerHTML = R.RARITIES.filter(function (r) { return set.pools[r.key].length; }).map(function (r) {
@@ -2014,8 +2003,6 @@
     });
     $('#freePackBtn').addEventListener('click', function () { addFree(1); });
     $('#adminUnlockBtn').addEventListener('click', requestDevUnlock);
-    $('#invPack').addEventListener('click', openFromPack);
-    $('#invPack').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); openFromPack(); } });
     $('#free10Btn').addEventListener('click', function () { addFree(10); });
 
     // collection
