@@ -42,6 +42,11 @@
 
   function turnedCount(set) {
     var n = 0;
+    if (set.stub) { /* no card list yet: count from the turned-in state */
+      var pre = set.id + ':';
+      Object.keys(ctx.S.turnedIn || {}).forEach(function (k) { if (k.indexOf(pre) === 0) n++; });
+      return n;
+    }
     set.cards.forEach(function (c) { if (ctx.isTurned(set.id, c.id)) n++; });
     return n;
   }
@@ -100,9 +105,9 @@
          have passed 25% (the server does the real counting). */
       var candidates = [];
       window.CardSets.all().forEach(function (set) {
-        if (set.id === 'jumbled' || !set.cards.length) return;
+        if (set.id === 'jumbled' || !(set.total || set.cards.length)) return;
         var n = turnedCount(set);
-        if (n < Math.ceil(set.cards.length * 0.25)) return;
+        if (n < Math.ceil((set.total || set.cards.length) * 0.25)) return;
         var key = set.id + ':' + n;
         if (seen[key]) return;
         seen[key] = true;
