@@ -497,8 +497,6 @@
     grid.classList.remove('hidden');
     $('#stageControls').classList.remove('hidden');
     $('#revealAllBtn').classList.remove('hidden');
-    $('#nextPackBtn').classList.add('hidden');
-    $('#doneBtn').classList.add('hidden');
     updateSummary();
   }
 
@@ -506,16 +504,7 @@
     var o = S.opening; if (!o) return;
     var n = o.revealed.filter(Boolean).length;
     if (!o.finished) { $('#stageSummary').innerHTML = 'Click a card to flip it · <b>' + n + ' / ' + o.pulls.length + '</b> revealed'; return; }
-    var cards = o.pulls.filter(function (p) { return !CPS.slips.isSlip(p); });
-    var slipBits = CPS.slips.summaryBits(o);
-    var news = cards.filter(function (p) { return p.isNew; }).length, best = cards[0];
-    cards.forEach(function (p) { if (CPS.packs.score(p.card, p.holo) > CPS.packs.score(best.card, best.holo)) best = p; });
-    var holos = cards.filter(function (p) { return p.holo; }).length;
-    $('#stageSummary').innerHTML = '<b>' + news + '</b> new card' + (news === 1 ? '' : 's') +
-      (holos ? ' · <b>' + holos + '</b> holo' : '') +
-      slipBits +
-      ' · Top pull: <b class="rt-' + best.card.rarity + '">' + esc(best.card.name) + (best.holo ? ' ✦' : '') +
-      (best.variant ? ' ' + CPS.cards.VARIANTS[best.variant].emoji + ' #' + best.serial + '/' + CPS.cards.VARIANTS[best.variant].run : '') + '</b> (' + rarityOf(best.card.rarity).label + ')';
+    $('#stageSummary').innerHTML = '';
   }
 
   function reveal(i) {
@@ -602,12 +591,7 @@
     o.finished = true;
     updateSummary();
     CPS.slips.applyPackGrants(o.pulls);
-    var st = ps(o.set);
     $('#revealAllBtn').classList.add('hidden');
-    var nb = $('#nextPackBtn');
-    nb.classList.toggle('hidden', !st.packs);
-    nb.textContent = 'Open next pack (' + st.packs + ' left)';
-    $('#doneBtn').classList.remove('hidden');
     renderPacksSide();
   }
 
@@ -1985,11 +1969,6 @@
     });
     var _msb = $('#multiSpinBtn'); if (_msb) _msb.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(); });
     var _m5b = $('#multiSpin5Btn'); if (_m5b) _m5b.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(5); });
-    $('#nextPackBtn').addEventListener('click', function () {
-      if (S.opening && S.opening.set.id === 'jumbled' && CPS.jumbled) CPS.jumbled.open();
-      else startOpen();
-    });
-    $('#doneBtn').addEventListener('click', resetStage);
     $('#revealAllBtn').addEventListener('click', revealAll);
     $('#stagePack').addEventListener('pointerdown', function (e) { if (e.button == null || e.button === 0) tear(); });
     $('#stageIdle').addEventListener('click', function (e) { if (e.target.closest('.idle-pack')) openFromPack(); });
