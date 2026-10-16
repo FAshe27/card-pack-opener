@@ -952,10 +952,14 @@
     try {
       var n = await CPS.cloud.call('list_notifications');
       var items = n.items || [];
+      var isAnn = function (it) { return !it.read && (it.kind === 'admin' || it.kind === 'turnin_rewards'); };
+      var pins = items.filter(isAnn);
+      if (pins.length) items = pins.concat(items.filter(function (it) { return !isAnn(it); }));
       openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
         '<h2>Notifications</h2>' +
+        (pins.length ? '<p class="muted small" style="margin:2px 0 0">📌 Announcements stay pinned to the top until you read them.</p>' : '') +
         (items.length ? '<div class="notif-list">' + items.map(function (it) {
-          return '<button class="notif' + (it.read ? '' : ' unread') + '" data-notif="' + it.id + '"' +
+          return '<button class="notif' + (it.read ? '' : ' unread') + (isAnn(it) ? ' pinned' : '') + '" data-notif="' + it.id + '"' +
             (it.view ? ' data-view="' + esc(it.view) + '"' : '') +
             (it.meta && it.meta.set_id ? ' data-nset="' + esc(it.meta.set_id) + '" data-ncard="' + esc(it.meta.card_id) + '"' +
               ' data-nholo="' + (it.meta.holo ? '1' : '0') + '"' +
