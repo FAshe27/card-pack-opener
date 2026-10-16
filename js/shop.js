@@ -44,6 +44,7 @@
     else el.innerHTML = '<div class="panel"><p class="muted">Loading shop…</p></div>';
     var data = await load();
     if (!data) { el.innerHTML = '<div class="panel"><p class="muted">Shop unavailable.</p></div>'; return; }
+    if (ctx.ensureOwnedSets) await ctx.ensureOwnedSets();
     draw(el, data);
     renderDupeSell(el);
     lastHTML = el.innerHTML; lastFor = acct;
