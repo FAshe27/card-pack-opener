@@ -56,6 +56,11 @@
     }
     S.busy = false;
     S.myVariants = null; S.variantCensus = null;
+    if (window.CardSets && window.CardSets.loadIds) {
+      var homeIds = {};
+      server.cards.forEach(function (c) { if (c.set_id) homeIds[c.set_id] = 1; });
+      await window.CardSets.loadIds(Object.keys(homeIds));
+    }
 
     var now = Date.now();
     var pulls = server.cards.map(function (c) {
@@ -87,7 +92,9 @@
       st.recent = st.recent.slice(0, 60);
       touched[p.homeSet.id] = st;
     });
-    Object.keys(touched).forEach(function (id) { touched[id].stats.opened++; });
+    /* One opening, counted once under 'jumbled' — not once per home
+       set touched (mirrors the server accounting fixed in mig. 158). */
+    ctx.ps({ id: 'jumbled' }).stats.opened++;
     ctx.save();
 
     /* Stage the pack for tearing (mirrors startOpen's UI setup). */
