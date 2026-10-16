@@ -680,7 +680,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .pack.gone .pack-body { transform: translateY(120%) rotate(-6deg); opacity: 0; }
 
 /* ===================================================== stage */
-.stage { min-height: 620px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; position: relative; overflow: hidden; }
+.stage { min-height: 720px; padding: 26px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; position: relative; overflow: hidden; }
 .stage::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(124,108,255,.18), transparent 60%); pointer-events: none; }
 .stage.shake { animation: shakeHard .5s; }
 .stage-idle { display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center; }
@@ -697,13 +697,19 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 
 /* ===== Open Packs single panel: stage + control strip under it (2026-10-16) =====
    The old 'Your packs' sidebar is gone; the stage reclaims its 300px and keeps
-   its full size (desktop min-height 620px above is unchanged) so a standard
-   9-card reveal renders at today's size in this same box. */
+   its full size so a standard 9-card reveal renders at today's size in this
+   same box. Desktop stage min-height is 720px (raised from 620) with its old
+   panel padding restored (26px top), so the whole reveal — grid, summary and
+   Done — fits from the start: the control strip below never moves between
+   idle / tear / reveal (Quick Open stays put for spam-clicking), and the top
+   row's overhanging NEW badges (-8px) clear the stage's clipped top edge. */
 .packs-panel { padding: 0; overflow: hidden; }
 .packs-controls { border-top: 1px solid var(--line); padding: 16px 20px 18px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: rgba(0,0,0,.14); }
-.packs-controls-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; width: 100%; }
-.packs-controls-row #openBtn { min-width: 230px; }
-.packs-controls-row #quickOpenBtn { min-width: 190px; padding-top: 13px; padding-bottom: 13px; }
+.packs-controls-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; width: 100%; max-width: 700px; }
+.packs-controls-row #openBtn { width: auto; flex: 1 1 300px; max-width: 350px; min-width: 230px; }
+.packs-controls-row #quickOpenBtn { flex: 1 1 210px; max-width: 250px; min-width: 190px; padding-top: 13px; padding-bottom: 13px; }
+.packs-controls-row .btn.ghost { flex: 1 1 100%; border: 0; background: transparent; box-shadow: none; color: var(--muted); padding: 2px; }
+.packs-controls-row .btn.ghost:hover { background: transparent; color: var(--text); }
 .packs-controls .dev-box { width: 100%; max-width: 520px; }
 /* Unopened-count badge, moved from the deleted sidebar mini-pack onto the stage pack */
 .idle-pack { position: relative; }
@@ -1126,7 +1132,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 .stage { scroll-margin-top: 84px; overflow-anchor: none; }   /* stage content is swapped wholesale: never use it as a scroll anchor */
 /* Phones/tablets: reserve the full 9-card reveal (+ its summary and buttons) on the stage from the start, so the page
    height doesn't change between the idle pack, the tearing pack, the reveal and "Done", and the scroll position can't jump.
-   Stage inner width = 100vw - 28px (main padding) - 22px (stage padding + border). Desktop keeps its 620px stage. */
+   Stage inner width = 100vw - 28px (main padding) - 22px (stage padding + border). Desktop keeps its 720px stage. */
 @media (max-width: 900px) and (min-width: 654px) {   /* 5 cards per row -> 2 rows; summary up to 2 lines */
   .stage { min-height: max(480px, calc(170px + 2.8 * clamp(108px, (100vw - 114px) / 5, 184px))); }
 }
