@@ -64,6 +64,8 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .notif-list { display: grid; gap: 8px; margin: 12px 0; max-height: 50vh; overflow-y: auto; }
 .notif { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); cursor: pointer; text-align: left; width: 100%; font: inherit; color: inherit; }
 .notif.unread { border-color: var(--accent); background: rgba(124,108,255,.08); }
+.notif.pinned { border-color: #d9a441; background: rgba(217,164,65,.10); }
+.notif.pinned .notif-text::before { content: '📌 PINNED'; display: block; font-size: .68rem; font-weight: 700; letter-spacing: .06em; color: var(--muted); margin-bottom: 2px; }
 .notif-icon { font-size: 1.3rem; flex: none; }
 .notif-text { flex: 1; min-width: 0; }
 .notif-time { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
