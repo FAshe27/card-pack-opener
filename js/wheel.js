@@ -227,22 +227,53 @@
     requestAnimationFrame(frame);
   }
 
+  /* Local "waiting" spin: keeps the wheel visibly turning while a spin
+     RPC is in flight, so a slow server never reads as a hang. playHops
+     stops it and takes over for the real result animation. */
+  function startIdle(canvas, wheel) {
+    if (!canvas || !wheel) return;
+    stopIdle(canvas);
+    var rot = canvas._rot || 0, last = null, speed = 0;
+    canvas._idle = true;
+    function frame(t) {
+      if (!canvas._idle) return;
+      if (!document.contains(canvas)) { stopIdle(canvas); return; }
+      if (last === null) last = t;
+      var dt = Math.min(0.05, (t - last) / 1000); last = t;
+      speed = Math.min(2.2, speed + dt * 1.4); /* rev/s: ramps up, then holds */
+      rot = (rot + speed * TAU * dt) % TAU;
+      canvas._rot = rot;
+      draw(canvas, wheel, rot);
+      canvas._idleRaf = requestAnimationFrame(frame);
+    }
+    canvas._idleRaf = requestAnimationFrame(frame);
+  }
+  function stopIdle(canvas) {
+    if (!canvas) return;
+    canvas._idle = false;
+    if (canvas._idleRaf) cancelAnimationFrame(canvas._idleRaf);
+    canvas._idleRaf = null;
+  }
+
   /* Play a server-rolled hop chain, one wheel at a time. Returns a promise. */
   function playHops(canvas, cfg, hops, speed) {
     speed = speed || 1;
     return new Promise(function (resolve) {
       var byId = {};
       cfg.wheels.forEach(function (w) { byId[w.id] = w; });
-      var i = 0, last = null;
+      stopIdle(canvas);
+      var i = 0, last = null, first = true;
       function next() {
         if (i >= hops.length) { resolve(last); return; }
         var hop = hops[i++];
         var wheel = byId[hop.wheel] || cfg.wheels[0];
         var nameEl = document.getElementById('wheelName');
         if (nameEl) nameEl.textContent = wheel.name;
-        draw(canvas, wheel, 0);
+        var fr = first ? (canvas._rot || 0) : 0;
+        first = false;
+        draw(canvas, wheel, fr);
         setTimeout(function () {
-          spinTo(canvas, wheel, hop.key, 0, 3600 / speed, function () {
+          spinTo(canvas, wheel, hop.key, fr, 3600 / speed, function () {
             last = { wheelId: wheel.id, key: hop.key, rotation: canvas._rot || 0 };
             setTimeout(next, 1100 / speed);
           });
@@ -279,7 +310,9 @@
     draw: draw,
     spinTo: spinTo,
     playHops: playHops,
-    prizeHtml: prizeHtml
+    prizeHtml: prizeHtml,
+    startIdle: startIdle,
+    stopIdle: stopIdle
   };
 })(window.CPS);
 
@@ -302,6 +335,7 @@
     CPS.wheel.draw(document.getElementById('wheelCanvas'), cfg.wheels[0], 0);
     var nm = document.getElementById('wheelName'); if (nm) nm.textContent = cfg.wheels[0].name;
     A.renderWheel();
+    CPS.wheel.startIdle(document.getElementById('wheelCanvas'), cfg.wheels[0]);
     CPS.cloud.call('spin_wheel_multi', { p_count: count }).then(function (out) {
       S.spins = out.spins_left;
       A.refreshQuests();
@@ -320,7 +354,7 @@
         A.renderPacksSide();
         showResults(out, count);
       });
-    }).catch(function (e) { S.spinning = false; A.renderWheel(); A.cloudError(e); });
+    }).catch(function (e) { CPS.wheel.stopIdle(document.getElementById('wheelCanvas')); S.spinning = false; A.renderWheel(); A.cloudError(e); });
   }
   /* Shared prize-summary popup: SPIN x10 passes its server aggregate,
      AUTOSPIN passes the tally it accumulated in app.js (S._autoAgg). */
