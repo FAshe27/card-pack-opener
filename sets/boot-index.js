@@ -42,7 +42,8 @@ window.CardSets.bootIndex = {
   "mkrt",
   "skyrim",
   "acrs",
-  "zelda"
+  "zelda",
+  "pokemon"
  ],
  "sets": {
   "birdwatching": {
@@ -566,6 +567,20 @@ window.CardSets.bootIndex = {
    "primary": "#c9a227",
    "secondary": "#1e4634",
    "total": 423
+  },
+  "pokemon": {
+   "files": [
+    "pokemon.js",
+    "pokemon-additions.js"
+   ],
+   "name": "Pokémon",
+   "code": "POKE",
+   "emblem": "🔴",
+   "packName": "Pokémon Pack",
+   "skin": "pokemon",
+   "primary": "#ffcb05",
+   "secondary": "#2a75bb",
+   "total": 420
   }
  }
 };
