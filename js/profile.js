@@ -206,7 +206,11 @@ function ownedCards() {
   return out;
 }
 
-function openFavManager(accountId, seedFavs) {
+function openFavManager(accountId, seedFavs, _ready) {
+  if (!_ready && ctx.ensureOwnedSets) {
+    ctx.ensureOwnedSets().then(function () { openFavManager(accountId, seedFavs, true); });
+    return;
+  }
   var myFavs = (seedFavs || []).slice(); // [{set_id, card_id, holo}]
   var favKeys = {};
   myFavs.forEach(function (f) { favKeys[f.set_id + ':' + f.card_id] = true; });
