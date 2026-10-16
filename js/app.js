@@ -155,6 +155,7 @@
     (state.turn_ins || []).forEach(function (f) { S.turnedIn[f[0] + ':' + f[1]] = true; });
     S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
     if (CPS.milestones) CPS.milestones.check();
+    if (CPS.online) CPS.online.start();
   }
 
   async function refreshCloud() {
@@ -1656,6 +1657,7 @@
     $('#adminBody').classList.toggle('hidden', !unlocked);
     $('#setsArea').classList.toggle('hidden', !unlocked);
     if (unlocked) renderAdmin();
+    if (unlocked && CPS.online) CPS.online.adminTick();
     if (unlocked) renderSets();
   }
 
