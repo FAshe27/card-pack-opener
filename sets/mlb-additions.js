@@ -32,3 +32,13 @@
     if (S.pools[c.rarity]) S.pools[c.rarity].push(c);
   });
 })();
+
+/* Deep-dive image-weight fix (2026-10-16): Daulton Varsho's photo was a
+   1.07 MB JPEG shown at card size. The card now uses a recompressed
+   wrapper (same photo, 800px). Original stays at assets/sets/misc/. */
+(function () {
+  var S = window.CardSets && window.CardSets.get('mlb');
+  if (!S) return;
+  var c = S.byId.get('daulton-varsho');
+  if (c) c.image = 'assets/sets/misc/Daulton-Varsho-sm.svg';
+})();
