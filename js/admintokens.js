@@ -15,7 +15,7 @@
       var who = whoSel ? whoSel.value : 'everyone';
       if (!(n >= 1)) { ctx.toast('Pick a number of game tokens.', 'warn'); return; }
       var whoName = who === 'everyone' ? 'every non-admin player' : (whoSel.selectedOptions[0].textContent || 'player');
-      if (!confirm('Give ' + n + ' game token' + (n === 1 ? '' : 's') + ' to ' + whoName + '?')) return;
+      if (!(await ctx.confirmDialog('Grant game tokens', '<p>Give ' + n + ' game token' + (n === 1 ? '' : 's') + ' to ' + ctx.esc(whoName) + '?</p>', 'Grant'))) return;
       btn.disabled = true;
       try {
         var r;
@@ -42,7 +42,7 @@
       var who = whoSel ? whoSel.value : 'everyone';
       if (!(n >= 1)) { ctx.toast('Pick an amount of Store Credit.', 'warn'); return; }
       var whoName = who === 'everyone' ? 'every non-admin player' : (whoSel.selectedOptions[0].textContent || 'player');
-      if (!confirm('Give $' + n + ' Store Credit to ' + whoName + '?')) return;
+      if (!(await ctx.confirmDialog('Grant Store Credit', '<p>Give $' + n + ' Store Credit to ' + ctx.esc(whoName) + '?</p>', 'Grant'))) return;
       btn.disabled = true;
       try {
         var r;
@@ -69,7 +69,7 @@
       var text = ctx.$('#notifyText').value.trim();
       if (!text) { ctx.toast('Type a message first.', 'warn'); return; }
       var whoName = who === 'everyone' ? 'every non-admin player' : (whoSel.selectedOptions[0].textContent || 'player');
-      if (!confirm('Send this notification to ' + whoName + '?\n\n"' + text + '"')) return;
+      if (!(await ctx.confirmDialog('Send notification', '<p>Send this notification to ' + ctx.esc(whoName) + '?</p><p>"' + ctx.esc(text) + '"</p>', 'Send'))) return;
       btn.disabled = true;
       try {
         var r;

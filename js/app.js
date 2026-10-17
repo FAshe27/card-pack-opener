@@ -1685,10 +1685,10 @@
         await CPS.cloud.call('admin_update_account', { p_account: id, p_pin: np });
         showCreated(name, $('.acct-user', row).textContent, np, 'PIN reset');
       } else if (act === 'disable' || act === 'enable') {
-        if (act === 'disable' && !confirm('Disable ' + name + '? They will be logged out and can\'t log in until you enable them.')) return;
+        if (act === 'disable' && !(await confirmDialog('Disable account', '<p>Disable ' + esc(name) + '? They will be logged out and can\'t log in until you enable them.</p>', 'Disable'))) return;
         await CPS.cloud.call('admin_update_account', { p_account: id, p_disabled: act === 'disable' });
       } else if (act === 'delete') {
-        if (!confirm('Delete ' + name + ' and ALL their cards, packs and stats? This cannot be undone.')) return;
+        if (!(await confirmDialog('Delete account', '<p>Delete ' + esc(name) + ' and ALL their cards, packs and stats? This cannot be undone.</p>', 'Delete'))) return;
         await CPS.cloud.call('admin_delete_account', { p_account: id });
         toast('Deleted ' + name + '.', 'warn');
       }
@@ -2147,7 +2147,7 @@
       var who = $('#grantSpinsWho').value;
       if (!(n >= 1)) { toast('Pick a number of spin tickets.', 'warn'); return; }
       var whoName = who === 'everyone' ? 'every non-admin player' : ($('#grantSpinsWho').selectedOptions[0].textContent || 'player');
-      if (!confirm('Give ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + whoName + '?')) return;
+      if (!(await confirmDialog('Grant spin tickets', '<p>Give ' + n + ' spin ticket' + (n === 1 ? '' : 's') + ' to ' + esc(whoName) + '?</p>', 'Grant'))) return;
       var btn = this; btn.disabled = true;
       try {
         var r;
@@ -2171,7 +2171,7 @@
       if (!sid || !(n >= 1)) { toast('Pick a set and a number of packs.', 'warn'); return; }
       var setName = sid === '__random' ? 'Random' : ((window.CardSets.get(sid) || {}).name || sid);
       var whoName = who === 'everyone' ? 'every non-admin player' : ($('#grantPacksWho').selectedOptions[0].textContent || 'player');
-      if (!confirm('Give ' + n + ' ' + setName + ' pack' + (n === 1 ? '' : 's') + ' to ' + whoName + '?')) return;
+      if (!(await confirmDialog('Grant packs', '<p>Give ' + n + ' ' + esc(setName) + ' pack' + (n === 1 ? '' : 's') + ' to ' + esc(whoName) + '?</p>', 'Grant'))) return;
       var btn = this; btn.disabled = true;
       try {
         var r;
