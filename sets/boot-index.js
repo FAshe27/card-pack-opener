@@ -74,7 +74,8 @@ window.CardSets.bootIndex = {
   },
   "fast-food": {
    "files": [
-    "fast-food.js"
+    "fast-food.js",
+    "fast-food-additions.js"
    ],
    "name": "Fast Food",
    "code": "FF",
@@ -83,7 +84,7 @@ window.CardSets.bootIndex = {
    "skin": "fastfood",
    "primary": "#e4002b",
    "secondary": "#ffc72c",
-   "total": 249
+   "total": 250
   },
   "formula-1-collection": {
    "files": [
