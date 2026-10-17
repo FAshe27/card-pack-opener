@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1400" viewBox="0 0 1000 1400">
+  <!-- PLACEHOLDER card back for the Stardew Valley set (pure vector):
+       a stardrop over the valley at dawn — layered hills, a rising sun,
+       and ploughed field rows below. Stand-in until Franklin's own
+       baked pack art replaces it, as with Zelda/MKRT/ACRS. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7fb2dd"/>
+      <stop offset="0.45" stop-color="#cfe3a8"/>
+      <stop offset="0.72" stop-color="#f7d774"/>
+      <stop offset="1" stop-color="#e8a04c"/>
+    </linearGradient>
+    <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a9a3d"/>
+      <stop offset="1" stop-color="#3d6125"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff3b0"/>
+      <stop offset="0.55" stop-color="#ffd94d"/>
+      <stop offset="1" stop-color="#ffd94d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1000" height="1400" fill="url(#sky)"/>
+  <circle cx="500" cy="640" r="330" fill="url(#sun)"/>
+  <circle cx="500" cy="640" r="128" fill="#ffd94d" stroke="#e8a04c" stroke-width="6"/>
+  <!-- far hills -->
+  <path d="M0 660 Q 220 540 430 620 T 1000 600 V 1400 H 0 Z" fill="#5d8a48"/>
+  <!-- near hills -->
+  <path d="M0 760 Q 260 660 520 730 T 1000 720 V 1400 H 0 Z" fill="#4a7c2f"/>
+  <!-- field -->
+  <path d="M0 900 Q 500 830 1000 900 V 1400 H 0 Z" fill="url(#field)"/>
+  <g stroke="#2f5d1f" stroke-width="10" opacity="0.55" fill="none">
+    <path d="M110 1400 Q 300 1080 380 905"/>
+    <path d="M330 1400 Q 430 1090 460 890"/>
+    <path d="M560 1400 Q 540 1095 520 885"/>
+    <path d="M790 1400 Q 640 1090 580 895"/>
+    <path d="M950 1400 Q 730 1085 650 905"/>
+  </g>
+  <!-- stardrop emblem -->
+  <g transform="translate(500 380)">
+    <circle r="168" fill="rgba(23,48,8,0.88)" stroke="#ffd94d" stroke-width="8"/>
+    <path d="M0 -104 L27 -34 L101 -32 L42 14 L62 86 L0 44 L-62 86 L-42 14 L-101 -32 L-27 -34 Z"
+          fill="#b388ff" stroke="#7e57c2" stroke-width="7" stroke-linejoin="round"/>
+    <circle r="16" fill="#ede7f6"/>
+  </g>
+  <text x="500" y="1150" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="92" font-weight="bold" letter-spacing="6" fill="#fdf6d8"
+        stroke="#274a1c" stroke-width="3">STARDEW VALLEY</text>
+  <text x="500" y="1230" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="44" letter-spacing="10" fill="#f7d774">PackRipper</text>
+</svg>
