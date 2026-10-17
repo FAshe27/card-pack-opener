@@ -30,7 +30,7 @@ CardSets.register({
       "id": "citizen-kane",
       "subtitle": "Film",
       "details": "Welles's 1941 debut topped the Sight and Sound critics' poll for 50 years.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Citizen_Kane_poster%2C_1941_%28Style_B%2C_unrestored%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Citizen_Kane_poster%2C_1941_%28Style_B%2C_unrestored%29.jpg/500px-Citizen_Kane_poster%2C_1941_%28Style_B%2C_unrestored%29.jpg"
     },
     {
       "name": "Casablanca",
@@ -46,7 +46,7 @@ CardSets.register({
       "id": "lawrence-of-arabia",
       "subtitle": "Film",
       "details": "Lean's desert epic won 7 Oscars, shot on location in Jordan and Morocco.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Lawrence_of_arabia_ver3_xxlg.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Lawrence_of_arabia_ver3_xxlg.jpg/500px-Lawrence_of_arabia_ver3_xxlg.jpg"
     },
     {
       "name": "2001: A Space Odyssey",
@@ -62,7 +62,7 @@ CardSets.register({
       "id": "gone-with-the-wind",
       "subtitle": "Film",
       "details": "Won 8 Academy Awards; Hattie McDaniel was the first Black Oscar winner.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/27/Poster_-_Gone_With_the_Wind_01.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Poster_-_Gone_With_the_Wind_01.jpg/500px-Poster_-_Gone_With_the_Wind_01.jpg"
     },
     {
       "name": "Seven Samurai",
@@ -78,7 +78,7 @@ CardSets.register({
       "id": "psycho",
       "subtitle": "Film",
       "details": "Hitchcock's 1960 shocker; theaters barred late admissions for the shower scene.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/76/Psycho_%281960%29_theatrical_poster_%28retouched%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Psycho_%281960%29_theatrical_poster_%28retouched%29.jpg/500px-Psycho_%281960%29_theatrical_poster_%28retouched%29.jpg"
     },
     {
       "name": "Schindler's List",
@@ -206,7 +206,7 @@ CardSets.register({
       "id": "indiana-jones-franchise",
       "subtitle": "Franchise",
       "details": "Spielberg and Lucas's adventurer debuted in Raiders of the Lost Ark (1981).",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/12/Indiana_Jones_and_the_Last_Crusade_Logo.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Indiana_Jones_and_the_Last_Crusade_Logo.png/500px-Indiana_Jones_and_the_Last_Crusade_Logo.png"
     },
     {
       "name": "Toy Story",
@@ -214,7 +214,7 @@ CardSets.register({
       "id": "toy-story-franchise",
       "subtitle": "Franchise",
       "details": "Pixar's flagship; the 1995 original was the first fully CG feature.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Toy_Story_logo_2010.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Toy_Story_logo_2010.png/500px-Toy_Story_logo_2010.png"
     },
     {
       "name": "Fast & Furious",
@@ -270,7 +270,7 @@ CardSets.register({
       "id": "charlie-chaplin",
       "subtitle": "Actor",
       "details": "The Tramp made him the silent era's first global superstar.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Charlie_Chaplin_portrait_Getty_1739411952.jpg/1280px-Charlie_Chaplin_portrait_Getty_1739411952.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Charlie_Chaplin_portrait_Getty_1739411952.jpg/500px-Charlie_Chaplin_portrait_Getty_1739411952.jpg"
     },
     {
       "name": "Marlon Brando",
@@ -278,7 +278,7 @@ CardSets.register({
       "id": "marlon-brando",
       "subtitle": "Actor",
       "details": "The Godfather and On the Waterfront; two Best Actor Oscars.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/53/Marlon_Brando_publicity_for_One-Eyed_Jacks.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Marlon_Brando_publicity_for_One-Eyed_Jacks.png/500px-Marlon_Brando_publicity_for_One-Eyed_Jacks.png"
     },
     {
       "name": "Humphrey Bogart",
@@ -294,7 +294,7 @@ CardSets.register({
       "id": "marilyn-monroe",
       "subtitle": "Actor",
       "details": "Some Like It Hot; Hollywood glamour's enduring icon.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Monroecirca1953.jpg/1280px-Monroecirca1953.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Monroecirca1953.jpg/500px-Monroecirca1953.jpg"
     },
     {
       "name": "Tom Hanks",
@@ -302,7 +302,7 @@ CardSets.register({
       "id": "tom-hanks",
       "subtitle": "Actor",
       "details": "Back-to-back Best Actor Oscars for Philadelphia and Forrest Gump.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/39/TomHanksPrincEdw031223_%2811_of_41%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/TomHanksPrincEdw031223_%2811_of_41%29_%28cropped%29.jpg/500px-TomHanksPrincEdw031223_%2811_of_41%29_%28cropped%29.jpg"
     },
     {
       "name": "Meryl Streep",
@@ -318,7 +318,7 @@ CardSets.register({
       "id": "leonardo-dicaprio",
       "subtitle": "Actor",
       "details": "From Titanic to The Revenant, for which he finally won his Oscar.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/2d/LeoPTABFI191125-28_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/LeoPTABFI191125-28_%28cropped%29.jpg/500px-LeoPTABFI191125-28_%28cropped%29.jpg"
     },
     {
       "name": "Steven Spielberg",
@@ -350,7 +350,7 @@ CardSets.register({
       "id": "akira-kurosawa",
       "subtitle": "Director",
       "details": "Seven Samurai and Rashomon brought Japanese cinema to the world.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Akirakurosawa-onthesetof7samurai-1953-page88.jpg/1280px-Akirakurosawa-onthesetof7samurai-1953-page88.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Akirakurosawa-onthesetof7samurai-1953-page88.jpg/500px-Akirakurosawa-onthesetof7samurai-1953-page88.jpg"
     },
     {
       "name": "Christopher Nolan",
@@ -366,7 +366,7 @@ CardSets.register({
       "id": "martin-scorsese",
       "subtitle": "Director",
       "details": "Taxi Driver to Killers of the Flower Moon; won for The Departed.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Martin_Scorsese-68749.jpg/1280px-Martin_Scorsese-68749.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Martin_Scorsese-68749.jpg/500px-Martin_Scorsese-68749.jpg"
     },
     {
       "name": "Quentin Tarantino",
@@ -390,7 +390,7 @@ CardSets.register({
       "id": "ridley-scott",
       "subtitle": "Director",
       "details": "Alien, Blade Runner, Gladiator; four Oscar nominations, no wins yet.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Ridley_Scott_At_BFI_-_BFI_Southbank_-_Saturday_4th_October_2025.jpg/1280px-Ridley_Scott_At_BFI_-_BFI_Southbank_-_Saturday_4th_October_2025.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Ridley_Scott_At_BFI_-_BFI_Southbank_-_Saturday_4th_October_2025.jpg/500px-Ridley_Scott_At_BFI_-_BFI_Southbank_-_Saturday_4th_October_2025.jpg"
     },
     {
       "name": "James Cameron",
@@ -406,7 +406,7 @@ CardSets.register({
       "id": "francis-ford-coppola",
       "subtitle": "Director",
       "details": "The Godfather films and Apocalypse Now; 5 Oscars.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/10/Lena_Herzog_Francis_Ford_Coppola_Wernder_Herzog_Venice_Film_Festival_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Lena_Herzog_Francis_Ford_Coppola_Wernder_Herzog_Venice_Film_Festival_%28cropped%29.jpg/500px-Lena_Herzog_Francis_Ford_Coppola_Wernder_Herzog_Venice_Film_Festival_%28cropped%29.jpg"
     },
     {
       "name": "Alien",
@@ -502,7 +502,7 @@ CardSets.register({
       "id": "italian-neorealism",
       "subtitle": "Era",
       "details": "Postwar Rome: real streets, non-actors, and Bicycle Thieves.",
-      "image": "https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2025/06/bicyclre-thieves.jpg"
+      "image": "assets/sets/compress/movie-pack__italian-neorealism.webp"
     },
     {
       "name": "Silent Era",
@@ -566,7 +566,7 @@ CardSets.register({
       "id": "vertigo",
       "subtitle": "Film",
       "details": "Hitchcock's obsession tale topped the 2012 Sight and Sound critics' poll.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/75/Vertigomovie_restoration.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Vertigomovie_restoration.jpg/500px-Vertigomovie_restoration.jpg"
     },
     {
       "name": "Singin' in the Rain",
@@ -574,7 +574,7 @@ CardSets.register({
       "id": "singin-in-the-rain",
       "subtitle": "Film",
       "details": "Gene Kelly's rain-soaked classic; AFI's greatest movie musical.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Singin%27_in_the_Rain_%281952_poster%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Singin%27_in_the_Rain_%281952_poster%29.jpg/500px-Singin%27_in_the_Rain_%281952_poster%29.jpg"
     },
     {
       "name": "Raging Bull",
@@ -590,7 +590,7 @@ CardSets.register({
       "id": "on-the-waterfront",
       "subtitle": "Film",
       "details": "Brando's 'contender' speech; the film won 8 Oscars.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/ee/On_the_Waterfront_%281954_poster%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/On_the_Waterfront_%281954_poster%29.jpg/500px-On_the_Waterfront_%281954_poster%29.jpg"
     },
     {
       "name": "The Shawshank Redemption",
@@ -750,7 +750,7 @@ CardSets.register({
       "id": "battleship-potemkin",
       "subtitle": "Film",
       "details": "Eisenstein's Odessa Steps montage became film-school canon.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/85/Vintage_Potemkin.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/Vintage_Potemkin.jpg/500px-Vintage_Potemkin.jpg"
     },
     {
       "name": "Metropolis",
@@ -774,7 +774,7 @@ CardSets.register({
       "id": "city-lights",
       "subtitle": "Film",
       "details": "Chaplin's silent romance, made four years into the sound era.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/09/City_Lights_%281931_theatrical_poster_-_retouched%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/City_Lights_%281931_theatrical_poster_-_retouched%29.jpg/500px-City_Lights_%281931_theatrical_poster_-_retouched%29.jpg"
     },
     {
       "name": "Some Like It Hot",
@@ -782,7 +782,7 @@ CardSets.register({
       "id": "some-like-it-hot",
       "subtitle": "Film",
       "details": "AFI's #1 comedy; 'Nobody's perfect' closes it.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Some_Like_It_Hot_%281959_poster%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Some_Like_It_Hot_%281959_poster%29.png/250px-Some_Like_It_Hot_%281959_poster%29.png"
     },
     {
       "name": "North by Northwest",
@@ -790,7 +790,7 @@ CardSets.register({
       "id": "north-by-northwest",
       "subtitle": "Film",
       "details": "Hitchcock's crop-duster chase set the spy-thriller template.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/83/Northbynorthwest1.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Northbynorthwest1.jpg/500px-Northbynorthwest1.jpg"
     },
     {
       "name": "Rear Window",
@@ -822,7 +822,7 @@ CardSets.register({
       "id": "john-ford",
       "subtitle": "Director",
       "details": "A record 4 Best Director Oscars; master of the Western.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/John_Ford_1946.jpg/1280px-John_Ford_1946.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/John_Ford_1946.jpg/500px-John_Ford_1946.jpg"
     },
     {
       "name": "Howard Hawks",
@@ -958,7 +958,7 @@ CardSets.register({
       "id": "horror",
       "subtitle": "Genre",
       "details": "From Universal monsters to Get Out; cinema's oldest thrill ride.",
-      "image": "https://creepycatalog.com/wp-content/uploads/sites/2/2021/10/nosferatu.jpeg"
+      "image": "assets/sets/compress/movie-pack__horror.webp"
     },
     {
       "name": "The Apartment",
@@ -1462,7 +1462,7 @@ CardSets.register({
       "id": "al-pacino",
       "subtitle": "Actor",
       "details": "The Godfather's Michael; won for Scent of a Woman.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Al_Pacino_-_Killing_Castro_-_Q%26A_-_Tribeca_2026_-_by_%40JJxFile-23_%28cropped%29.jpg/1280px-Al_Pacino_-_Killing_Castro_-_Q%26A_-_Tribeca_2026_-_by_%40JJxFile-23_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Al_Pacino_-_Killing_Castro_-_Q%26A_-_Tribeca_2026_-_by_%40JJxFile-23_%28cropped%29.jpg/500px-Al_Pacino_-_Killing_Castro_-_Q%26A_-_Tribeca_2026_-_by_%40JJxFile-23_%28cropped%29.jpg"
     },
     {
       "name": "Clint Eastwood",
@@ -1534,7 +1534,7 @@ CardSets.register({
       "id": "viola-davis",
       "subtitle": "Actor",
       "details": "Completed the EGOT in 2023 with a Grammy win.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Viola_Davis_at_the_Air_Premiere_at_SXSW_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Viola_Davis_at_the_Air_Premiere_at_SXSW_%28cropped%29.jpg/500px-Viola_Davis_at_the_Air_Premiere_at_SXSW_%28cropped%29.jpg"
     },
     {
       "name": "Frances McDormand",
@@ -1622,7 +1622,7 @@ CardSets.register({
       "id": "david-fincher",
       "subtitle": "Director",
       "details": "Se7en to The Social Network; three directing noms, no wins yet.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/d1/TheKillerBFILFF051023_%288_of_22%29_%2853255176376%29_%28cropped2%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/TheKillerBFILFF051023_%288_of_22%29_%2853255176376%29_%28cropped2%29.jpg/500px-TheKillerBFILFF051023_%288_of_22%29_%2853255176376%29_%28cropped2%29.jpg"
     },
     {
       "name": "Denis Villeneuve",
@@ -1630,7 +1630,7 @@ CardSets.register({
       "id": "denis-villeneuve",
       "subtitle": "Director",
       "details": "Arrival and Dune; sci-fi's prestige director.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5a/DVilleneuveRFH121024_%2812_of_23%29_%2854061976489%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/DVilleneuveRFH121024_%2812_of_23%29_%2854061976489%29_%28cropped%29.jpg/500px-DVilleneuveRFH121024_%2812_of_23%29_%2854061976489%29_%28cropped%29.jpg"
     },
     {
       "name": "Wes Anderson",
@@ -1670,7 +1670,7 @@ CardSets.register({
       "id": "jordan-peele",
       "subtitle": "Director",
       "details": "Get Out won him a screenplay Oscar.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/bc/SXSW_2019_2_-_Jordan_Peele_%2847282560202%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/SXSW_2019_2_-_Jordan_Peele_%2847282560202%29_%28cropped%29.jpg/500px-SXSW_2019_2_-_Jordan_Peele_%2847282560202%29_%28cropped%29.jpg"
     },
     {
       "name": "Sofia Coppola",
@@ -1694,7 +1694,7 @@ CardSets.register({
       "id": "darren-aronofsky",
       "subtitle": "Director",
       "details": "Black Swan and The Whale; bold and divisive.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Darren_Aronofsky_79th_Locarno_Film_Festival_-_Red_Carpet-22_%28second_cropped%29.jpg/1280px-Darren_Aronofsky_79th_Locarno_Film_Festival_-_Red_Carpet-22_%28second_cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Darren_Aronofsky_79th_Locarno_Film_Festival_-_Red_Carpet-22_%28second_cropped%29.jpg/500px-Darren_Aronofsky_79th_Locarno_Film_Festival_-_Red_Carpet-22_%28second_cropped%29.jpg"
     },
     {
       "name": "Tony Montana",
@@ -1718,7 +1718,7 @@ CardSets.register({
       "id": "jack-sparrow",
       "subtitle": "Character",
       "details": "Depp's drunken pirate stole the franchise.",
-      "image": "https://i.pinimg.com/originals/fa/75/03/fa750353db85575e4588fe63e61b9cf3.jpg"
+      "image": "assets/sets/compress/movie-pack__jack-sparrow.webp"
     },
     {
       "name": "The Joker",
@@ -2406,7 +2406,7 @@ CardSets.register({
       "id": "morgan-freeman",
       "subtitle": "Actor",
       "details": "Shawshank's Red; won for Million Dollar Baby.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Morgan_Freeman_at_The_Pentagon_on_2_August_2023_-_230802-D-PM193-3363_%28cropped%29.jpg/1280px-Morgan_Freeman_at_The_Pentagon_on_2_August_2023_-_230802-D-PM193-3363_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Morgan_Freeman_at_The_Pentagon_on_2_August_2023_-_230802-D-PM193-3363_%28cropped%29.jpg/500px-Morgan_Freeman_at_The_Pentagon_on_2_August_2023_-_230802-D-PM193-3363_%28cropped%29.jpg"
     },
     {
       "name": "Kevin Costner",
@@ -2438,7 +2438,7 @@ CardSets.register({
       "id": "arnold-schwarzenegger",
       "subtitle": "Actor",
       "details": "The Terminator; later California's governor.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Arnold_Schwarzenegger_-_Austrian_World_Summit_2026_BHO-2906.jpg/1280px-Arnold_Schwarzenegger_-_Austrian_World_Summit_2026_BHO-2906.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Arnold_Schwarzenegger_-_Austrian_World_Summit_2026_BHO-2906.jpg/500px-Arnold_Schwarzenegger_-_Austrian_World_Summit_2026_BHO-2906.jpg"
     },
     {
       "name": "Sylvester Stallone",
@@ -2478,7 +2478,7 @@ CardSets.register({
       "id": "hugh-jackman",
       "subtitle": "Actor",
       "details": "Played Wolverine for 17 years.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Hugh_Jackman_Is_This_Thing_On-68_%28cropped%29.jpg/1280px-Hugh_Jackman_Is_This_Thing_On-68_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Hugh_Jackman_Is_This_Thing_On-68_%28cropped%29.jpg/500px-Hugh_Jackman_Is_This_Thing_On-68_%28cropped%29.jpg"
     },
     {
       "name": "Christian Bale",
@@ -2518,7 +2518,7 @@ CardSets.register({
       "id": "timothee-chalamet",
       "subtitle": "Actor",
       "details": "Oscar-nominated for Call Me by Your Name at 22.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Timoth%C3%A9e_Chalamet-63482_%28cropped%29.jpg/1280px-Timoth%C3%A9e_Chalamet-63482_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Timoth%C3%A9e_Chalamet-63482_%28cropped%29.jpg/500px-Timoth%C3%A9e_Chalamet-63482_%28cropped%29.jpg"
     },
     {
       "name": "Austin Butler",
@@ -2590,7 +2590,7 @@ CardSets.register({
       "id": "lupita-nyongo",
       "subtitle": "Actor",
       "details": "12 Years a Slave won her an Oscar.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/LupitaNyongo-byPhilipRomano3.jpg/1280px-LupitaNyongo-byPhilipRomano3.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/LupitaNyongo-byPhilipRomano3.jpg/500px-LupitaNyongo-byPhilipRomano3.jpg"
     },
     {
       "name": "Octavia Spencer",
@@ -2606,7 +2606,7 @@ CardSets.register({
       "id": "angela-bassett",
       "subtitle": "Actor",
       "details": "Honorary Oscar in 2024.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Angela_Basset_at_the_2025_Cannes_Film_Festival_04_%28cropped%29.jpg/1280px-Angela_Basset_at_the_2025_Cannes_Film_Festival_04_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Angela_Basset_at_the_2025_Cannes_Film_Festival_04_%28cropped%29.jpg/500px-Angela_Basset_at_the_2025_Cannes_Film_Festival_04_%28cropped%29.jpg"
     },
     {
       "name": "Jamie Lee Curtis",
@@ -2614,7 +2614,7 @@ CardSets.register({
       "id": "jamie-lee-curtis",
       "subtitle": "Actor",
       "details": "Everything Everywhere won her an Oscar.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/2025_Jamie_Lee_Curtis_%28cropped%29.jpg/1280px-2025_Jamie_Lee_Curtis_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/2025_Jamie_Lee_Curtis_%28cropped%29.jpg/500px-2025_Jamie_Lee_Curtis_%28cropped%29.jpg"
     },
     {
       "name": "Michelle Yeoh",
@@ -2654,7 +2654,7 @@ CardSets.register({
       "id": "ang-lee",
       "subtitle": "Director",
       "details": "Two directing Oscars: Brokeback Mountain and Life of Pi.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e2/2016_NAB_Show%27s_The_Future_of_Cinema_Conference%2C_produced_in_partnership_with_SMPTE_%2826717112630%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/2016_NAB_Show%27s_The_Future_of_Cinema_Conference%2C_produced_in_partnership_with_SMPTE_%2826717112630%29_%28cropped%29.jpg/500px-2016_NAB_Show%27s_The_Future_of_Cinema_Conference%2C_produced_in_partnership_with_SMPTE_%2826717112630%29_%28cropped%29.jpg"
     },
     {
       "name": "Kathryn Bigelow",
@@ -2662,7 +2662,7 @@ CardSets.register({
       "id": "kathryn-bigelow",
       "subtitle": "Director",
       "details": "The first woman to win Best Director.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Kathryn_Bigelow_A_House_of_Dynamite-13_%28cropped%29.jpg/1280px-Kathryn_Bigelow_A_House_of_Dynamite-13_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Kathryn_Bigelow_A_House_of_Dynamite-13_%28cropped%29.jpg/500px-Kathryn_Bigelow_A_House_of_Dynamite-13_%28cropped%29.jpg"
     },
     {
       "name": "Barry Jenkins",
@@ -2702,7 +2702,7 @@ CardSets.register({
       "id": "alfonso-cuaron",
       "subtitle": "Director",
       "details": "Two directing Oscars: Gravity and Roma.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/DisclaimerBFILFF101024_%2888_of_113%29_%2854062275143%29_%28cropped%29.jpg/1280px-DisclaimerBFILFF101024_%2888_of_113%29_%2854062275143%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/DisclaimerBFILFF101024_%2888_of_113%29_%2854062275143%29_%28cropped%29.jpg/500px-DisclaimerBFILFF101024_%2888_of_113%29_%2854062275143%29_%28cropped%29.jpg"
     },
     {
       "name": "Taika Waititi",
@@ -2782,7 +2782,7 @@ CardSets.register({
       "id": "yoda",
       "subtitle": "Character",
       "details": "The Jedi Master: 'Do or do not.'",
-      "image": "https://i.pinimg.com/originals/58/03/7d/58037ddc134452741e274b9e43203aa7.jpg"
+      "image": "assets/sets/compress/movie-pack__yoda.webp"
     },
     {
       "name": "Obi-Wan Kenobi",
@@ -2846,7 +2846,7 @@ CardSets.register({
       "id": "voldemort",
       "subtitle": "Character",
       "details": "Fiennes's He-Who-Must-Not-Be-Named.",
-      "image": "https://www.giantfreakinrobot.com/wp-content/uploads/2021/03/ralph-fiennes-voldemort-scaled.jpg"
+      "image": "assets/sets/compress/movie-pack__voldemort.webp"
     },
     {
       "name": "Drama",
@@ -2854,7 +2854,7 @@ CardSets.register({
       "id": "drama",
       "subtitle": "Genre",
       "details": "The Oscars' favorite: most Best Picture winners.",
-      "image": "https://image.tmdb.org/t/p/original/1u1jG4RKHUQWOfkENVujRt3Mm6P.jpg"
+      "image": "assets/sets/compress/movie-pack__drama.webp"
     },
     {
       "name": "Comedy",
@@ -2870,7 +2870,7 @@ CardSets.register({
       "id": "action",
       "subtitle": "Genre",
       "details": "Die Hard to Mad Max: pure adrenaline.",
-      "image": "https://static-secure.guim.co.uk/sys-images/Guardian/Pix/pictures/2015/10/1/1443694939804/Mad-Max-Fury-Road-009.jpg"
+      "image": "assets/sets/compress/movie-pack__action.webp"
     },
     {
       "name": "Adventure",
@@ -2878,7 +2878,7 @@ CardSets.register({
       "id": "adventure",
       "subtitle": "Genre",
       "details": "Indiana Jones territory.",
-      "image": "https://lumiere-a.akamaihd.net/v1/images/indiana_jones_and_the_raiders_of_the_lost_ark_5ab08aad.jpeg"
+      "image": "assets/sets/compress/movie-pack__adventure.webp"
     },
     {
       "name": "Fantasy",
@@ -2926,7 +2926,7 @@ CardSets.register({
       "id": "war",
       "subtitle": "Genre",
       "details": "All Quiet on the Western Front to 1917.",
-      "image": "https://upp-cdn.b-cdn.net/app/uploads/2024/12/2022_AQT_still_4-2000x838.jpg"
+      "image": "assets/sets/compress/movie-pack__war.webp"
     },
     {
       "name": "Academy Awards",
