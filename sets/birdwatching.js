@@ -78,7 +78,7 @@ CardSets.register({
       "id": "whooping-crane",
       "subtitle": "Wader",
       "details": "Tallest North American bird; rebounded to about 800 wild.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Grus_americana_Sasata.jpg/1280px-Grus_americana_Sasata.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Grus_americana_Sasata.jpg/500px-Grus_americana_Sasata.jpg"
     },
     {
       "name": "Golden Eagle",
@@ -158,7 +158,7 @@ CardSets.register({
       "id": "american-kestrel",
       "subtitle": "Raptor",
       "details": "Smallest US falcon; hovers over fields hunting grasshoppers.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6a/American_Kestrel_%2853468230687%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/American_Kestrel_%2853468230687%29.jpg/500px-American_Kestrel_%2853468230687%29.jpg"
     },
     {
       "name": "Great Blue Heron",
@@ -198,7 +198,7 @@ CardSets.register({
       "id": "eastern-screech-owl",
       "subtitle": "Owl",
       "details": "Tiny triller of eastern woods; nests in backyard boxes.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Eastern_Screech_Owl.jpg/1280px-Eastern_Screech_Owl.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Eastern_Screech_Owl.jpg/500px-Eastern_Screech_Owl.jpg"
     },
     {
       "name": "Wood Duck",
@@ -206,7 +206,7 @@ CardSets.register({
       "id": "wood-duck",
       "subtitle": "Waterfowl",
       "details": "Jewel of the swamp; ducklings leap from nest cavities.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Wood_Duck_Wissahickon_Creek.png/1280px-Wood_Duck_Wissahickon_Creek.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Wood_Duck_Wissahickon_Creek.png/250px-Wood_Duck_Wissahickon_Creek.png"
     },
     {
       "name": "Roseate Spoonbill",
@@ -246,7 +246,7 @@ CardSets.register({
       "id": "stellers-jay",
       "subtitle": "Songbird",
       "details": "Crested heckler of western pines; mimics red-tailed hawks.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Steller%27s_Jay_flagstaff_arizona.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Steller%27s_Jay_flagstaff_arizona.jpg/500px-Steller%27s_Jay_flagstaff_arizona.jpg"
     },
     {
       "name": "Western Tanager",
@@ -342,7 +342,7 @@ CardSets.register({
       "id": "sharp-shinned-hawk",
       "subtitle": "Raptor",
       "details": "Smallest US accipiter; ambushes songbirds mid-flight.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Accipiter_striatus%2C_Canet_Road%2C_San_Luis_Obispo_1.jpg/1280px-Accipiter_striatus%2C_Canet_Road%2C_San_Luis_Obispo_1.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Accipiter_striatus%2C_Canet_Road%2C_San_Luis_Obispo_1.jpg/500px-Accipiter_striatus%2C_Canet_Road%2C_San_Luis_Obispo_1.jpg"
     },
     {
       "name": "Northern Harrier",
@@ -350,7 +350,7 @@ CardSets.register({
       "id": "northern-harrier",
       "subtitle": "Raptor",
       "details": "Glides low over marshes; owl-like face disk hears prey.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Circus_hudsonius%2C_male_perched%2C_Berkeley%2C_California_%28cropped%29.jpg/1280px-Circus_hudsonius%2C_male_perched%2C_Berkeley%2C_California_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Circus_hudsonius%2C_male_perched%2C_Berkeley%2C_California_%28cropped%29.jpg/500px-Circus_hudsonius%2C_male_perched%2C_Berkeley%2C_California_%28cropped%29.jpg"
     },
     {
       "name": "Merlin",
@@ -470,7 +470,7 @@ CardSets.register({
       "id": "brown-creeper",
       "subtitle": "Songbird",
       "details": "Spirals up tree trunks; camouflaged like bark.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Brown_creeper_%28Certhia_americana%29_in_Center_City%2C_Philadelphia%2C_PA%2C_USA.png/1280px-Brown_creeper_%28Certhia_americana%29_in_Center_City%2C_Philadelphia%2C_PA%2C_USA.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Brown_creeper_%28Certhia_americana%29_in_Center_City%2C_Philadelphia%2C_PA%2C_USA.png/250px-Brown_creeper_%28Certhia_americana%29_in_Center_City%2C_Philadelphia%2C_PA%2C_USA.png"
     },
     {
       "name": "Winter Wren",
@@ -558,7 +558,7 @@ CardSets.register({
       "id": "red-bellied-woodpecker",
       "subtitle": "Woodpecker",
       "details": "Zebra-backed; its belly blush is barely visible.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/12/Red-bellied_Woodpecker-27527.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Red-bellied_Woodpecker-27527.jpg/500px-Red-bellied_Woodpecker-27527.jpg"
     },
     {
       "name": "Downy Woodpecker",
@@ -974,7 +974,7 @@ CardSets.register({
       "id": "red-winged-blackbird",
       "subtitle": "Blackbird",
       "details": "Conk-la-ree! Defends marsh nests like a tiny general.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Red-Winged_Blackbird.png/1280px-Red-Winged_Blackbird.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Red-Winged_Blackbird.png/250px-Red-Winged_Blackbird.png"
     },
     {
       "name": "Common Grackle",
@@ -1030,7 +1030,7 @@ CardSets.register({
       "id": "swamp-sparrow",
       "subtitle": "Songbird",
       "details": "Slow trill from cattails; rusty wings, gray face.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Melospiza_georgiana_MP_01%2C_crop.jpg/1280px-Melospiza_georgiana_MP_01%2C_crop.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Melospiza_georgiana_MP_01%2C_crop.jpg/500px-Melospiza_georgiana_MP_01%2C_crop.jpg"
     },
     {
       "name": "Savannah Sparrow",
@@ -1294,7 +1294,7 @@ CardSets.register({
       "id": "bufflehead",
       "subtitle": "Waterfowl",
       "details": "Tiny diver; males flash a white bonnet.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Drake_Bufflehead_LBI_%28cropped%29.png/1280px-Drake_Bufflehead_LBI_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Drake_Bufflehead_LBI_%28cropped%29.png/250px-Drake_Bufflehead_LBI_%28cropped%29.png"
     },
     {
       "name": "Hooded Merganser",
@@ -1366,7 +1366,7 @@ CardSets.register({
       "id": "great-egret",
       "subtitle": "Wader",
       "details": "Statuesque white hunter; plumes nearly caused its extinction.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Great_Egret_%28Ardea_alba%29_in_Breeding_Plumage%2C_Cape_May_County%2C_New_Jersey%2C_USA_%28cropped%29.png/1280px-Great_Egret_%28Ardea_alba%29_in_Breeding_Plumage%2C_Cape_May_County%2C_New_Jersey%2C_USA_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Great_Egret_%28Ardea_alba%29_in_Breeding_Plumage%2C_Cape_May_County%2C_New_Jersey%2C_USA_%28cropped%29.png/500px-Great_Egret_%28Ardea_alba%29_in_Breeding_Plumage%2C_Cape_May_County%2C_New_Jersey%2C_USA_%28cropped%29.png"
     },
     {
       "name": "Snowy Egret",
@@ -1382,7 +1382,7 @@ CardSets.register({
       "id": "little-blue-heron",
       "subtitle": "Wader",
       "details": "Slate-blue; juveniles start out all white.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Little_Blue_Fly-By.png/1280px-Little_Blue_Fly-By.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Little_Blue_Fly-By.png/500px-Little_Blue_Fly-By.png"
     },
     {
       "name": "Tricolored Heron",
@@ -1414,7 +1414,7 @@ CardSets.register({
       "id": "yellow-crowned-night-heron",
       "subtitle": "Wader",
       "details": "Crab specialist of southern swamps.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Yellow-crowned_Night_Heron_%28Nyctanassa_violacea%29_perched_on_a_cedar_-_Cape_May_County%2C_New_Jersey%2C_USA.png/1280px-Yellow-crowned_Night_Heron_%28Nyctanassa_violacea%29_perched_on_a_cedar_-_Cape_May_County%2C_New_Jersey%2C_USA.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Yellow-crowned_Night_Heron_%28Nyctanassa_violacea%29_perched_on_a_cedar_-_Cape_May_County%2C_New_Jersey%2C_USA.png/500px-Yellow-crowned_Night_Heron_%28Nyctanassa_violacea%29_perched_on_a_cedar_-_Cape_May_County%2C_New_Jersey%2C_USA.png"
     },
     {
       "name": "Glossy Ibis",
@@ -1422,7 +1422,7 @@ CardSets.register({
       "id": "glossy-ibis",
       "subtitle": "Wader",
       "details": "Chestnut-maroon; probes mud with a curved bill.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Glossy_ibis.png/1280px-Glossy_ibis.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Glossy_ibis.png/250px-Glossy_ibis.png"
     },
     {
       "name": "White Ibis",
@@ -1430,7 +1430,7 @@ CardSets.register({
       "id": "white-ibis",
       "subtitle": "Wader",
       "details": "Sacred-looking; flocks comb Florida marshes.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/50/American_White_IbisII.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/American_White_IbisII.jpg/500px-American_White_IbisII.jpg"
     },
     {
       "name": "American Bittern",
@@ -1438,7 +1438,7 @@ CardSets.register({
       "id": "american-bittern",
       "subtitle": "Wader",
       "details": "Onk-a-chonk! Freezes with bill skyward in reeds.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Botaurus_lentiginosus_28079.JPG/1280px-Botaurus_lentiginosus_28079.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Botaurus_lentiginosus_28079.JPG/500px-Botaurus_lentiginosus_28079.JPG"
     },
     {
       "name": "Least Bittern",
@@ -1446,7 +1446,7 @@ CardSets.register({
       "id": "least-bittern",
       "subtitle": "Wader",
       "details": "Tiny heron; climbs reeds with grasping toes.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Least_Bittern_For_Wiki.png/1280px-Least_Bittern_For_Wiki.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Least_Bittern_For_Wiki.png/500px-Least_Bittern_For_Wiki.png"
     },
     {
       "name": "Killdeer",
@@ -1454,7 +1454,7 @@ CardSets.register({
       "id": "killdeer",
       "subtitle": "Shorebird",
       "details": "Kill-deer! Fakes a broken wing to lure predators away.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Killdeer_Heislerville.png/1280px-Killdeer_Heislerville.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Killdeer_Heislerville.png/250px-Killdeer_Heislerville.png"
     },
     {
       "name": "Spotted Sandpiper",
@@ -1478,7 +1478,7 @@ CardSets.register({
       "id": "greater-yellowlegs",
       "subtitle": "Shorebird",
       "details": "Three-note whistle; flashes bright yellow legs.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Greater_yellowlegs_%28Tringa_melanoleuca%29_foraging_at_Huntley_Meadows%2C_Alexandria%2C_Virginia%2C_USA.png/1280px-Greater_yellowlegs_%28Tringa_melanoleuca%29_foraging_at_Huntley_Meadows%2C_Alexandria%2C_Virginia%2C_USA.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Greater_yellowlegs_%28Tringa_melanoleuca%29_foraging_at_Huntley_Meadows%2C_Alexandria%2C_Virginia%2C_USA.png/250px-Greater_yellowlegs_%28Tringa_melanoleuca%29_foraging_at_Huntley_Meadows%2C_Alexandria%2C_Virginia%2C_USA.png"
     },
     {
       "name": "Barred Owl",
@@ -1574,7 +1574,7 @@ CardSets.register({
       "id": "surf-scoter",
       "subtitle": "Waterfowl",
       "details": "Skunk-head; dives for clams in the surf.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Surf_Scoter_Drake_LBI.png/1280px-Surf_Scoter_Drake_LBI.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Surf_Scoter_Drake_LBI.png/250px-Surf_Scoter_Drake_LBI.png"
     },
     {
       "name": "Black Scoter",
@@ -1582,7 +1582,7 @@ CardSets.register({
       "id": "black-scoter",
       "subtitle": "Waterfowl",
       "details": "All-black sea duck; males whistle in spring.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Black_Scoter_From_The_Crossley_ID_Guide_Eastern_Birds.jpg/1280px-Black_Scoter_From_The_Crossley_ID_Guide_Eastern_Birds.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Black_Scoter_From_The_Crossley_ID_Guide_Eastern_Birds.jpg/500px-Black_Scoter_From_The_Crossley_ID_Guide_Eastern_Birds.jpg"
     },
     {
       "name": "Common Merganser",
@@ -1614,7 +1614,7 @@ CardSets.register({
       "id": "brant",
       "subtitle": "Waterfowl",
       "details": "Small sea goose; grazes eelgrass in coastal bays.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Atlantic_Brant_Fly-By_Wiki.png/1280px-Atlantic_Brant_Fly-By_Wiki.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Atlantic_Brant_Fly-By_Wiki.png/250px-Atlantic_Brant_Fly-By_Wiki.png"
     },
     {
       "name": "Cackling Goose",
@@ -1654,7 +1654,7 @@ CardSets.register({
       "id": "black-bellied-plover",
       "subtitle": "Shorebird",
       "details": "Gray plover; flashes black armpits in flight.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Breeding_plumage_Black-bellied_plover_%28Pluvialis_squatarola%29_Great_Bay_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/1280px-Breeding_plumage_Black-bellied_plover_%28Pluvialis_squatarola%29_Great_Bay_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Breeding_plumage_Black-bellied_plover_%28Pluvialis_squatarola%29_Great_Bay_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/500px-Breeding_plumage_Black-bellied_plover_%28Pluvialis_squatarola%29_Great_Bay_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png"
     },
     {
       "name": "Ruddy Turnstone",
@@ -1678,7 +1678,7 @@ CardSets.register({
       "id": "dunlin",
       "subtitle": "Shorebird",
       "details": "Drooping bill; swirls in huge winter flocks.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Dunlin_%28Calidris_alpina%29_in_the_Delaware_Bay_at_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/1280px-Dunlin_%28Calidris_alpina%29_in_the_Delaware_Bay_at_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Dunlin_%28Calidris_alpina%29_in_the_Delaware_Bay_at_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/500px-Dunlin_%28Calidris_alpina%29_in_the_Delaware_Bay_at_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png"
     },
     {
       "name": "Least Sandpiper",
@@ -1686,7 +1686,7 @@ CardSets.register({
       "id": "least-sandpiper",
       "subtitle": "Shorebird",
       "details": "Smallest shorebird; mouse-brown and buzzy.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Least_Sandpiper_Foraging.png/1280px-Least_Sandpiper_Foraging.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Least_Sandpiper_Foraging.png/500px-Least_Sandpiper_Foraging.png"
     },
     {
       "name": "Semipalmated Sandpiper",
@@ -1694,7 +1694,7 @@ CardSets.register({
       "id": "semipalmated-sandpiper",
       "subtitle": "Shorebird",
       "details": "Arctic nester; stages in massive Bay of Fundy flocks.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Semipalmated_sandpiper_%28Calidris_pusilla%29_-_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/1280px-Semipalmated_sandpiper_%28Calidris_pusilla%29_-_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Semipalmated_sandpiper_%28Calidris_pusilla%29_-_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/500px-Semipalmated_sandpiper_%28Calidris_pusilla%29_-_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png"
     },
     {
       "name": "Pectoral Sandpiper",
@@ -1726,7 +1726,7 @@ CardSets.register({
       "id": "wilsons-snipe",
       "subtitle": "Shorebird",
       "details": "Winnowing display; tail feathers hum in dives.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Gallinago-delicata-002-cropped.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Gallinago-delicata-002-cropped.jpg/500px-Gallinago-delicata-002-cropped.jpg"
     },
     {
       "name": "American Avocet",
@@ -1734,7 +1734,7 @@ CardSets.register({
       "id": "american-avocet",
       "subtitle": "Shorebird",
       "details": "Elegant upturned bill sweeps side to side.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/de/American_Avocet1.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/American_Avocet1.jpg/500px-American_Avocet1.jpg"
     },
     {
       "name": "Black-necked Stilt",
@@ -1750,7 +1750,7 @@ CardSets.register({
       "id": "willet",
       "subtitle": "Shorebird",
       "details": "Flashy wings; 'pill-will-willet' from salt marshes.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Catoptrophorus_semipalmatus_edit.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Catoptrophorus_semipalmatus_edit.jpg/500px-Catoptrophorus_semipalmatus_edit.jpg"
     },
     {
       "name": "Marbled Godwit",
@@ -1766,7 +1766,7 @@ CardSets.register({
       "id": "hudsonian-godwit",
       "subtitle": "Shorebird",
       "details": "Epic migrant; Alaska to South America each year.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Hudsonian_Godwit_-_Churchill_-_Canada_01_%2815657156459%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Hudsonian_Godwit_-_Churchill_-_Canada_01_%2815657156459%29.jpg/500px-Hudsonian_Godwit_-_Churchill_-_Canada_01_%2815657156459%29.jpg"
     },
     {
       "name": "Whimbrel",
@@ -1806,7 +1806,7 @@ CardSets.register({
       "id": "buff-breasted-sandpiper",
       "subtitle": "Shorebird",
       "details": "Leks on the tundra; males flash white underwings.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Tryngites_subruficollis_-USA-8.jpg/1280px-Tryngites_subruficollis_-USA-8.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Tryngites_subruficollis_-USA-8.jpg/500px-Tryngites_subruficollis_-USA-8.jpg"
     },
     {
       "name": "Herring Gull",
@@ -1998,7 +1998,7 @@ CardSets.register({
       "id": "common-murre",
       "subtitle": "Seabird",
       "details": "Penguin of the north; dives 500 feet for fish.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Common_Murre_Uria_aalge.jpg/1280px-Common_Murre_Uria_aalge.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Common_Murre_Uria_aalge.jpg/500px-Common_Murre_Uria_aalge.jpg"
     },
     {
       "name": "Dovekie",
@@ -2022,7 +2022,7 @@ CardSets.register({
       "id": "northern-goshawk",
       "subtitle": "Raptor",
       "details": "Phantom of the deep woods; crashes through branches.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/American_goshawk.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/American_goshawk.jpg/500px-American_goshawk.jpg"
     },
     {
       "name": "Rough-legged Hawk",
@@ -2070,7 +2070,7 @@ CardSets.register({
       "id": "gyrfalcon",
       "subtitle": "Raptor",
       "details": "Arctic giant; largest falcon in the world.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Falco_rusticolus_white_cropped.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Falco_rusticolus_white_cropped.jpg/500px-Falco_rusticolus_white_cropped.jpg"
     },
     {
       "name": "Western Screech-Owl",
@@ -2118,7 +2118,7 @@ CardSets.register({
       "id": "red-cockaded-woodpecker",
       "subtitle": "Woodpecker",
       "details": "Endangered; drills cavities in living pines.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Picoides_borealis_USMC2005729133853B.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Picoides_borealis_USMC2005729133853B.jpg/500px-Picoides_borealis_USMC2005729133853B.jpg"
     },
     {
       "name": "House Wren",
@@ -2294,7 +2294,7 @@ CardSets.register({
       "id": "bachmans-warbler",
       "subtitle": "Warbler",
       "details": "Likely extinct; last confirmed in the 1980s.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/185_Bachman%27s_Warbler_%28cropped%29.jpg/1280px-185_Bachman%27s_Warbler_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/185_Bachman%27s_Warbler_%28cropped%29.jpg/500px-185_Bachman%27s_Warbler_%28cropped%29.jpg"
     },
     {
       "name": "Cerulean Warbler",
@@ -2302,7 +2302,7 @@ CardSets.register({
       "id": "cerulean-warbler",
       "subtitle": "Warbler",
       "details": "Sky-blue; declining singer of tall eastern forests.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Cerulean_Warbler%2C_Rondeau_Provincial_Park%2C_Ontario%2C_Canada.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Cerulean_Warbler%2C_Rondeau_Provincial_Park%2C_Ontario%2C_Canada.jpg/500px-Cerulean_Warbler%2C_Rondeau_Provincial_Park%2C_Ontario%2C_Canada.jpg"
     },
     {
       "name": "Golden-cheeked Warbler",
@@ -2734,7 +2734,7 @@ CardSets.register({
       "id": "buff-bellied-hummingbird",
       "subtitle": "Hummingbird",
       "details": "South Texas hummer; winters along the Gulf.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Buff-bellied_Hummingbird-Sabal_Palm_Bird_Sanctuary-TX_-_2015-05-21at11-43-412_%2821421266100%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Buff-bellied_Hummingbird-Sabal_Palm_Bird_Sanctuary-TX_-_2015-05-21at11-43-412_%2821421266100%29.jpg/500px-Buff-bellied_Hummingbird-Sabal_Palm_Bird_Sanctuary-TX_-_2015-05-21at11-43-412_%2821421266100%29.jpg"
     },
     {
       "name": "Common Poorwill",
@@ -2902,7 +2902,7 @@ CardSets.register({
       "id": "plain-chachalaca",
       "subtitle": "Game Bird",
       "details": "Noisy; shouts from Rio Grande thickets.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Plain_Chachalaca_Roadside.png/1280px-Plain_Chachalaca_Roadside.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Plain_Chachalaca_Roadside.png/250px-Plain_Chachalaca_Roadside.png"
     },
     {
       "name": "Red-throated Loon",
@@ -3038,7 +3038,7 @@ CardSets.register({
       "id": "common-gallinule",
       "subtitle": "Rail",
       "details": "Red-billed; swims like a tiny coot.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Common-gallinule-galapagos-casey-klebba.jpg/1280px-Common-gallinule-galapagos-casey-klebba.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Common-gallinule-galapagos-casey-klebba.jpg/500px-Common-gallinule-galapagos-casey-klebba.jpg"
     },
     {
       "name": "American Coot",
