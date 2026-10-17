@@ -555,7 +555,7 @@ window.CardSets.bootIndex = {
    "skin": "acrs",
    "primary": "#59a83b",
    "secondary": "#7a4a21",
-   "total": 442
+   "total": 443
   },
   "zelda": {
    "files": [
