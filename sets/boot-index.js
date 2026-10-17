@@ -43,7 +43,8 @@ window.CardSets.bootIndex = {
   "skyrim",
   "acrs",
   "zelda",
-  "pokemon"
+  "pokemon",
+  "stardew-valley"
  ],
  "sets": {
   "birdwatching": {
@@ -581,6 +582,20 @@ window.CardSets.bootIndex = {
    "skin": "pokemon",
    "primary": "#ffcb05",
    "secondary": "#2a75bb",
+   "total": 420
+  },
+  "stardew-valley": {
+   "files": [
+    "stardew-valley.js",
+    "stardew-valley-additions.js"
+   ],
+   "name": "Stardew Valley",
+   "code": "STAR",
+   "emblem": "⭐",
+   "packName": "Stardew Valley Pack",
+   "skin": "stardew",
+   "primary": "#4a7c2f",
+   "secondary": "#8a5a2b",
    "total": 420
   }
  }
