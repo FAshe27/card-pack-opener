@@ -22,7 +22,7 @@ CardSets.register({
       "id": "giant-sequoia",
       "subtitle": "Tree",
       "details": "Largest living things on Earth by volume.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Grizzly_Giant_Mariposa_Grove.jpg/1280px-Grizzly_Giant_Mariposa_Grove.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Grizzly_Giant_Mariposa_Grove.jpg/500px-Grizzly_Giant_Mariposa_Grove.jpg"
     },
     {
       "name": "Venus Flytrap",
@@ -46,7 +46,7 @@ CardSets.register({
       "id": "saguaro",
       "subtitle": "Cactus",
       "details": "Slow-growing giant; arms appear after decades.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Carnegiea_gigantea_in_Saguaro_National_Park_near_Tucson%2C_Arizona_during_November_%2858%29.jpg/1280px-Carnegiea_gigantea_in_Saguaro_National_Park_near_Tucson%2C_Arizona_during_November_%2858%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Carnegiea_gigantea_in_Saguaro_National_Park_near_Tucson%2C_Arizona_during_November_%2858%29.jpg/500px-Carnegiea_gigantea_in_Saguaro_National_Park_near_Tucson%2C_Arizona_during_November_%2858%29.jpg"
     },
     {
       "name": "Ghost Orchid",
@@ -62,7 +62,7 @@ CardSets.register({
       "id": "coast-redwood",
       "subtitle": "Tree",
       "details": "Tallest trees on Earth; some near 380 feet.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/03/US_199_Redwood_Highway.jpg/1280px-US_199_Redwood_Highway.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/03/US_199_Redwood_Highway.jpg/500px-US_199_Redwood_Highway.jpg"
     },
     {
       "name": "Bristlecone Pine",
@@ -70,7 +70,7 @@ CardSets.register({
       "id": "bristlecone-pine",
       "subtitle": "Tree",
       "details": "Some living trees predate the pyramids.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Big_bristlecone_pine_Pinus_longaeva.jpg/1280px-Big_bristlecone_pine_Pinus_longaeva.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Big_bristlecone_pine_Pinus_longaeva.jpg/500px-Big_bristlecone_pine_Pinus_longaeva.jpg"
     },
     {
       "name": "Bald Cypress",
@@ -78,7 +78,7 @@ CardSets.register({
       "id": "bald-cypress",
       "subtitle": "Tree",
       "details": "A conifer that sheds needles; knees rise from swamps.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Taxodium_distichum_NRCSMS01010.jpg/1280px-Taxodium_distichum_NRCSMS01010.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Taxodium_distichum_NRCSMS01010.jpg/500px-Taxodium_distichum_NRCSMS01010.jpg"
     },
     {
       "name": "Joshua Tree",
@@ -86,7 +86,7 @@ CardSets.register({
       "id": "joshua-tree",
       "subtitle": "Tree",
       "details": "Mojave icon; named for the biblical Joshua.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Joshua_Tree_01.jpg/1280px-Joshua_Tree_01.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Joshua_Tree_01.jpg/500px-Joshua_Tree_01.jpg"
     },
     {
       "name": "Century Plant",
@@ -94,7 +94,7 @@ CardSets.register({
       "id": "century-plant",
       "subtitle": "Succulent",
       "details": "Blooms once after decades, then dies.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Agave_July_2011-1.jpg/1280px-Agave_July_2011-1.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Agave_July_2011-1.jpg/500px-Agave_July_2011-1.jpg"
     },
     {
       "name": "Pawpaw",
@@ -118,7 +118,7 @@ CardSets.register({
       "id": "eastern-redbud",
       "subtitle": "Tree",
       "details": "Pink blooms on bare branches, even the trunk.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/RedbudOhio02.jpg/1280px-RedbudOhio02.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/RedbudOhio02.jpg/500px-RedbudOhio02.jpg"
     },
     {
       "name": "Jack-in-the-Pulpit",
@@ -126,7 +126,7 @@ CardSets.register({
       "id": "jack-in-the-pulpit",
       "subtitle": "Wildflower",
       "details": "A preacher in a leafy pulpit; berries blaze red.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Arisaema_triphyllum_Bob_Hunter_Memorial_Park.jpg/1280px-Arisaema_triphyllum_Bob_Hunter_Memorial_Park.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Arisaema_triphyllum_Bob_Hunter_Memorial_Park.jpg/500px-Arisaema_triphyllum_Bob_Hunter_Memorial_Park.jpg"
     },
     {
       "name": "Bloodroot",
@@ -166,7 +166,7 @@ CardSets.register({
       "id": "purple-pitcher-plant",
       "subtitle": "Carnivorous Plant",
       "details": "A pitfall trap of rainwater; digests drowned insects.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Sarracenia_purpurea_Flowers.JPG/1280px-Sarracenia_purpurea_Flowers.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Sarracenia_purpurea_Flowers.JPG/500px-Sarracenia_purpurea_Flowers.JPG"
     },
     {
       "name": "Roundleaf Sundew",
@@ -214,7 +214,7 @@ CardSets.register({
       "id": "fireweed",
       "subtitle": "Wildflower",
       "details": "First bloom after wildfire; pink spikes to the sky.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Maitohorsma_%28Epilobium_angustifolium%29.JPG/1280px-Maitohorsma_%28Epilobium_angustifolium%29.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Maitohorsma_%28Epilobium_angustifolium%29.JPG/500px-Maitohorsma_%28Epilobium_angustifolium%29.JPG"
     },
     {
       "name": "Tulip Tree",
@@ -222,7 +222,7 @@ CardSets.register({
       "id": "tulip-tree",
       "subtitle": "Tree",
       "details": "Tulip-shaped flowers high in a 150-foot crown.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/37/Liriodendron_tulipifera_%28arbre%29_-_Laeken.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Liriodendron_tulipifera_%28arbre%29_-_Laeken.JPG/500px-Liriodendron_tulipifera_%28arbre%29_-_Laeken.JPG"
     },
     {
       "name": "White Oak",
@@ -230,7 +230,7 @@ CardSets.register({
       "id": "white-oak",
       "subtitle": "Tree",
       "details": "Whiskey barrels and ship timbers; lives 300 years.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Keeler_Oak_Tree_-_distance_photo%2C_May_2013.jpg/1280px-Keeler_Oak_Tree_-_distance_photo%2C_May_2013.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Keeler_Oak_Tree_-_distance_photo%2C_May_2013.jpg/500px-Keeler_Oak_Tree_-_distance_photo%2C_May_2013.jpg"
     },
     {
       "name": "Franklin Tree",
@@ -254,7 +254,7 @@ CardSets.register({
       "id": "american-beech",
       "subtitle": "Tree",
       "details": "Smooth gray bark; beechnuts feed bears and jays.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Beech_with_Branches.jpg/1280px-Beech_with_Branches.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Beech_with_Branches.jpg/500px-Beech_with_Branches.jpg"
     },
     {
       "name": "Sugar Maple",
@@ -270,7 +270,7 @@ CardSets.register({
       "id": "bigleaf-magnolia",
       "subtitle": "Tree",
       "details": "Leaves three feet long; biggest of any US tree.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/MagnoliaMacrophylla.jpg/1280px-MagnoliaMacrophylla.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/MagnoliaMacrophylla.jpg/500px-MagnoliaMacrophylla.jpg"
     },
     {
       "name": "Eastern Prickly Pear",
@@ -278,7 +278,7 @@ CardSets.register({
       "id": "eastern-prickly-pear",
       "subtitle": "Cactus",
       "details": "A desert cactus thriving on Atlantic dunes.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Prickly_pear_MN_2007.JPG/1280px-Prickly_pear_MN_2007.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Prickly_pear_MN_2007.JPG/500px-Prickly_pear_MN_2007.JPG"
     },
     {
       "name": "Ocotillo",
@@ -286,7 +286,7 @@ CardSets.register({
       "id": "ocotillo",
       "subtitle": "Shrub",
       "details": "Thorny whips leaf out within days of rain.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Ocotillo_GB.jpg/1280px-Ocotillo_GB.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Ocotillo_GB.jpg/500px-Ocotillo_GB.jpg"
     },
     {
       "name": "Adam's Needle",
@@ -318,7 +318,7 @@ CardSets.register({
       "id": "broadleaf-cattail",
       "subtitle": "Wetland Plant",
       "details": "Hot-dog seed heads; shoots and roots are edible.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Bulrush_%28Typha_latifolia%29_%288139113636%29.jpg/1280px-Bulrush_%28Typha_latifolia%29_%288139113636%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Bulrush_%28Typha_latifolia%29_%288139113636%29.jpg/500px-Bulrush_%28Typha_latifolia%29_%288139113636%29.jpg"
     },
     {
       "name": "Blue Flag Iris",
@@ -334,7 +334,7 @@ CardSets.register({
       "id": "northern-red-oak",
       "subtitle": "Tree",
       "details": "Fast-growing oak; scarlet fall color.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Quercus_rubra_%40_Tortworth_Court.jpg/1280px-Quercus_rubra_%40_Tortworth_Court.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Quercus_rubra_%40_Tortworth_Court.jpg/500px-Quercus_rubra_%40_Tortworth_Court.jpg"
     },
     {
       "name": "Black Cherry",
@@ -350,7 +350,7 @@ CardSets.register({
       "id": "shagbark-hickory",
       "subtitle": "Tree",
       "details": "Bark peels in long shaggy strips.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/2021-03-03_10_34_58_Shagbark_Hickory_trunk_within_the_woodlands_along_the_West_Branch_Shabakunk_Creek_in_Ewing_Township%2C_Mercer_County%2C_New_Jersey.jpg/1280px-2021-03-03_10_34_58_Shagbark_Hickory_trunk_within_the_woodlands_along_the_West_Branch_Shabakunk_Creek_in_Ewing_Township%2C_Mercer_County%2C_New_Jersey.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/2021-03-03_10_34_58_Shagbark_Hickory_trunk_within_the_woodlands_along_the_West_Branch_Shabakunk_Creek_in_Ewing_Township%2C_Mercer_County%2C_New_Jersey.jpg/500px-2021-03-03_10_34_58_Shagbark_Hickory_trunk_within_the_woodlands_along_the_West_Branch_Shabakunk_Creek_in_Ewing_Township%2C_Mercer_County%2C_New_Jersey.jpg"
     },
     {
       "name": "American Sycamore",
@@ -358,7 +358,7 @@ CardSets.register({
       "id": "american-sycamore",
       "subtitle": "Tree",
       "details": "Camo-bark giant; hollow trunks shelter wildlife.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Pawling_Sycamore%2C_Valley_Forge_National_Historic_Park%2C_Pennsylvania_June_2024.jpg/1280px-Pawling_Sycamore%2C_Valley_Forge_National_Historic_Park%2C_Pennsylvania_June_2024.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Pawling_Sycamore%2C_Valley_Forge_National_Historic_Park%2C_Pennsylvania_June_2024.jpg/500px-Pawling_Sycamore%2C_Valley_Forge_National_Historic_Park%2C_Pennsylvania_June_2024.jpg"
     },
     {
       "name": "River Birch",
@@ -366,7 +366,7 @@ CardSets.register({
       "id": "river-birch",
       "subtitle": "Tree",
       "details": "Peeling salmon bark; loves riverbanks.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/RiverBirchBark01.JPG/1280px-RiverBirchBark01.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/RiverBirchBark01.JPG/500px-RiverBirchBark01.JPG"
     },
     {
       "name": "Sweetgum",
@@ -374,7 +374,7 @@ CardSets.register({
       "id": "sweetgum",
       "subtitle": "Tree",
       "details": "Star leaves; spiky gum balls underfoot.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/2014-11-02_13_06_29_Sweet_Gum_during_autumn_along_Lower_Ferry_Road_in_Ewing%2C_New_Jersey.JPG/1280px-2014-11-02_13_06_29_Sweet_Gum_during_autumn_along_Lower_Ferry_Road_in_Ewing%2C_New_Jersey.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/2014-11-02_13_06_29_Sweet_Gum_during_autumn_along_Lower_Ferry_Road_in_Ewing%2C_New_Jersey.JPG/500px-2014-11-02_13_06_29_Sweet_Gum_during_autumn_along_Lower_Ferry_Road_in_Ewing%2C_New_Jersey.JPG"
     },
     {
       "name": "Blackgum",
@@ -414,7 +414,7 @@ CardSets.register({
       "id": "honey-locust",
       "subtitle": "Tree",
       "details": "Wicked thorns; sweet pods feed deer.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Gleditsia_triacanthos_%28Honeylocust%29_%2838246396371%29.jpg/1280px-Gleditsia_triacanthos_%28Honeylocust%29_%2838246396371%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Gleditsia_triacanthos_%28Honeylocust%29_%2838246396371%29.jpg/500px-Gleditsia_triacanthos_%28Honeylocust%29_%2838246396371%29.jpg"
     },
     {
       "name": "Whitebark Pine",
@@ -430,7 +430,7 @@ CardSets.register({
       "id": "torrey-pine",
       "subtitle": "Tree",
       "details": "Rarest US pine; grows only near San Diego.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Torrey_Pine_at_Santa_Rosa_Island.jpg/1280px-Torrey_Pine_at_Santa_Rosa_Island.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Torrey_Pine_at_Santa_Rosa_Island.jpg/500px-Torrey_Pine_at_Santa_Rosa_Island.jpg"
     },
     {
       "name": "Green Ash",
@@ -446,7 +446,7 @@ CardSets.register({
       "id": "american-elm",
       "subtitle": "Tree",
       "details": "Vase-shaped giant; disease-resistant types return.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/American_Elm_Tree%2C_Old_South_Street%2C_Northampton%2C_MA_-_October_2019.jpg/1280px-American_Elm_Tree%2C_Old_South_Street%2C_Northampton%2C_MA_-_October_2019.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/American_Elm_Tree%2C_Old_South_Street%2C_Northampton%2C_MA_-_October_2019.jpg/500px-American_Elm_Tree%2C_Old_South_Street%2C_Northampton%2C_MA_-_October_2019.jpg"
     },
     {
       "name": "Eastern White Pine",
@@ -462,7 +462,7 @@ CardSets.register({
       "id": "longleaf-pine",
       "subtitle": "Tree",
       "details": "Fire-forged; once covered 90 million acres.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Pinus_palustris_UGA1.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Pinus_palustris_UGA1.jpg/500px-Pinus_palustris_UGA1.jpg"
     },
     {
       "name": "Northern White Cedar",
@@ -478,7 +478,7 @@ CardSets.register({
       "id": "witch-hazel",
       "subtitle": "Shrub",
       "details": "Blooms in fall; twigs soothe skin.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Hamamelis_virginiana_FlowersLeaves_BotGardBln0906.JPG/1280px-Hamamelis_virginiana_FlowersLeaves_BotGardBln0906.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Hamamelis_virginiana_FlowersLeaves_BotGardBln0906.JPG/500px-Hamamelis_virginiana_FlowersLeaves_BotGardBln0906.JPG"
     },
     {
       "name": "Mountain Laurel",
@@ -494,7 +494,7 @@ CardSets.register({
       "id": "great-rhododendron",
       "subtitle": "Shrub",
       "details": "Rosebay thickets; blooms the size of bouquets.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/American_Rhododendron.jpg/1280px-American_Rhododendron.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/American_Rhododendron.jpg/500px-American_Rhododendron.jpg"
     },
     {
       "name": "Spicebush",
@@ -510,7 +510,7 @@ CardSets.register({
       "id": "american-elderberry",
       "subtitle": "Shrub",
       "details": "White flower clusters become dark berries.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Sambucus_nigra_subsp_canadensis_-_Indiana.jpg/1280px-Sambucus_nigra_subsp_canadensis_-_Indiana.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Sambucus_nigra_subsp_canadensis_-_Indiana.jpg/500px-Sambucus_nigra_subsp_canadensis_-_Indiana.jpg"
     },
     {
       "name": "Winterberry",
@@ -558,7 +558,7 @@ CardSets.register({
       "id": "dutchmans-breeches",
       "subtitle": "Wildflower",
       "details": "Pantaloons on a stem; bumblebee favorite.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Dicentra_cucullaria_-_Dutchmans_Breeches_2.jpg/1280px-Dicentra_cucullaria_-_Dutchmans_Breeches_2.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Dicentra_cucullaria_-_Dutchmans_Breeches_2.jpg/500px-Dicentra_cucullaria_-_Dutchmans_Breeches_2.jpg"
     },
     {
       "name": "Wild Columbine",
@@ -598,7 +598,7 @@ CardSets.register({
       "id": "wild-bergamot",
       "subtitle": "Wildflower",
       "details": "Lavender crowns; Oswego tea of settlers.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Monarda_fistulosa_Arkansas.jpg/1280px-Monarda_fistulosa_Arkansas.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Monarda_fistulosa_Arkansas.jpg/500px-Monarda_fistulosa_Arkansas.jpg"
     },
     {
       "name": "Butterfly Weed",
@@ -702,7 +702,7 @@ CardSets.register({
       "id": "northern-maidenhair-fern",
       "subtitle": "Fern",
       "details": "Black wiry stems; fan of delicate leaflets.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Adiantum_pedatum_%28northern_maidenhair_fern%29%2C_Willsboro%2C_NY_%2832127843596%29.jpg/1280px-Adiantum_pedatum_%28northern_maidenhair_fern%29%2C_Willsboro%2C_NY_%2832127843596%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Adiantum_pedatum_%28northern_maidenhair_fern%29%2C_Willsboro%2C_NY_%2832127843596%29.jpg/500px-Adiantum_pedatum_%28northern_maidenhair_fern%29%2C_Willsboro%2C_NY_%2832127843596%29.jpg"
     },
     {
       "name": "Big Bluestem",
@@ -710,7 +710,7 @@ CardSets.register({
       "id": "big-bluestem",
       "subtitle": "Grass",
       "details": "Turkey-foot seed heads; king of the tallgrass.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Andropogon_gerardii_%283904160434%29.jpg/1280px-Andropogon_gerardii_%283904160434%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Andropogon_gerardii_%283904160434%29.jpg/500px-Andropogon_gerardii_%283904160434%29.jpg"
     },
     {
       "name": "Switchgrass",
@@ -750,7 +750,7 @@ CardSets.register({
       "id": "silver-maple",
       "subtitle": "Tree",
       "details": "Silver-backed leaves; fastest-growing maple.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/64/Silber-Ahorn_%28Acer_saccharinum%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Silber-Ahorn_%28Acer_saccharinum%29.jpg/500px-Silber-Ahorn_%28Acer_saccharinum%29.jpg"
     },
     {
       "name": "Boxelder",
@@ -790,7 +790,7 @@ CardSets.register({
       "id": "butternut",
       "subtitle": "Tree",
       "details": "White walnut; canker threatens it.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Juglans_cinerea_002.JPG/1280px-Juglans_cinerea_002.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Juglans_cinerea_002.JPG/500px-Juglans_cinerea_002.JPG"
     },
     {
       "name": "Black Walnut",
@@ -806,7 +806,7 @@ CardSets.register({
       "id": "quaking-aspen",
       "subtitle": "Tree",
       "details": "Trembling leaves; Pando clone spans 106 acres.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/2013-10-06_15_04_21_Aspens_during_autumn_along_the_Changing_Canyon_Nature_Trail_in_Lamoille_Canyon%2C_Nevada.jpg/1280px-2013-10-06_15_04_21_Aspens_during_autumn_along_the_Changing_Canyon_Nature_Trail_in_Lamoille_Canyon%2C_Nevada.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/2013-10-06_15_04_21_Aspens_during_autumn_along_the_Changing_Canyon_Nature_Trail_in_Lamoille_Canyon%2C_Nevada.jpg/500px-2013-10-06_15_04_21_Aspens_during_autumn_along_the_Changing_Canyon_Nature_Trail_in_Lamoille_Canyon%2C_Nevada.jpg"
     },
     {
       "name": "Paper Birch",
@@ -814,7 +814,7 @@ CardSets.register({
       "id": "paper-birch",
       "subtitle": "Tree",
       "details": "Peeling white bark; canoe skins.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/13._The_Fall_of_Acadia_%284039110079%29.jpg/1280px-13._The_Fall_of_Acadia_%284039110079%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/13._The_Fall_of_Acadia_%284039110079%29.jpg/500px-13._The_Fall_of_Acadia_%284039110079%29.jpg"
     },
     {
       "name": "Yellow Birch",
@@ -822,7 +822,7 @@ CardSets.register({
       "id": "yellow-birch",
       "subtitle": "Tree",
       "details": "Bronze curls; wintergreen-scented twigs.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Betula_alleghaniensis_5349050.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Betula_alleghaniensis_5349050.jpg/500px-Betula_alleghaniensis_5349050.jpg"
     },
     {
       "name": "American Hornbeam",
@@ -838,7 +838,7 @@ CardSets.register({
       "id": "eastern-hophornbeam",
       "subtitle": "Tree",
       "details": "Hop-like fruits; iron-hard wood.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Ostrya_virginiana_2.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Ostrya_virginiana_2.jpg/500px-Ostrya_virginiana_2.jpg"
     },
     {
       "name": "Pagoda Dogwood",
@@ -878,7 +878,7 @@ CardSets.register({
       "id": "pacific-madrone",
       "subtitle": "Tree",
       "details": "Peeling red bark; evergreen leaves.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Arbutus_menziesii_5822.JPG/1280px-Arbutus_menziesii_5822.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Arbutus_menziesii_5822.JPG/500px-Arbutus_menziesii_5822.JPG"
     },
     {
       "name": "American Holly",
@@ -910,7 +910,7 @@ CardSets.register({
       "id": "fringetree",
       "subtitle": "Tree",
       "details": "Fringe-like white blooms; old man's beard.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Chionanthus_virginicus_Arkansas.jpg/1280px-Chionanthus_virginicus_Arkansas.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Chionanthus_virginicus_Arkansas.jpg/500px-Chionanthus_virginicus_Arkansas.jpg"
     },
     {
       "name": "Sourwood",
@@ -934,7 +934,7 @@ CardSets.register({
       "id": "pecan",
       "subtitle": "Tree",
       "details": "The only major native US nut tree.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/62/Carya_illinoinensis.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Carya_illinoinensis.jpg/500px-Carya_illinoinensis.jpg"
     },
     {
       "name": "Common Ninebark",
@@ -1006,7 +1006,7 @@ CardSets.register({
       "id": "kinnikinnick",
       "subtitle": "Shrub",
       "details": "Bearberry mats; red winter berries.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Arctostaphylos_uva-ursi_25924.JPG/1280px-Arctostaphylos_uva-ursi_25924.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Arctostaphylos_uva-ursi_25924.JPG/500px-Arctostaphylos_uva-ursi_25924.JPG"
     },
     {
       "name": "White Meadowsweet",
@@ -1038,7 +1038,7 @@ CardSets.register({
       "id": "swamp-rose",
       "subtitle": "Shrub",
       "details": "Pink blooms over standing water.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Rosa_palustris_flowering_branch_001.JPG/1280px-Rosa_palustris_flowering_branch_001.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Rosa_palustris_flowering_branch_001.JPG/500px-Rosa_palustris_flowering_branch_001.JPG"
     },
     {
       "name": "American Beautyberry",
@@ -1062,7 +1062,7 @@ CardSets.register({
       "id": "wild-geranium",
       "subtitle": "Wildflower",
       "details": "Lavender cups over dissected leaves.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Geranium_maculatum_Leatherwood_Lake.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Geranium_maculatum_Leatherwood_Lake.jpg/500px-Geranium_maculatum_Leatherwood_Lake.jpg"
     },
     {
       "name": "Foamflower",
@@ -1102,7 +1102,7 @@ CardSets.register({
       "id": "shooting-star",
       "subtitle": "Wildflower",
       "details": "Petals swept back like falling stars.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Dodecatheon_meadia_01.JPG/1280px-Dodecatheon_meadia_01.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Dodecatheon_meadia_01.JPG/500px-Dodecatheon_meadia_01.JPG"
     },
     {
       "name": "Wild Ginger",
@@ -1182,7 +1182,7 @@ CardSets.register({
       "id": "marsh-marigold",
       "subtitle": "Wildflower",
       "details": "Golden cups in the spring marsh.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Caltha_palustris_plant.JPG/1280px-Caltha_palustris_plant.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Caltha_palustris_plant.JPG/500px-Caltha_palustris_plant.JPG"
     },
     {
       "name": "Turtlehead",
@@ -1238,7 +1238,7 @@ CardSets.register({
       "id": "canada-goldenrod",
       "subtitle": "Wildflower",
       "details": "Golden plumes; unfairly blamed for hay fever.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Solidago_canadensis_20050815_248.jpg/1280px-Solidago_canadensis_20050815_248.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Solidago_canadensis_20050815_248.jpg/500px-Solidago_canadensis_20050815_248.jpg"
     },
     {
       "name": "New England Aster",
@@ -1302,7 +1302,7 @@ CardSets.register({
       "id": "nodding-ladys-tresses",
       "subtitle": "Orchid",
       "details": "Spiral of tiny white nods.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Spiranthes_cernua_%281%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Spiranthes_cernua_%281%29.jpg/500px-Spiranthes_cernua_%281%29.jpg"
     },
     {
       "name": "Grass Pink",
@@ -1342,7 +1342,7 @@ CardSets.register({
       "id": "sensitive-fern",
       "subtitle": "Fern",
       "details": "Wilts at first frost; bead-like fertile fronds.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Onoclea_sensibilis_3.jpg/1280px-Onoclea_sensibilis_3.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Onoclea_sensibilis_3.jpg/500px-Onoclea_sensibilis_3.jpg"
     },
     {
       "name": "Cinnamon Fern",
@@ -1350,7 +1350,7 @@ CardSets.register({
       "id": "cinnamon-fern",
       "subtitle": "Fern",
       "details": "Cinnamon spikes rise from green fountains.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Osmundastrum_cinnamomeum_May2015.jpg/1280px-Osmundastrum_cinnamomeum_May2015.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Osmundastrum_cinnamomeum_May2015.jpg/500px-Osmundastrum_cinnamomeum_May2015.jpg"
     },
     {
       "name": "Royal Fern",
@@ -1358,7 +1358,7 @@ CardSets.register({
       "id": "royal-fern",
       "subtitle": "Fern",
       "details": "Regal plumes; among the oldest ferns.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Osmunda_regalis_Mimizan.jpg/1280px-Osmunda_regalis_Mimizan.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Osmunda_regalis_Mimizan.jpg/500px-Osmunda_regalis_Mimizan.jpg"
     },
     {
       "name": "Bracken Fern",
@@ -1366,7 +1366,7 @@ CardSets.register({
       "id": "bracken-fern",
       "subtitle": "Fern",
       "details": "Waist-high fronds; one of Earth's commonest plants.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Adelaarsvaren_planten_Pteridium_aquilinum.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Adelaarsvaren_planten_Pteridium_aquilinum.jpg/500px-Adelaarsvaren_planten_Pteridium_aquilinum.jpg"
     },
     {
       "name": "Lady Fern",
@@ -1374,7 +1374,7 @@ CardSets.register({
       "id": "lady-fern",
       "subtitle": "Fern",
       "details": "Lacy and ladylike; quick to colonize.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Athyrium_filix-femina0.jpg/1280px-Athyrium_filix-femina0.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Athyrium_filix-femina0.jpg/500px-Athyrium_filix-femina0.jpg"
     },
     {
       "name": "Little Bluestem",
@@ -1398,7 +1398,7 @@ CardSets.register({
       "id": "prairie-dropseed",
       "subtitle": "Grass",
       "details": "Fine fountain grass; smells like popcorn.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Sporobolus_heterolepis_-_Denver_Botanic_Gardens_-_DSC00886.JPG/1280px-Sporobolus_heterolepis_-_Denver_Botanic_Gardens_-_DSC00886.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Sporobolus_heterolepis_-_Denver_Botanic_Gardens_-_DSC00886.JPG/500px-Sporobolus_heterolepis_-_Denver_Botanic_Gardens_-_DSC00886.JPG"
     },
     {
       "name": "Side-Oats Grama",
@@ -1406,7 +1406,7 @@ CardSets.register({
       "id": "side-oats-grama",
       "subtitle": "Grass",
       "details": "Oats dangle one-sided down the stem.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Bouteloua_curtipendula.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Bouteloua_curtipendula.jpg/500px-Bouteloua_curtipendula.jpg"
     },
     {
       "name": "Bottlebrush Grass",
@@ -1470,7 +1470,7 @@ CardSets.register({
       "id": "water-shield",
       "subtitle": "Aquatic Plant",
       "details": "Slimy oval leaves float like shields.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/68/BraseniaAlt.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/BraseniaAlt.jpg/500px-BraseniaAlt.jpg"
     },
     {
       "name": "Common Duckweed",
@@ -1566,7 +1566,7 @@ CardSets.register({
       "id": "post-oak",
       "subtitle": "Tree",
       "details": "Cross-shaped leaves; tough as posts.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Houston_campsite_oak.jpg/1280px-Houston_campsite_oak.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Houston_campsite_oak.jpg/500px-Houston_campsite_oak.jpg"
     },
     {
       "name": "Southern Red Oak",
@@ -1582,7 +1582,7 @@ CardSets.register({
       "id": "black-oak",
       "subtitle": "Tree",
       "details": "Orange inner bark; glossy leaves.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Quercus_velutina_001.jpg/1280px-Quercus_velutina_001.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Quercus_velutina_001.jpg/500px-Quercus_velutina_001.jpg"
     },
     {
       "name": "Mockernut Hickory",
@@ -1590,7 +1590,7 @@ CardSets.register({
       "id": "mockernut-hickory",
       "subtitle": "Tree",
       "details": "Big nut, small kernel; dense wood.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Carya_tomentosa_12zz.jpg/1280px-Carya_tomentosa_12zz.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Carya_tomentosa_12zz.jpg/500px-Carya_tomentosa_12zz.jpg"
     },
     {
       "name": "Shellbark Hickory",
@@ -1630,7 +1630,7 @@ CardSets.register({
       "id": "ponderosa-pine",
       "subtitle": "Tree",
       "details": "Vanilla-scented bark; puzzle-piece plates.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Pinus_ponderosa_15932.JPG/1280px-Pinus_ponderosa_15932.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Pinus_ponderosa_15932.JPG/500px-Pinus_ponderosa_15932.JPG"
     },
     {
       "name": "Douglas Fir",
@@ -1646,7 +1646,7 @@ CardSets.register({
       "id": "blue-spruce",
       "subtitle": "Tree",
       "details": "Colorado's tree; blue-green needles.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Blue_Spruce_%2815905530369%29.jpg/1280px-Blue_Spruce_%2815905530369%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Blue_Spruce_%2815905530369%29.jpg/500px-Blue_Spruce_%2815905530369%29.jpg"
     },
     {
       "name": "Sugar Pine",
@@ -1662,7 +1662,7 @@ CardSets.register({
       "id": "incense-cedar",
       "subtitle": "Tree",
       "details": "Cedar-chest scent; pencil wood.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Calocedrus_decurrens_Yosemite_NP.jpg/1280px-Calocedrus_decurrens_Yosemite_NP.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Calocedrus_decurrens_Yosemite_NP.jpg/500px-Calocedrus_decurrens_Yosemite_NP.jpg"
     },
     {
       "name": "Bigleaf Maple",
@@ -1670,7 +1670,7 @@ CardSets.register({
       "id": "bigleaf-maple",
       "subtitle": "Tree",
       "details": "Leaves a foot wide; mossy giant.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Acer_macrophyllum_1199.jpg/1280px-Acer_macrophyllum_1199.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Acer_macrophyllum_1199.jpg/500px-Acer_macrophyllum_1199.jpg"
     },
     {
       "name": "California Buckeye",
@@ -1742,7 +1742,7 @@ CardSets.register({
       "id": "smooth-hydrangea",
       "subtitle": "Shrub",
       "details": "Wild hydrangea; white mopheads.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Hydrangea_arborescens_001.JPG/1280px-Hydrangea_arborescens_001.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Hydrangea_arborescens_001.JPG/500px-Hydrangea_arborescens_001.JPG"
     },
     {
       "name": "Oakleaf Hydrangea",
@@ -1806,7 +1806,7 @@ CardSets.register({
       "id": "toyon",
       "subtitle": "Shrub",
       "details": "Hollywood's namesake; red Christmas berries.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/018_Black_Mountain_Road_Views_%288%29_-_Heteromeles_Arbutifolia%2C_AKA_Toyon_%281%29.jpg/1280px-018_Black_Mountain_Road_Views_%288%29_-_Heteromeles_Arbutifolia%2C_AKA_Toyon_%281%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/018_Black_Mountain_Road_Views_%288%29_-_Heteromeles_Arbutifolia%2C_AKA_Toyon_%281%29.jpg/500px-018_Black_Mountain_Road_Views_%288%29_-_Heteromeles_Arbutifolia%2C_AKA_Toyon_%281%29.jpg"
     },
     {
       "name": "Creosote Bush",
@@ -1870,7 +1870,7 @@ CardSets.register({
       "id": "black-cohosh",
       "subtitle": "Wildflower",
       "details": "Tall white wands; famous remedy.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Actaea_racemosa_002.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/Actaea_racemosa_002.JPG/500px-Actaea_racemosa_002.JPG"
     },
     {
       "name": "White Baneberry",
@@ -1918,7 +1918,7 @@ CardSets.register({
       "id": "pipsissewa",
       "subtitle": "Wildflower",
       "details": "Striped evergreen leaves; wintergreen tea.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Chimaphila_maculata1010.jpg/1280px-Chimaphila_maculata1010.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Chimaphila_maculata1010.jpg/500px-Chimaphila_maculata1010.jpg"
     },
     {
       "name": "Indian Pipe",
@@ -1958,7 +1958,7 @@ CardSets.register({
       "id": "common-blue-violet",
       "subtitle": "Wildflower",
       "details": "The classic lawn violet.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Viola_sororia_in_Wisconsin.jpg/1280px-Viola_sororia_in_Wisconsin.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Viola_sororia_in_Wisconsin.jpg/500px-Viola_sororia_in_Wisconsin.jpg"
     },
     {
       "name": "Bird's-Foot Violet",
@@ -2038,7 +2038,7 @@ CardSets.register({
       "id": "hoary-vervain",
       "subtitle": "Wildflower",
       "details": "Gray-green spikes of violet.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Hoary_Vervain_%28Verbena_stricta%29_on_Mixed_Grass_Prairie_of_Lacreek_NWR_%2813918328442%29.jpg/1280px-Hoary_Vervain_%28Verbena_stricta%29_on_Mixed_Grass_Prairie_of_Lacreek_NWR_%2813918328442%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Hoary_Vervain_%28Verbena_stricta%29_on_Mixed_Grass_Prairie_of_Lacreek_NWR_%2813918328442%29.jpg/500px-Hoary_Vervain_%28Verbena_stricta%29_on_Mixed_Grass_Prairie_of_Lacreek_NWR_%2813918328442%29.jpg"
     },
     {
       "name": "Rose Vervain",
@@ -2086,7 +2086,7 @@ CardSets.register({
       "id": "culvers-root",
       "subtitle": "Wildflower",
       "details": "White candelabra spires.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/ac/CulversRoot.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/CulversRoot.jpg/500px-CulversRoot.jpg"
     },
     {
       "name": "Virginia Mountain Mint",
@@ -2094,7 +2094,7 @@ CardSets.register({
       "id": "virginia-mountain-mint",
       "subtitle": "Wildflower",
       "details": "Frosty bracts; potent mint oil.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Pycnanthemum-virginianum.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Pycnanthemum-virginianum.JPG/500px-Pycnanthemum-virginianum.JPG"
     },
     {
       "name": "Dotted Horsemint",
@@ -2102,7 +2102,7 @@ CardSets.register({
       "id": "dotted-horsemint",
       "subtitle": "Wildflower",
       "details": "Spotted lips under yellow hats.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/%28MHNT%29_Monarda_punctata.jpg/1280px-%28MHNT%29_Monarda_punctata.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/%28MHNT%29_Monarda_punctata.jpg/500px-%28MHNT%29_Monarda_punctata.jpg"
     },
     {
       "name": "Scarlet Beebalm",
@@ -2222,7 +2222,7 @@ CardSets.register({
       "id": "rocky-mountain-penstemon",
       "subtitle": "Wildflower",
       "details": "Royal trumpets; bumblebee favorite.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Penstemon_strictus_-_Todd_Boland_01.jpg/1280px-Penstemon_strictus_-_Todd_Boland_01.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Penstemon_strictus_-_Todd_Boland_01.jpg/500px-Penstemon_strictus_-_Todd_Boland_01.jpg"
     },
     {
       "name": "Scarlet Gilia",
@@ -2254,7 +2254,7 @@ CardSets.register({
       "id": "tufted-evening-primrose",
       "subtitle": "Wildflower",
       "details": "White moons opening at dusk.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Oenothera_caespitosa_var_marginata_3.jpg/1280px-Oenothera_caespitosa_var_marginata_3.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Oenothera_caespitosa_var_marginata_3.jpg/500px-Oenothera_caespitosa_var_marginata_3.jpg"
     },
     {
       "name": "Firecracker Penstemon",
@@ -2318,7 +2318,7 @@ CardSets.register({
       "id": "owls-clover",
       "subtitle": "Wildflower",
       "details": "Pink-purple; owl-face blooms.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Castilleja_exserta_8031.JPG/1280px-Castilleja_exserta_8031.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Castilleja_exserta_8031.JPG/500px-Castilleja_exserta_8031.JPG"
     },
     {
       "name": "Chinese Houses",
@@ -2366,7 +2366,7 @@ CardSets.register({
       "id": "death-camas",
       "subtitle": "Wildflower",
       "details": "Creamy bells; deadly to livestock.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Toxicoscordion_venenosum_-_Craig_Martin_01.jpg/1280px-Toxicoscordion_venenosum_-_Craig_Martin_01.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Toxicoscordion_venenosum_-_Craig_Martin_01.jpg/500px-Toxicoscordion_venenosum_-_Craig_Martin_01.jpg"
     },
     {
       "name": "Prince's Pine",
@@ -2374,7 +2374,7 @@ CardSets.register({
       "id": "princes-pine",
       "subtitle": "Wildflower",
       "details": "Evergreen prince; pink wintergreen blooms.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Chimaphila2.jpg/1280px-Chimaphila2.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Chimaphila2.jpg/500px-Chimaphila2.jpg"
     },
     {
       "name": "Whorled Pogonia",
@@ -2390,7 +2390,7 @@ CardSets.register({
       "id": "cranefly-orchid",
       "subtitle": "Orchid",
       "details": "Cranefly-like; single winter leaf.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Tipularia_discolor.jpg/1280px-Tipularia_discolor.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Tipularia_discolor.jpg/500px-Tipularia_discolor.jpg"
     },
     {
       "name": "Autumn Coralroot",
@@ -2430,7 +2430,7 @@ CardSets.register({
       "id": "mountain-ladys-slipper",
       "subtitle": "Orchid",
       "details": "White pouch with purple veins.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/43/Cypripedium_montanum_-_Flickr_002.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Cypripedium_montanum_-_Flickr_002.jpg/500px-Cypripedium_montanum_-_Flickr_002.jpg"
     },
     {
       "name": "New York Fern",
@@ -2454,7 +2454,7 @@ CardSets.register({
       "id": "interrupted-fern",
       "subtitle": "Fern",
       "details": "Fertile beads interrupt the frond.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Osmunda_claytoniana_JSG.jpg/1280px-Osmunda_claytoniana_JSG.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Osmunda_claytoniana_JSG.jpg/500px-Osmunda_claytoniana_JSG.jpg"
     },
     {
       "name": "Spinulose Wood Fern",
@@ -2478,7 +2478,7 @@ CardSets.register({
       "id": "walking-fern",
       "subtitle": "Fern",
       "details": "Tips root and walk across rock.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/48/Asplenium_rhizophyllum.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Asplenium_rhizophyllum.jpg/500px-Asplenium_rhizophyllum.jpg"
     },
     {
       "name": "Rattlesnake Fern",
@@ -2494,7 +2494,7 @@ CardSets.register({
       "id": "licorice-fern",
       "subtitle": "Fern",
       "details": "Rhizomes taste like licorice.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Licorice_ferns_growing_on_bigleaf_maple.jpg/1280px-Licorice_ferns_growing_on_bigleaf_maple.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Licorice_ferns_growing_on_bigleaf_maple.jpg/500px-Licorice_ferns_growing_on_bigleaf_maple.jpg"
     },
     {
       "name": "Western Sword Fern",
@@ -2502,7 +2502,7 @@ CardSets.register({
       "id": "western-sword-fern",
       "subtitle": "Fern",
       "details": "Glossy swords; forest-floor staple.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Polystichum_munitum_%28Jami_Dwyer%29_001.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Polystichum_munitum_%28Jami_Dwyer%29_001.jpg/500px-Polystichum_munitum_%28Jami_Dwyer%29_001.jpg"
     },
     {
       "name": "Canada Wildrye",
@@ -2582,7 +2582,7 @@ CardSets.register({
       "id": "great-basin-wildrye",
       "subtitle": "Grass",
       "details": "Tall rye of alkaline flats.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Leymus_cinereus_%285048924411%29.jpg/1280px-Leymus_cinereus_%285048924411%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Leymus_cinereus_%285048924411%29.jpg/500px-Leymus_cinereus_%285048924411%29.jpg"
     },
     {
       "name": "Tussock Sedge",
@@ -2606,7 +2606,7 @@ CardSets.register({
       "id": "penn-sedge",
       "subtitle": "Sedge",
       "details": "Lawn-like sedge of dry woods.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/CarexPensylvanica.jpg/1280px-CarexPensylvanica.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/CarexPensylvanica.jpg/500px-CarexPensylvanica.jpg"
     },
     {
       "name": "Appalachian Sedge",
@@ -2678,7 +2678,7 @@ CardSets.register({
       "id": "common-moonseed",
       "subtitle": "Vine",
       "details": "Moon-shaped seeds; toxic berries.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Menispermum_canadense%2C_Saint-Hilaire-1.png/1280px-Menispermum_canadense%2C_Saint-Hilaire-1.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Menispermum_canadense%2C_Saint-Hilaire-1.png/500px-Menispermum_canadense%2C_Saint-Hilaire-1.png"
     },
     {
       "name": "Poison Ivy",
@@ -2686,7 +2686,7 @@ CardSets.register({
       "id": "poison-ivy",
       "subtitle": "Vine",
       "details": "Leaves of three; urushiol rash.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/2014-10-29_13_43_39_Poison_Ivy_foliage_during_autumn_leaf_coloration_in_Ewing%2C_New_Jersey.JPG/1280px-2014-10-29_13_43_39_Poison_Ivy_foliage_during_autumn_leaf_coloration_in_Ewing%2C_New_Jersey.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/2014-10-29_13_43_39_Poison_Ivy_foliage_during_autumn_leaf_coloration_in_Ewing%2C_New_Jersey.JPG/500px-2014-10-29_13_43_39_Poison_Ivy_foliage_during_autumn_leaf_coloration_in_Ewing%2C_New_Jersey.JPG"
     },
     {
       "name": "Orange Honeysuckle",
@@ -2710,7 +2710,7 @@ CardSets.register({
       "id": "broom-moss",
       "subtitle": "Moss",
       "details": "Curved leaves sweep like brooms.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/Broom_moss_%28Orphan_Lk%29_2.JPG/1280px-Broom_moss_%28Orphan_Lk%29_2.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/Broom_moss_%28Orphan_Lk%29_2.JPG/500px-Broom_moss_%28Orphan_Lk%29_2.JPG"
     },
     {
       "name": "Fern Moss",
@@ -2726,7 +2726,7 @@ CardSets.register({
       "id": "star-moss",
       "subtitle": "Moss",
       "details": "Star rosettes; gold-tipped.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Atrichum_angustatum_or_Star_Moss%2C_Lugton.JPG/1280px-Atrichum_angustatum_or_Star_Moss%2C_Lugton.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Atrichum_angustatum_or_Star_Moss%2C_Lugton.JPG/500px-Atrichum_angustatum_or_Star_Moss%2C_Lugton.JPG"
     },
     {
       "name": "Silver Moss",
@@ -2766,7 +2766,7 @@ CardSets.register({
       "id": "old-mans-beard",
       "subtitle": "Lichen",
       "details": "Hanging strands; air-quality sentinel.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Usnea_spp._-_Flickr_-_pellaea.jpg/1280px-Usnea_spp._-_Flickr_-_pellaea.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Usnea_spp._-_Flickr_-_pellaea.jpg/500px-Usnea_spp._-_Flickr_-_pellaea.jpg"
     },
     {
       "name": "British Soldier",
@@ -2798,7 +2798,7 @@ CardSets.register({
       "id": "map-lichen",
       "subtitle": "Lichen",
       "details": "Map-like crusts on alpine rock.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Rhizocarpon_geographicum_on_quartz.jpg/1280px-Rhizocarpon_geographicum_on_quartz.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Rhizocarpon_geographicum_on_quartz.jpg/500px-Rhizocarpon_geographicum_on_quartz.jpg"
     },
     {
       "name": "Common Coontail",
@@ -2878,7 +2878,7 @@ CardSets.register({
       "id": "american-bur-reed",
       "subtitle": "Wetland Plant",
       "details": "Spiky balls on jointed stems.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Sparganium_americanum_3_%2820083090940%29.jpg/1280px-Sparganium_americanum_3_%2820083090940%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Sparganium_americanum_3_%2820083090940%29.jpg/500px-Sparganium_americanum_3_%2820083090940%29.jpg"
     },
     {
       "name": "Marsh St. John's Wort",
@@ -2918,7 +2918,7 @@ CardSets.register({
       "id": "beavertail-cactus",
       "subtitle": "Cactus",
       "details": "Paddle pads; magenta blooms.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Wild_Opuntia_basilaris.jpg/1280px-Wild_Opuntia_basilaris.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Wild_Opuntia_basilaris.jpg/500px-Wild_Opuntia_basilaris.jpg"
     },
     {
       "name": "Fishhook Barrel Cactus",
@@ -2942,7 +2942,7 @@ CardSets.register({
       "id": "plains-pricklypear",
       "subtitle": "Cactus",
       "details": "Low pads; prairie cactus.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Opuntia_polyacantha.jpg/1280px-Opuntia_polyacantha.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Opuntia_polyacantha.jpg/500px-Opuntia_polyacantha.jpg"
     },
     {
       "name": "Christmas Cholla",
@@ -2950,7 +2950,7 @@ CardSets.register({
       "id": "christmas-cholla",
       "subtitle": "Cactus",
       "details": "Red fruits deck it like ornaments.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/Cylindropuntialeptocaulis.jpg/1280px-Cylindropuntialeptocaulis.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/Cylindropuntialeptocaulis.jpg/500px-Cylindropuntialeptocaulis.jpg"
     },
     {
       "name": "Tree Cholla",
@@ -2966,7 +2966,7 @@ CardSets.register({
       "id": "desert-agave",
       "subtitle": "Succulent",
       "details": "Blue-gray rosette; once-a-century bloom.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Agave_deserti.jpg/1280px-Agave_deserti.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Agave_deserti.jpg/500px-Agave_deserti.jpg"
     },
     {
       "name": "Soaptree Yucca",
@@ -2990,7 +2990,7 @@ CardSets.register({
       "id": "spanish-dagger",
       "subtitle": "Succulent",
       "details": "Dagger leaves; Texas giant.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Spanish_Dagger_San_Antonio.jpg/1280px-Spanish_Dagger_San_Antonio.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Spanish_Dagger_San_Antonio.jpg/500px-Spanish_Dagger_San_Antonio.jpg"
     },
     {
       "name": "Twistleaf Yucca",
