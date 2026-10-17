@@ -44,7 +44,8 @@ window.CardSets.bootIndex = {
   "acrs",
   "zelda",
   "pokemon",
-  "stardew-valley"
+  "stardew-valley",
+  "candy"
  ],
  "sets": {
   "birdwatching": {
@@ -596,6 +597,20 @@ window.CardSets.bootIndex = {
    "skin": "stardew",
    "primary": "#4a7c2f",
    "secondary": "#8a5a2b",
+   "total": 420
+  },
+  "candy": {
+   "files": [
+    "candy.js",
+    "candy-additions.js"
+   ],
+   "name": "Candy",
+   "code": "CANDY",
+   "emblem": "🍬",
+   "packName": "Candy Pack",
+   "skin": "candy",
+   "primary": "#e5488c",
+   "secondary": "#7b3fbf",
    "total": 420
   }
  }
