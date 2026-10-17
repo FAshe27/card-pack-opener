@@ -38,7 +38,7 @@ CardSets.register({
       "id": "willie-mays",
       "subtitle": "Center Fielder, San Francisco Giants · 1951–1973",
       "details": "660 HR; 'The Catch' in the 1954 World Series.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/80/Willie_Mays_cropped.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Willie_Mays_cropped.jpg/500px-Willie_Mays_cropped.jpg"
     },
     {
       "name": "Mickey Mantle",
@@ -46,7 +46,7 @@ CardSets.register({
       "id": "mickey-mantle",
       "subtitle": "Center Fielder, New York Yankees · 1951–1968",
       "details": "536 HR; 7x champion; the Commerce Comet.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/1951_Bowman_Mickey_Mantle.png/1280px-1951_Bowman_Mickey_Mantle.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/1951_Bowman_Mickey_Mantle.png/500px-1951_Bowman_Mickey_Mantle.png"
     },
     {
       "name": "Ken Griffey Jr.",
@@ -62,7 +62,7 @@ CardSets.register({
       "id": "derek-jeter",
       "subtitle": "Shortstop, New York Yankees · 1995–2014",
       "details": "3,465 hits; 5 rings; Mr. November.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Derek-Jeter-in-May-1996.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Derek-Jeter-in-May-1996.jpg/500px-Derek-Jeter-in-May-1996.jpg"
     },
     {
       "name": "Mariano Rivera",
@@ -342,7 +342,7 @@ CardSets.register({
       "id": "commissioner-s-trophy",
       "subtitle": "World Series Championship Trophy",
       "details": "30 gold flags, one per club; hoisted each fall.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/World_Series_Trophy_%2848262268286%29.jpg/1280px-World_Series_Trophy_%2848262268286%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/World_Series_Trophy_%2848262268286%29.jpg/500px-World_Series_Trophy_%2848262268286%29.jpg"
     },
     {
       "name": "Shohei Ohtani",
@@ -358,7 +358,7 @@ CardSets.register({
       "id": "aaron-judge",
       "subtitle": "Right Field, New York Yankees",
       "details": "62 HR in 2022: the AL single-season record.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Aaron_Judge_%2853946528067%29_%28cropped%29.jpg/1280px-Aaron_Judge_%2853946528067%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Aaron_Judge_%2853946528067%29_%28cropped%29.jpg/500px-Aaron_Judge_%2853946528067%29_%28cropped%29.jpg"
     },
     {
       "name": "Ronald Acuña Jr.",
@@ -406,7 +406,7 @@ CardSets.register({
       "id": "freddie-freeman",
       "subtitle": "First Base, Los Angeles Dodgers",
       "details": "Walk-off grand slam, 2024 World Series Game 1.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Freddie_Freeman_-_Dodgers_vs_Nationals_4-23-2024.jpg/1280px-Freddie_Freeman_-_Dodgers_vs_Nationals_4-23-2024.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Freddie_Freeman_-_Dodgers_vs_Nationals_4-23-2024.jpg/500px-Freddie_Freeman_-_Dodgers_vs_Nationals_4-23-2024.jpg"
     },
     {
       "name": "Jose Altuve",
@@ -438,7 +438,7 @@ CardSets.register({
       "id": "bobby-witt-jr",
       "subtitle": "Shortstop, Kansas City Royals",
       "details": "2024 AL batting champ at .332.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/4119_Royals_Cleveland_July_2025_bobby_witt_jr.png/1280px-4119_Royals_Cleveland_July_2025_bobby_witt_jr.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/4119_Royals_Cleveland_July_2025_bobby_witt_jr.png/250px-4119_Royals_Cleveland_July_2025_bobby_witt_jr.png"
     },
     {
       "name": "Gunnar Henderson",
@@ -502,7 +502,7 @@ CardSets.register({
       "id": "yankee-stadium",
       "subtitle": "Home of the New York Yankees",
       "details": "Opened 2009; Monument Park honors legends.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Yankee_Stadium_aerial_from_Blackhawk.jpg/1280px-Yankee_Stadium_aerial_from_Blackhawk.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Yankee_Stadium_aerial_from_Blackhawk.jpg/500px-Yankee_Stadium_aerial_from_Blackhawk.jpg"
     },
     {
       "name": "Oracle Park",
@@ -622,7 +622,7 @@ CardSets.register({
       "id": "pat-murphy",
       "subtitle": "Manager, Milwaukee Brewers",
       "details": "2024 NL Manager of the Year.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Pat_Murphy_Netherlands_August_2000.jpg/1280px-Pat_Murphy_Netherlands_August_2000.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Pat_Murphy_Netherlands_August_2000.jpg/500px-Pat_Murphy_Netherlands_August_2000.jpg"
     },
     {
       "name": "Joe Espada",
@@ -638,7 +638,7 @@ CardSets.register({
       "id": "oliver-marmol",
       "subtitle": "Manager, St. Louis Cardinals",
       "details": "Youngest manager in MLB when hired.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/27/Oliver_Marmol.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Oliver_Marmol.jpg/500px-Oliver_Marmol.jpg"
     },
     {
       "name": "Oriole Park at Camden Yards",
@@ -646,7 +646,7 @@ CardSets.register({
       "id": "oriole-park-at-camden-yards",
       "subtitle": "Home of the Baltimore Orioles",
       "details": "Opened 1992; the retro park that started it all.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Oriole_Park_at_Camden_Yards_aerial_view.jpg/1280px-Oriole_Park_at_Camden_Yards_aerial_view.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Oriole_Park_at_Camden_Yards_aerial_view.jpg/500px-Oriole_Park_at_Camden_Yards_aerial_view.jpg"
     },
     {
       "name": "PNC Park",
@@ -686,7 +686,7 @@ CardSets.register({
       "id": "petco-park",
       "subtitle": "Home of the San Diego Padres",
       "details": "Western Metal Supply Co. building in left.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/PetcoBallParkByPhilKonstantin.jpg/1280px-PetcoBallParkByPhilKonstantin.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/PetcoBallParkByPhilKonstantin.jpg/500px-PetcoBallParkByPhilKonstantin.jpg"
     },
     {
       "name": "T-Mobile Park",
@@ -702,7 +702,7 @@ CardSets.register({
       "id": "sutter-health-park",
       "subtitle": "Home of the Athletics",
       "details": "A Triple-A park hosting MLB in Sacramento.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Aerial_view_of_Sutter_Health_Park_in_2024.jpg/1280px-Aerial_view_of_Sutter_Health_Park_in_2024.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Aerial_view_of_Sutter_Health_Park_in_2024.jpg/500px-Aerial_view_of_Sutter_Health_Park_in_2024.jpg"
     },
     {
       "name": "Francisco Lindor",
@@ -726,7 +726,7 @@ CardSets.register({
       "id": "pete-alonso",
       "subtitle": "First Baseman, Baltimore Orioles",
       "details": "53 HR as a rookie in 2019: an MLB record.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Pete_Alonso_fist-bumps_teammates_during_introductions%2C_March_30%2C_2023_%28cropped%29.jpg/1280px-Pete_Alonso_fist-bumps_teammates_during_introductions%2C_March_30%2C_2023_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Pete_Alonso_fist-bumps_teammates_during_introductions%2C_March_30%2C_2023_%28cropped%29.jpg/500px-Pete_Alonso_fist-bumps_teammates_during_introductions%2C_March_30%2C_2023_%28cropped%29.jpg"
     },
     {
       "name": "Manny Machado",
@@ -758,7 +758,7 @@ CardSets.register({
       "id": "corey-seager",
       "subtitle": "Shortstop, Texas Rangers",
       "details": "2023 World Series MVP.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Corey_Seager_%2853626731808%29_%28cropped%29.jpg/1280px-Corey_Seager_%2853626731808%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Corey_Seager_%2853626731808%29_%28cropped%29.jpg/500px-Corey_Seager_%2853626731808%29_%28cropped%29.jpg"
     },
     {
       "name": "Jacob deGrom",
@@ -766,7 +766,7 @@ CardSets.register({
       "id": "jacob-degrom",
       "subtitle": "Starting Pitcher, Texas Rangers",
       "details": "2x Cy Young; 100 mph with command.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Jacob_deGrom_%2847449527382%29_%28cropped%29.jpg/1280px-Jacob_deGrom_%2847449527382%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Jacob_deGrom_%2847449527382%29_%28cropped%29.jpg/500px-Jacob_deGrom_%2847449527382%29_%28cropped%29.jpg"
     },
     {
       "name": "Yordan Alvarez",
@@ -782,7 +782,7 @@ CardSets.register({
       "id": "vladimir-guerrero-jr",
       "subtitle": "First Baseman, Toronto Blue Jays",
       "details": "2021 HR Derby champ; 48 HR that year.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Vladimir_Guerrero_Jr._%2851324781714%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Vladimir_Guerrero_Jr._%2851324781714%29_%28cropped%29.jpg/500px-Vladimir_Guerrero_Jr._%2851324781714%29_%28cropped%29.jpg"
     },
     {
       "name": "Rafael Devers",
@@ -798,7 +798,7 @@ CardSets.register({
       "id": "matt-chapman",
       "subtitle": "Third Baseman, San Francisco Giants",
       "details": "5x Gold Glove at the hot corner.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/df/Matt_Chapman_%2851005053792%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Matt_Chapman_%2851005053792%29_%28cropped%29.jpg/500px-Matt_Chapman_%2851005053792%29_%28cropped%29.jpg"
     },
     {
       "name": "Logan Webb",
@@ -886,7 +886,7 @@ CardSets.register({
       "id": "cal-raleigh",
       "subtitle": "Catcher, Seattle Mariners",
       "details": "2025 Home Run Derby champion.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/CalRaleigh2025.png/1280px-CalRaleigh2025.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/CalRaleigh2025.png/250px-CalRaleigh2025.png"
     },
     {
       "name": "Julio Rodríguez",
@@ -918,7 +918,7 @@ CardSets.register({
       "id": "austin-riley",
       "subtitle": "Third Baseman, Atlanta Braves",
       "details": "2x All-Star; 2021 champion.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Austin_Riley_%2852329558803%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Austin_Riley_%2852329558803%29.jpg/500px-Austin_Riley_%2852329558803%29.jpg"
     },
     {
       "name": "Spencer Strider",
@@ -942,7 +942,7 @@ CardSets.register({
       "id": "kevin-cash",
       "subtitle": "Manager, Tampa Bay Rays",
       "details": "2x AL Manager of the Year (2020, 2021).",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Kevin_Cash_%2853626732183%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Kevin_Cash_%2853626732183%29_%28cropped%29.jpg/500px-Kevin_Cash_%2853626732183%29_%28cropped%29.jpg"
     },
     {
       "name": "John Schneider",
@@ -990,7 +990,7 @@ CardSets.register({
       "id": "clayton-mccullough",
       "subtitle": "Manager, Miami Marlins",
       "details": "Ex-Dodgers coach; Marlins skipper.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/64/Clayton_McCullough_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Clayton_McCullough_%28cropped%29.jpg/500px-Clayton_McCullough_%28cropped%29.jpg"
     },
     {
       "name": "Craig Albernaz",
@@ -1006,7 +1006,7 @@ CardSets.register({
       "id": "blake-butera",
       "subtitle": "Manager, Washington Nationals",
       "details": "Youngest skipper in MLB at 33.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Blake_Butera_%2855280041275%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Blake_Butera_%2855280041275%29_%28cropped%29.jpg/500px-Blake_Butera_%2855280041275%29_%28cropped%29.jpg"
     },
     {
       "name": "Derek Shelton",
@@ -1022,7 +1022,7 @@ CardSets.register({
       "id": "citi-field",
       "subtitle": "Home of the New York Mets",
       "details": "Opened 2009; the Home Run Apple rises.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Citi_Field_and_Arthur_Ashe_Stadium.jpg/1280px-Citi_Field_and_Arthur_Ashe_Stadium.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Citi_Field_and_Arthur_Ashe_Stadium.jpg/500px-Citi_Field_and_Arthur_Ashe_Stadium.jpg"
     },
     {
       "name": "Citizens Bank Park",
@@ -1078,7 +1078,7 @@ CardSets.register({
       "id": "globe-life-field",
       "subtitle": "Home of the Texas Rangers",
       "details": "Retractable roof; opened 2020.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Globe_Life_Field_Exterior_2024.jpg/1280px-Globe_Life_Field_Exterior_2024.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Globe_Life_Field_Exterior_2024.jpg/500px-Globe_Life_Field_Exterior_2024.jpg"
     },
     {
       "name": "Daikin Park",
@@ -1102,7 +1102,7 @@ CardSets.register({
       "id": "matt-blake",
       "subtitle": "Pitching Coach, New York Yankees",
       "details": "His staff led MLB with a 3.30 ERA in 2026.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/ba/MattBlake2019.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/MattBlake2019.png/500px-MattBlake2019.png"
     },
     {
       "name": "Mark Prior",
@@ -1150,7 +1150,7 @@ CardSets.register({
       "id": "manny-acta",
       "subtitle": "Bench Coach, Seattle Mariners",
       "details": "Managed Cleveland and Washington before.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9f/9TH_Manny_Acta.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/9TH_Manny_Acta.jpg/500px-9TH_Manny_Acta.jpg"
     },
     {
       "name": "Brady Anderson",
@@ -1166,7 +1166,7 @@ CardSets.register({
       "id": "kevin-seitzer",
       "subtitle": "Hitting Coach, Seattle Mariners",
       "details": "Ex-Royals All-Star turned hitting guru.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Kevin_Seitzer_on_July_27%2C_2009_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Kevin_Seitzer_on_July_27%2C_2009_%28cropped%29.jpg/500px-Kevin_Seitzer_on_July_27%2C_2009_%28cropped%29.jpg"
     },
     {
       "name": "Perry Hill",
@@ -1198,7 +1198,7 @@ CardSets.register({
       "id": "cam-schlittler",
       "subtitle": "Starting Pitcher, New York Yankees",
       "details": "Rookie ace; likely 2026 AL Cy Young.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Cam_Schlittler_%2854476798685%29.jpg/1280px-Cam_Schlittler_%2854476798685%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Cam_Schlittler_%2854476798685%29.jpg/500px-Cam_Schlittler_%2854476798685%29.jpg"
     },
     {
       "name": "David Bednar",
@@ -1286,7 +1286,7 @@ CardSets.register({
       "id": "adley-rutschman",
       "subtitle": "Catcher, Baltimore Orioles",
       "details": "No. 1 pick; 2023 All-Star starter.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Adley_Rutschman_%2848130140726%29.jpg/1280px-Adley_Rutschman_%2848130140726%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Adley_Rutschman_%2848130140726%29.jpg/500px-Adley_Rutschman_%2848130140726%29.jpg"
     },
     {
       "name": "Jackson Holliday",
@@ -1358,7 +1358,7 @@ CardSets.register({
       "id": "byron-buxton",
       "subtitle": "Center Field, Minnesota Twins",
       "details": "2022 All-Star; elite when healthy.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6c/2025_Twins-Cardinals_Mar_29_byron_buxton.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/2025_Twins-Cardinals_Mar_29_byron_buxton.png/250px-2025_Twins-Cardinals_Mar_29_byron_buxton.png"
     },
     {
       "name": "Joe Ryan",
@@ -1366,7 +1366,7 @@ CardSets.register({
       "id": "joe-ryan",
       "subtitle": "Starting Pitcher, Minnesota Twins",
       "details": "2025 All-Star; split-finger artist.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Joe_Ryan_Twins_2025.png/1280px-Joe_Ryan_Twins_2025.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Joe_Ryan_Twins_2025.png/250px-Joe_Ryan_Twins_2025.png"
     },
     {
       "name": "Andrew Benintendi",
@@ -1382,7 +1382,7 @@ CardSets.register({
       "id": "christian-walker",
       "subtitle": "First Baseman, Houston Astros",
       "details": "Gold Glove defender; ex-Diamondback.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Christian_Walker_Orioles_cropped.jpg/1280px-Christian_Walker_Orioles_cropped.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Christian_Walker_Orioles_cropped.jpg/500px-Christian_Walker_Orioles_cropped.jpg"
     },
     {
       "name": "Hunter Brown",
@@ -1398,7 +1398,7 @@ CardSets.register({
       "id": "josh-hader",
       "subtitle": "Closer, Houston Astros",
       "details": "3x Reliever of the Year.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Game_03_2025_Astros-Cardinals_Apr_14_josh_hader.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Game_03_2025_Astros-Cardinals_Apr_14_josh_hader.png/500px-Game_03_2025_Astros-Cardinals_Apr_14_josh_hader.png"
     },
     {
       "name": "Wyatt Langford",
@@ -1406,7 +1406,7 @@ CardSets.register({
       "id": "wyatt-langford",
       "subtitle": "Left Field, Texas Rangers",
       "details": "Top-5 pick; 2024 rookie standout.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Wyatt_Langford_%2853626533006%29_%28cropped%29.jpg/1280px-Wyatt_Langford_%2853626533006%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Wyatt_Langford_%2853626533006%29_%28cropped%29.jpg/500px-Wyatt_Langford_%2853626533006%29_%28cropped%29.jpg"
     },
     {
       "name": "Nathan Eovaldi",
@@ -1414,7 +1414,7 @@ CardSets.register({
       "id": "nathan-eovaldi",
       "subtitle": "Starting Pitcher, Texas Rangers",
       "details": "2023 WS hero; playoff Nate.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Nathan_Eovaldi_%28June_2012%29.jpg/1280px-Nathan_Eovaldi_%28June_2012%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Nathan_Eovaldi_%28June_2012%29.jpg/500px-Nathan_Eovaldi_%28June_2012%29.jpg"
     },
     {
       "name": "Logan Gilbert",
@@ -1462,7 +1462,7 @@ CardSets.register({
       "id": "nick-kurtz",
       "subtitle": "First Baseman, Athletics",
       "details": "Top prospect; 2025 debut.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Nick_Kurtz_%28260715-A-BN614-5826%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Nick_Kurtz_%28260715-A-BN614-5826%29_%28cropped%29.jpg/500px-Nick_Kurtz_%28260715-A-BN614-5826%29_%28cropped%29.jpg"
     },
     {
       "name": "Nick Castellanos",
@@ -1510,7 +1510,7 @@ CardSets.register({
       "id": "james-wood",
       "subtitle": "Left Field, Washington Nationals",
       "details": "6'7\" slugger; Soto-trade prize.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Washington_Nationals_player%2C_James_Wood_%288994611%29_%28cropped%29.jpg/1280px-Washington_Nationals_player%2C_James_Wood_%288994611%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Washington_Nationals_player%2C_James_Wood_%288994611%29_%28cropped%29.jpg/500px-Washington_Nationals_player%2C_James_Wood_%288994611%29_%28cropped%29.jpg"
     },
     {
       "name": "MacKenzie Gore",
@@ -1518,7 +1518,7 @@ CardSets.register({
       "id": "mackenzie-gore",
       "subtitle": "Starting Pitcher, Washington Nationals",
       "details": "2025 All-Star; ex-Padre.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/MacKenzie_Gore_%2852995559841%29.jpg/1280px-MacKenzie_Gore_%2852995559841%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/MacKenzie_Gore_%2852995559841%29.jpg/500px-MacKenzie_Gore_%2852995559841%29.jpg"
     },
     {
       "name": "Sandy Alcantara",
@@ -1542,7 +1542,7 @@ CardSets.register({
       "id": "michael-harris-ii",
       "subtitle": "Center Field, Atlanta Braves",
       "details": "2022 NL Rookie of the Year.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Michael_Harris_II_and_Matt_Olson_during_warmups.jpg/1280px-Michael_Harris_II_and_Matt_Olson_during_warmups.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Michael_Harris_II_and_Matt_Olson_during_warmups.jpg/500px-Michael_Harris_II_and_Matt_Olson_during_warmups.jpg"
     },
     {
       "name": "Ozzie Albies",
@@ -1558,7 +1558,7 @@ CardSets.register({
       "id": "masyn-winn",
       "subtitle": "Shortstop, St. Louis Cardinals",
       "details": "100 mph throws across the diamond.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/4f/MasynWinn2024.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/MasynWinn2024.png/500px-MasynWinn2024.png"
     },
     {
       "name": "JJ Wetherholt",
@@ -1566,7 +1566,7 @@ CardSets.register({
       "id": "jj-wetherholt",
       "subtitle": "Shortstop, St. Louis Cardinals",
       "details": "Top-10 pick; 2026 debut.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/JJ_Wetherholt_March_31_2026_1332seqn%29.png/1280px-JJ_Wetherholt_March_31_2026_1332seqn%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/JJ_Wetherholt_March_31_2026_1332seqn%29.png/250px-JJ_Wetherholt_March_31_2026_1332seqn%29.png"
     },
     {
       "name": "Christian Yelich",
@@ -1590,7 +1590,7 @@ CardSets.register({
       "id": "dansby-swanson",
       "subtitle": "Shortstop, Chicago Cubs",
       "details": "2x All-Star; 2021 champ with Atlanta.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Dansby_Swanson.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Dansby_Swanson.jpg/500px-Dansby_Swanson.jpg"
     },
     {
       "name": "Shota Imanaga",
@@ -1678,7 +1678,7 @@ CardSets.register({
       "id": "jackson-merrill",
       "subtitle": "Center Field, San Diego Padres",
       "details": "2024 ROY runner-up; 2025 All-Star.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Jackson_Merrill_6.24.2024.jpg/1280px-Jackson_Merrill_6.24.2024.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Jackson_Merrill_6.24.2024.jpg/500px-Jackson_Merrill_6.24.2024.jpg"
     },
     {
       "name": "Mason Miller",
@@ -1718,7 +1718,7 @@ CardSets.register({
       "id": "teoscar-hernandez",
       "subtitle": "Outfielder, Los Angeles Dodgers",
       "details": "2024 HR Derby champ.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/80/Teoscar_Hern%C3%A1ndez_on_April_24%2C_2024_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Teoscar_Hern%C3%A1ndez_on_April_24%2C_2024_%281%29.jpg/500px-Teoscar_Hern%C3%A1ndez_on_April_24%2C_2024_%281%29.jpg"
     },
     {
       "name": "Anthony Volpe",
@@ -1750,7 +1750,7 @@ CardSets.register({
       "id": "craig-stammen",
       "subtitle": "Manager, San Diego Padres",
       "details": "Ex-reliever; rookie skipper.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/87/2ND_Craig_Stammen.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/2ND_Craig_Stammen.jpg/500px-2ND_Craig_Stammen.jpg"
     },
     {
       "name": "Kurt Suzuki",
@@ -1766,7 +1766,7 @@ CardSets.register({
       "id": "don-kelly",
       "subtitle": "Manager, Pittsburgh Pirates",
       "details": "Promoted from interim in 2025.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Don_Kelly_2010.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Don_Kelly_2010.jpg/500px-Don_Kelly_2010.jpg"
     },
     {
       "name": "Walt Weiss",
@@ -1830,7 +1830,7 @@ CardSets.register({
       "id": "nationals-park",
       "subtitle": "Home of the Washington Nationals",
       "details": "Opened 2008; 2019 champs' home.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Aerial_view_of_Nationals_Park.jpg/1280px-Aerial_view_of_Nationals_Park.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Aerial_view_of_Nationals_Park.jpg/500px-Aerial_view_of_Nationals_Park.jpg"
     },
     {
       "name": "loanDepot park",
@@ -1870,7 +1870,7 @@ CardSets.register({
       "id": "luis-rojas",
       "subtitle": "Third Base Coach, New York Yankees",
       "details": "Ex-Mets manager; Yankees 3B coach.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Luis_Rojas_interview_screenshot_%28cropped%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Luis_Rojas_interview_screenshot_%28cropped%29.png/500px-Luis_Rojas_interview_screenshot_%28cropped%29.png"
     },
     {
       "name": "Dave Bush",
@@ -1894,7 +1894,7 @@ CardSets.register({
       "id": "austin-wells",
       "subtitle": "Catcher, New York Yankees",
       "details": "2024 ROY runner-up; lefty bat.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Austin_Wells_%2853179300583%29.jpg/1280px-Austin_Wells_%2853179300583%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Austin_Wells_%2853179300583%29.jpg/500px-Austin_Wells_%2853179300583%29.jpg"
     },
     {
       "name": "Jasson Domínguez",
@@ -1902,7 +1902,7 @@ CardSets.register({
       "id": "jasson-dominguez",
       "subtitle": "Outfielder, New York Yankees",
       "details": "'The Martian'; top prospect.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Jasson_Dominguez_%285Hdrkc_3Nxg%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Jasson_Dominguez_%285Hdrkc_3Nxg%29.png/500px-Jasson_Dominguez_%285Hdrkc_3Nxg%29.png"
     },
     {
       "name": "Ryan Weathers",
@@ -1918,7 +1918,7 @@ CardSets.register({
       "id": "will-warren",
       "subtitle": "Starting Pitcher, New York Yankees",
       "details": "2026 rotation regular.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/64/Will_Warren_%285oaYuiNTofQ%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Will_Warren_%285oaYuiNTofQ%29.png/500px-Will_Warren_%285oaYuiNTofQ%29.png"
     },
     {
       "name": "Trevor Story",
@@ -1942,7 +1942,7 @@ CardSets.register({
       "id": "ceddanne-rafaela",
       "subtitle": "Outfielder, Boston Red Sox",
       "details": "Gold Glove defender; speed.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Ceddanne_Rafaela_%28LHWWCzjI6uM%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Ceddanne_Rafaela_%28LHWWCzjI6uM%29.png/500px-Ceddanne_Rafaela_%28LHWWCzjI6uM%29.png"
     },
     {
       "name": "Aroldis Chapman",
@@ -1950,7 +1950,7 @@ CardSets.register({
       "id": "aroldis-chapman",
       "subtitle": "Closer, Boston Red Sox",
       "details": "Still touching 100 at 38.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/AROLDIS_CHAPMAN.jpg/1280px-AROLDIS_CHAPMAN.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/AROLDIS_CHAPMAN.jpg/500px-AROLDIS_CHAPMAN.jpg"
     },
     {
       "name": "Payton Tolle",
@@ -1998,7 +1998,7 @@ CardSets.register({
       "id": "brandon-lowe",
       "subtitle": "Second Baseman, Tampa Bay Rays",
       "details": "2021 All-Star; 30-HR power.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/BrandonLowe2025.jpg/1280px-BrandonLowe2025.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/BrandonLowe2025.jpg/500px-BrandonLowe2025.jpg"
     },
     {
       "name": "Drew Rasmussen",
@@ -2014,7 +2014,7 @@ CardSets.register({
       "id": "nolan-arenado",
       "subtitle": "Third Baseman, Arizona Diamondbacks",
       "details": "8x All-Star; 30 HR in 2026 Arizona revival.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d7/Arenado_Cards_Brewers_Sept_21_2025.png/1280px-Arenado_Cards_Brewers_Sept_21_2025.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d7/Arenado_Cards_Brewers_Sept_21_2025.png/250px-Arenado_Cards_Brewers_Sept_21_2025.png"
     },
     {
       "name": "Chandler Simpson",
@@ -2126,7 +2126,7 @@ CardSets.register({
       "id": "kyle-manzardo",
       "subtitle": "First Baseman, Cleveland Guardians",
       "details": "2024 ALCS hero.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/4168_Royals_Cleveland_July_2025_Kyle_Manzardo_NR.png/1280px-4168_Royals_Cleveland_July_2025_Kyle_Manzardo_NR.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/4168_Royals_Cleveland_July_2025_Kyle_Manzardo_NR.png/250px-4168_Royals_Cleveland_July_2025_Kyle_Manzardo_NR.png"
     },
     {
       "name": "Brayan Rocchio",
@@ -2238,7 +2238,7 @@ CardSets.register({
       "id": "matt-wallner",
       "subtitle": "Outfielder, Minnesota Twins",
       "details": "Huge raw power; 30-HR pop.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/2025_Twins-Cardinals_Mar_29_Matt_Wallner_2.png/1280px-2025_Twins-Cardinals_Mar_29_Matt_Wallner_2.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/2025_Twins-Cardinals_Mar_29_Matt_Wallner_2.png/250px-2025_Twins-Cardinals_Mar_29_Matt_Wallner_2.png"
     },
     {
       "name": "Brooks Lee",
@@ -2270,7 +2270,7 @@ CardSets.register({
       "id": "kyle-teel",
       "subtitle": "Catcher, Chicago White Sox",
       "details": "Crochet-trade prize; 2025 debut.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/53/Kyle_Teel_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Kyle_Teel_1.jpg/500px-Kyle_Teel_1.jpg"
     },
     {
       "name": "Miguel Vargas",
@@ -2278,7 +2278,7 @@ CardSets.register({
       "id": "miguel-vargas",
       "subtitle": "Third Baseman, Chicago White Sox",
       "details": "Ex-Dodger; fresh start.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/MiguelVargas.png/1280px-MiguelVargas.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/MiguelVargas.png/500px-MiguelVargas.png"
     },
     {
       "name": "Shane Smith",
@@ -2326,7 +2326,7 @@ CardSets.register({
       "id": "cam-smith",
       "subtitle": "Outfielder, Houston Astros",
       "details": "Top prospect; 2025 debut.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Cam_Smith_%28baseball%29.jpg/1280px-Cam_Smith_%28baseball%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Cam_Smith_%28baseball%29.jpg/500px-Cam_Smith_%28baseball%29.jpg"
     },
     {
       "name": "Josh Jung",
@@ -2334,7 +2334,7 @@ CardSets.register({
       "id": "josh-jung",
       "subtitle": "Third Baseman, Texas Rangers",
       "details": "2023 All-Star; 2023 champ.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Josh_Jung_%2853626726723%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Josh_Jung_%2853626726723%29_%28cropped%29.jpg/500px-Josh_Jung_%2853626726723%29_%28cropped%29.jpg"
     },
     {
       "name": "Evan Carter",
@@ -2342,7 +2342,7 @@ CardSets.register({
       "id": "evan-carter",
       "subtitle": "Outfielder, Texas Rangers",
       "details": "2023 playoff breakout star.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/80/Evan_Carter_%2853626731523%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Evan_Carter_%2853626731523%29_%28cropped%29.jpg/500px-Evan_Carter_%2853626731523%29_%28cropped%29.jpg"
     },
     {
       "name": "Kumar Rocker",
@@ -2350,7 +2350,7 @@ CardSets.register({
       "id": "kumar-rocker",
       "subtitle": "Starting Pitcher, Texas Rangers",
       "details": "2022 No. 3 pick; 100 mph.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/42/Kumar_Rocker.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Kumar_Rocker.jpg/500px-Kumar_Rocker.jpg"
     },
     {
       "name": "Jack Leiter",
@@ -2374,7 +2374,7 @@ CardSets.register({
       "id": "randy-arozarena",
       "subtitle": "Outfielder, Seattle Mariners",
       "details": "2023 HR Derby champ.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/81/Randy_Arozarena_%2853626861999%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Randy_Arozarena_%2853626861999%29_%28cropped%29.jpg/500px-Randy_Arozarena_%2853626861999%29_%28cropped%29.jpg"
     },
     {
       "name": "Jorge Polanco",
@@ -2398,7 +2398,7 @@ CardSets.register({
       "id": "kade-anderson",
       "subtitle": "Starting Pitcher, Seattle Mariners",
       "details": "2025 No. 3 pick; 2026 debut.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Anderson-Kade-Futures-Game-2026.png/1280px-Anderson-Kade-Futures-Game-2026.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Anderson-Kade-Futures-Game-2026.png/500px-Anderson-Kade-Futures-Game-2026.png"
     },
     {
       "name": "J.P. Crawford",
@@ -2446,7 +2446,7 @@ CardSets.register({
       "id": "yusei-kikuchi",
       "subtitle": "Starting Pitcher, Los Angeles Angels",
       "details": "2021 All-Star; ex-Blue Jay.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Yusei_Kikuchi_and_Shohei_Ohtani_on_June_8%2C_2019.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Yusei_Kikuchi_and_Shohei_Ohtani_on_June_8%2C_2019.jpg/500px-Yusei_Kikuchi_and_Shohei_Ohtani_on_June_8%2C_2019.jpg"
     },
     {
       "name": "Jacob Wilson",
@@ -2534,7 +2534,7 @@ CardSets.register({
       "id": "brandon-marsh",
       "subtitle": "Outfielder, Philadelphia Phillies",
       "details": "Gold Glove defender; fan favorite.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/25/Brandon_Marsh%2C_Toronto_Blue_Jays_11%2C_Philadelphia_Phillies_%28Split_Squad%29_7%2C_TD_Ballpark%2C_Dunedin%2C_Florida_%2854400604007%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Brandon_Marsh%2C_Toronto_Blue_Jays_11%2C_Philadelphia_Phillies_%28Split_Squad%29_7%2C_TD_Ballpark%2C_Dunedin%2C_Florida_%2854400604007%29_%28cropped%29.jpg/500px-Brandon_Marsh%2C_Toronto_Blue_Jays_11%2C_Philadelphia_Phillies_%28Split_Squad%29_7%2C_TD_Ballpark%2C_Dunedin%2C_Florida_%2854400604007%29_%28cropped%29.jpg"
     },
     {
       "name": "Aaron Nola",
@@ -2550,7 +2550,7 @@ CardSets.register({
       "id": "francisco-alvarez",
       "subtitle": "Catcher, New York Mets",
       "details": "2023 rookie; 25-HR power.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Francisco_%C3%81lvarez_during_warmups%2C_March_15%2C_2024_%282%29_%28cropped%29.jpg/1280px-Francisco_%C3%81lvarez_during_warmups%2C_March_15%2C_2024_%282%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Francisco_%C3%81lvarez_during_warmups%2C_March_15%2C_2024_%282%29_%28cropped%29.jpg/500px-Francisco_%C3%81lvarez_during_warmups%2C_March_15%2C_2024_%282%29_%28cropped%29.jpg"
     },
     {
       "name": "Sean Manaea",
@@ -2574,7 +2574,7 @@ CardSets.register({
       "id": "mark-vientos",
       "subtitle": "Third Baseman, New York Mets",
       "details": "27 HR in 2024; power bat.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Mark_Vientos%2C_September_4%2C_2024_-_001_%28cropped%29.jpg/1280px-Mark_Vientos%2C_September_4%2C_2024_-_001_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Mark_Vientos%2C_September_4%2C_2024_-_001_%28cropped%29.jpg/500px-Mark_Vientos%2C_September_4%2C_2024_-_001_%28cropped%29.jpg"
     },
     {
       "name": "David Peterson",
@@ -2582,7 +2582,7 @@ CardSets.register({
       "id": "david-peterson",
       "subtitle": "Starting Pitcher, New York Mets",
       "details": "2024 breakout lefty.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/David_Peterson_pitching%2C_March_31%2C_2023_%281%29_%28cropped%29.jpg/1280px-David_Peterson_pitching%2C_March_31%2C_2023_%281%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/David_Peterson_pitching%2C_March_31%2C_2023_%281%29_%28cropped%29.jpg/500px-David_Peterson_pitching%2C_March_31%2C_2023_%281%29_%28cropped%29.jpg"
     },
     {
       "name": "Clay Holmes",
@@ -2606,7 +2606,7 @@ CardSets.register({
       "id": "dylan-crews",
       "subtitle": "Outfielder, Washington Nationals",
       "details": "2023 No. 2 pick; 2024 debut.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Dylan_Crews.jpg/1280px-Dylan_Crews.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Dylan_Crews.jpg/500px-Dylan_Crews.jpg"
     },
     {
       "name": "Keibert Ruiz",
@@ -2622,7 +2622,7 @@ CardSets.register({
       "id": "cade-cavalli",
       "subtitle": "Starting Pitcher, Washington Nationals",
       "details": "Back from Tommy John.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Cade_Cavalli_%2820220830SM815%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Cade_Cavalli_%2820220830SM815%29_%28cropped%29.jpg/500px-Cade_Cavalli_%2820220830SM815%29_%28cropped%29.jpg"
     },
     {
       "name": "Josiah Gray",
@@ -2670,7 +2670,7 @@ CardSets.register({
       "id": "otto-lopez",
       "subtitle": "Shortstop, Miami Marlins",
       "details": "2024 All-Star.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Otto_Lopez_interview.png/1280px-Otto_Lopez_interview.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Otto_Lopez_interview.png/500px-Otto_Lopez_interview.png"
     },
     {
       "name": "Jakob Marsee",
@@ -2742,7 +2742,7 @@ CardSets.register({
       "id": "ivan-herrera",
       "subtitle": "Catcher, St. Louis Cardinals",
       "details": "2025 breakout bat.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Ivan_Herrera_2025.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Ivan_Herrera_2025.png/250px-Ivan_Herrera_2025.png"
     },
     {
       "name": "Andre Pallante",
@@ -2750,7 +2750,7 @@ CardSets.register({
       "id": "andre-pallante",
       "subtitle": "Starting Pitcher, St. Louis Cardinals",
       "details": "Ground-ball machine.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/da/Andre_Pallante_2024.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Andre_Pallante_2024.png/500px-Andre_Pallante_2024.png"
     },
     {
       "name": "Victor Scott II",
@@ -2758,7 +2758,7 @@ CardSets.register({
       "id": "victor-scott-ii",
       "subtitle": "Outfielder, St. Louis Cardinals",
       "details": "80-grade speed; 2024 debut.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/24/Victorscottii_2024.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Victorscottii_2024.png/500px-Victorscottii_2024.png"
     },
     {
       "name": "Brice Turang",
@@ -2798,7 +2798,7 @@ CardSets.register({
       "id": "nico-hoerner",
       "subtitle": "Second Baseman, Chicago Cubs",
       "details": "2023 Gold Glove; contact star.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Nico_Hoerner.jpg/1280px-Nico_Hoerner.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Nico_Hoerner.jpg/500px-Nico_Hoerner.jpg"
     },
     {
       "name": "Justin Steele",
@@ -2814,7 +2814,7 @@ CardSets.register({
       "id": "seiya-suzuki",
       "subtitle": "Designated Hitter, Chicago Cubs",
       "details": "25-HR power from Japan.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Seiya_Suzuki.jpg/1280px-Seiya_Suzuki.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Seiya_Suzuki.jpg/500px-Seiya_Suzuki.jpg"
     },
     {
       "name": "Michael Busch",
@@ -2838,7 +2838,7 @@ CardSets.register({
       "id": "spencer-steer",
       "subtitle": "Infielder, Cincinnati Reds",
       "details": "20/20 utility man.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Spencer_Steer_batting%2C_July_20%2C_2025_%281%29_%28cropped%29.jpg/1280px-Spencer_Steer_batting%2C_July_20%2C_2025_%281%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Spencer_Steer_batting%2C_July_20%2C_2025_%281%29_%28cropped%29.jpg/500px-Spencer_Steer_batting%2C_July_20%2C_2025_%281%29_%28cropped%29.jpg"
     },
     {
       "name": "Noelvi Marte",
@@ -2854,7 +2854,7 @@ CardSets.register({
       "id": "rhett-lowder",
       "subtitle": "Starting Pitcher, Cincinnati Reds",
       "details": "2023 No. 7 pick; 2024 debut.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/37/Rhett_Lowder_of_the_Reds_2026.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Rhett_Lowder_of_the_Reds_2026.png/250px-Rhett_Lowder_of_the_Reds_2026.png"
     },
     {
       "name": "Mitch Keller",
@@ -2902,7 +2902,7 @@ CardSets.register({
       "id": "roki-sasaki",
       "subtitle": "Starting Pitcher, Los Angeles Dodgers",
       "details": "102 mph from Japan; 2025 debut.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Roki.sasaki_marines.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Roki.sasaki_marines.jpg/500px-Roki.sasaki_marines.jpg"
     },
     {
       "name": "Tommy Edman",
@@ -2990,7 +2990,7 @@ CardSets.register({
       "id": "nick-pivetta",
       "subtitle": "Starting Pitcher, San Diego Padres",
       "details": "200-K arm; ex-Red Sox.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/90/Nick_Pivetta.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Nick_Pivetta.png/500px-Nick_Pivetta.png"
     },
     {
       "name": "Jake Cronenworth",
@@ -3014,7 +3014,7 @@ CardSets.register({
       "id": "heliot-ramos",
       "subtitle": "Outfielder, San Francisco Giants",
       "details": "2024 All-Star.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/81/Heliot_Ramos_%289sVyQt-8ZEI%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Heliot_Ramos_%289sVyQt-8ZEI%29.png/500px-Heliot_Ramos_%289sVyQt-8ZEI%29.png"
     },
     {
       "name": "Patrick Bailey",
