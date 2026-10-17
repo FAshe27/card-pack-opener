@@ -22,7 +22,7 @@ CardSets.register({
       "id": "tom-brady",
       "subtitle": "Retired",
       "details": "7 Super Bowls; 89,214 passing yards, most ever.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/73/25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Tom_Brady_-_240422_191334_%28cropped%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Tom_Brady_-_240422_191334_%28cropped%29_%28cropped%29.jpg/500px-25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Tom_Brady_-_240422_191334_%28cropped%29_%28cropped%29.jpg"
     },
     {
       "name": "Jerry Rice",
@@ -78,7 +78,7 @@ CardSets.register({
       "id": "john-elway",
       "subtitle": "Retired",
       "details": "The Drive; then back-to-back titles to retire.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/John_Elway_OCT2021_%28cropped%29.jpg/1280px-John_Elway_OCT2021_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/John_Elway_OCT2021_%28cropped%29.jpg/500px-John_Elway_OCT2021_%28cropped%29.jpg"
     },
     {
       "name": "Reggie White",
@@ -358,7 +358,7 @@ CardSets.register({
       "id": "vince-lombardi-trophy",
       "subtitle": "Super Bowl Championship Trophy",
       "details": "Sterling silver; hoisted every February.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Commanders%27_three_Vince_Lombardi_Trophy%2C_2023.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Commanders%27_three_Vince_Lombardi_Trophy%2C_2023.jpg/500px-Commanders%27_three_Vince_Lombardi_Trophy%2C_2023.jpg"
     },
     {
       "name": "Patrick Mahomes",
@@ -398,7 +398,7 @@ CardSets.register({
       "id": "jalen-hurts",
       "subtitle": "Quarterback, Philadelphia Eagles",
       "details": "Super Bowl LIX MVP; beat KC 40-22.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Jalen_Hurts_11-14-22_%28cropped%29.jpg/1280px-Jalen_Hurts_11-14-22_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Jalen_Hurts_11-14-22_%28cropped%29.jpg/500px-Jalen_Hurts_11-14-22_%28cropped%29.jpg"
     },
     {
       "name": "Jayden Daniels",
@@ -462,7 +462,7 @@ CardSets.register({
       "id": "kenneth-walker-iii",
       "subtitle": "Running Back, Kansas City Chiefs",
       "details": "Super Bowl LX MVP; 135 rushing yards.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/52/Kenneth_Walker_III_being_interviewed_by_Time2Football_2026_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Kenneth_Walker_III_being_interviewed_by_Time2Football_2026_%28cropped%29.png/500px-Kenneth_Walker_III_being_interviewed_by_Time2Football_2026_%28cropped%29.png"
     },
     {
       "name": "Justin Jefferson",
@@ -470,7 +470,7 @@ CardSets.register({
       "id": "justin-jefferson",
       "subtitle": "Wide Receiver, Minnesota Vikings",
       "details": "2022 OPOY; the Griddy inventor.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Jefferson_2022.jpg/1280px-Jefferson_2022.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Jefferson_2022.jpg/500px-Jefferson_2022.jpg"
     },
     {
       "name": "Ja'Marr Chase",
@@ -534,7 +534,7 @@ CardSets.register({
       "id": "lumen-field",
       "subtitle": "Home of the Seattle Seahawks",
       "details": "The 12s; famously deafening.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/2026_FIFA_World_Cup_-_Belgium_v._Egypt_in_Seattle_-_04.jpg/1280px-2026_FIFA_World_Cup_-_Belgium_v._Egypt_in_Seattle_-_04.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/2026_FIFA_World_Cup_-_Belgium_v._Egypt_in_Seattle_-_04.jpg/500px-2026_FIFA_World_Cup_-_Belgium_v._Egypt_in_Seattle_-_04.jpg"
     },
     {
       "name": "Andy Reid",
@@ -558,7 +558,7 @@ CardSets.register({
       "id": "kyle-shanahan",
       "subtitle": "Head Coach, San Francisco 49ers",
       "details": "Two Super Bowl trips; offensive wizard.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Kyle_Shanahan_%28tight_crop%29.jpg/1280px-Kyle_Shanahan_%28tight_crop%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Kyle_Shanahan_%28tight_crop%29.jpg/500px-Kyle_Shanahan_%28tight_crop%29.jpg"
     },
     {
       "name": "Mike Tomlin",
@@ -574,7 +574,7 @@ CardSets.register({
       "id": "rob-gronkowski",
       "subtitle": "Tight End · 2010–2022",
       "details": "4x champ; retired in 2022.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/cd/231208-N-QE848-2422_%2853391476156%29_%28Rob_Gronkowski%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/231208-N-QE848-2422_%2853391476156%29_%28Rob_Gronkowski%29.jpg/500px-231208-N-QE848-2422_%2853391476156%29_%28Rob_Gronkowski%29.jpg"
     },
     {
       "name": "J.J. Watt",
@@ -582,7 +582,7 @@ CardSets.register({
       "id": "j-j-watt",
       "subtitle": "Defensive End · 2011–2022",
       "details": "3x DPOY; 114.5 career sacks.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/J.J._Watt_2018%E2%80%942.JPG/1280px-J.J._Watt_2018%E2%80%942.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/J.J._Watt_2018%E2%80%942.JPG/500px-J.J._Watt_2018%E2%80%942.JPG"
     },
     {
       "name": "Drew Brees",
@@ -590,7 +590,7 @@ CardSets.register({
       "id": "drew-brees",
       "subtitle": "Quarterback · 2001–2020",
       "details": "80,358 passing yards; retired 2021.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/MedalCeremony_1_011520_%2861_of_69%29_%2849396271982%29_%28cropped%29.jpg/1280px-MedalCeremony_1_011520_%2861_of_69%29_%2849396271982%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/MedalCeremony_1_011520_%2861_of_69%29_%2849396271982%29_%28cropped%29.jpg/500px-MedalCeremony_1_011520_%2861_of_69%29_%2849396271982%29_%28cropped%29.jpg"
     },
     {
       "name": "Jason Kelce",
@@ -606,7 +606,7 @@ CardSets.register({
       "id": "fletcher-cox",
       "subtitle": "Defensive Tackle · 2012–2023",
       "details": "6x Pro Bowl; retired in 2024.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Fletcher_Cox.JPG/1280px-Fletcher_Cox.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Fletcher_Cox.JPG/500px-Fletcher_Cox.JPG"
     },
     {
       "name": "Andrew Whitworth",
@@ -614,7 +614,7 @@ CardSets.register({
       "id": "andrew-whitworth",
       "subtitle": "Tackle · 2006–2021",
       "details": "2021 Walter Payton Man of the Year.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Andrew_Whitworth_Thursday_Night_Football_DEC2023_%28cropped%29.jpg/1280px-Andrew_Whitworth_Thursday_Night_Football_DEC2023_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Andrew_Whitworth_Thursday_Night_Football_DEC2023_%28cropped%29.jpg/500px-Andrew_Whitworth_Thursday_Night_Football_DEC2023_%28cropped%29.jpg"
     },
     {
       "name": "Philip Rivers",
@@ -622,7 +622,7 @@ CardSets.register({
       "id": "philip-rivers",
       "subtitle": "Quarterback · 2004–2025",
       "details": "Came back at 44; started 3 games in 2025.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Coin_toss_at_Packers_at_Chargers_8-12-06_060812-N-7526R-092.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Coin_toss_at_Packers_at_Chargers_8-12-06_060812-N-7526R-092.jpg/500px-Coin_toss_at_Packers_at_Chargers_8-12-06_060812-N-7526R-092.jpg"
     },
     {
       "name": "Mike Vrabel",
@@ -646,7 +646,7 @@ CardSets.register({
       "id": "john-harbaugh",
       "subtitle": "Head Coach, New York Giants",
       "details": "Won Super Bowl XLVII with Baltimore.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f4/John_Harbaugh_%2852093585046%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/John_Harbaugh_%2852093585046%29_%28cropped%29.jpg/500px-John_Harbaugh_%2852093585046%29_%28cropped%29.jpg"
     },
     {
       "name": "Jesse Minter",
@@ -686,7 +686,7 @@ CardSets.register({
       "id": "robert-saleh",
       "subtitle": "Head Coach, Tennessee Titans",
       "details": "Former Jets HC; ex-49ers DC.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/2026_Titans_HC_Interview_-_Robert_Saleh_%28cropped%29.png/1280px-2026_Titans_HC_Interview_-_Robert_Saleh_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/2026_Titans_HC_Interview_-_Robert_Saleh_%28cropped%29.png/500px-2026_Titans_HC_Interview_-_Robert_Saleh_%28cropped%29.png"
     },
     {
       "name": "Kevin Stefanski",
@@ -726,7 +726,7 @@ CardSets.register({
       "id": "sean-payton",
       "subtitle": "Head Coach, Denver Broncos",
       "details": "14-3 in 2025; AFC's top seed.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Sean_Payton_2021.jpg/1280px-Sean_Payton_2021.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Sean_Payton_2021.jpg/500px-Sean_Payton_2021.jpg"
     },
     {
       "name": "Matt LaFleur",
@@ -766,7 +766,7 @@ CardSets.register({
       "id": "lincoln-financial-field",
       "subtitle": "Home of the Philadelphia Eagles",
       "details": "The Linc; famously hostile.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/Lincoln_Financial_Field%2C_Philadelphia%2C_Pennsylvania%2C_United_States.jpg/1280px-Lincoln_Financial_Field%2C_Philadelphia%2C_Pennsylvania%2C_United_States.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/Lincoln_Financial_Field%2C_Philadelphia%2C_Pennsylvania%2C_United_States.jpg/500px-Lincoln_Financial_Field%2C_Philadelphia%2C_Pennsylvania%2C_United_States.jpg"
     },
     {
       "name": "U.S. Bank Stadium",
@@ -806,7 +806,7 @@ CardSets.register({
       "id": "drake-maye",
       "subtitle": "Quarterback, New England Patriots",
       "details": "2025 MVP runner-up at age 23.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Drake_Maye_Patriots_vs_Titans_NOV2024.png_%28section%29_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Drake_Maye_Patriots_vs_Titans_NOV2024.png_%28section%29_%28cropped%29.png/500px-Drake_Maye_Patriots_vs_Titans_NOV2024.png_%28section%29_%28cropped%29.png"
     },
     {
       "name": "Dak Prescott",
@@ -838,7 +838,7 @@ CardSets.register({
       "id": "justin-herbert",
       "subtitle": "Quarterback, Los Angeles Chargers",
       "details": "5,014 yards in 2021; huge arm.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Justin_Herbert_presnap_against_the_Washington_Commanders.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Justin_Herbert_presnap_against_the_Washington_Commanders.jpg/500px-Justin_Herbert_presnap_against_the_Washington_Commanders.jpg"
     },
     {
       "name": "Jordan Love",
@@ -862,7 +862,7 @@ CardSets.register({
       "id": "c-j-stroud",
       "subtitle": "Quarterback, Houston Texans",
       "details": "2023 OROY; Houston's hope.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fd/CJ_Stroud_NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/CJ_Stroud_NFL_Combine_%28cropped%29.png/500px-CJ_Stroud_NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "Jaxon Smith-Njigba",
@@ -894,7 +894,7 @@ CardSets.register({
       "id": "amon-ra-st-brown",
       "subtitle": "Wide Receiver, Detroit Lions",
       "details": "The Sun God; 4th-round steal.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Amon-Ra_St._Brown_FanDuel_Interview.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Amon-Ra_St._Brown_FanDuel_Interview.png/500px-Amon-Ra_St._Brown_FanDuel_Interview.png"
     },
     {
       "name": "Puka Nacua",
@@ -918,7 +918,7 @@ CardSets.register({
       "id": "brock-bowers",
       "subtitle": "Tight End, Las Vegas Raiders",
       "details": "Rookie TE records in 2024.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/93/Brock_Bowers_%282025%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Brock_Bowers_%282025%29.jpg/500px-Brock_Bowers_%282025%29.jpg"
     },
     {
       "name": "Bijan Robinson",
@@ -926,7 +926,7 @@ CardSets.register({
       "id": "bijan-robinson",
       "subtitle": "Running Back, Atlanta Falcons",
       "details": "Top-10 pick; Atlanta's engine.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Bijan_Robinson_2025.jpg/1280px-Bijan_Robinson_2025.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Bijan_Robinson_2025.jpg/500px-Bijan_Robinson_2025.jpg"
     },
     {
       "name": "Jahmyr Gibbs",
@@ -958,7 +958,7 @@ CardSets.register({
       "id": "nick-bosa",
       "subtitle": "Defensive End, San Francisco 49ers",
       "details": "2022 DPOY; $170M man.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Nick_Bosa_vs_Redskins_2019.jpg/1280px-Nick_Bosa_vs_Redskins_2019.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Nick_Bosa_vs_Redskins_2019.jpg/500px-Nick_Bosa_vs_Redskins_2019.jpg"
     },
     {
       "name": "Aaron Donald",
@@ -974,7 +974,7 @@ CardSets.register({
       "id": "zac-taylor",
       "subtitle": "Head Coach, Cincinnati Bengals",
       "details": "Took Cincy to Super Bowl LVI.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Zac_Taylor_2019.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Zac_Taylor_2019.jpg/500px-Zac_Taylor_2019.jpg"
     },
     {
       "name": "Kevin O'Connell",
@@ -982,7 +982,7 @@ CardSets.register({
       "id": "kevin-o-connell",
       "subtitle": "Head Coach, Minnesota Vikings",
       "details": "2024 Coach of the Year.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Kevin_O%27Connell_2019_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Kevin_O%27Connell_2019_%28cropped%29.jpg/500px-Kevin_O%27Connell_2019_%28cropped%29.jpg"
     },
     {
       "name": "DeMeco Ryans",
@@ -1022,7 +1022,7 @@ CardSets.register({
       "id": "aaron-glenn",
       "subtitle": "Head Coach, New York Jets",
       "details": "Ex-Lions DC; Gang Green's HC.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/87/2025_NYJ_HC_Aaron_Glenn.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/2025_NYJ_HC_Aaron_Glenn.png/500px-2025_NYJ_HC_Aaron_Glenn.png"
     },
     {
       "name": "Liam Coen",
@@ -1046,7 +1046,7 @@ CardSets.register({
       "id": "brian-schottenheimer",
       "subtitle": "Head Coach, Dallas Cowboys",
       "details": "Son of Marty; 25 years an assistant.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/39/Brian_Schottenheimer_2025.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Brian_Schottenheimer_2025.jpg/500px-Brian_Schottenheimer_2025.jpg"
     },
     {
       "name": "Kellen Moore",
@@ -1062,7 +1062,7 @@ CardSets.register({
       "id": "todd-bowles",
       "subtitle": "Head Coach, Tampa Bay Buccaneers",
       "details": "SB LV champ as Bucs DC.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Tampa_Bay_Buccaneers_HC_Todd_Bowles_with_Meredith_Marakovits_%2871Zy1MYJ2tk%29_shadows_lifted.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Tampa_Bay_Buccaneers_HC_Todd_Bowles_with_Meredith_Marakovits_%2871Zy1MYJ2tk%29_shadows_lifted.png/500px-Tampa_Bay_Buccaneers_HC_Todd_Bowles_with_Meredith_Marakovits_%2871Zy1MYJ2tk%29_shadows_lifted.png"
     },
     {
       "name": "Jim Harbaugh",
@@ -1086,7 +1086,7 @@ CardSets.register({
       "id": "ben-johnson",
       "subtitle": "Head Coach, Chicago Bears",
       "details": "Ex-Lions OC; Chicago's hire.",
-      "image": "https://wp.clutchpoints.com/wp-content/uploads/2026/06/Ben-Johnson.jpg"
+      "image": "assets/sets/compress/nfl-collection__ben-johnson.webp"
     },
     {
       "name": "Steve Spagnuolo",
@@ -1118,7 +1118,7 @@ CardSets.register({
       "id": "kliff-kingsbury",
       "subtitle": "Offensive Coordinator, Washington Commanders",
       "details": "Former Cardinals head coach.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/99/Kliff_Kingsbury_Preseason_Week_1_-_Commanders_at_Jets_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Kliff_Kingsbury_Preseason_Week_1_-_Commanders_at_Jets_%28cropped%29.jpg/500px-Kliff_Kingsbury_Preseason_Week_1_-_Commanders_at_Jets_%28cropped%29.jpg"
     },
     {
       "name": "Matt Nagy",
@@ -1158,7 +1158,7 @@ CardSets.register({
       "id": "brian-daboll",
       "subtitle": "Offensive Coordinator, Tennessee Titans",
       "details": "Ex-Giants HC; 2022 Coach of the Year.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/55/2026_Official_Titans_Podcast_-_OC_Brian_Daboll.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/2026_Official_Titans_Podcast_-_OC_Brian_Daboll.png/500px-2026_Official_Titans_Podcast_-_OC_Brian_Daboll.png"
     },
     {
       "name": "Mike McDaniel",
@@ -1166,7 +1166,7 @@ CardSets.register({
       "id": "mike-mcdaniel",
       "subtitle": "Offensive Coordinator, Los Angeles Chargers",
       "details": "Ex-Dolphins HC; offensive innovator.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/27/Mike_McDaniel_2023.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Mike_McDaniel_2023.png/500px-Mike_McDaniel_2023.png"
     },
     {
       "name": "Ford Field",
@@ -1182,7 +1182,7 @@ CardSets.register({
       "id": "m-t-bank-stadium",
       "subtitle": "Home of the Baltimore Ravens",
       "details": "Opened 1998; the Bank.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/M%26T_Bank_Stadium_in_Baltimore.jpg/1280px-M%26T_Bank_Stadium_in_Baltimore.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/M%26T_Bank_Stadium_in_Baltimore.jpg/500px-M%26T_Bank_Stadium_in_Baltimore.jpg"
     },
     {
       "name": "Paycor Stadium",
@@ -1198,7 +1198,7 @@ CardSets.register({
       "id": "huntington-bank-field",
       "subtitle": "Home of the Cleveland Browns",
       "details": "Dawg Pound barks here.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/FirstEnergy_Stadium_50_yardline_panorama.png/1280px-FirstEnergy_Stadium_50_yardline_panorama.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/FirstEnergy_Stadium_50_yardline_panorama.png/500px-FirstEnergy_Stadium_50_yardline_panorama.png"
     },
     {
       "name": "Nissan Stadium",
@@ -1206,7 +1206,7 @@ CardSets.register({
       "id": "nissan-stadium",
       "subtitle": "Home of the Tennessee Titans",
       "details": "Opened 1999 on the Cumberland River.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/83/Nissan_International_Stadium_Yokohama.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Nissan_International_Stadium_Yokohama.jpg/500px-Nissan_International_Stadium_Yokohama.jpg"
     },
     {
       "name": "EverBank Stadium",
@@ -1214,7 +1214,7 @@ CardSets.register({
       "id": "everbank-stadium",
       "subtitle": "Home of the Jacksonville Jaguars",
       "details": "Pools in the end zone.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/EverBank_Stadium_aerial_view.jpg/1280px-EverBank_Stadium_aerial_view.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/EverBank_Stadium_aerial_view.jpg/500px-EverBank_Stadium_aerial_view.jpg"
     },
     {
       "name": "NRG Stadium",
@@ -1270,7 +1270,7 @@ CardSets.register({
       "id": "bank-of-america-stadium",
       "subtitle": "Home of the Carolina Panthers",
       "details": "Keep Pounding in Charlotte.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Aerial_view_of_Bank_of_America_Stadium_in_Charlotte.jpg/1280px-Aerial_view_of_Bank_of_America_Stadium_in_Charlotte.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Aerial_view_of_Bank_of_America_Stadium_in_Charlotte.jpg/500px-Aerial_view_of_Bank_of_America_Stadium_in_Charlotte.jpg"
     },
     {
       "name": "Caesars Superdome",
@@ -1326,7 +1326,7 @@ CardSets.register({
       "id": "caleb-williams",
       "subtitle": "Quarterback, Chicago Bears",
       "details": "2024 No. 1 pick; Chicago's hope.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Caleb_Williams_%2854858668366%29_%28cropped%29.jpg/1280px-Caleb_Williams_%2854858668366%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Caleb_Williams_%2854858668366%29_%28cropped%29.jpg/500px-Caleb_Williams_%2854858668366%29_%28cropped%29.jpg"
     },
     {
       "name": "J.J. McCarthy",
@@ -1350,7 +1350,7 @@ CardSets.register({
       "id": "cam-ward",
       "subtitle": "Quarterback, Tennessee Titans",
       "details": "2025 No. 1 overall pick.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c3/2025_TEN_vs_DEN_-_QB_Cam_Ward_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/2025_TEN_vs_DEN_-_QB_Cam_Ward_%28cropped%29.png/500px-2025_TEN_vs_DEN_-_QB_Cam_Ward_%28cropped%29.png"
     },
     {
       "name": "Trevor Lawrence",
@@ -1398,7 +1398,7 @@ CardSets.register({
       "id": "shedeur-sanders",
       "subtitle": "Quarterback, Cleveland Browns",
       "details": "5th-round pick; prime spotlight.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/00/Shedeur_Sanders_8_23_2025_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Shedeur_Sanders_8_23_2025_%28cropped%29.jpg/500px-Shedeur_Sanders_8_23_2025_%28cropped%29.jpg"
     },
     {
       "name": "Tyler Shough",
@@ -1422,7 +1422,7 @@ CardSets.register({
       "id": "daniel-jones",
       "subtitle": "Quarterback, Indianapolis Colts",
       "details": "Tore Achilles in Dec 2025.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/57/Daniel_Jones_2019_crop.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Daniel_Jones_2019_crop.jpg/500px-Daniel_Jones_2019_crop.jpg"
     },
     {
       "name": "Anthony Richardson",
@@ -1430,7 +1430,7 @@ CardSets.register({
       "id": "anthony-richardson",
       "subtitle": "Quarterback, Indianapolis Colts",
       "details": "2023 No. 4 pick; oft-injured.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/01/Anthony_Richardson_NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Anthony_Richardson_NFL_Combine_%28cropped%29.png/500px-Anthony_Richardson_NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "Deshaun Watson",
@@ -1486,7 +1486,7 @@ CardSets.register({
       "id": "george-kittle",
       "subtitle": "Tight End, San Francisco 49ers",
       "details": "2025 All-Pro; the people's TE.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/George_Kittle_DSC08082_%2848940368597%29_%28cropped%29.jpg/1280px-George_Kittle_DSC08082_%2848940368597%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/George_Kittle_DSC08082_%2848940368597%29_%28cropped%29.jpg/500px-George_Kittle_DSC08082_%2848940368597%29_%28cropped%29.jpg"
     },
     {
       "name": "Trey McBride",
@@ -1542,7 +1542,7 @@ CardSets.register({
       "id": "terry-mclaurin",
       "subtitle": "Wide Receiver, Washington Commanders",
       "details": "Scary Terry; Washington's WR1.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Commanders_vs._Giants_2025_Terry_McLaurin.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Commanders_vs._Giants_2025_Terry_McLaurin.jpg/500px-Commanders_vs._Giants_2025_Terry_McLaurin.jpg"
     },
     {
       "name": "Mike Evans",
@@ -1598,7 +1598,7 @@ CardSets.register({
       "id": "breece-hall",
       "subtitle": "Running Back, New York Jets",
       "details": "Comeback from 2022 ACL tear.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/51/2026_NYJ_Media_-_Breece_Hall.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/2026_NYJ_Media_-_Breece_Hall.png/500px-2026_NYJ_Media_-_Breece_Hall.png"
     },
     {
       "name": "Kyren Williams",
@@ -1678,7 +1678,7 @@ CardSets.register({
       "id": "quinnen-williams",
       "subtitle": "Defensive Tackle, New York Jets",
       "details": "3rd overall pick in 2019.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Quinnen_Williams_New_York_Jets_NOV2023_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Quinnen_Williams_New_York_Jets_NOV2023_%28cropped%29.jpg/500px-Quinnen_Williams_New_York_Jets_NOV2023_%28cropped%29.jpg"
     },
     {
       "name": "Roquan Smith",
@@ -1694,7 +1694,7 @@ CardSets.register({
       "id": "fred-warner",
       "subtitle": "Linebacker, San Francisco 49ers",
       "details": "The NFL's best MLB.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/49ers_LB_Fred_Warner_Super_Bowl_LIV_Interview_%28cropped%29.png/1280px-49ers_LB_Fred_Warner_Super_Bowl_LIV_Interview_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/49ers_LB_Fred_Warner_Super_Bowl_LIV_Interview_%28cropped%29.png/500px-49ers_LB_Fred_Warner_Super_Bowl_LIV_Interview_%28cropped%29.png"
     },
     {
       "name": "Patrick Surtain II",
@@ -1702,7 +1702,7 @@ CardSets.register({
       "id": "patrick-surtain-ii",
       "subtitle": "Cornerback, Denver Broncos",
       "details": "2024 Defensive Player of the Year.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Patrick_Surtain_2021_%2851650411936%29_%28cropped%29.jpg/1280px-Patrick_Surtain_2021_%2851650411936%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Patrick_Surtain_2021_%2851650411936%29_%28cropped%29.jpg/500px-Patrick_Surtain_2021_%2851650411936%29_%28cropped%29.jpg"
     },
     {
       "name": "Sauce Gardner",
@@ -1710,7 +1710,7 @@ CardSets.register({
       "id": "sauce-gardner",
       "subtitle": "Cornerback, New York Jets",
       "details": "2x All-Pro to start career.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/88/2025_NYJ_Media_Day_Sauce_Gardner_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/2025_NYJ_Media_Day_Sauce_Gardner_%28cropped%29.png/500px-2025_NYJ_Media_Day_Sauce_Gardner_%28cropped%29.png"
     },
     {
       "name": "Derek Stingley Jr.",
@@ -1734,7 +1734,7 @@ CardSets.register({
       "id": "brian-branch",
       "subtitle": "Safety, Detroit Lions",
       "details": "2024 All-Pro; Detroit's enforcer.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Brian_Branch_NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Brian_Branch_NFL_Combine_%28cropped%29.png/500px-Brian_Branch_NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "Kyle Hamilton",
@@ -1790,7 +1790,7 @@ CardSets.register({
       "id": "will-howard",
       "subtitle": "Quarterback, Pittsburgh Steelers",
       "details": "2025 6th-rounder; Buckeye champ.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/WillHoward.jpg/1280px-WillHoward.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/WillHoward.jpg/500px-WillHoward.jpg"
     },
     {
       "name": "Dillon Gabriel",
@@ -1830,7 +1830,7 @@ CardSets.register({
       "id": "drew-allar",
       "subtitle": "Quarterback, Pittsburgh Steelers",
       "details": "2026 draft pick; Penn State.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/DrewAllar2.jpg/1280px-DrewAllar2.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/DrewAllar2.jpg/500px-DrewAllar2.jpg"
     },
     {
       "name": "Mitchell Trubisky",
@@ -1838,7 +1838,7 @@ CardSets.register({
       "id": "mitchell-trubisky",
       "subtitle": "Quarterback, Tennessee Titans",
       "details": "Ward's veteran backup.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Mitch_Trubisky.jpg/1280px-Mitch_Trubisky.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Mitch_Trubisky.jpg/500px-Mitch_Trubisky.jpg"
     },
     {
       "name": "Jake Browning",
@@ -1870,7 +1870,7 @@ CardSets.register({
       "id": "cam-skattebo",
       "subtitle": "Running Back, New York Giants",
       "details": "4th-round fan favorite.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Cam_Skattebo_Jan_2019.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Cam_Skattebo_Jan_2019.png/500px-Cam_Skattebo_Jan_2019.png"
     },
     {
       "name": "TreVeyon Henderson",
@@ -1918,7 +1918,7 @@ CardSets.register({
       "id": "chuba-hubbard",
       "subtitle": "Running Back, Carolina Panthers",
       "details": "1,000-yard rusher in 2024.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/57/Chuba_Hubbard.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Chuba_Hubbard.png/500px-Chuba_Hubbard.png"
     },
     {
       "name": "Aaron Jones",
@@ -1966,7 +1966,7 @@ CardSets.register({
       "id": "isiah-pacheco",
       "subtitle": "Running Back, Kansas City Chiefs",
       "details": "Runs angry; 2x champ.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Isiah_Pacheco_%2855091352760%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Isiah_Pacheco_%2855091352760%29_%28cropped%29.jpg/500px-Isiah_Pacheco_%2855091352760%29_%28cropped%29.jpg"
     },
     {
       "name": "J.K. Dobbins",
@@ -1990,7 +1990,7 @@ CardSets.register({
       "id": "tyrone-tracy-jr",
       "subtitle": "Running Back, New York Giants",
       "details": "Converted WR; 2024 rookie.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Tyrone_Tracy_Jr._%2848870526222%29_%28cropped%29.jpg/1280px-Tyrone_Tracy_Jr._%2848870526222%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Tyrone_Tracy_Jr._%2848870526222%29_%28cropped%29.jpg/500px-Tyrone_Tracy_Jr._%2848870526222%29_%28cropped%29.jpg"
     },
     {
       "name": "Trey Benson",
@@ -2006,7 +2006,7 @@ CardSets.register({
       "id": "chris-olave",
       "subtitle": "Wide Receiver, New Orleans Saints",
       "details": "Back-to-back 1,000-yard starts.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/ca/IX8A4137_%2845339431234%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/IX8A4137_%2845339431234%29_%28cropped%29.jpg/500px-IX8A4137_%2845339431234%29_%28cropped%29.jpg"
     },
     {
       "name": "Garrett Wilson",
@@ -2022,7 +2022,7 @@ CardSets.register({
       "id": "drake-london",
       "subtitle": "Wide Receiver, Atlanta Falcons",
       "details": "2022 No. 8 pick.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Drake_London_Falcons_camp_2022.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Drake_London_Falcons_camp_2022.png/500px-Drake_London_Falcons_camp_2022.png"
     },
     {
       "name": "Marvin Harrison Jr.",
@@ -2046,7 +2046,7 @@ CardSets.register({
       "id": "rashee-rice",
       "subtitle": "Wide Receiver, Kansas City Chiefs",
       "details": "2023 2nd-rounder.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Rashee_Rice_%2855090108907%29_%28cropped%29.jpg/1280px-Rashee_Rice_%2855090108907%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Rashee_Rice_%2855090108907%29_%28cropped%29.jpg/500px-Rashee_Rice_%2855090108907%29_%28cropped%29.jpg"
     },
     {
       "name": "Xavier Worthy",
@@ -2094,7 +2094,7 @@ CardSets.register({
       "id": "quentin-johnston",
       "subtitle": "Wide Receiver, Los Angeles Chargers",
       "details": "2023 1st-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/ba/Quentin_Johnston_%28August_2026%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Quentin_Johnston_%28August_2026%29_%28cropped%29.jpg/500px-Quentin_Johnston_%28August_2026%29_%28cropped%29.jpg"
     },
     {
       "name": "Ladd McConkey",
@@ -2102,7 +2102,7 @@ CardSets.register({
       "id": "ladd-mcconkey",
       "subtitle": "Wide Receiver, Los Angeles Chargers",
       "details": "2024 2nd-round steal.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Ladd_McConkey_%28August_2026%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Ladd_McConkey_%28August_2026%29.jpg/500px-Ladd_McConkey_%28August_2026%29.jpg"
     },
     {
       "name": "Jakobi Meyers",
@@ -2142,7 +2142,7 @@ CardSets.register({
       "id": "rashod-bateman",
       "subtitle": "Wide Receiver, Baltimore Ravens",
       "details": "2021 1st-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Rashod_Bateman_-_2024_Ravens_Training_Camp_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Rashod_Bateman_-_2024_Ravens_Training_Camp_%28cropped%29.jpg/500px-Rashod_Bateman_-_2024_Ravens_Training_Camp_%28cropped%29.jpg"
     },
     {
       "name": "Jordan Addison",
@@ -2190,7 +2190,7 @@ CardSets.register({
       "id": "ricky-pearsall",
       "subtitle": "Wide Receiver, San Francisco 49ers",
       "details": "2024 1st-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Ricky_Pearsall_Senior_Bowl.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Ricky_Pearsall_Senior_Bowl.png/500px-Ricky_Pearsall_Senior_Bowl.png"
     },
     {
       "name": "Malik Washington",
@@ -2230,7 +2230,7 @@ CardSets.register({
       "id": "david-njoku",
       "subtitle": "Tight End, Cleveland Browns",
       "details": "2023 Pro Bowler.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/David_Njoku_Browns_vs_Steelers_OCT2021_-_51653877071.jpg/1280px-David_Njoku_Browns_vs_Steelers_OCT2021_-_51653877071.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/David_Njoku_Browns_vs_Steelers_OCT2021_-_51653877071.jpg/500px-David_Njoku_Browns_vs_Steelers_OCT2021_-_51653877071.jpg"
     },
     {
       "name": "Harold Fannin Jr.",
@@ -2238,7 +2238,7 @@ CardSets.register({
       "id": "harold-fannin-jr",
       "subtitle": "Tight End, Cleveland Browns",
       "details": "2025 rookie standout.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Harold_Fannin_Jr._2026_Cleveland_Browns_training_camp_%28cropped%29.jpg/1280px-Harold_Fannin_Jr._2026_Cleveland_Browns_training_camp_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Harold_Fannin_Jr._2026_Cleveland_Browns_training_camp_%28cropped%29.jpg/500px-Harold_Fannin_Jr._2026_Cleveland_Browns_training_camp_%28cropped%29.jpg"
     },
     {
       "name": "Jake Ferguson",
@@ -2270,7 +2270,7 @@ CardSets.register({
       "id": "chig-okonkwo",
       "subtitle": "Tight End, Tennessee Titans",
       "details": "Athletic seam threat.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/98/Chigoziem_Okonkwo_Music_City_Football_Episode_2_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Chigoziem_Okonkwo_Music_City_Football_Episode_2_%28cropped%29.png/500px-Chigoziem_Okonkwo_Music_City_Football_Episode_2_%28cropped%29.png"
     },
     {
       "name": "Jonnu Smith",
@@ -2286,7 +2286,7 @@ CardSets.register({
       "id": "cole-kmet",
       "subtitle": "Tight End, Chicago Bears",
       "details": "Bears' longtime TE.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/76/Cole_Kmet_visits_KMC%2C_hosts_youth_football_camp_%28A-Roll%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Cole_Kmet_visits_KMC%2C_hosts_youth_football_camp_%28A-Roll%29.png/500px-Cole_Kmet_visits_KMC%2C_hosts_youth_football_camp_%28A-Roll%29.png"
     },
     {
       "name": "Colston Loveland",
@@ -2350,7 +2350,7 @@ CardSets.register({
       "id": "lane-johnson",
       "subtitle": "Tackle, Philadelphia Eagles",
       "details": "2x champ; Philly's anchor.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Lane_Johnson_Training_Camp_2025_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Lane_Johnson_Training_Camp_2025_%28cropped%29.jpg/500px-Lane_Johnson_Training_Camp_2025_%28cropped%29.jpg"
     },
     {
       "name": "Jordan Mailata",
@@ -2358,7 +2358,7 @@ CardSets.register({
       "id": "jordan-mailata",
       "subtitle": "Tackle, Philadelphia Eagles",
       "details": "Ex-rugby player; All-Pro.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/dd/2025_Philadelphia_Eagles_Visit_ANC_-_Jordan_Mailata_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/2025_Philadelphia_Eagles_Visit_ANC_-_Jordan_Mailata_%28cropped%29.jpg/500px-2025_Philadelphia_Eagles_Visit_ANC_-_Jordan_Mailata_%28cropped%29.jpg"
     },
     {
       "name": "Dion Dawkins",
@@ -2422,7 +2422,7 @@ CardSets.register({
       "id": "chris-lindstrom",
       "subtitle": "Guard, Atlanta Falcons",
       "details": "3x All-Pro.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/ATL_Falcons_Chris_Lindstrom_2022_%28cropped%29.png/1280px-ATL_Falcons_Chris_Lindstrom_2022_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/ATL_Falcons_Chris_Lindstrom_2022_%28cropped%29.png/500px-ATL_Falcons_Chris_Lindstrom_2022_%28cropped%29.png"
     },
     {
       "name": "Landon Dickerson",
@@ -2430,7 +2430,7 @@ CardSets.register({
       "id": "landon-dickerson",
       "subtitle": "Guard, Philadelphia Eagles",
       "details": "Alabama mauler.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Landon_Dickerson_-_Philadelphia_Eagles_Visit_ANC_April_2025_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Landon_Dickerson_-_Philadelphia_Eagles_Visit_ANC_April_2025_%28cropped%29.jpg/500px-Landon_Dickerson_-_Philadelphia_Eagles_Visit_ANC_April_2025_%28cropped%29.jpg"
     },
     {
       "name": "Will Campbell",
@@ -2446,7 +2446,7 @@ CardSets.register({
       "id": "kelvin-banks-jr",
       "subtitle": "Tackle, New Orleans Saints",
       "details": "2025 No. 9 pick.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/84/Kelvin_Banks_Jr.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Kelvin_Banks_Jr.jpg/500px-Kelvin_Banks_Jr.jpg"
     },
     {
       "name": "Cameron Heyward",
@@ -2454,7 +2454,7 @@ CardSets.register({
       "id": "cameron-heyward",
       "subtitle": "Defensive Tackle, Pittsburgh Steelers",
       "details": "2024 All-Pro; 14 seasons.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/85/Cameron_Heyward_OCT2021_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/Cameron_Heyward_OCT2021_%28cropped%29.jpg/500px-Cameron_Heyward_OCT2021_%28cropped%29.jpg"
     },
     {
       "name": "Leonard Williams",
@@ -2486,7 +2486,7 @@ CardSets.register({
       "id": "jeffery-simmons",
       "subtitle": "Defensive Tackle, Tennessee Titans",
       "details": "2x Pro Bowler.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/2026_Tennessee_Titans_New_Jersey_Photo_Shoot_-_Jeffery_Simmons_%28cropped%29.png/1280px-2026_Tennessee_Titans_New_Jersey_Photo_Shoot_-_Jeffery_Simmons_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/2026_Tennessee_Titans_New_Jersey_Photo_Shoot_-_Jeffery_Simmons_%28cropped%29.png/500px-2026_Tennessee_Titans_New_Jersey_Photo_Shoot_-_Jeffery_Simmons_%28cropped%29.png"
     },
     {
       "name": "Grady Jarrett",
@@ -2502,7 +2502,7 @@ CardSets.register({
       "id": "kenny-clark",
       "subtitle": "Defensive Tackle, Dallas Cowboys",
       "details": "Parsons trade piece.",
-      "image": "https://gsp-image-cdn.wmsports.io/cms/prod/bleacher-report/ap_images/2026-03/0e20bf060abc4eee89bed363e4529421/Vikings_Cowboys_Football_91204_4320x2430_%280,267%29.jpg"
+      "image": "assets/sets/compress/nfl-collection__kenny-clark.webp"
     },
     {
       "name": "Kobie Turner",
@@ -2518,7 +2518,7 @@ CardSets.register({
       "id": "byron-young",
       "subtitle": "Edge Rusher, Los Angeles Rams",
       "details": "2023 3rd-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/de/Byron_Young_NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Byron_Young_NFL_Combine_%28cropped%29.png/500px-Byron_Young_NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "Zach Allen",
@@ -2534,7 +2534,7 @@ CardSets.register({
       "id": "andrew-van-ginkel",
       "subtitle": "Linebacker, Minnesota Vikings",
       "details": "2024 breakout; pick-6 king.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Andrew_Van_Ginkel_Dolphins-Falcons_OCT2021.png/1280px-Andrew_Van_Ginkel_Dolphins-Falcons_OCT2021.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Andrew_Van_Ginkel_Dolphins-Falcons_OCT2021.png/500px-Andrew_Van_Ginkel_Dolphins-Falcons_OCT2021.png"
     },
     {
       "name": "Jonathan Greenard",
@@ -2550,7 +2550,7 @@ CardSets.register({
       "id": "danielle-hunter",
       "subtitle": "Defensive End, Houston Texans",
       "details": "4x Pro Bowler.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/59/Danielle_Hunter.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Danielle_Hunter.JPG/500px-Danielle_Hunter.JPG"
     },
     {
       "name": "Will Anderson Jr.",
@@ -2558,7 +2558,7 @@ CardSets.register({
       "id": "will-anderson-jr",
       "subtitle": "Defensive End, Houston Texans",
       "details": "2023 DROY; No. 3 pick.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Will_Anderson_Jr._NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Will_Anderson_Jr._NFL_Combine_%28cropped%29.png/500px-Will_Anderson_Jr._NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "Josh Hines-Allen",
@@ -2582,7 +2582,7 @@ CardSets.register({
       "id": "aidan-hutchinson",
       "subtitle": "Defensive End, Detroit Lions",
       "details": "2022 No. 2 pick.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Aidan_Hutchinson.jpg/1280px-Aidan_Hutchinson.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Aidan_Hutchinson.jpg/500px-Aidan_Hutchinson.jpg"
     },
     {
       "name": "Brian Burns",
@@ -2622,7 +2622,7 @@ CardSets.register({
       "id": "bobby-wagner",
       "subtitle": "Linebacker, Washington Commanders",
       "details": "2025 Walter Payton MOY.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Bobby_Wagner_-_2025_Commanders_at_Chargers_%28cropped%29.jpg/1280px-Bobby_Wagner_-_2025_Commanders_at_Chargers_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Bobby_Wagner_-_2025_Commanders_at_Chargers_%28cropped%29.jpg/500px-Bobby_Wagner_-_2025_Commanders_at_Chargers_%28cropped%29.jpg"
     },
     {
       "name": "Lavonte David",
@@ -2630,7 +2630,7 @@ CardSets.register({
       "id": "lavonte-david",
       "subtitle": "Linebacker, Tampa Bay Buccaneers",
       "details": "Bucs lifer since 2012.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Lavonte_David.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Lavonte_David.JPG/500px-Lavonte_David.JPG"
     },
     {
       "name": "Demario Davis",
@@ -2638,7 +2638,7 @@ CardSets.register({
       "id": "demario-davis",
       "subtitle": "Linebacker, New Orleans Saints",
       "details": "5x All-Pro.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/80/2026_NYJ_Free_Agency_Press_Conference_-_Demario_Davis.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/2026_NYJ_Free_Agency_Press_Conference_-_Demario_Davis.png/250px-2026_NYJ_Free_Agency_Press_Conference_-_Demario_Davis.png"
     },
     {
       "name": "Tremaine Edmunds",
@@ -2654,7 +2654,7 @@ CardSets.register({
       "id": "jack-campbell",
       "subtitle": "Linebacker, Detroit Lions",
       "details": "2023 1st-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/13/Jack_Campbell_NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Jack_Campbell_NFL_Combine_%28cropped%29.png/500px-Jack_Campbell_NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "Frankie Luvu",
@@ -2670,7 +2670,7 @@ CardSets.register({
       "id": "daiyan-henley",
       "subtitle": "Linebacker, Los Angeles Chargers",
       "details": "2024 breakout.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/90/Daiyan_Henley_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Daiyan_Henley_%28cropped%29.jpg/500px-Daiyan_Henley_%28cropped%29.jpg"
     },
     {
       "name": "Ernest Jones",
@@ -2710,7 +2710,7 @@ CardSets.register({
       "id": "alex-highsmith",
       "subtitle": "Linebacker, Pittsburgh Steelers",
       "details": "2022: 14.5 sacks.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/AlexHighsmith.jpg/1280px-AlexHighsmith.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/AlexHighsmith.jpg/500px-AlexHighsmith.jpg"
     },
     {
       "name": "Nakobe Dean",
@@ -2766,7 +2766,7 @@ CardSets.register({
       "id": "uchenna-nwosu",
       "subtitle": "Linebacker, Seattle Seahawks",
       "details": "SB LX pick-6.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Uchenna_Nwosu_2018.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Uchenna_Nwosu_2018.png/250px-Uchenna_Nwosu_2018.png"
     },
     {
       "name": "Derick Hall",
@@ -2774,7 +2774,7 @@ CardSets.register({
       "id": "derick-hall",
       "subtitle": "Linebacker, Seattle Seahawks",
       "details": "SB LX strip-sack.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Derick_Hall_at_Super_Bowl_LX_Victory_Parade_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Derick_Hall_at_Super_Bowl_LX_Victory_Parade_%28cropped%29.jpg/500px-Derick_Hall_at_Super_Bowl_LX_Victory_Parade_%28cropped%29.jpg"
     },
     {
       "name": "Jalen Ramsey",
@@ -2790,7 +2790,7 @@ CardSets.register({
       "id": "minkah-fitzpatrick",
       "subtitle": "Safety, New York Jets",
       "details": "Traded from Miami in 2026.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/ff/2026_NYJ_Press_Conference_-_Minkah_Fitzpatrick.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/2026_NYJ_Press_Conference_-_Minkah_Fitzpatrick.png/500px-2026_NYJ_Press_Conference_-_Minkah_Fitzpatrick.png"
     },
     {
       "name": "Marlon Humphrey",
@@ -2798,7 +2798,7 @@ CardSets.register({
       "id": "marlon-humphrey",
       "subtitle": "Cornerback, Baltimore Ravens",
       "details": "3x Pro Bowler.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Marlon_Humphrey_Ravens_Training_Camp_AUG2023_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Marlon_Humphrey_Ravens_Training_Camp_AUG2023_%28cropped%29.jpg/500px-Marlon_Humphrey_Ravens_Training_Camp_AUG2023_%28cropped%29.jpg"
     },
     {
       "name": "Nate Wiggins",
@@ -2862,7 +2862,7 @@ CardSets.register({
       "id": "christian-gonzalez",
       "subtitle": "Cornerback, New England Patriots",
       "details": "SB LX: 3 fingertip stops.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/13/Christian_Gonzalez_NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Christian_Gonzalez_NFL_Combine_%28cropped%29.png/500px-Christian_Gonzalez_NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "Carlton Davis",
@@ -2894,7 +2894,7 @@ CardSets.register({
       "id": "marshon-lattimore",
       "subtitle": "Cornerback, Washington Commanders",
       "details": "2017 DROY.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/76/Marshon_Lattimore_2025.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Marshon_Lattimore_2025.jpg/500px-Marshon_Lattimore_2025.jpg"
     },
     {
       "name": "Mike Sainristil",
@@ -2910,7 +2910,7 @@ CardSets.register({
       "id": "joey-porter-jr",
       "subtitle": "Cornerback, Pittsburgh Steelers",
       "details": "2023 1st-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Joey_Porter_Jr._NFL_Combine_%28cropped%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Joey_Porter_Jr._NFL_Combine_%28cropped%29.png/500px-Joey_Porter_Jr._NFL_Combine_%28cropped%29.png"
     },
     {
       "name": "DeShon Elliott",
@@ -2966,7 +2966,7 @@ CardSets.register({
       "id": "talanoa-hufanga",
       "subtitle": "Safety, Denver Broncos",
       "details": "2022 All-Pro; signed in 2025.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/80/Hufanga_2025.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Hufanga_2025.png/500px-Hufanga_2025.png"
     },
     {
       "name": "Brandon Jones",
@@ -2982,7 +2982,7 @@ CardSets.register({
       "id": "coby-bryant",
       "subtitle": "Safety, Seattle Seahawks",
       "details": "2022 4th-rounder; converted corner.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/91/Coby_Bryant_%28211023-N-SM112-0332%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Coby_Bryant_%28211023-N-SM112-0332%29_%28cropped%29.jpg/500px-Coby_Bryant_%28211023-N-SM112-0332%29_%28cropped%29.jpg"
     },
     {
       "name": "Brandon Aubrey",
@@ -3030,7 +3030,7 @@ CardSets.register({
       "id": "jake-elliott",
       "subtitle": "Kicker, Philadelphia Eagles",
       "details": "61-yarder in 2023.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/57/Jake_Elliott_-_April_2025_Philadelphia_Eagles_Visit_ANC_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Jake_Elliott_-_April_2025_Philadelphia_Eagles_Visit_ANC_%28cropped%29.jpg/500px-Jake_Elliott_-_April_2025_Philadelphia_Eagles_Visit_ANC_%28cropped%29.jpg"
     },
     {
       "name": "Tyler Bass",
@@ -3038,7 +3038,7 @@ CardSets.register({
       "id": "tyler-bass",
       "subtitle": "Kicker, Buffalo Bills",
       "details": "2020 6th-rounder.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Tyler_Bass_%2851528385837%29_%28cropped%29.jpg/1280px-Tyler_Bass_%2851528385837%29_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Tyler_Bass_%2851528385837%29_%28cropped%29.jpg/500px-Tyler_Bass_%2851528385837%29_%28cropped%29.jpg"
     },
     {
       "name": "Daniel Carlson",
@@ -3046,7 +3046,7 @@ CardSets.register({
       "id": "daniel-carlson",
       "subtitle": "Kicker, Las Vegas Raiders",
       "details": "2022 All-Pro.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Daniel_Carlson_Las_Vegas_Raiders_2021_%28cropped%29.jpg/1280px-Daniel_Carlson_Las_Vegas_Raiders_2021_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Daniel_Carlson_Las_Vegas_Raiders_2021_%28cropped%29.jpg/500px-Daniel_Carlson_Las_Vegas_Raiders_2021_%28cropped%29.jpg"
     },
     {
       "name": "Ka'imi Fairbairn",
@@ -3054,7 +3054,7 @@ CardSets.register({
       "id": "ka-imi-fairbairn",
       "subtitle": "Kicker, Houston Texans",
       "details": "Texans' scoring leader.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Ka%CA%BBimi_Fairbairn_in_2026_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Ka%CA%BBimi_Fairbairn_in_2026_%28cropped%29.jpg/500px-Ka%CA%BBimi_Fairbairn_in_2026_%28cropped%29.jpg"
     },
     {
       "name": "Andre Szmyt",
@@ -3086,7 +3086,7 @@ CardSets.register({
       "id": "kavontae-turpin",
       "subtitle": "Returner, Dallas Cowboys",
       "details": "All-Pro return man.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/KaVontae_Turpin_%28cropped%29.jpg/1280px-KaVontae_Turpin_%28cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/KaVontae_Turpin_%28cropped%29.jpg/500px-KaVontae_Turpin_%28cropped%29.jpg"
     }
   ]
 });
