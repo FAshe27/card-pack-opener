@@ -50,7 +50,7 @@ CardSets.register({
       "id": "new-york",
       "subtitle": "State",
       "details": "The Empire State; Albany is the capital. The Statue of Liberty has welcomed arrivals in New York Harbor since 1886.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_New_York.svg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_New_York.svg/500px-Flag_of_New_York.svg.png"
     },
     {
       "name": "Pennsylvania",
@@ -218,7 +218,7 @@ CardSets.register({
       "id": "louisiana",
       "subtitle": "State",
       "details": "The Pelican State; Baton Rouge is the capital. The only state divided into parishes instead of counties.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Flag_of_Louisiana.svg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Flag_of_Louisiana.svg/500px-Flag_of_Louisiana.svg.png"
     },
     {
       "name": "Kentucky",
@@ -322,7 +322,7 @@ CardSets.register({
       "id": "idaho",
       "subtitle": "State",
       "details": "The Gem State; Boise is the capital. Famous for potatoes and for Hells Canyon, the deepest river gorge in North America.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_Idaho.svg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_Idaho.svg/500px-Flag_of_Idaho.svg.png"
     },
     {
       "name": "West Virginia",
@@ -330,7 +330,7 @@ CardSets.register({
       "id": "west-virginia",
       "subtitle": "State",
       "details": "The Mountain State; Charleston is the capital. The only state formed by seceding from another state.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/22/Flag_of_West_Virginia.svg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Flag_of_West_Virginia.svg/500px-Flag_of_West_Virginia.svg.png"
     },
     {
       "name": "Hawaii",
