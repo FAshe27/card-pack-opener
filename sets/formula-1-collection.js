@@ -38,7 +38,7 @@ CardSets.register({
       "id": "alain-prost",
       "subtitle": "Driver",
       "details": "4 titles, 51 wins; The Professor.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Festival_automobile_international_2015_-_Photocall_-_065_%28cropped3%29.jpg/1280px-Festival_automobile_international_2015_-_Photocall_-_065_%28cropped3%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Festival_automobile_international_2015_-_Photocall_-_065_%28cropped3%29.jpg/500px-Festival_automobile_international_2015_-_Photocall_-_065_%28cropped3%29.jpg"
     },
     {
       "name": "Juan Manuel Fangio",
@@ -54,7 +54,7 @@ CardSets.register({
       "id": "niki-lauda",
       "subtitle": "Driver",
       "details": "3 titles; racing again 6 weeks after the fire.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Lauda_at_1982_Dutch_Grand_Prix.jpg/1280px-Lauda_at_1982_Dutch_Grand_Prix.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Lauda_at_1982_Dutch_Grand_Prix.jpg/500px-Lauda_at_1982_Dutch_Grand_Prix.jpg"
     },
     {
       "name": "Jim Clark",
@@ -190,7 +190,7 @@ CardSets.register({
       "id": "max-verstappen",
       "subtitle": "Driver",
       "details": "4 straight titles (2021–24); a generational talent.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3973_by_Stepro_%28medium_crop%29.jpg/1280px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3973_by_Stepro_%28medium_crop%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3973_by_Stepro_%28medium_crop%29.jpg/500px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3973_by_Stepro_%28medium_crop%29.jpg"
     },
     {
       "name": "Lando Norris",
@@ -198,7 +198,7 @@ CardSets.register({
       "id": "lando-norris",
       "subtitle": "Driver",
       "details": "2025 world champion; McLaren's No. 1.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/90/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg/500px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg"
     },
     {
       "name": "Oscar Piastri",
@@ -302,7 +302,7 @@ CardSets.register({
       "id": "silverstone",
       "subtitle": "Circuit",
       "details": "Hosted the first F1 championship race, 1950.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Silverstone_Circuit%2C_July_2%2C_2018_SkySat_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Silverstone_Circuit%2C_July_2%2C_2018_SkySat_%28cropped%29.jpg/500px-Silverstone_Circuit%2C_July_2%2C_2018_SkySat_%28cropped%29.jpg"
     },
     {
       "name": "Monza",
@@ -374,7 +374,7 @@ CardSets.register({
       "id": "emerson-fittipaldi",
       "subtitle": "Driver",
       "details": "2 titles (1972, 1974); Brazil's first champ.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Emerson_Fittipaldi_in_2020_%28cropped%29.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Emerson_Fittipaldi_in_2020_%28cropped%29.JPG/500px-Emerson_Fittipaldi_in_2020_%28cropped%29.JPG"
     },
     {
       "name": "Graham Hill",
@@ -382,7 +382,7 @@ CardSets.register({
       "id": "graham-hill",
       "subtitle": "Driver",
       "details": "2x champion; the only Triple Crown winner.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Graham_Hill_Bestanddeelnr_924-6564.jpg/1280px-Graham_Hill_Bestanddeelnr_924-6564.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Graham_Hill_Bestanddeelnr_924-6564.jpg/500px-Graham_Hill_Bestanddeelnr_924-6564.jpg"
     },
     {
       "name": "Alberto Ascari",
@@ -398,7 +398,7 @@ CardSets.register({
       "id": "mercedes-w11",
       "subtitle": "Car",
       "details": "The fastest F1 car ever built; DAS and all.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a5/2020_Formula_One_tests_Barcelona%2C_Mercedes-AMG_F1_W11_EQ_Performance%2C_Hamilton.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/2020_Formula_One_tests_Barcelona%2C_Mercedes-AMG_F1_W11_EQ_Performance%2C_Hamilton.jpg/500px-2020_Formula_One_tests_Barcelona%2C_Mercedes-AMG_F1_W11_EQ_Performance%2C_Hamilton.jpg"
     },
     {
       "name": "McLaren MP4/13",
@@ -550,7 +550,7 @@ CardSets.register({
       "id": "adrian-newey",
       "subtitle": "Designer",
       "details": "His cars have won 12 constructors' titles.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Adrian_Newey_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8662%29.jpg/1280px-Adrian_Newey_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8662%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Adrian_Newey_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8662%29.jpg/500px-Adrian_Newey_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8662%29.jpg"
     },
     {
       "name": "Colin Chapman",
@@ -582,7 +582,7 @@ CardSets.register({
       "id": "damon-hill",
       "subtitle": "Driver",
       "details": "1996 champion; 22 wins.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Damon_Hill_at_the_Atlassian_Williams_Racing_Fan_Zone_of_2026_%28028A8241%29.jpg/1280px-Damon_Hill_at_the_Atlassian_Williams_Racing_Fan_Zone_of_2026_%28028A8241%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Damon_Hill_at_the_Atlassian_Williams_Racing_Fan_Zone_of_2026_%28028A8241%29.jpg/500px-Damon_Hill_at_the_Atlassian_Williams_Racing_Fan_Zone_of_2026_%28028A8241%29.jpg"
     },
     {
       "name": "Jacques Villeneuve",
@@ -598,7 +598,7 @@ CardSets.register({
       "id": "jenson-button",
       "subtitle": "Driver",
       "details": "2009 champion; 15 wins; the smooth one.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Jenson_Button_2024_WEC_Fuji.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Jenson_Button_2024_WEC_Fuji.jpg/500px-Jenson_Button_2024_WEC_Fuji.jpg"
     },
     {
       "name": "Nico Rosberg",
@@ -622,7 +622,7 @@ CardSets.register({
       "id": "james-hunt",
       "subtitle": "Driver",
       "details": "1976 champion; 10 wins; the playboy.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/12/J._Hunt_in_1977_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/J._Hunt_in_1977_%28cropped%29.jpg/500px-J._Hunt_in_1977_%28cropped%29.jpg"
     },
     {
       "name": "Denny Hulme",
@@ -638,7 +638,7 @@ CardSets.register({
       "id": "jochen-rindt",
       "subtitle": "Driver",
       "details": "1970 champion; the only posthumous title.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Rindt_at_1970_Dutch_Grand_Prix_%282C%29.jpg/1280px-Rindt_at_1970_Dutch_Grand_Prix_%282C%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Rindt_at_1970_Dutch_Grand_Prix_%282C%29.jpg/500px-Rindt_at_1970_Dutch_Grand_Prix_%282C%29.jpg"
     },
     {
       "name": "Phil Hill",
@@ -670,7 +670,7 @@ CardSets.register({
       "id": "giuseppe-farina",
       "subtitle": "Driver",
       "details": "1950: the very first world champion.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Giuseppe_Farina_-_El_Gr%C3%A1fico_1750.jpg/1280px-Giuseppe_Farina_-_El_Gr%C3%A1fico_1750.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Giuseppe_Farina_-_El_Gr%C3%A1fico_1750.jpg/500px-Giuseppe_Farina_-_El_Gr%C3%A1fico_1750.jpg"
     },
     {
       "name": "Jody Scheckter",
@@ -686,7 +686,7 @@ CardSets.register({
       "id": "keke-rosberg",
       "subtitle": "Driver",
       "details": "1982 champion; 5 wins.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Anefo_932-2378_Keke_Rosberg%2C_Zandvoort%2C_03-07-1982_-_Restoration.jpg/1280px-Anefo_932-2378_Keke_Rosberg%2C_Zandvoort%2C_03-07-1982_-_Restoration.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Anefo_932-2378_Keke_Rosberg%2C_Zandvoort%2C_03-07-1982_-_Restoration.jpg/500px-Anefo_932-2378_Keke_Rosberg%2C_Zandvoort%2C_03-07-1982_-_Restoration.jpg"
     },
     {
       "name": "Sergio Pérez",
@@ -718,7 +718,7 @@ CardSets.register({
       "id": "carlos-sainz",
       "subtitle": "Driver",
       "details": "The Smooth Operator; joined Williams in 2025.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/3d/2026_Chinese_GP_-_Williams_-_Carlos_Sainz_-_FP1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/2026_Chinese_GP_-_Williams_-_Carlos_Sainz_-_FP1.jpg/500px-2026_Chinese_GP_-_Williams_-_Carlos_Sainz_-_FP1.jpg"
     },
     {
       "name": "Christian Horner",
@@ -806,7 +806,7 @@ CardSets.register({
       "id": "2011-canadian-grand-prix",
       "subtitle": "Race",
       "details": "The longest race ever; Button won it from last.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg/1280px-%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg/500px-%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg.png"
     },
     {
       "name": "2012 Brazilian Grand Prix",
@@ -838,7 +838,7 @@ CardSets.register({
       "id": "safety-car",
       "subtitle": "Race Control",
       "details": "Bernd Mayländer has driven it since 2000.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/08/2024_Aston_Martin_Vantage_V8_F1_Safety_Car_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/2024_Aston_Martin_Vantage_V8_F1_Safety_Car_1.jpg/500px-2024_Aston_Martin_Vantage_V8_F1_Safety_Car_1.jpg"
     },
     {
       "name": "DRS",
@@ -854,7 +854,7 @@ CardSets.register({
       "id": "pole-position",
       "subtitle": "Qualifying",
       "details": "P1 on the grid; Saturday's prize.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e7/FIA_F1_Austria_2018_Bottas_scored_the_fastest_lap.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/FIA_F1_Austria_2018_Bottas_scored_the_fastest_lap.jpg/500px-FIA_F1_Austria_2018_Bottas_scored_the_fastest_lap.jpg"
     },
     {
       "name": "Constructors' Championship",
@@ -886,7 +886,7 @@ CardSets.register({
       "id": "parc-ferme",
       "subtitle": "Regulation",
       "details": "No-touch zone; the cars are sealed.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Formel3_parc_ferme2006.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Formel3_parc_ferme2006.jpg/500px-Formel3_parc_ferme2006.jpg"
     },
     {
       "name": "Fastest Lap",
@@ -902,7 +902,7 @@ CardSets.register({
       "id": "lotus-49",
       "subtitle": "Car",
       "details": "Debuted the Cosworth DFV; Clark's rocket.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/HillGraham19690801Lotus-Nordkehre.jpg/1280px-HillGraham19690801Lotus-Nordkehre.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/HillGraham19690801Lotus-Nordkehre.jpg/500px-HillGraham19690801Lotus-Nordkehre.jpg"
     },
     {
       "name": "McLaren M23",
@@ -926,7 +926,7 @@ CardSets.register({
       "id": "mercedes-w05",
       "subtitle": "Car",
       "details": "Started the hybrid-era steamroller.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Lewis_Hamilton_2014_Singapore_FP1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Lewis_Hamilton_2014_Singapore_FP1.jpg/500px-Lewis_Hamilton_2014_Singapore_FP1.jpg"
     },
     {
       "name": "Imola",
@@ -934,7 +934,7 @@ CardSets.register({
       "id": "imola",
       "subtitle": "Circuit",
       "details": "Tamburello's shadow; a driver's track.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Autodromo_aerea_poster.jpg/1280px-Autodromo_aerea_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Autodromo_aerea_poster.jpg/500px-Autodromo_aerea_poster.jpg"
     },
     {
       "name": "Zandvoort",
@@ -942,7 +942,7 @@ CardSets.register({
       "id": "zandvoort",
       "subtitle": "Circuit",
       "details": "Banked final corner; the Orange Army's home.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/55/Aerial_view_of_Motorsport_race_track_Circuit_Zandvoort_Formula_one_%2840889997713%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Aerial_view_of_Motorsport_race_track_Circuit_Zandvoort_Formula_one_%2840889997713%29.jpg/500px-Aerial_view_of_Motorsport_race_track_Circuit_Zandvoort_Formula_one_%2840889997713%29.jpg"
     },
     {
       "name": "Circuit of the Americas",
@@ -998,7 +998,7 @@ CardSets.register({
       "id": "pierre-gasly",
       "subtitle": "Driver",
       "details": "2020 Italian GP winner; Alpine's talisman.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Pierre_Gasly_2017_Malaysia.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Pierre_Gasly_2017_Malaysia.jpg/500px-Pierre_Gasly_2017_Malaysia.jpg"
     },
     {
       "name": "Franco Colapinto",
@@ -1030,7 +1030,7 @@ CardSets.register({
       "id": "liam-lawson",
       "subtitle": "Driver",
       "details": "New Zealand's finest; full-time since 2024.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Liam_Lawson_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7795%29.jpg/1280px-Liam_Lawson_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7795%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Liam_Lawson_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7795%29.jpg/500px-Liam_Lawson_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7795%29.jpg"
     },
     {
       "name": "Arvid Lindblad",
@@ -1038,7 +1038,7 @@ CardSets.register({
       "id": "arvid-lindblad",
       "subtitle": "Driver",
       "details": "The grid's only rookie in 2026.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Arvid_Lindblad_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7869%29_%28cropped%29.jpg/1280px-Arvid_Lindblad_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7869%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Arvid_Lindblad_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7869%29_%28cropped%29.jpg/500px-Arvid_Lindblad_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7869%29_%28cropped%29.jpg"
     },
     {
       "name": "Nico Hülkenberg",
@@ -1094,7 +1094,7 @@ CardSets.register({
       "id": "mark-webber",
       "subtitle": "Driver",
       "details": "9 wins; the Aussie battler.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Mark_Webber_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8720%29.jpg/1280px-Mark_Webber_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8720%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Mark_Webber_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8720%29.jpg/500px-Mark_Webber_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8720%29.jpg"
     },
     {
       "name": "David Coulthard",
@@ -1150,7 +1150,7 @@ CardSets.register({
       "id": "didier-pironi",
       "subtitle": "Driver",
       "details": "3 wins; the feud with Villeneuve.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Pironi_celebrating_at_1982_Dutch_Grand_Prix_%28cropped%29.jpg/1280px-Pironi_celebrating_at_1982_Dutch_Grand_Prix_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Pironi_celebrating_at_1982_Dutch_Grand_Prix_%28cropped%29.jpg/500px-Pironi_celebrating_at_1982_Dutch_Grand_Prix_%28cropped%29.jpg"
     },
     {
       "name": "Patrick Tambay",
@@ -1182,7 +1182,7 @@ CardSets.register({
       "id": "jacky-ickx",
       "subtitle": "Driver",
       "details": "8 wins; also a Le Mans legend.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/19/Jacky_Ickx_Portr%C3%A4t_Mille_Miglia_2018.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Jacky_Ickx_Portr%C3%A4t_Mille_Miglia_2018.jpg/500px-Jacky_Ickx_Portr%C3%A4t_Mille_Miglia_2018.jpg"
     },
     {
       "name": "Ronnie Peterson",
@@ -1190,7 +1190,7 @@ CardSets.register({
       "id": "ronnie-peterson",
       "subtitle": "Driver",
       "details": "10 wins; SuperSwede, gone too soon.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Peterson_at_1978_Dutch_Grand_Prix.jpg/1280px-Peterson_at_1978_Dutch_Grand_Prix.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Peterson_at_1978_Dutch_Grand_Prix.jpg/500px-Peterson_at_1978_Dutch_Grand_Prix.jpg"
     },
     {
       "name": "Carlos Reutemann",
@@ -1206,7 +1206,7 @@ CardSets.register({
       "id": "francois-cevert",
       "subtitle": "Driver",
       "details": "1 win; Stewart's heir apparent.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Francois_Cevert_1973.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Francois_Cevert_1973.jpg/500px-Francois_Cevert_1973.jpg"
     },
     {
       "name": "Peter Revson",
@@ -1246,7 +1246,7 @@ CardSets.register({
       "id": "innes-ireland",
       "subtitle": "Driver",
       "details": "1 win; Lotus' first Grand Prix winner.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Innes_Ireland.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Innes_Ireland.jpg/500px-Innes_Ireland.jpg"
     },
     {
       "name": "Tony Brooks",
@@ -1254,7 +1254,7 @@ CardSets.register({
       "id": "tony-brooks",
       "subtitle": "Driver",
       "details": "6 wins; the racing dentist.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Surtees_and_Brooks_at_1961_Dutch_Grand_Prix.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Surtees_and_Brooks_at_1961_Dutch_Grand_Prix.jpg/500px-Surtees_and_Brooks_at_1961_Dutch_Grand_Prix.jpg"
     },
     {
       "name": "Jean Behra",
@@ -1278,7 +1278,7 @@ CardSets.register({
       "id": "peter-collins",
       "subtitle": "Driver",
       "details": "3 wins; handed Fangio his 1956 title.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Eric_Boocock_Peter_Collins_270376.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Eric_Boocock_Peter_Collins_270376.jpg/500px-Eric_Boocock_Peter_Collins_270376.jpg"
     },
     {
       "name": "Eugenio Castellotti",
@@ -1310,7 +1310,7 @@ CardSets.register({
       "id": "olivier-panis",
       "subtitle": "Driver",
       "details": "Monaco 1996: his only win, in the rain.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Paris_-_Retromobile_2012_-_Olivier_Panis_-_Fiskens_-_006.jpg/1280px-Paris_-_Retromobile_2012_-_Olivier_Panis_-_Fiskens_-_006.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Paris_-_Retromobile_2012_-_Olivier_Panis_-_Fiskens_-_006.jpg/500px-Paris_-_Retromobile_2012_-_Olivier_Panis_-_Fiskens_-_006.jpg"
     },
     {
       "name": "Pastor Maldonado",
@@ -1350,7 +1350,7 @@ CardSets.register({
       "id": "thierry-boutsen",
       "subtitle": "Driver",
       "details": "3 wins; Belgium's nearly man.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Thierry_Boutsen_at_the_2026_Adelaide_Motorsport_Festival_%28028A6498%29.jpg/1280px-Thierry_Boutsen_at_the_2026_Adelaide_Motorsport_Festival_%28028A6498%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Thierry_Boutsen_at_the_2026_Adelaide_Motorsport_Festival_%28028A6498%29.jpg/500px-Thierry_Boutsen_at_the_2026_Adelaide_Motorsport_Festival_%28028A6498%29.jpg"
     },
     {
       "name": "Vittorio Brambilla",
@@ -1366,7 +1366,7 @@ CardSets.register({
       "id": "jo-siffert",
       "subtitle": "Driver",
       "details": "2 wins; Switzerland's Seppi.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Siffert%2C_Joseph_1968.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Siffert%2C_Joseph_1968.jpg/500px-Siffert%2C_Joseph_1968.jpg"
     },
     {
       "name": "Pedro Rodríguez",
@@ -1390,7 +1390,7 @@ CardSets.register({
       "id": "ralf-schumacher",
       "subtitle": "Driver",
       "details": "6 wins; Michael's younger brother.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Ralf_Schumacher%2C_2016.png/1280px-Ralf_Schumacher%2C_2016.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Ralf_Schumacher%2C_2016.png/500px-Ralf_Schumacher%2C_2016.png"
     },
     {
       "name": "Giancarlo Fisichella",
@@ -1398,7 +1398,7 @@ CardSets.register({
       "id": "giancarlo-fisichella",
       "subtitle": "Driver",
       "details": "3 wins; nearly man, nearly champion.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Giancarlo_Fisichella_2012_WEC_Fuji.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Giancarlo_Fisichella_2012_WEC_Fuji.jpg/500px-Giancarlo_Fisichella_2012_WEC_Fuji.jpg"
     },
     {
       "name": "Nick Heidfeld",
@@ -1406,7 +1406,7 @@ CardSets.register({
       "id": "nick-heidfeld",
       "subtitle": "Driver",
       "details": "13 podiums; never won.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Nick_Heidfeld_Goodwood_Festival_of_Speed_2019_%2848242681251%29.jpg/1280px-Nick_Heidfeld_Goodwood_Festival_of_Speed_2019_%2848242681251%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Nick_Heidfeld_Goodwood_Festival_of_Speed_2019_%2848242681251%29.jpg/500px-Nick_Heidfeld_Goodwood_Festival_of_Speed_2019_%2848242681251%29.jpg"
     },
     {
       "name": "Heinz-Harald Frentzen",
@@ -1422,7 +1422,7 @@ CardSets.register({
       "id": "jarno-trulli",
       "subtitle": "Driver",
       "details": "Monaco 2004: his only win.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/12._Internationale_Sportnacht_Davos_2014_%2815246044859%29_%28cropped%29.jpg/1280px-12._Internationale_Sportnacht_Davos_2014_%2815246044859%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/12._Internationale_Sportnacht_Davos_2014_%2815246044859%29_%28cropped%29.jpg/500px-12._Internationale_Sportnacht_Davos_2014_%2815246044859%29_%28cropped%29.jpg"
     },
     {
       "name": "Kamui Kobayashi",
@@ -1430,7 +1430,7 @@ CardSets.register({
       "id": "kamui-kobayashi",
       "subtitle": "Driver",
       "details": "Japan 2012 podium; the fearless one.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Kamui_Kobayashi_2024_WEC_Fuji_2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Kamui_Kobayashi_2024_WEC_Fuji_2.jpg/500px-Kamui_Kobayashi_2024_WEC_Fuji_2.jpg"
     },
     {
       "name": "Romain Grosjean",
@@ -1526,7 +1526,7 @@ CardSets.register({
       "id": "marussia",
       "subtitle": "Team",
       "details": "Bianchi's Monaco 2014 points.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/46/2014_Australian_F1_Grand_Prix_%2813124950303%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/2014_Australian_F1_Grand_Prix_%2813124950303%29.jpg/500px-2014_Australian_F1_Grand_Prix_%2813124950303%29.jpg"
     },
     {
       "name": "Caterham",
@@ -1566,7 +1566,7 @@ CardSets.register({
       "id": "albert-park",
       "subtitle": "Circuit",
       "details": "Season opener since 1996.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Albert_Lake_Park_Street_Circuit_in_Melbourne%2C_Australia.svg/1280px-Albert_Lake_Park_Street_Circuit_in_Melbourne%2C_Australia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Albert_Lake_Park_Street_Circuit_in_Melbourne%2C_Australia.svg/500px-Albert_Lake_Park_Street_Circuit_in_Melbourne%2C_Australia.svg.png"
     },
     {
       "name": "Circuit Gilles Villeneuve",
@@ -1574,7 +1574,7 @@ CardSets.register({
       "id": "circuit-gilles-villeneuve",
       "subtitle": "Circuit",
       "details": "The Wall of Champions awaits.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg/1280px-%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg/500px-%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg.png"
     },
     {
       "name": "Circuit de Barcelona-Catalunya",
@@ -1702,7 +1702,7 @@ CardSets.register({
       "id": "v10-era",
       "subtitle": "Engine Era",
       "details": "The screaming 19,000 rpm years.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Bruno_Senna_Formula_BMW_UK_Car_Rockingham_2004.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Bruno_Senna_Formula_BMW_UK_Car_Rockingham_2004.jpg/500px-Bruno_Senna_Formula_BMW_UK_Car_Rockingham_2004.jpg"
     },
     {
       "name": "Halo",
@@ -1710,7 +1710,7 @@ CardSets.register({
       "id": "halo",
       "subtitle": "Safety Device",
       "details": "The titanium wishbone that saves lives.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/96/F1_Carbon_Fibre_Halo_at_Formula_1_Exhibition%2C_London.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/F1_Carbon_Fibre_Halo_at_Formula_1_Exhibition%2C_London.jpg/500px-F1_Carbon_Fibre_Halo_at_Formula_1_Exhibition%2C_London.jpg"
     },
     {
       "name": "Active Suspension",
@@ -1718,7 +1718,7 @@ CardSets.register({
       "id": "active-suspension",
       "subtitle": "Technology",
       "details": "Williams' computer-controlled ride.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/65/Williams_FW14B_%2835029084126%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Williams_FW14B_%2835029084126%29_%28cropped%29.jpg/500px-Williams_FW14B_%2835029084126%29_%28cropped%29.jpg"
     },
     {
       "name": "Traction Control",
@@ -1734,7 +1734,7 @@ CardSets.register({
       "id": "carbon-brakes",
       "subtitle": "Technology",
       "details": "Stop from 300 km/h in 4 seconds.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Toyota_TF103_Front_Brake_Disc_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Toyota_TF103_Front_Brake_Disc_01.JPG/500px-Toyota_TF103_Front_Brake_Disc_01.JPG"
     },
     {
       "name": "ERS",
@@ -1758,7 +1758,7 @@ CardSets.register({
       "id": "pirelli",
       "subtitle": "Tire Supplier",
       "details": "F1's sole tire maker; colored compounds.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/93/Pirelli_Formula_One_tires1_2017_Catalonia_test_%2827_Feb-2_Mar%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Pirelli_Formula_One_tires1_2017_Catalonia_test_%2827_Feb-2_Mar%29.jpg/500px-Pirelli_Formula_One_tires1_2017_Catalonia_test_%2827_Feb-2_Mar%29.jpg"
     },
     {
       "name": "Michelin",
@@ -1766,7 +1766,7 @@ CardSets.register({
       "id": "michelin",
       "subtitle": "Tire Supplier",
       "details": "The Bibendum's tire wars era.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Michelin_rain_and_intermediate_tyres_2005_United_States_GP_%2819889979%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Michelin_rain_and_intermediate_tyres_2005_United_States_GP_%2819889979%29.jpg/500px-Michelin_rain_and_intermediate_tyres_2005_United_States_GP_%2819889979%29.jpg"
     },
     {
       "name": "Formula 2",
@@ -1774,7 +1774,7 @@ CardSets.register({
       "id": "formula-2",
       "subtitle": "Feeder Series",
       "details": "F1's final audition; same weekends.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/ff/2018_FIA_Formula_2_Championship%2C_Autodromo_Nazionale_Monza_%2831075389108%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/2018_FIA_Formula_2_Championship%2C_Autodromo_Nazionale_Monza_%2831075389108%29.jpg/500px-2018_FIA_Formula_2_Championship%2C_Autodromo_Nazionale_Monza_%2831075389108%29.jpg"
     },
     {
       "name": "Formula 3",
@@ -1782,7 +1782,7 @@ CardSets.register({
       "id": "formula-3",
       "subtitle": "Feeder Series",
       "details": "Where the juniors learn their craft.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a7/2018_FIA_Formula_3_European_Championship%2C_Norisring_%2828087356267%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/2018_FIA_Formula_3_European_Championship%2C_Norisring_%2828087356267%29.jpg/500px-2018_FIA_Formula_3_European_Championship%2C_Norisring_%2828087356267%29.jpg"
     },
     {
       "name": "F1 Academy",
@@ -1790,7 +1790,7 @@ CardSets.register({
       "id": "f1-academy",
       "subtitle": "Series",
       "details": "The all-female junior series.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/77/2026_F1_Academy_Shanghai_-_Hitech_-_Shi_Wei_-_Qualifying.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/2026_F1_Academy_Shanghai_-_Hitech_-_Shi_Wei_-_Qualifying.jpg/500px-2026_F1_Academy_Shanghai_-_Hitech_-_Shi_Wei_-_Qualifying.jpg"
     },
     {
       "name": "Pit Stop",
@@ -1846,7 +1846,7 @@ CardSets.register({
       "id": "martin-brundle",
       "subtitle": "Driver/Broadcaster",
       "details": "9 podiums as a driver; now the voice of F1.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/36/Martin_Brundle_2021_%2851591210921%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Martin_Brundle_2021_%2851591210921%29_%28cropped%29.jpg/500px-Martin_Brundle_2021_%2851591210921%29_%28cropped%29.jpg"
     },
     {
       "name": "Johnny Herbert",
@@ -1854,7 +1854,7 @@ CardSets.register({
       "id": "johnny-herbert",
       "subtitle": "Driver",
       "details": "3 wins; the popular Brit.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Johnny_Herbert_%2831729263593%29.jpg/1280px-Johnny_Herbert_%2831729263593%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Johnny_Herbert_%2831729263593%29.jpg/500px-Johnny_Herbert_%2831729263593%29.jpg"
     },
     {
       "name": "Julian Bailey",
@@ -1862,7 +1862,7 @@ CardSets.register({
       "id": "julian-bailey",
       "subtitle": "Driver",
       "details": "Britain's nearly man of the 1980s.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Julian_Bailey_1991_USA.jpg/1280px-Julian_Bailey_1991_USA.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Julian_Bailey_1991_USA.jpg/500px-Julian_Bailey_1991_USA.jpg"
     },
     {
       "name": "Mark Blundell",
@@ -1886,7 +1886,7 @@ CardSets.register({
       "id": "pedro-de-la-rosa",
       "subtitle": "Driver",
       "details": "Spain's super-sub; McLaren tester.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Pedro_de_la_Rosa_2010_Malaysia.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Pedro_de_la_Rosa_2010_Malaysia.jpg/500px-Pedro_de_la_Rosa_2010_Malaysia.jpg"
     },
     {
       "name": "Marc Gené",
@@ -1982,7 +1982,7 @@ CardSets.register({
       "id": "karun-chandhok",
       "subtitle": "Driver",
       "details": "India's second F1 driver.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Karun_Chandhok_Goodwood_Festival_of_Speed_2019_%2848242680701%29.jpg/1280px-Karun_Chandhok_Goodwood_Festival_of_Speed_2019_%2848242680701%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Karun_Chandhok_Goodwood_Festival_of_Speed_2019_%2848242680701%29.jpg/500px-Karun_Chandhok_Goodwood_Festival_of_Speed_2019_%2848242680701%29.jpg"
     },
     {
       "name": "Sakon Yamamoto",
@@ -1998,7 +1998,7 @@ CardSets.register({
       "id": "yuji-ide",
       "subtitle": "Driver",
       "details": "4 races; super licence revoked.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/90/Yuji_Ide_2010_Super_GT_Fuji_400km.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Yuji_Ide_2010_Super_GT_Fuji_400km.jpg/500px-Yuji_Ide_2010_Super_GT_Fuji_400km.jpg"
     },
     {
       "name": "Franck Montagny",
@@ -2062,7 +2062,7 @@ CardSets.register({
       "id": "will-stevens",
       "subtitle": "Driver",
       "details": "Manor's Brit; 18 starts.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Will_Stevens_2017.jpg/1280px-Will_Stevens_2017.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Will_Stevens_2017.jpg/500px-Will_Stevens_2017.jpg"
     },
     {
       "name": "Rio Haryanto",
@@ -2150,7 +2150,7 @@ CardSets.register({
       "id": "mick-schumacher",
       "subtitle": "Driver",
       "details": "Michael's son; two Haas seasons.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Mick_Schumacher_2024_WEC_Fuji.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Mick_Schumacher_2024_WEC_Fuji.jpg/500px-Mick_Schumacher_2024_WEC_Fuji.jpg"
     },
     {
       "name": "Adelaide",
@@ -2262,7 +2262,7 @@ CardSets.register({
       "id": "detroit",
       "subtitle": "Circuit",
       "details": "Street racing in Motown, 1982–1988.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Downtown_Detroit_Street_Circuit.svg/1280px-Downtown_Detroit_Street_Circuit.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Downtown_Detroit_Street_Circuit.svg/500px-Downtown_Detroit_Street_Circuit.svg.png"
     },
     {
       "name": "Dallas",
@@ -2278,7 +2278,7 @@ CardSets.register({
       "id": "phoenix",
       "subtitle": "Circuit",
       "details": "The desert GP, 1989–1991.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/94/AlainProst_Ferrari_1991.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/AlainProst_Ferrari_1991.jpg/500px-AlainProst_Ferrari_1991.jpg"
     },
     {
       "name": "Long Beach",
@@ -2294,7 +2294,7 @@ CardSets.register({
       "id": "watkins-glen",
       "subtitle": "Circuit",
       "details": "The US GP's beloved home, 1961–1980.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a8/2025_Watkins_glen_imsa_race_turn_1_gtd.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/2025_Watkins_glen_imsa_race_turn_1_gtd.jpg/500px-2025_Watkins_glen_imsa_race_turn_1_gtd.jpg"
     },
     {
       "name": "Mosport",
@@ -2358,7 +2358,7 @@ CardSets.register({
       "id": "apex",
       "subtitle": "Racing Term",
       "details": "Clip it; the corner's fastest point.",
-      "image": "https://motorsportmagazine.b-cdn.net/wp-content/uploads/2022/05/Max-Verstappen-ahead-of-Charles-Leclerc-in-the-2022-Monaco-Grand-Prix.jpg"
+      "image": "assets/sets/compress/formula-1-collection__apex.webp"
     },
     {
       "name": "Slipstream",
@@ -2430,7 +2430,7 @@ CardSets.register({
       "id": "pit-window",
       "subtitle": "Strategy",
       "details": "The laps when stopping works.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0e/10_9_Brabham_Pit_Lane_DAG.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/10_9_Brabham_Pit_Lane_DAG.jpg/500px-10_9_Brabham_Pit_Lane_DAG.jpg"
     },
     {
       "name": "Undercut",
@@ -2438,7 +2438,7 @@ CardSets.register({
       "id": "undercut",
       "subtitle": "Strategy",
       "details": "Pit early; jump them on fresh rubber.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Fale_F1_Monza_2004_103.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Fale_F1_Monza_2004_103.jpg/500px-Fale_F1_Monza_2004_103.jpg"
     },
     {
       "name": "Overcut",
@@ -2446,7 +2446,7 @@ CardSets.register({
       "id": "overcut",
       "subtitle": "Strategy",
       "details": "Stay out; pass them in the pits.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Kubica_Brazil_2008_pits.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Kubica_Brazil_2008_pits.jpg/500px-Kubica_Brazil_2008_pits.jpg"
     },
     {
       "name": "Out Lap",
@@ -2462,7 +2462,7 @@ CardSets.register({
       "id": "in-lap",
       "subtitle": "Session Term",
       "details": "Cooling down; back to the pits.",
-      "image": "https://www.f1mania.net/wp-content/uploads/2025/04/XPB_1340147_HiRes.jpg"
+      "image": "assets/sets/compress/formula-1-collection__in-lap.webp"
     },
     {
       "name": "Flying Lap",
@@ -2470,7 +2470,7 @@ CardSets.register({
       "id": "flying-lap",
       "subtitle": "Session Term",
       "details": "Flat out; the timed one.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Susie_Wolff_2013_Silverstone_F1_Test_001.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/Susie_Wolff_2013_Silverstone_F1_Test_001.jpg/500px-Susie_Wolff_2013_Silverstone_F1_Test_001.jpg"
     },
     {
       "name": "Cool-down Lap",
@@ -2478,7 +2478,7 @@ CardSets.register({
       "id": "cool-down-lap",
       "subtitle": "Session Term",
       "details": "After the flag; pick up rubber.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Lewis_Hamilton_2021_Silverstone_Win_%2851349264986%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Lewis_Hamilton_2021_Silverstone_Win_%2851349264986%29.jpg/500px-Lewis_Hamilton_2021_Silverstone_Win_%2851349264986%29.jpg"
     },
     {
       "name": "Formation Lap",
@@ -2486,7 +2486,7 @@ CardSets.register({
       "id": "formation-lap",
       "subtitle": "Race Procedure",
       "details": "Warming tires before the start.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/93/Daniel_Ricciardo_before_the_formation_lap_of_the_2014_Chinese_Grand_Prix.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Daniel_Ricciardo_before_the_formation_lap_of_the_2014_Chinese_Grand_Prix.jpg/500px-Daniel_Ricciardo_before_the_formation_lap_of_the_2014_Chinese_Grand_Prix.jpg"
     },
     {
       "name": "Blue Flags",
@@ -2510,7 +2510,7 @@ CardSets.register({
       "id": "green-flag",
       "subtitle": "Race Flag",
       "details": "Track clear; racing resumes.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/83/F1_green_flag.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/F1_green_flag.jpg/500px-F1_green_flag.jpg"
     },
     {
       "name": "Chequered Flag",
@@ -2518,7 +2518,7 @@ CardSets.register({
       "id": "chequered-flag",
       "subtitle": "Race Flag",
       "details": "Race over; the winner's flag.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/88/Chequered_Flag_Formula_3_Latin-America_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Chequered_Flag_Formula_3_Latin-America_1.jpg/500px-Chequered_Flag_Formula_3_Latin-America_1.jpg"
     },
     {
       "name": "Red Flag",
@@ -2526,7 +2526,7 @@ CardSets.register({
       "id": "red-flag",
       "subtitle": "Race Flag",
       "details": "Session stopped; everyone pits.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f3/2010_IZOD_IndyCar_Series_-_S%C3%A3o_Paulo_Indy_300_Fiscais_de_pista_resgatando_Milka_Duno_-_Track_marshals_rescuing_Milka_Duno_%2826990560272%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/2010_IZOD_IndyCar_Series_-_S%C3%A3o_Paulo_Indy_300_Fiscais_de_pista_resgatando_Milka_Duno_-_Track_marshals_rescuing_Milka_Duno_%2826990560272%29.jpg/500px-2010_IZOD_IndyCar_Series_-_S%C3%A3o_Paulo_Indy_300_Fiscais_de_pista_resgatando_Milka_Duno_-_Track_marshals_rescuing_Milka_Duno_%2826990560272%29.jpg"
     },
     {
       "name": "Yellow Flag",
@@ -2534,7 +2534,7 @@ CardSets.register({
       "id": "yellow-flag",
       "subtitle": "Race Flag",
       "details": "Danger ahead; slow down.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fa/F1_yellow_flag_and_SC_sign.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/F1_yellow_flag_and_SC_sign.jpg/500px-F1_yellow_flag_and_SC_sign.jpg"
     },
     {
       "name": "White Flag",
@@ -2542,7 +2542,7 @@ CardSets.register({
       "id": "white-flag",
       "subtitle": "Race Flag",
       "details": "Slow vehicle on track; heads up.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Fatal_accident_at_1973_Dutch_Grand_Prix_%283%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Fatal_accident_at_1973_Dutch_Grand_Prix_%283%29.jpg/500px-Fatal_accident_at_1973_Dutch_Grand_Prix_%283%29.jpg"
     },
     {
       "name": "Black Flag",
@@ -2550,7 +2550,7 @@ CardSets.register({
       "id": "black-flag",
       "subtitle": "Race Flag",
       "details": "Disqualified; return to the pits.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Fatal_accident_at_1973_Dutch_Grand_Prix_%283%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Fatal_accident_at_1973_Dutch_Grand_Prix_%283%29.jpg/500px-Fatal_accident_at_1973_Dutch_Grand_Prix_%283%29.jpg"
     },
     {
       "name": "107% Rule",
@@ -2566,7 +2566,7 @@ CardSets.register({
       "id": "qualifying",
       "subtitle": "Session",
       "details": "Saturday shootout for grid slots.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/ac/2024_Spanish_GP_Formula_3_Qualifying_Car_21.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/2024_Spanish_GP_Formula_3_Qualifying_Car_21.jpg/500px-2024_Spanish_GP_Formula_3_Qualifying_Car_21.jpg"
     },
     {
       "name": "Q1",
@@ -2598,7 +2598,7 @@ CardSets.register({
       "id": "sprint-shootout",
       "subtitle": "Qualifying",
       "details": "Friday's dash for Saturday's grid.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/ac/2024_Spanish_GP_Formula_3_Qualifying_Car_21.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/2024_Spanish_GP_Formula_3_Qualifying_Car_21.jpg/500px-2024_Spanish_GP_Formula_3_Qualifying_Car_21.jpg"
     },
     {
       "name": "Grand Chelem",
@@ -2630,7 +2630,7 @@ CardSets.register({
       "id": "backmarker",
       "subtitle": "Racing Term",
       "details": "Lapped traffic; blue flags ahead.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Marussia_MR-03_%2822181787084%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Marussia_MR-03_%2822181787084%29.jpg/500px-Marussia_MR-03_%2822181787084%29.jpg"
     },
     {
       "name": "Pay Driver",
@@ -2638,7 +2638,7 @@ CardSets.register({
       "id": "pay-driver",
       "subtitle": "Racing Term",
       "details": "Brings budget; brings debate.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/81/F1_2012_Jerez_test_-_old_HRT.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/F1_2012_Jerez_test_-_old_HRT.jpg/500px-F1_2012_Jerez_test_-_old_HRT.jpg"
     },
     {
       "name": "Rookie",
@@ -2646,7 +2646,7 @@ CardSets.register({
       "id": "rookie",
       "subtitle": "Racing Term",
       "details": "First full season; learning fast.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/79/Kimi_Antonelli_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A7923%29_cropped.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Kimi_Antonelli_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A7923%29_cropped.jpg/500px-Kimi_Antonelli_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A7923%29_cropped.jpg"
     },
     {
       "name": "Team Orders",
@@ -2654,7 +2654,7 @@ CardSets.register({
       "id": "team-orders",
       "subtitle": "Racing Term",
       "details": "\"Multi 21, Seb\"; controversy guaranteed.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Red_Bull_team_on_the_pit_lane_wall_-_2010_Singapore_Grand_Prix.jpeg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Red_Bull_team_on_the_pit_lane_wall_-_2010_Singapore_Grand_Prix.jpeg/500px-Red_Bull_team_on_the_pit_lane_wall_-_2010_Singapore_Grand_Prix.jpeg"
     },
     {
       "name": "Home Race",
@@ -2662,7 +2662,7 @@ CardSets.register({
       "id": "home-race",
       "subtitle": "Racing Term",
       "details": "The crowd's behind you.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Formula_1_Hungarian_Grand_Prix_%289%29.JPG"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Formula_1_Hungarian_Grand_Prix_%289%29.JPG/500px-Formula_1_Hungarian_Grand_Prix_%289%29.JPG"
     },
     {
       "name": "Triple Header",
@@ -2670,7 +2670,7 @@ CardSets.register({
       "id": "triple-header",
       "subtitle": "Calendar Term",
       "details": "Three races, three weekends.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/12/Ferrari_Paddock_Formula_1_Suzuka_2009_%283975492653%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Ferrari_Paddock_Formula_1_Suzuka_2009_%283975492653%29.jpg/500px-Ferrari_Paddock_Formula_1_Suzuka_2009_%283975492653%29.jpg"
     },
     {
       "name": "Night Race",
@@ -2678,7 +2678,7 @@ CardSets.register({
       "id": "night-race",
       "subtitle": "Race Format",
       "details": "Under lights; Singapore started it.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f0/1_singapore_f1_night_race_2012_city_skyline.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/1_singapore_f1_night_race_2012_city_skyline.jpg/500px-1_singapore_f1_night_race_2012_city_skyline.jpg"
     },
     {
       "name": "Street Circuit",
@@ -2694,7 +2694,7 @@ CardSets.register({
       "id": "power-unit",
       "subtitle": "Car Part",
       "details": "Engine plus hybrid; 1,000+ hp.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Ferrari_Tipo_065-6_Engine_and_Mercedes_AMG_F1_W10_EQ_Power%2B_MGU-K_at_Formula_1_Exhibition%2C_London.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Ferrari_Tipo_065-6_Engine_and_Mercedes_AMG_F1_W10_EQ_Power%2B_MGU-K_at_Formula_1_Exhibition%2C_London.jpg/500px-Ferrari_Tipo_065-6_Engine_and_Mercedes_AMG_F1_W10_EQ_Power%2B_MGU-K_at_Formula_1_Exhibition%2C_London.jpg"
     },
     {
       "name": "Gearbox",
@@ -2702,7 +2702,7 @@ CardSets.register({
       "id": "gearbox",
       "subtitle": "Car Part",
       "details": "8 speeds; shifts in milliseconds.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fa/BRM_P261_gearbox_Donington.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/BRM_P261_gearbox_Donington.jpg/500px-BRM_P261_gearbox_Donington.jpg"
     },
     {
       "name": "Front Wing",
@@ -2718,7 +2718,7 @@ CardSets.register({
       "id": "rear-wing",
       "subtitle": "Aerodynamics",
       "details": "The DRS flap lives here.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/be/Mercedes_AMG_F1_W09_EQ_Power%2B_DRS_Rear_Wing_at_Formula_1_Exhibition%2C_London.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/Mercedes_AMG_F1_W09_EQ_Power%2B_DRS_Rear_Wing_at_Formula_1_Exhibition%2C_London.jpg/500px-Mercedes_AMG_F1_W09_EQ_Power%2B_DRS_Rear_Wing_at_Formula_1_Exhibition%2C_London.jpg"
     },
     {
       "name": "Diffuser",
@@ -2726,7 +2726,7 @@ CardSets.register({
       "id": "diffuser",
       "subtitle": "Aerodynamics",
       "details": "Sucks the car to the ground.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Benetton_B190_diffuser_2010_Pavilion_Pit_Stop.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Benetton_B190_diffuser_2010_Pavilion_Pit_Stop.jpg/500px-Benetton_B190_diffuser_2010_Pavilion_Pit_Stop.jpg"
     },
     {
       "name": "Sidepod",
@@ -2774,7 +2774,7 @@ CardSets.register({
       "id": "tire-carrier",
       "subtitle": "Pit Crew Role",
       "details": "Hauls rubber to the wheel.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Fale_F1_Monza_2004_73.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Fale_F1_Monza_2004_73.jpg/500px-Fale_F1_Monza_2004_73.jpg"
     },
     {
       "name": "Front Wing Adjuster",
@@ -2798,7 +2798,7 @@ CardSets.register({
       "id": "steering-wheel",
       "subtitle": "Car Part",
       "details": "25 buttons; costs $50,000.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Caterham_steering_wheel_at_Goodwood_2012.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Caterham_steering_wheel_at_Goodwood_2012.jpg/500px-Caterham_steering_wheel_at_Goodwood_2012.jpg"
     },
     {
       "name": "Nose Cone",
@@ -2814,7 +2814,7 @@ CardSets.register({
       "id": "airbox",
       "subtitle": "Car Part",
       "details": "Feeds the engine; holds the camera.",
-      "image": "https://www.motortrend.com/uploads/sites/5/2021/08/2017-Scuderia-Toro-Rosso-STR12-03.jpg"
+      "image": "assets/sets/compress/formula-1-collection__airbox.webp"
     },
     {
       "name": "Bargeboard",
@@ -2838,7 +2838,7 @@ CardSets.register({
       "id": "suspension",
       "subtitle": "Car Part",
       "details": "Push-rod or pull-rod; keeps tires planted.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fa/BRM_P261_gearbox_Donington.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/BRM_P261_gearbox_Donington.jpg/500px-BRM_P261_gearbox_Donington.jpg"
     },
     {
       "name": "Wishbone",
@@ -2846,7 +2846,7 @@ CardSets.register({
       "id": "wishbone",
       "subtitle": "Car Part",
       "details": "Carbon arms; aero-shaped.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fa/BRM_P261_gearbox_Donington.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/BRM_P261_gearbox_Donington.jpg/500px-BRM_P261_gearbox_Donington.jpg"
     },
     {
       "name": "Brake Disc",
@@ -2854,7 +2854,7 @@ CardSets.register({
       "id": "brake-disc",
       "subtitle": "Car Part",
       "details": "Carbon; glows at 1,000°C.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Toyota_TF103_Front_Brake_Disc_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Toyota_TF103_Front_Brake_Disc_01.JPG/500px-Toyota_TF103_Front_Brake_Disc_01.JPG"
     },
     {
       "name": "Brake Duct",
@@ -2878,7 +2878,7 @@ CardSets.register({
       "id": "wheel-gun",
       "subtitle": "Equipment",
       "details": "3,000 rpm; one nut, one second.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Formula_One_Wheel_Gun.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Formula_One_Wheel_Gun.jpg/500px-Formula_One_Wheel_Gun.jpg"
     },
     {
       "name": "Wheel Nut",
@@ -2894,7 +2894,7 @@ CardSets.register({
       "id": "fuel-rig",
       "subtitle": "Equipment",
       "details": "Refueling's gone; the rigs remain.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/36/2009_Japanese_GP_-_Scuderia_Ferrari%27s_fuel_pump.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/2009_Japanese_GP_-_Scuderia_Ferrari%27s_fuel_pump.jpg/500px-2009_Japanese_GP_-_Scuderia_Ferrari%27s_fuel_pump.jpg"
     },
     {
       "name": "Crash Structure",
@@ -2934,7 +2934,7 @@ CardSets.register({
       "id": "intermediate-tire",
       "subtitle": "Tire Compound",
       "details": "Green-walled; for damp tracks.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/62/Pirelli_Tyre_Sets_at_Formula_1_Exhibition%2C_London_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Pirelli_Tyre_Sets_at_Formula_1_Exhibition%2C_London_03.jpg/500px-Pirelli_Tyre_Sets_at_Formula_1_Exhibition%2C_London_03.jpg"
     },
     {
       "name": "Wet Tire",
@@ -2942,7 +2942,7 @@ CardSets.register({
       "id": "wet-tire",
       "subtitle": "Tire Compound",
       "details": "Blue-walled; full rain warrior.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/11/Wet_tyre_%282637240824%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Wet_tyre_%282637240824%29.jpg/500px-Wet_tyre_%282637240824%29.jpg"
     },
     {
       "name": "Murray Walker",
@@ -2958,7 +2958,7 @@ CardSets.register({
       "id": "david-croft",
       "subtitle": "Broadcaster",
       "details": "\"Lights out and away we go!\"",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/93/Charles_Leclerc_%26_David_Croft_NEC2020.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Charles_Leclerc_%26_David_Croft_NEC2020.png/500px-Charles_Leclerc_%26_David_Croft_NEC2020.png"
     },
     {
       "name": "Alex Jacques",
@@ -2966,7 +2966,7 @@ CardSets.register({
       "id": "alex-jacques",
       "subtitle": "Broadcaster",
       "details": "F1TV's lead commentator.",
-      "image": "https://images.squarespace-cdn.com/content/v1/5e2b72fb7db0c336f3f887c5/ac341f1f-6c34-4831-919d-82d920727113/unnamed89.jpg"
+      "image": "assets/sets/compress/formula-1-collection__alex-jacques.webp"
     },
     {
       "name": "Ted Kravitz",
@@ -2990,7 +2990,7 @@ CardSets.register({
       "id": "champagne-spray",
       "subtitle": "Tradition",
       "details": "Gurney started it at Le Mans 1967.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/33/Champagne_-_F2_Podium_%2841932830900%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Champagne_-_F2_Podium_%2841932830900%29.jpg/500px-Champagne_-_F2_Podium_%2841932830900%29.jpg"
     },
     {
       "name": "National Anthem",
@@ -2998,7 +2998,7 @@ CardSets.register({
       "id": "national-anthem",
       "subtitle": "Tradition",
       "details": "Winner's anthem on the podium.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8d/FIA_F2_Austria_2018_podium_national_anthems_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/FIA_F2_Austria_2018_podium_national_anthems_%28cropped%29.jpg/500px-FIA_F2_Austria_2018_podium_national_anthems_%28cropped%29.jpg"
     },
     {
       "name": "Cool-down Room",
@@ -3014,7 +3014,7 @@ CardSets.register({
       "id": "podium-interview",
       "subtitle": "Tradition",
       "details": "Microphones out; champagne incoming.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/90/2015_FIA_Formula_E_Visa_London_ePrix%2C_podium.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/2015_FIA_Formula_E_Visa_London_ePrix%2C_podium.jpg/500px-2015_FIA_Formula_E_Visa_London_ePrix%2C_podium.jpg"
     }
   ]
 });
