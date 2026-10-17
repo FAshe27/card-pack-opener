@@ -109,7 +109,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily', 'faq'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -2124,6 +2124,11 @@
     if (_acctProfile) _acctProfile.addEventListener('click', function () {
       closeAccountMenu();
       if (S.account && CPS.profile) CPS.profile.openProfile(S.account.id);
+    });
+    var _acctFaq = $('#acctFaqBtn');
+    if (_acctFaq) _acctFaq.addEventListener('click', function () {
+      closeAccountMenu();
+      showView('faq');
     });
     var _acctLogout = $('#acctLogoutBtn');
     if (_acctLogout) _acctLogout.addEventListener('click', async function () {
