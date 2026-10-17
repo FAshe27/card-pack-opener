@@ -61,10 +61,35 @@
     }, 1000);
   }
 
+  // Recompute every booth's Buy / Buy-all disabled state (+ the Buy-all
+  // label) from the current data — a purchase in one booth can make
+  // another booth's Buy-all unaffordable, and vice versa.
+  function syncBoothButtons(el, data) {
+    var booths = el.querySelectorAll('.shop-booth');
+    data.slots.forEach(function (sl, idx) {
+      var booth = booths[idx];
+      if (!booth) return;
+      var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
+      var buyBtn = booth.querySelector('[data-buyslot]');
+      if (buyBtn) buyBtn.disabled = !(data.store_credit >= sl.price && (remaining == null || remaining > 0));
+      var allBtn = booth.querySelector('[data-buyall]');
+      if (allBtn) {
+        var tot = (remaining || 0) * sl.price;
+        allBtn.textContent = 'Buy all ×' + (remaining || 0) + ' · $' + tot;
+        allBtn.disabled = !(remaining > 0 && data.store_credit >= tot);
+      }
+      var leftEl = $('.shop-left', booth);
+      if (leftEl && remaining != null) leftEl.textContent = remaining + ' of ' + sl.limit + ' left';
+    });
+  }
+
   function draw(el, data) {
     var slots = data.slots.map(function (sl) {
       var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
       var canBuy = data.store_credit >= sl.price && (remaining == null || remaining > 0);
+      var canBuyAll = remaining != null && remaining > 0 && data.store_credit >= remaining * sl.price;
+      var buyAllBtn = sl.limit == null ? '' :
+        '<button class="btn shop-buyall" data-buyall="' + sl.slot + '"' + (canBuyAll ? '' : ' disabled') + '>Buy all ×' + remaining + ' · $' + (remaining * sl.price) + '</button>';
       var isTicket = sl.kind === 'ticket';
       var isToken = sl.kind === 'token';
       var visual = isTicket ? '<div class="shop-ticket"><div class="shop-ticket-icon">\uD83C\uDFAB</div><div class="muted small">Spin Ticket</div></div>'
@@ -78,6 +103,7 @@
         '<div class="shop-price">💵 $' + sl.price + '</div>' +
         '<div class="muted small shop-left">' + (remaining != null ? remaining + ' of ' + sl.limit + ' left' : '&nbsp;') + '</div>' +
         '<button class="btn primary" data-buyslot="' + sl.slot + '"' + (canBuy ? '' : ' disabled') + '>Buy</button>' +
+        buyAllBtn +
         '</div></div>';
     }).join('');
 
@@ -149,7 +175,73 @@
           }
           // Note: no refreshCloud() here — in-place update above is sufficient.
           // refreshCloud() would re-render the shop and restart the timer.
+          // One exception: this buy changed the balance, so other booths'
+          // Buy / Buy-all affordability may have flipped — resync them.
+          syncBoothButtons(el, data);
         } catch (e) { btn.disabled = false; ctx.cloudError(e); }
+      });
+    });
+
+    el.querySelectorAll('[data-buyall]').forEach(function (btn) {
+      btn.addEventListener('click', async function () {
+        var slotNum = parseInt(btn.getAttribute('data-buyall'), 10);
+        var sl = data.slots[slotNum - 1];
+        if (!sl || sl.limit == null) return;
+        var remaining = Math.max(0, sl.limit - (sl.bought || 0));
+        var total = remaining * sl.price;
+        if (remaining <= 0 || data.store_credit < total) return;
+        var label = sl.kind === 'ticket' ? 'Spin Tickets'
+          : sl.kind === 'token' ? 'Arcade Tokens'
+          : sl.mystery ? 'Mystery Packs'
+          : setName(sl.set_id) + ' Packs';
+        btn.disabled = true;
+        var ok = await ctx.confirmDialog('Buy all?',
+          '<p>Buy <b>all ' + remaining + ' ' + esc(label) + '</b> for <b>$' + total + ' Store Credit</b>?</p>' +
+          (sl.mystery ? '<p class="muted">Each Mystery pack rolls its own set.</p>' : '') +
+          '<p class="muted">You\'ll have $' + (data.store_credit - total) + ' left.</p>',
+          'Buy all');
+        if (!ok) { syncBoothButtons(el, data); return; }
+        try {
+          var r = await CPS.cloud.call('shop_buy_all', { p_slot: slotNum });
+          var msg;
+          if (r.kind === 'ticket') {
+            msg = '🎫 ' + r.count + ' Spin Tickets purchased!';
+            if (r.spins_now != null && S) {
+              S.spins = r.spins_now;
+              if (S.player) S.player.spins = r.spins_now;
+              if (ctx.updateWheelBadge) ctx.updateWheelBadge();
+            }
+          } else if (r.kind === 'token') {
+            msg = '🪙 ' + r.count + ' Arcade Tokens purchased!';
+            if (r.tokens_now != null && S) {
+              S.gameTokens = r.tokens_now;
+              if (CPS.games && CPS.games.updateBadge) CPS.games.updateBadge();
+            }
+          } else if (sl.mystery && r.revealed) {
+            msg = '🎁 Mystery ×' + r.count + ': ' + r.revealed.map(function (e) {
+              return setName(e.set_id) + ' ×' + e.count;
+            }).join(', ') + '!';
+          } else {
+            msg = r.count + ' packs purchased! Check your packs.';
+          }
+          ctx.toast(msg, 'good');
+          ctx.audio.coin();
+          data.store_credit = r.store_credit;
+          sl.bought = (sl.bought || 0) + r.count;
+          var balEl = $('#shopBalance', el);
+          if (balEl) balEl.innerHTML = '💵 <b>$' + data.store_credit + '</b>';
+          // Local pack inventory, per set the server reports (mystery can
+          // grant several sets in one buy-all).
+          if (r.packs && ctx.S && ctx.S.player && ctx.S.player.sets) {
+            r.packs.forEach(function (p) {
+              var st = ctx.S.player.sets[p.set_id];
+              if (!st) st = ctx.S.player.sets[p.set_id] = { packs: 0, cards: {}, recent: [], stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
+              st.packs = p.packs_now;
+            });
+            if (ctx.renderPacksSide) ctx.renderPacksSide();
+          }
+          syncBoothButtons(el, data);
+        } catch (e) { syncBoothButtons(el, data); ctx.cloudError(e); }
       });
     });
   }
