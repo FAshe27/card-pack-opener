@@ -38,7 +38,7 @@ CardSets.register({
       "id": "civ-douglas-dc-3",
       "subtitle": "Airliner",
       "details": "First airliner to turn a profit; 16,000+ built, some still flying.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Historic_Flight_Foundation_Douglas_DC-3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Historic_Flight_Foundation_Douglas_DC-3.jpg/500px-Historic_Flight_Foundation_Douglas_DC-3.jpg"
     },
     {
       "name": "Boeing 707",
@@ -246,7 +246,7 @@ CardSets.register({
       "id": "civ-etops",
       "subtitle": "Regulation",
       "details": "Certification that let twinjets fly long overwater routes.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Norwegian_Boeing_787-9_%28EI-LNI%29_above_clouds.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Norwegian_Boeing_787-9_%28EI-LNI%29_above_clouds.jpg/500px-Norwegian_Boeing_787-9_%28EI-LNI%29_above_clouds.jpg"
     },
     {
       "name": "Fly-by-Wire",
@@ -254,7 +254,7 @@ CardSets.register({
       "id": "civ-fly-by-wire",
       "subtitle": "Flight Control",
       "details": "Computers replaced cables; Airbus made it standard on airliners.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/45/Airbus_A400M_cockpit_ILA2014.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Airbus_A400M_cockpit_ILA2014.jpg/500px-Airbus_A400M_cockpit_ILA2014.jpg"
     },
     {
       "name": "Glass Cockpit",
@@ -270,7 +270,7 @@ CardSets.register({
       "id": "civ-turbofan",
       "subtitle": "Engine",
       "details": "The quiet, efficient engine behind the modern airliner.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Detail_of_GEnx_turbofan_engine_core.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Detail_of_GEnx_turbofan_engine_core.jpg/500px-Detail_of_GEnx_turbofan_engine_core.jpg"
     },
     {
       "name": "Pressurized Cabin",
@@ -278,7 +278,7 @@ CardSets.register({
       "id": "civ-pressurized-cabin",
       "subtitle": "Airframe",
       "details": "Lets airliners cruise high and smooth above the weather.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Cabin_of_B_737_2015-06_616.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Cabin_of_B_737_2015-06_616.jpg/500px-Cabin_of_B_737_2015-06_616.jpg"
     },
     {
       "name": "Instrument Landing System",
@@ -286,7 +286,7 @@ CardSets.register({
       "id": "civ-instrument-landing-system",
       "subtitle": "Navigation",
       "details": "Radio beams guide jets to the runway in zero visibility.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/da/33_Approach_IMG_7476_%2824854673065%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/33_Approach_IMG_7476_%2824854673065%29.jpg/500px-33_Approach_IMG_7476_%2824854673065%29.jpg"
     },
     {
       "name": "Air Traffic Control",
@@ -294,7 +294,7 @@ CardSets.register({
       "id": "civ-air-traffic-control",
       "subtitle": "System",
       "details": "The invisible network keeping thousands of flights separated.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/12-06-05-innsbruck-by-ralfr-164.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/12-06-05-innsbruck-by-ralfr-164.jpg/500px-12-06-05-innsbruck-by-ralfr-164.jpg"
     },
     {
       "name": "Black Box",
@@ -310,7 +310,7 @@ CardSets.register({
       "id": "civ-winglets",
       "subtitle": "Aerodynamics",
       "details": "Upturned wingtips that cut fuel burn across the fleet.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/77/Ryanair_winglet_over_Tel_Aviv.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Ryanair_winglet_over_Tel_Aviv.jpg/500px-Ryanair_winglet_over_Tel_Aviv.jpg"
     },
     {
       "name": "Autoland",
@@ -318,7 +318,7 @@ CardSets.register({
       "id": "civ-autoland",
       "subtitle": "Avionics",
       "details": "Autopilot landings in near-zero visibility; pioneered in the 1960s.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Douglas_DC-8_72_just_before_touchdown.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Douglas_DC-8_72_just_before_touchdown.jpg/500px-Douglas_DC-8_72_just_before_touchdown.jpg"
     },
     {
       "name": "Composite Airframe",
@@ -326,7 +326,7 @@ CardSets.register({
       "id": "civ-composite-airframe",
       "subtitle": "Airframe",
       "details": "Carbon-fiber fuselages: lighter and rust-proof; the 787 and A350 fly it.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Biman_Bangladesh_Airlines_Boeing_787_Dreamliner_2.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Biman_Bangladesh_Airlines_Boeing_787_Dreamliner_2.jpg/500px-Biman_Bangladesh_Airlines_Boeing_787_Dreamliner_2.jpg"
     },
     {
       "name": "Head-Up Display",
@@ -926,7 +926,7 @@ CardSets.register({
       "id": "civ-airbus-a350f",
       "subtitle": "Freighter",
       "details": "Composite freighter with a 109-ton payload.",
-      "image": "https://www.aircraft.airbus.com/sites/g/files/jlcbta126/files/styles/w2720/public/2025-12/explore_a350f_capabilities_2_1.png?itok=V4GuNboN"
+      "image": "assets/sets/compress/civilian-aircraft__civ-airbus-a350f.webp"
     },
     {
       "name": "Boeing 737-800BCF",
@@ -1014,7 +1014,7 @@ CardSets.register({
       "id": "civ-hawker-siddeley-trident",
       "subtitle": "Narrow-Body Airliner",
       "details": "Trijet with the first certified autoland.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/62/Air_Ceylon_Hawker_Siddeley_HS-121_Trident_Green.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Air_Ceylon_Hawker_Siddeley_HS-121_Trident_Green.jpg/500px-Air_Ceylon_Hawker_Siddeley_HS-121_Trident_Green.jpg"
     },
     {
       "name": "Convair 880",
@@ -1158,7 +1158,7 @@ CardSets.register({
       "id": "civ-airbus-a321",
       "subtitle": "Narrow-Body Airliner",
       "details": "Stretched A320; 1990s charter favorite.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Airbus_A321-200_at_Gumrak_Airport.jpg/1280px-Airbus_A321-200_at_Gumrak_Airport.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Airbus_A321-200_at_Gumrak_Airport.jpg/500px-Airbus_A321-200_at_Gumrak_Airport.jpg"
     },
     {
       "name": "Boeing 737-200",
@@ -1166,7 +1166,7 @@ CardSets.register({
       "id": "civ-boeing-737-200",
       "subtitle": "Narrow-Body Airliner",
       "details": "Gravel-kit 737s still serve Arctic strips.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/72/Air_Algerie_Boeing_737-200_Rees-3.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Air_Algerie_Boeing_737-200_Rees-3.jpg/500px-Air_Algerie_Boeing_737-200_Rees-3.jpg"
     },
     {
       "name": "Boeing 737-300",
@@ -1214,7 +1214,7 @@ CardSets.register({
       "id": "civ-boeing-737-max-7",
       "subtitle": "Narrow-Body Airliner",
       "details": "Smallest MAX; Southwest launch customer.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Boeing_Company%2C_N7201S%2C_Boeing_737-7_MAX_%2830416417438%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Boeing_Company%2C_N7201S%2C_Boeing_737-7_MAX_%2830416417438%29.jpg/500px-Boeing_Company%2C_N7201S%2C_Boeing_737-7_MAX_%2830416417438%29.jpg"
     },
     {
       "name": "Boeing 737 MAX 9",
@@ -1238,7 +1238,7 @@ CardSets.register({
       "id": "civ-boeing-777-200",
       "subtitle": "Wide-Body Airliner",
       "details": "First 777; United flew the maiden revenue flight.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a8/American_Airlines_Boeing_777-200ER_N775AN_PVG_2013-5-21.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/American_Airlines_Boeing_777-200ER_N775AN_PVG_2013-5-21.png/500px-American_Airlines_Boeing_777-200ER_N775AN_PVG_2013-5-21.png"
     },
     {
       "name": "Boeing 777-200LR",
@@ -1270,7 +1270,7 @@ CardSets.register({
       "id": "civ-airbus-a330-800neo",
       "subtitle": "Wide-Body Airliner",
       "details": "Re-engined A330-200; few sold.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Air_Greenland_A330_800neo_OY-GKN_nicknamed_Tuukkaq.png/1280px-Air_Greenland_A330_800neo_OY-GKN_nicknamed_Tuukkaq.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Air_Greenland_A330_800neo_OY-GKN_nicknamed_Tuukkaq.png/500px-Air_Greenland_A330_800neo_OY-GKN_nicknamed_Tuukkaq.png"
     },
     {
       "name": "Airbus A321LR",
@@ -1278,7 +1278,7 @@ CardSets.register({
       "id": "civ-airbus-a321lr",
       "subtitle": "Narrow-Body Airliner",
       "details": "Long-range neo; opened thin transatlantic routes.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/A321lr_Luftwaffe.png/1280px-A321lr_Luftwaffe.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/A321lr_Luftwaffe.png/500px-A321lr_Luftwaffe.png"
     },
     {
       "name": "Embraer E170",
@@ -1430,7 +1430,7 @@ CardSets.register({
       "id": "civ-antonov-an-28",
       "subtitle": "Turboprop",
       "details": "17-seat STOL twin; PZL built it as the M28.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/99/Aeroflot_Antonov_An-28_Goetting-1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Aeroflot_Antonov_An-28_Goetting-1.jpg/500px-Aeroflot_Antonov_An-28_Goetting-1.jpg"
     },
     {
       "name": "Antonov An-72",
@@ -1454,7 +1454,7 @@ CardSets.register({
       "id": "civ-yakovlev-yak-40",
       "subtitle": "Regional Jet",
       "details": "Trijet for rough fields; 1,000+ built.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kamchatka_Aviation_Enterprise_-_Yakovlev_Yak-40_-_RA-87669.png/1280px-Kamchatka_Aviation_Enterprise_-_Yakovlev_Yak-40_-_RA-87669.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Kamchatka_Aviation_Enterprise_-_Yakovlev_Yak-40_-_RA-87669.png/250px-Kamchatka_Aviation_Enterprise_-_Yakovlev_Yak-40_-_RA-87669.png"
     },
     {
       "name": "Yakovlev Yak-42",
@@ -1470,7 +1470,7 @@ CardSets.register({
       "id": "civ-tupolev-tu-134",
       "subtitle": "Narrow-Body Airliner",
       "details": "Soviet short-haul twinjet; glass nose.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Aeroflot-Plus_Tupolev_Tu-134_at_SVO_at_night.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Aeroflot-Plus_Tupolev_Tu-134_at_SVO_at_night.jpg/500px-Aeroflot-Plus_Tupolev_Tu-134_at_SVO_at_night.jpg"
     },
     {
       "name": "Tupolev Tu-154",
@@ -1774,7 +1774,7 @@ CardSets.register({
       "id": "civ-bell-412",
       "subtitle": "Helicopter",
       "details": "Four-blade twin; EMS and offshore work.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Bell_412_JA6767.JPG/1280px-Bell_412_JA6767.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Bell_412_JA6767.JPG/500px-Bell_412_JA6767.JPG"
     },
     {
       "name": "Bell 429",
@@ -2070,7 +2070,7 @@ CardSets.register({
       "id": "civ-flight-design-ctls",
       "subtitle": "Light Sport",
       "details": "German LSA; 120-knot cruiser.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/41/Flight_Design_CTLS%2C_Private_JP7365743.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Flight_Design_CTLS%2C_Private_JP7365743.jpg/500px-Flight_Design_CTLS%2C_Private_JP7365743.jpg"
     },
     {
       "name": "Icon A5",
@@ -2206,7 +2206,7 @@ CardSets.register({
       "id": "civ-grumman-g-44-widgeon",
       "subtitle": "Seaplane",
       "details": "Smaller Goose; postwar amphibian.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Grumman_G-44A_Super_Widgeon_AN0953391.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Grumman_G-44A_Super_Widgeon_AN0953391.jpg/500px-Grumman_G-44A_Super_Widgeon_AN0953391.jpg"
     },
     {
       "name": "Grumman G-73 Mallard",
@@ -2686,7 +2686,7 @@ CardSets.register({
       "id": "civ-mitsubishi-mu-2",
       "subtitle": "Turboprop",
       "details": "Fast Japanese twin; 300-knot turboprop.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0e/D-IAHT_Mitsubishi_MU-2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/D-IAHT_Mitsubishi_MU-2.jpg/500px-D-IAHT_Mitsubishi_MU-2.jpg"
     },
     {
       "name": "Schleicher ASK 21",
@@ -2742,7 +2742,7 @@ CardSets.register({
       "id": "civ-beta-alia",
       "subtitle": "eVTOL",
       "details": "Electric aircraft; cargo and passenger versions in testing.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/BETA_Technologies_ALIA_250.jpg/1280px-BETA_Technologies_ALIA_250.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/BETA_Technologies_ALIA_250.jpg/500px-BETA_Technologies_ALIA_250.jpg"
     },
     {
       "name": "DJI Phantom",
@@ -2870,7 +2870,7 @@ CardSets.register({
       "id": "civ-cessna-170",
       "subtitle": "Piston Single",
       "details": "Taildragger 172 predecessor; 1950s classic.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Super_170.jpg/1280px-Super_170.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Super_170.jpg/500px-Super_170.jpg"
     },
     {
       "name": "Cessna 180 Skywagon",
