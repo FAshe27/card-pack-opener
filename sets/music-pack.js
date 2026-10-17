@@ -1110,7 +1110,7 @@ CardSets.register({
       "id": "after-the-gold-rush",
       "subtitle": "Rock",
       "details": "Neil Young (1970): Southern Man; the '70s singer-songwriter peak.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Harvest_Neil_Young.png/960px-Harvest_Neil_Young.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Harvest_Neil_Young.png/500px-Harvest_Neil_Young.png"
     },
     {
       "name": "Harvest",
@@ -1118,7 +1118,7 @@ CardSets.register({
       "id": "harvest",
       "subtitle": "Rock",
       "details": "Neil Young (1972): Heart of Gold; his only No. 1 album.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Harvest_Neil_Young.png/960px-Harvest_Neil_Young.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Harvest_Neil_Young.png/500px-Harvest_Neil_Young.png"
     },
     {
       "name": "Rust Never Sleeps",
@@ -1862,7 +1862,7 @@ CardSets.register({
       "id": "let-it-be",
       "subtitle": "Rock",
       "details": "The Beatles (1970): the final release; the rooftop concert.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/The_Beatles_-_Let_It_Be.png/960px-The_Beatles_-_Let_It_Be.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/The_Beatles_-_Let_It_Be.png/500px-The_Beatles_-_Let_It_Be.png"
     },
     {
       "name": "Meddle",
