@@ -350,7 +350,7 @@ CardSets.register({
       "id": "lebron-james",
       "subtitle": "Small Forward",
       "details": "4x champ; the all-time scoring leader.",
-      "image": "https://images.daznservices.com/di/library/DAZN_News/85/ab/lebron-james-team-usa-olympia-2024-15072024_1toqt44ybwrdy10cofc21hsvr2.jpg?t=-532"
+      "image": "assets/sets/compress/nba-collection__lebron-james.webp"
     },
     {
       "name": "Stephen Curry",
@@ -390,7 +390,7 @@ CardSets.register({
       "id": "nikola-jokic",
       "subtitle": "Center",
       "details": "3x MVP; 2023 champ and Finals MVP.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Nikola_Jokic_free_throw_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Nikola_Jokic_free_throw_%28cropped%29.jpg/500px-Nikola_Jokic_free_throw_%28cropped%29.jpg"
     },
     {
       "name": "Shai Gilgeous-Alexander",
@@ -462,7 +462,7 @@ CardSets.register({
       "id": "kawhi-leonard",
       "subtitle": "Small Forward",
       "details": "2x Finals MVP; 2019 champion.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Kawhi_Leonard_%287440607%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Kawhi_Leonard_%287440607%29_%28cropped%29.jpg/500px-Kawhi_Leonard_%287440607%29_%28cropped%29.jpg"
     },
     {
       "name": "Jaylen Brown",
@@ -526,7 +526,7 @@ CardSets.register({
       "id": "erik-spoelstra",
       "subtitle": "Head Coach",
       "details": "2x champ; Heat coach since 2008.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Erik_Spoelstra_2022_%28cropped%29.jpg/960px-Erik_Spoelstra_2022_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Erik_Spoelstra_2022_%28cropped%29.jpg/500px-Erik_Spoelstra_2022_%28cropped%29.jpg"
     },
     {
       "name": "Steve Kerr",
@@ -558,7 +558,7 @@ CardSets.register({
       "id": "carmelo-anthony",
       "subtitle": "Small Forward",
       "details": "10x All-Star; 28,289 career points.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Carmelo_Anthony_at_2025_NBA_All_Star_Weekend_%28cropped%29.jpg/960px-Carmelo_Anthony_at_2025_NBA_All_Star_Weekend_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Carmelo_Anthony_at_2025_NBA_All_Star_Weekend_%28cropped%29.jpg/500px-Carmelo_Anthony_at_2025_NBA_All_Star_Weekend_%28cropped%29.jpg"
     },
     {
       "name": "Dwight Howard",
@@ -774,7 +774,7 @@ CardSets.register({
       "id": "paul-george",
       "subtitle": "Small Forward",
       "details": "9x All-Star.",
-      "image": "https://heavy.com/wp-content/uploads/2026/09/GettyImages-2297594130.jpg?quality=65&strip=all"
+      "image": "assets/sets/compress/nba-collection__paul-george.webp"
     },
     {
       "name": "Karl-Anthony Towns",
@@ -846,7 +846,7 @@ CardSets.register({
       "id": "jalen-williams",
       "subtitle": "Small Forward",
       "details": "2025 champ; All-NBA and All-Defensive.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/3/38/Jalen_Williams_OKCThunder_2025_NBA_Cup_%28cropped%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Jalen_Williams_OKCThunder_2025_NBA_Cup_%28cropped%29_%28cropped%29.jpg/500px-Jalen_Williams_OKCThunder_2025_NBA_Cup_%28cropped%29_%28cropped%29.jpg"
     },
     {
       "name": "Chet Holmgren",
@@ -910,7 +910,7 @@ CardSets.register({
       "id": "jaren-jackson-jr",
       "subtitle": "Power Forward",
       "details": "2023 Defensive Player of the Year.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Jaren_Jackson_%2851814052094%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Jaren_Jackson_%2851814052094%29_%28cropped%29.jpg/500px-Jaren_Jackson_%2851814052094%29_%28cropped%29.jpg"
     },
     {
       "name": "Brandon Ingram",
@@ -1238,7 +1238,7 @@ CardSets.register({
       "id": "brandon-miller",
       "subtitle": "Small Forward",
       "details": "2023 No. 2 pick; 2024 All-Rookie.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/59/Brandon_Miller_Alabama_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Brandon_Miller_Alabama_%28cropped%29.jpg/500px-Brandon_Miller_Alabama_%28cropped%29.jpg"
     },
     {
       "name": "Miles Bridges",
@@ -1270,7 +1270,7 @@ CardSets.register({
       "id": "desmond-bane",
       "subtitle": "Shooting Guard",
       "details": "Career 41% three-point shooter.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Desmond_Bane%2C_Magic_vs_Raptors.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Desmond_Bane%2C_Magic_vs_Raptors.png/250px-Desmond_Bane%2C_Magic_vs_Raptors.png"
     },
     {
       "name": "RJ Barrett",
@@ -1374,7 +1374,7 @@ CardSets.register({
       "id": "andrew-nembhard",
       "subtitle": "Point Guard",
       "details": "2025 Finals breakout; clutch guard.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Andrew_Nembhard_Gonzaga_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Andrew_Nembhard_Gonzaga_%28cropped%29.jpg/500px-Andrew_Nembhard_Gonzaga_%28cropped%29.jpg"
     },
     {
       "name": "Bennedict Mathurin",
@@ -1398,7 +1398,7 @@ CardSets.register({
       "id": "isaiah-hartenstein",
       "subtitle": "Center",
       "details": "2025 champ; OKC's big body.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Isaiah_Hartenstein_OKC_Thunder_2025_NBA_Cup_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Isaiah_Hartenstein_OKC_Thunder_2025_NBA_Cup_%28cropped%29.jpg/500px-Isaiah_Hartenstein_OKC_Thunder_2025_NBA_Cup_%28cropped%29.jpg"
     },
     {
       "name": "Jamal Murray",
@@ -1598,7 +1598,7 @@ CardSets.register({
       "id": "cameron-boozer",
       "subtitle": "Power Forward",
       "details": "2026 lottery pick; Carlos' son.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Boozer_%E2%80%93_Clemson_%E2%80%93_February_14_2026_%28cropped%29.png/960px-Boozer_%E2%80%93_Clemson_%E2%80%93_February_14_2026_%28cropped%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Boozer_%E2%80%93_Clemson_%E2%80%93_February_14_2026_%28cropped%29.png/250px-Boozer_%E2%80%93_Clemson_%E2%80%93_February_14_2026_%28cropped%29.png"
     },
     {
       "name": "Cedric Coward",
@@ -1774,7 +1774,7 @@ CardSets.register({
       "id": "darko-rajakovic",
       "subtitle": "Head Coach",
       "details": "Serbian tactician; ex-Thunder assistant.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Darko_Rajakovi%C4%87_pregame_interview.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Darko_Rajakovi%C4%87_pregame_interview.png/500px-Darko_Rajakovi%C4%87_pregame_interview.png"
     },
     {
       "name": "Doug Christie",
@@ -1830,7 +1830,7 @@ CardSets.register({
       "id": "rocket-arena",
       "subtitle": "Arena",
       "details": "2016 title home in downtown Cleveland.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Rocket_Mortgage_FieldHouse_2022_%28cropped%29.png/960px-Rocket_Mortgage_FieldHouse_2022_%28cropped%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Rocket_Mortgage_FieldHouse_2022_%28cropped%29.png/500px-Rocket_Mortgage_FieldHouse_2022_%28cropped%29.png"
     },
     {
       "name": "Delta Center",
@@ -1902,7 +1902,7 @@ CardSets.register({
       "id": "sam-hauser",
       "subtitle": "Small Forward",
       "details": "2024 champ; sharpshooting wing.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Celtics_at_Wizards_2024-12-024_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Celtics_at_Wizards_2024-12-024_%28cropped%29.jpg/500px-Celtics_at_Wizards_2024-12-024_%28cropped%29.jpg"
     },
     {
       "name": "Neemias Queta",
@@ -1958,7 +1958,7 @@ CardSets.register({
       "id": "ziaire-williams",
       "subtitle": "Small Forward",
       "details": "2021 No. 10 pick; athletic wing.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/89/Ziaire_Williams_%2851814052094%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Ziaire_Williams_%2851814052094%29_%28cropped%29.jpg/500px-Ziaire_Williams_%2851814052094%29_%28cropped%29.jpg"
     },
     {
       "name": "Egor Demin",
@@ -2014,7 +2014,7 @@ CardSets.register({
       "id": "ryan-kalkbrenner",
       "subtitle": "Center",
       "details": "2025 second-rounder; 7-foot rim protector.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/07/Ryan_Kalkbrenner_2024.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Ryan_Kalkbrenner_2024.jpg/500px-Ryan_Kalkbrenner_2024.jpg"
     },
     {
       "name": "Nikola Vučević",
@@ -2150,7 +2150,7 @@ CardSets.register({
       "id": "julian-strawther",
       "subtitle": "Shooting Guard",
       "details": "2023 first-rounder; Gonzaga sniper.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Julian_Strawther_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Julian_Strawther_%28cropped%29.jpg/500px-Julian_Strawther_%28cropped%29.jpg"
     },
     {
       "name": "Jonas Valančiūnas",
@@ -2174,7 +2174,7 @@ CardSets.register({
       "id": "tim-hardaway-jr",
       "subtitle": "Shooting Guard",
       "details": "Veteran sniper; Tim Jr.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/28/Tim_Hardaway_Jr._2021.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Tim_Hardaway_Jr._2021.jpg/500px-Tim_Hardaway_Jr._2021.jpg"
     },
     {
       "name": "DaRon Holmes II",
@@ -2254,7 +2254,7 @@ CardSets.register({
       "id": "quinten-post",
       "subtitle": "Center",
       "details": "2024 second-rounder; stretch five.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Quinten_Post_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Quinten_Post_%28cropped%29.jpg/500px-Quinten_Post_%28cropped%29.jpg"
     },
     {
       "name": "Will Richard",
@@ -2262,7 +2262,7 @@ CardSets.register({
       "id": "will-richard",
       "subtitle": "Shooting Guard",
       "details": "2025 second-rounder from Florida.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/cb/WillRichard030125.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/WillRichard030125.png/250px-WillRichard030125.png"
     },
     {
       "name": "Reed Sheppard",
@@ -2422,7 +2422,7 @@ CardSets.register({
       "id": "bronny-james",
       "subtitle": "Point Guard",
       "details": "LeBron's son; 2024 second-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Bronny_James_Jr._%2855095342116%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Bronny_James_Jr._%2855095342116%29_%28cropped%29.jpg/500px-Bronny_James_Jr._%2855095342116%29_%28cropped%29.jpg"
     },
     {
       "name": "Scotty Pippen Jr.",
@@ -2438,7 +2438,7 @@ CardSets.register({
       "id": "santi-aldama",
       "subtitle": "Power Forward",
       "details": "Spanish stretch big; 2021 first-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Santi_Aldama_%2851812767732%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Santi_Aldama_%2851812767732%29_%28cropped%29.jpg/500px-Santi_Aldama_%2851812767732%29_%28cropped%29.jpg"
     },
     {
       "name": "Jaylen Wells",
@@ -2510,7 +2510,7 @@ CardSets.register({
       "id": "kel-el-ware",
       "subtitle": "Center",
       "details": "2024 first-rounder; Indiana big.",
-      "image": "http://platform.brewhoop.com/wp-content/uploads/sites/44/2026/04/gettyimages-2237798491.jpg"
+      "image": "assets/sets/compress/nba-collection__kel-el-ware.webp"
     },
     {
       "name": "Jaime Jaquez Jr.",
@@ -2582,7 +2582,7 @@ CardSets.register({
       "id": "yves-missi",
       "subtitle": "Center",
       "details": "2024 first-rounder; Baylor big.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/d/da/Yves_Missi.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Yves_Missi.jpg/500px-Yves_Missi.jpg"
     },
     {
       "name": "Jeremiah Fears",
@@ -2622,7 +2622,7 @@ CardSets.register({
       "id": "mitchell-robinson",
       "subtitle": "Center",
       "details": "Shot-blocking center; 2018 second-rounder.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/43/Mitchell_Robinson_-_52976499477_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Mitchell_Robinson_-_52976499477_%28cropped%29.jpg/500px-Mitchell_Robinson_-_52976499477_%28cropped%29.jpg"
     },
     {
       "name": "Miles McBride",
@@ -2718,7 +2718,7 @@ CardSets.register({
       "id": "tristan-da-silva",
       "subtitle": "Power Forward",
       "details": "2024 first-rounder from Colorado.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/04/Tristan_da_Silva_Colorado.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Tristan_da_Silva_Colorado.jpg/500px-Tristan_da_Silva_Colorado.jpg"
     },
     {
       "name": "Goga Bitadze",
@@ -2726,7 +2726,7 @@ CardSets.register({
       "id": "goga-bitadze",
       "subtitle": "Center",
       "details": "Georgian big; rim protector.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/15/Goga_Bitadze_Orlando_Magic_2025_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Goga_Bitadze_Orlando_Magic_2025_%28cropped%29.jpg/500px-Goga_Bitadze_Orlando_Magic_2025_%28cropped%29.jpg"
     },
     {
       "name": "Jett Howard",
@@ -2806,7 +2806,7 @@ CardSets.register({
       "id": "oso-ighodaro",
       "subtitle": "Power Forward",
       "details": "2024 second-rounder; Marquette big.",
-      "image": "https://collectsix.com/wp-content/uploads/2025/03/22500345-front-scaled.jpg"
+      "image": "assets/sets/compress/nba-collection__oso-ighodaro.webp"
     },
     {
       "name": "Nick Richards",
@@ -2830,7 +2830,7 @@ CardSets.register({
       "id": "robert-williams-iii",
       "subtitle": "Center",
       "details": "Time Lord; 2022 All-Defensive.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/17/Robert_Williams_%2851687558126%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Robert_Williams_%2851687558126%29_%28cropped%29.jpg/500px-Robert_Williams_%2851687558126%29_%28cropped%29.jpg"
     },
     {
       "name": "Dalano Banton",
@@ -2958,7 +2958,7 @@ CardSets.register({
       "id": "ochai-agbaji",
       "subtitle": "Small Forward",
       "details": "2022 lottery pick; Kansas wing.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Ochai_Agbaji.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Ochai_Agbaji.png/500px-Ochai_Agbaji.png"
     },
     {
       "name": "Jakob Poeltl",
@@ -2982,7 +2982,7 @@ CardSets.register({
       "id": "collin-murray-boyles",
       "subtitle": "Power Forward",
       "details": "2025 lottery pick from South Carolina.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Collin_Murray-Boyles.jpg/960px-Collin_Murray-Boyles.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Collin_Murray-Boyles.jpg/500px-Collin_Murray-Boyles.jpg"
     },
     {
       "name": "Brice Sensabaugh",
