@@ -38,7 +38,7 @@ CardSets.register({
       "id": "nintendo-game-boy-1989",
       "subtitle": "Handheld Console",
       "details": "Tetris in your pocket; 118.7M sold.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Game-Boy-FL.png/1280px-Game-Boy-FL.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Game-Boy-FL.png/500px-Game-Boy-FL.png"
     },
     {
       "name": "Motorola DynaTAC 8000X (1983)",
@@ -78,7 +78,7 @@ CardSets.register({
       "id": "atari-2600-1977",
       "subtitle": "Game Console",
       "details": "Swappable cartridges; Space Invaders quadrupled sales.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Atari-2600-Wood-4Sw-Set.png/1280px-Atari-2600-Wood-4Sw-Set.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Atari-2600-Wood-4Sw-Set.png/500px-Atari-2600-Wood-4Sw-Set.png"
     },
     {
       "name": "Nintendo Entertainment System (1985)",
@@ -342,7 +342,7 @@ CardSets.register({
       "id": "oled",
       "subtitle": "Display Technology",
       "details": "Self-lit pixels; perfect blacks.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/OLED_SUBPIXELS.jpg/1280px-OLED_SUBPIXELS.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/OLED_SUBPIXELS.jpg/500px-OLED_SUBPIXELS.jpg"
     },
     {
       "name": "Nokia 3310 (2000)",
@@ -358,7 +358,7 @@ CardSets.register({
       "id": "motorola-razr-v3-2004",
       "subtitle": "Mobile Phone",
       "details": "130M sold; the razor-thin style icon.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/56/Motorola_Razr_V3_montage_closed_open.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Motorola_Razr_V3_montage_closed_open.png/500px-Motorola_Razr_V3_montage_closed_open.png"
     },
     {
       "name": "BlackBerry Bold 9700 (2009)",
@@ -374,7 +374,7 @@ CardSets.register({
       "id": "t-mobile-sidekick-2002",
       "subtitle": "Smartphone",
       "details": "Swivel screen; the teen messenger.",
-      "image": "https://myphonebook.ca/wp-content/uploads/2012/05/hiptop-1.jpg"
+      "image": "assets/sets/compress/technology-collection__t-mobile-sidekick-2002.webp"
     },
     {
       "name": "Apple iPhone 4 (2010)",
@@ -398,7 +398,7 @@ CardSets.register({
       "id": "palm-treo-650-2004",
       "subtitle": "Smartphone",
       "details": "The PDA-phone CEOs lived on.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/67/Treo650-Sprint.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Treo650-Sprint.png/250px-Treo650-Sprint.png"
     },
     {
       "name": "LG Chocolate (2006)",
@@ -462,7 +462,7 @@ CardSets.register({
       "id": "sony-playstation-2-2000",
       "subtitle": "Game Console",
       "details": "Best-selling console ever: 160M+.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Sony_PlayStation_2.png/1280px-Sony_PlayStation_2.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Sony_PlayStation_2.png/500px-Sony_PlayStation_2.png"
     },
     {
       "name": "Xbox 360 (2005)",
@@ -478,7 +478,7 @@ CardSets.register({
       "id": "nintendo-wii-2006",
       "subtitle": "Game Console",
       "details": "Motion controls for everyone; Wii Sports: 82.9M.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Wii-Console.png/1280px-Wii-Console.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Wii-Console.png/500px-Wii-Console.png"
     },
     {
       "name": "Sega Genesis (1988)",
@@ -502,7 +502,7 @@ CardSets.register({
       "id": "nintendo-ds-2004",
       "subtitle": "Handheld Console",
       "details": "Two screens; 154M sold.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Nintendo-DS-Fat-Blue.png/1280px-Nintendo-DS-Fat-Blue.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Nintendo-DS-Fat-Blue.png/500px-Nintendo-DS-Fat-Blue.png"
     },
     {
       "name": "Apple iPod (2001)",
@@ -526,7 +526,7 @@ CardSets.register({
       "id": "microsoft-zune-2006",
       "subtitle": "MP3 Player",
       "details": "The brown iPod rival.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Zune-brown.jpg/1280px-Zune-brown.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Zune-brown.jpg/500px-Zune-brown.jpg"
     },
     {
       "name": "Commodore 64 (1982)",
@@ -598,7 +598,7 @@ CardSets.register({
       "id": "motorola-droid-2009",
       "subtitle": "Smartphone",
       "details": "'Droid Does'; Lucasfilm licensed the name.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/09/Motorola-milestone-wikipedia.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Motorola-milestone-wikipedia.png/500px-Motorola-milestone-wikipedia.png"
     },
     {
       "name": "Nokia Lumia 920 (2012)",
@@ -614,7 +614,7 @@ CardSets.register({
       "id": "oneplus-one-2014",
       "subtitle": "Smartphone",
       "details": "$299 flagship killer, invite-only.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/a/af/OnePlus_One.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/OnePlus_One.png/500px-OnePlus_One.png"
     },
     {
       "name": "Palm Pre (2009)",
@@ -742,7 +742,7 @@ CardSets.register({
       "id": "nintendo-gamecube-2001",
       "subtitle": "Game Console",
       "details": "Purple lunchbox; tiny 1.5GB discs.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/GameCube-Console-Set.png/1280px-GameCube-Console-Set.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/GameCube-Console-Set.png/500px-GameCube-Console-Set.png"
     },
     {
       "name": "Sega Dreamcast (1998)",
@@ -758,7 +758,7 @@ CardSets.register({
       "id": "sony-playstation-3-2006",
       "subtitle": "Game Console",
       "details": "The $599 Blu-ray Trojan horse.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/PS3_consoles_montage_HQ.png/1280px-PS3_consoles_montage_HQ.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/PS3_consoles_montage_HQ.png/500px-PS3_consoles_montage_HQ.png"
     },
     {
       "name": "Xbox One (2013)",
@@ -774,7 +774,7 @@ CardSets.register({
       "id": "sony-psp-2004",
       "subtitle": "Handheld Console",
       "details": "PlayStation in your pocket; UMD discs.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/PSP-1000.png/1280px-PSP-1000.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/PSP-1000.png/500px-PSP-1000.png"
     },
     {
       "name": "Atari 7800 (1986)",
@@ -918,7 +918,7 @@ CardSets.register({
       "id": "smith-corona-silent-1940s",
       "subtitle": "Typewriter",
       "details": "The hushed dorm-room portable.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Smith_Corona_Silent_Typewriter.png/1280px-Smith_Corona_Silent_Typewriter.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Smith_Corona_Silent_Typewriter.png/500px-Smith_Corona_Silent_Typewriter.png"
     },
     {
       "name": "Apple iMac G3 (1998)",
@@ -926,7 +926,7 @@ CardSets.register({
       "id": "apple-imac-g3-1998",
       "subtitle": "Computer",
       "details": "Translucent all-in-one that saved Apple.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/IMac_G3_Bondi_Blue%2C_three-quarters_view.png/1280px-IMac_G3_Bondi_Blue%2C_three-quarters_view.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/IMac_G3_Bondi_Blue%2C_three-quarters_view.png/500px-IMac_G3_Bondi_Blue%2C_three-quarters_view.png"
     },
     {
       "name": "IBM ThinkPad 701C (1995)",
@@ -934,7 +934,7 @@ CardSets.register({
       "id": "ibm-thinkpad-701c-1995",
       "subtitle": "Computer",
       "details": "The 'Butterfly' unfolding keyboard.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/9/99/ThinkPad_701_%283%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/ThinkPad_701_%283%29.png/500px-ThinkPad_701_%283%29.png"
     },
     {
       "name": "Commodore Amiga 500 (1987)",
@@ -982,7 +982,7 @@ CardSets.register({
       "id": "apple-iphone-x-2017",
       "subtitle": "Smartphone",
       "details": "Killed the home button; $999 shocked 2017.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/4/44/IPhone_X_rear.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/IPhone_X_rear.jpg/500px-IPhone_X_rear.jpg"
     },
     {
       "name": "Apple iPhone 14 (2022)",
@@ -990,7 +990,7 @@ CardSets.register({
       "id": "apple-iphone-14-2022",
       "subtitle": "Smartphone",
       "details": "Crash detection and satellite SOS.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/c/c8/IPhone_14_Product_Red.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/IPhone_14_Product_Red.jpg/500px-IPhone_14_Product_Red.jpg"
     },
     {
       "name": "Samsung Galaxy S8 (2017)",
@@ -1006,7 +1006,7 @@ CardSets.register({
       "id": "samsung-galaxy-s23-ultra-2023",
       "subtitle": "Smartphone",
       "details": "200MP camera, built-in S Pen.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Samsung_Galaxy_S23_Ultra%2C_512_GB%2C_Lavender_20230416_HOF00318_RAW-Export_cens.png/1280px-Samsung_Galaxy_S23_Ultra%2C_512_GB%2C_Lavender_20230416_HOF00318_RAW-Export_cens.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Samsung_Galaxy_S23_Ultra%2C_512_GB%2C_Lavender_20230416_HOF00318_RAW-Export_cens.png/500px-Samsung_Galaxy_S23_Ultra%2C_512_GB%2C_Lavender_20230416_HOF00318_RAW-Export_cens.png"
     },
     {
       "name": "Samsung Galaxy Z Flip (2020)",
@@ -1086,7 +1086,7 @@ CardSets.register({
       "id": "blackberry-keyone-2017",
       "subtitle": "Smartphone",
       "details": "Last great QWERTY; keyboard as trackpad.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/BlackBerry_KEYone.png/1280px-BlackBerry_KEYone.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/BlackBerry_KEYone.png/500px-BlackBerry_KEYone.png"
     },
     {
       "name": "Asus ZenFone 2 (2015)",
@@ -1134,7 +1134,7 @@ CardSets.register({
       "id": "fairphone-4-2021",
       "subtitle": "Smartphone",
       "details": "Fix it yourself with a screwdriver.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Flat_UI_Speckle_%2851534331732%29.png/1280px-Flat_UI_Speckle_%2851534331732%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Flat_UI_Speckle_%2851534331732%29.png/500px-Flat_UI_Speckle_%2851534331732%29.png"
     },
     {
       "name": "Canon Rebel T7 (2018)",
@@ -1310,7 +1310,7 @@ CardSets.register({
       "id": "sony-playstation-5-2020",
       "subtitle": "Game Console",
       "details": "Blazing SSD; meme-sized tower.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Black_and_white_Playstation_5_base_edition_with_controller.png/1280px-Black_and_white_Playstation_5_base_edition_with_controller.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Black_and_white_Playstation_5_base_edition_with_controller.png/500px-Black_and_white_Playstation_5_base_edition_with_controller.png"
     },
     {
       "name": "Xbox Series X (2020)",
@@ -1326,7 +1326,7 @@ CardSets.register({
       "id": "nintendo-3ds-2011",
       "subtitle": "Handheld Console",
       "details": "Glasses-free 3D on the go.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Nintendo-3DS-AquaOpen.png/1280px-Nintendo-3DS-AquaOpen.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Nintendo-3DS-AquaOpen.png/500px-Nintendo-3DS-AquaOpen.png"
     },
     {
       "name": "Sony PS Vita (2011)",
@@ -1334,7 +1334,7 @@ CardSets.register({
       "id": "sony-ps-vita-2011",
       "subtitle": "Handheld Console",
       "details": "Powerhouse undone by pricey memory cards.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/PlayStation-Vita-1101-FL.png/1280px-PlayStation-Vita-1101-FL.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/PlayStation-Vita-1101-FL.png/500px-PlayStation-Vita-1101-FL.png"
     },
     {
       "name": "Steam Deck (2022)",
@@ -1342,7 +1342,7 @@ CardSets.register({
       "id": "steam-deck-2022",
       "subtitle": "Handheld Console",
       "details": "Your Steam library in your hands.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Steam_Deck_%28front%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Steam_Deck_%28front%29.png/500px-Steam_Deck_%28front%29.png"
     },
     {
       "name": "Nintendo Wii U (2012)",
@@ -1366,7 +1366,7 @@ CardSets.register({
       "id": "sega-game-gear-1990",
       "subtitle": "Handheld Console",
       "details": "Color screen; ate six AAs in 5 hours.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Sega-Game-Gear-WB.png/1280px-Sega-Game-Gear-WB.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Sega-Game-Gear-WB.png/500px-Sega-Game-Gear-WB.png"
     },
     {
       "name": "Atari Lynx (1989)",
@@ -1430,7 +1430,7 @@ CardSets.register({
       "id": "apple-ipod-touch-2007",
       "subtitle": "MP3 Player",
       "details": "The iPhone without the phone.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/IPod_touch_%28aka%29.jpg/1280px-IPod_touch_%28aka%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/IPod_touch_%28aka%29.jpg/500px-IPod_touch_%28aka%29.jpg"
     },
     {
       "name": "Apple iPod Classic (2007)",
@@ -1438,7 +1438,7 @@ CardSets.register({
       "id": "apple-ipod-classic-2007",
       "subtitle": "MP3 Player",
       "details": "160GB; held 40,000 songs.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/IPod_Classic_6th_Generation_120_GB_-_front.jpg/1280px-IPod_Classic_6th_Generation_120_GB_-_front.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/IPod_Classic_6th_Generation_120_GB_-_front.jpg/500px-IPod_Classic_6th_Generation_120_GB_-_front.jpg"
     },
     {
       "name": "Microsoft Zune HD (2009)",
@@ -1454,7 +1454,7 @@ CardSets.register({
       "id": "sony-walkman-nw-a105-2019",
       "subtitle": "MP3 Player",
       "details": "Cassette-style UI for nostalgia.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Sony_Walkman_NW-A105.png/1280px-Sony_Walkman_NW-A105.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Sony_Walkman_NW-A105.png/500px-Sony_Walkman_NW-A105.png"
     },
     {
       "name": "JBL Flip 5 (2019)",
@@ -1494,7 +1494,7 @@ CardSets.register({
       "id": "google-nest-audio-2020",
       "subtitle": "Smart Speaker",
       "details": "Wrapped in recycled fabric.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Nest_Audio.jpg/1280px-Google_Nest_Audio.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Nest_Audio.jpg/500px-Google_Nest_Audio.jpg"
     },
     {
       "name": "Sonos One (2017)",
@@ -1542,7 +1542,7 @@ CardSets.register({
       "id": "black-and-white-tv",
       "subtitle": "Television",
       "details": "The boxy set that started it all.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Sony_Watchman_Black_%26_White_Miniature_Television%2C_Model_FD-2A_1987.jpg/1280px-Sony_Watchman_Black_%26_White_Miniature_Television%2C_Model_FD-2A_1987.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Sony_Watchman_Black_%26_White_Miniature_Television%2C_Model_FD-2A_1987.jpg/500px-Sony_Watchman_Black_%26_White_Miniature_Television%2C_Model_FD-2A_1987.jpg"
     },
     {
       "name": "CRT Television",
@@ -1606,7 +1606,7 @@ CardSets.register({
       "id": "microled-television",
       "subtitle": "Television",
       "details": "Every pixel its own LED.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/The_Wall_%28Samsung_MicroLED_display%29.jpg/1280px-The_Wall_%28Samsung_MicroLED_display%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/The_Wall_%28Samsung_MicroLED_display%29.jpg/500px-The_Wall_%28Samsung_MicroLED_display%29.jpg"
     },
     {
       "name": "OLED Television",
@@ -1742,7 +1742,7 @@ CardSets.register({
       "id": "raspberry-pi-2012",
       "subtitle": "Computer",
       "details": "The $35 maker computer.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Raspberry_Pi_Model_B_%2835259984214_d02ecfd9d9_o%29.jpg/1280px-Raspberry_Pi_Model_B_%2835259984214_d02ecfd9d9_o%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Raspberry_Pi_Model_B_%2835259984214_d02ecfd9d9_o%29.jpg/500px-Raspberry_Pi_Model_B_%2835259984214_d02ecfd9d9_o%29.jpg"
     },
     {
       "name": "Microsoft Surface Pro (2013)",
@@ -1814,7 +1814,7 @@ CardSets.register({
       "id": "pebble-2013",
       "subtitle": "Smartwatch",
       "details": "$10.3M Kickstarter pioneer.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Pebble_watch_trio_group_04.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Pebble_watch_trio_group_04.png/500px-Pebble_watch_trio_group_04.png"
     },
     {
       "name": "Google Glass (2013)",
@@ -1862,7 +1862,7 @@ CardSets.register({
       "id": "apple-tv-4k-2017",
       "subtitle": "Media Player",
       "details": "Siri remote frustrated everyone.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/8e/A1842.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/A1842.png/500px-A1842.png"
     },
     {
       "name": "Amazon Fire TV Stick (2014)",
@@ -2054,7 +2054,7 @@ CardSets.register({
       "id": "universal-remote",
       "subtitle": "Accessory",
       "details": "Programming it was a quest.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Hama_universal_remote_control%2C_Kleiwegkwartier%2C_Rotterdam_%282021%29_05.jpg/1280px-Hama_universal_remote_control%2C_Kleiwegkwartier%2C_Rotterdam_%282021%29_05.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Hama_universal_remote_control%2C_Kleiwegkwartier%2C_Rotterdam_%282021%29_05.jpg/500px-Hama_universal_remote_control%2C_Kleiwegkwartier%2C_Rotterdam_%282021%29_05.jpg"
     },
     {
       "name": "Flip Phone",
@@ -2062,7 +2062,7 @@ CardSets.register({
       "id": "flip-phone",
       "subtitle": "Mobile Phone",
       "details": "Snap it shut to hang up.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Cat_S22_Flip_open.jpg/1280px-Cat_S22_Flip_open.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Cat_S22_Flip_open.jpg/500px-Cat_S22_Flip_open.jpg"
     },
     {
       "name": "Candybar Phone",
@@ -2086,7 +2086,7 @@ CardSets.register({
       "id": "pager",
       "subtitle": "Mobile Device",
       "details": "143 meant 'I love you.'",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/ERIC-Pager_der_Fa._Unitronic_im_GroupAlarm_Layout.jpg/1280px-ERIC-Pager_der_Fa._Unitronic_im_GroupAlarm_Layout.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/ERIC-Pager_der_Fa._Unitronic_im_GroupAlarm_Layout.jpg/500px-ERIC-Pager_der_Fa._Unitronic_im_GroupAlarm_Layout.jpg"
     },
     {
       "name": "Satellite Phone",
@@ -2142,7 +2142,7 @@ CardSets.register({
       "id": "nokia-1100-2003",
       "subtitle": "Mobile Phone",
       "details": "250M sold; the all-time record.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Nokia1100_new.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Nokia1100_new.jpg/500px-Nokia1100_new.jpg"
     },
     {
       "name": "Landline Telephone",
@@ -2222,7 +2222,7 @@ CardSets.register({
       "id": "burner-phone",
       "subtitle": "Mobile Phone",
       "details": "A staple of crime dramas.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/7/78/Nokia_3310_Blue_R7309170_%28retouch%29.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Nokia_3310_Blue_R7309170_%28retouch%29.png/250px-Nokia_3310_Blue_R7309170_%28retouch%29.png"
     },
     {
       "name": "Car Phone",
@@ -2238,7 +2238,7 @@ CardSets.register({
       "id": "phone-booth",
       "subtitle": "Telephone",
       "details": "Clark Kent's changing room.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/00_3351_Telephone_booths_in_New_Zealand.jpg/1280px-00_3351_Telephone_booths_in_New_Zealand.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/00_3351_Telephone_booths_in_New_Zealand.jpg/500px-00_3351_Telephone_booths_in_New_Zealand.jpg"
     },
     {
       "name": "Dial-Up Modem",
@@ -2262,7 +2262,7 @@ CardSets.register({
       "id": "video-phone",
       "subtitle": "Telephone",
       "details": "AT&T demoed one in 1964.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/8/86/Amstrad_E3_Videophone.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Amstrad_E3_Videophone.png/500px-Amstrad_E3_Videophone.png"
     },
     {
       "name": "Disposable Camera",
@@ -2398,7 +2398,7 @@ CardSets.register({
       "id": "trail-camera",
       "subtitle": "Camera",
       "details": "Catches wildlife while you're gone.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Camera_trap.jpg/1280px-Camera_trap.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Camera_trap.jpg/500px-Camera_trap.jpg"
     },
     {
       "name": "Light Meter",
@@ -2422,7 +2422,7 @@ CardSets.register({
       "id": "photo-printer",
       "subtitle": "Photo",
       "details": "Ink costs more than the printer.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/DNP_Photo_Printer_Station.jpg/1280px-DNP_Photo_Printer_Station.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/DNP_Photo_Printer_Station.jpg/500px-DNP_Photo_Printer_Station.jpg"
     },
     {
       "name": "Kodak Instamatic (1963)",
@@ -2534,7 +2534,7 @@ CardSets.register({
       "id": "dat-player",
       "subtitle": "Audio",
       "details": "Digital cassettes for pros.",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/08/Aiwa_DAT_recorder_%28edited_and_cropped%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Aiwa_DAT_recorder_%28edited_and_cropped%29.jpg/500px-Aiwa_DAT_recorder_%28edited_and_cropped%29.jpg"
     },
     {
       "name": "Reel-to-Reel Tape",
@@ -2614,7 +2614,7 @@ CardSets.register({
       "id": "microphone",
       "subtitle": "Audio",
       "details": "Some people sing into these.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/AKG_C214_Condenser_microphone.jpg/1280px-AKG_C214_Condenser_microphone.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/AKG_C214_Condenser_microphone.jpg/500px-AKG_C214_Condenser_microphone.jpg"
     },
     {
       "name": "Headphones",
@@ -2654,7 +2654,7 @@ CardSets.register({
       "id": "arcade-cabinet",
       "subtitle": "Game Console",
       "details": "A quarter a play.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Pac-Man_arcade_machine%2C_De_Notaris_Schaijk.jpg/1280px-Pac-Man_arcade_machine%2C_De_Notaris_Schaijk.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Pac-Man_arcade_machine%2C_De_Notaris_Schaijk.jpg/500px-Pac-Man_arcade_machine%2C_De_Notaris_Schaijk.jpg"
     },
     {
       "name": "Pinball Machine",
@@ -2686,7 +2686,7 @@ CardSets.register({
       "id": "game-watch-1980",
       "subtitle": "Handheld Game",
       "details": "The D-pad was born here.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Nintendo_Donkey_Kong_Game_and_Watch2.png/1280px-Nintendo_Donkey_Kong_Game_and_Watch2.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Nintendo_Donkey_Kong_Game_and_Watch2.png/500px-Nintendo_Donkey_Kong_Game_and_Watch2.png"
     },
     {
       "name": "Retro Mini Console",
@@ -2798,7 +2798,7 @@ CardSets.register({
       "id": "gaming-chair",
       "subtitle": "Gaming Accessory",
       "details": "Comfort for long sessions.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Aorus_gaming_chair_on_the_stage_20230205.jpg/1280px-Aorus_gaming_chair_on_the_stage_20230205.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Aorus_gaming_chair_on_the_stage_20230205.jpg/500px-Aorus_gaming_chair_on_the_stage_20230205.jpg"
     },
     {
       "name": "Fight Stick",
@@ -2822,7 +2822,7 @@ CardSets.register({
       "id": "pachinko",
       "subtitle": "Game",
       "details": "Japan's vertical pinball.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Pachinko_machine%2C_Tokyo_%28screen_blurred%29.jpg/1280px-Pachinko_machine%2C_Tokyo_%28screen_blurred%29.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Pachinko_machine%2C_Tokyo_%28screen_blurred%29.jpg/500px-Pachinko_machine%2C_Tokyo_%28screen_blurred%29.jpg"
     },
     {
       "name": "Electric Typewriter",
@@ -2878,7 +2878,7 @@ CardSets.register({
       "id": "3d-printer",
       "subtitle": "Printer",
       "details": "From prototypes to prosthetics.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/3D_printer.png/1280px-3D_printer.png"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/3D_printer.png/500px-3D_printer.png"
     },
     {
       "name": "Photocopier",
@@ -3022,7 +3022,7 @@ CardSets.register({
       "id": "sd-card",
       "subtitle": "Storage",
       "details": "Smaller than a stamp.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/16_MB_SD_Card%2C_Toshiba-2724.jpg/1280px-16_MB_SD_Card%2C_Toshiba-2724.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/16_MB_SD_Card%2C_Toshiba-2724.jpg/500px-16_MB_SD_Card%2C_Toshiba-2724.jpg"
     },
       {
       "name": "Minolta SRT 201",
