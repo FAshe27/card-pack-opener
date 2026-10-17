@@ -59,5 +59,7 @@ CardSets.manifest = [
   'zelda.js',
   'zelda-additions.js',
   'pokemon.js',
-  'pokemon-additions.js'
+  'pokemon-additions.js',
+  'stardew-valley.js',
+  'stardew-valley-additions.js'
 ];
