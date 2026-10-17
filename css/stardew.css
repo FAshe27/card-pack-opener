@@ -1,0 +1,86 @@
+/* pack skin "stardew": PLACEHOLDER pure-CSS skin — Stardew Valley.
+   Valley green under a shaft of sunrise-gold light: pollen and pale
+   motes drifting across the tear top, a warm dawn glow rising at the
+   foot of the pack, antique-brass crimps (class pack-skin-stardew).
+   A stand-in until Franklin's own baked pack art replaces it; it
+   touches nothing shared — this file is scoped to the stardew set.
+   Card art is the game's own sprites/portraits on the theme's pale
+   hay panel (artFit contain, #fdf6d8); section 2 only adds a slim
+   leaf-green frame line around the art and keeps the pixel art crisp.
+   Section 3 wires the placeholder card back inside the site frame
+   (the standing in-frame default). */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-stardew .pack-top {
+  background:
+    /* a shaft of sunrise light falling over the valley */
+    linear-gradient(115deg, transparent 28%, rgba(255,213,79,.16) 44%, rgba(255,183,77,.11) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(255,213,79,.22), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(163,217,119,.16), transparent 70%),
+    /* drifting pollen and pale motes */
+    radial-gradient(rgba(253,246,216,.75) 1px, transparent 1.5px),
+    radial-gradient(rgba(255,213,79,.55) 1px, transparent 1.5px),
+    linear-gradient(180deg, #2f5d1f 0%, #224613 60%, #173008 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-stardew .pack-body {
+  background:
+    /* dawn-gold glow rising off the fields below */
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(255,183,77,.32), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(253,246,216,.12), transparent 70%),
+    /* the last of the light shaft washing the top of the body */
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,213,79,.10), transparent 70%),
+    /* faint pollen, sparser than the top */
+    radial-gradient(rgba(253,246,216,.45) 1px, transparent 1.5px),
+    radial-gradient(rgba(255,213,79,.35) 1px, transparent 1.5px),
+    linear-gradient(180deg, #2c571e 0%, #224613 55%, #122806 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-stardew .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,213,79,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-stardew .crimp { background: repeating-linear-gradient(100deg, rgba(0,0,0,.55) 0 4px, rgba(176,141,87,.55) 4px 6px, rgba(255,213,79,.28) 6px 9px); }
+.pack-skin-stardew .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(0,0,0,.66) 0 4px, rgba(146,118,32,.55) 4px 6px, rgba(255,213,79,.14) 6px 9px); }
+.pack-skin-stardew .pack-top::after { border-bottom-color: rgba(255,213,79,.65); }
+.pack-skin-stardew .pack-code { color: #fdf6d8; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.65), 0 0 12px rgba(255,183,77,.85); }
+.pack-skin-stardew .pack-emblem { background:
+  /* a faint golden wedge rising in the ring — a sunrise over the fields */
+  conic-gradient(from -35deg at 50% 70%, rgba(255,213,79,.30) 0deg 70deg, transparent 70deg),
+  radial-gradient(circle at 35% 30%, rgba(255,213,79,.38), rgba(23,48,8,.94) 72%);
+  border-color: rgba(255,213,79,.9); box-shadow: 0 0 26px rgba(255,183,77,.55), inset 0 0 18px rgba(255,183,77,.25); text-shadow: 0 0 16px rgba(253,246,216,.9); }
+.pack-skin-stardew .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(255,183,77,.85), 0 2px 8px rgba(0,0,0,.7); }
+.pack-skin-stardew .pack-sub { color: #cfe3b8; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Game sprites and portraits sit whole on the theme's pale hay panel
+   (artFit contain, panel #fdf6d8 behind them). The frame swaps the
+   stock translucent border for a slim leaf-green line with a faint
+   warm inset, and the pixel art is kept crisp (no blurry upscale). */
+.card[data-set="stardew-valley"] .cf-art {
+  border-color: rgba(90,138,44,.55);
+  box-shadow: inset 0 0 18px rgba(74,54,10,.22);
+}
+.card[data-set="stardew-valley"] .cf-art img { image-rendering: pixelated; }
+/* Slips (ticket/token/credit cards borrowed into a stardew pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="stardew-valley"].ticket-card .cf-art,
+.card[data-set="stardew-valley"].token-card .cf-art,
+.card[data-set="stardew-valley"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder art, in-frame) ----------
+   The placeholder back art sits inside the site frame (the standing
+   default): the stock .back frame stays, the .cb panel carries the
+   art, and the printed emblem/name hide because the art carries the
+   design (a stardrop over the valley fields). */
+.card[data-set="stardew-valley"] .cb {
+  background: url('../assets/sets/stardew-valley/card-back-art.svg') center / cover no-repeat #274a1c;
+  border: none;
+}
+.card[data-set="stardew-valley"] .cb-emblem, .card[data-set="stardew-valley"] .cb-name { display: none; }
