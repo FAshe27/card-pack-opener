@@ -1536,6 +1536,13 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .shop-deal-tag.ticket { background: linear-gradient(135deg, #27ae60, #1e8449); color: #fff; }
 .shop-mystery-q { font-size: 3rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,.4); }
 .shop-deal-tag.mystery { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; }
+/* FAQ & How to Play (static view, linked from the account menu) */
+.faq-panel { padding: 20px 22px; max-width: 860px; margin: 0 auto; }
+.faq-panel h2 { margin-top: 0; }
+.faq-sec { margin: 26px 0 6px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.faq-item { margin: 14px 0; }
+.faq-q { margin: 0 0 4px; font-size: 1rem; color: var(--text); text-transform: none; letter-spacing: normal; }
+.faq-a { margin: 0; color: var(--muted); line-height: 1.5; }
 
 /* --- turn-ins + the Vault (108) --- */
 .badge-turned { background: #14532d; color: #86efac; border-radius: 999px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,.35); display: inline-flex; align-items: center; justify-content: center; min-width: 18px; }
