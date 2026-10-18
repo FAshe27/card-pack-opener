@@ -45,7 +45,8 @@ window.CardSets.bootIndex = {
   "zelda",
   "pokemon",
   "stardew-valley",
-  "candy"
+  "candy",
+  "dinosaurs"
  ],
  "sets": {
   "birdwatching": {
@@ -653,6 +654,21 @@ window.CardSets.bootIndex = {
    "css": "candy",
    "primary": "#e5488c",
    "secondary": "#7b3fbf",
+   "total": 420
+  },
+  "dinosaurs": {
+   "files": [
+    "dinosaurs.js",
+    "dinosaurs-additions.js"
+   ],
+   "name": "Dinosaurs",
+   "code": "DINO",
+   "emblem": "🦖",
+   "packName": "Dinosaur Pack",
+   "skin": "dinosaurs",
+   "css": "",
+   "primary": "#4e7a3d",
+   "secondary": "#37474f",
    "total": 420
   }
  }
