@@ -1879,6 +1879,12 @@
       m5btn.style.display = (!isLocked() && n >= 5 && cfg && cfg.wheels.length) ? '' : 'none';
       m5btn.disabled = S.spinning || S.autospin;
     }
+    var allbtn = $('#multiSpinAllBtn');
+    if (allbtn) {
+      allbtn.style.display = (!isLocked() && n >= 2 && cfg && cfg.wheels.length) ? '' : 'none';
+      allbtn.disabled = S.spinning || S.autospin;
+      allbtn.textContent = 'SPIN ALL ×' + n;
+    }
     updateWheelBadge();
   }
   async function startWheelSpin() {
@@ -1970,6 +1976,7 @@
     });
     var _msb = $('#multiSpinBtn'); if (_msb) _msb.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(); });
     var _m5b = $('#multiSpin5Btn'); if (_m5b) _m5b.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(5); });
+    var _mab = $('#multiSpinAllBtn'); if (_mab) _mab.addEventListener('click', function () { if (CPS.wheelMulti && CPS.wheelMulti.startAll) CPS.wheelMulti.startAll(); });
     $('#revealAllBtn').addEventListener('click', revealAll);
     $('#stagePack').addEventListener('pointerdown', function (e) { if (e.button == null || e.button === 0) tear(); });
     $('#stageIdle').addEventListener('click', function (e) { if (e.target.closest('.idle-pack')) openFromPack(); });

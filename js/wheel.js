@@ -320,7 +320,9 @@
    (x5 / x10 buttons); the wheel plays ONE visual spin (the last
    result's hop chain), then a summary popup lists everything won.
    State lives in app.js; this module drives it through CPS.appCtx
-   like the other feature modules. */
+   like the other feature modules.
+   SPIN ALL (migration 162) rides the same call: startAll passes the
+   whole ticket balance and the server clamp (1000) does the rest. */
 (function (CPS) {
   function start(count) {
     count = count || 10;
@@ -374,5 +376,14 @@
   function showResults(out, count) {
     showSummary({ n: out.spins_used || count || 10, bySet: out.packs_by_set || {}, tokens: out.tokens_won || 0, credit: out.credit_won || 0 });
   }
-  CPS.wheelMulti = { start: start, showSummary: showSummary };
+  /* SPIN ALL: one multi call for the whole balance (server clamps at
+     1000 per migration 162; on a pre-162 server it harmlessly spins
+     10 and the summary reports the server's spins_used). */
+  function startAll() {
+    var A = CPS.appCtx; if (!A) return;
+    var n = A.spinCount();
+    if (n < 2) { A.toast('Spin All needs at least 2 spin tickets.', 'warn'); A.audio.error(); return; }
+    start(Math.min(n, 1000));
+  }
+  CPS.wheelMulti = { start: start, startAll: startAll, showSummary: showSummary };
 })(window.CPS);
