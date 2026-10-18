@@ -727,6 +727,12 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   .packs-controls { padding: 14px 14px 16px; }
   .packs-controls-row #openBtn, .packs-controls-row #quickOpenBtn { min-width: 0; flex: 1 1 100%; }
 }
+/* Phones: pin the pack controls to the bottom of the screen while the
+   packs panel is in view, so "Open next pack" never hides below a
+   full 9-card reveal. Desktop layout is untouched. */
+@media (max-width: 700px) {
+  .packs-controls { position: sticky; bottom: 0; z-index: 6; background: var(--panel); box-shadow: 0 -8px 22px rgba(0,0,0,.35); }
+}
 /* Collection header: 'Packs opened' line (relocated from Open Packs) */
 .packs-opened-note { color: var(--muted); font-weight: 600; } .packs-opened-note b { color: var(--text); }
 
@@ -1237,7 +1243,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 /* ===================================================== prize wheel */
 /* wheel/arcade counts now show as tab badges (see .tab-badge) */
 .wheel-wrap { max-width: 640px; margin: 0 auto; text-align: center; padding: 12px 0 48px; }
-.spin-btns { display: flex; gap: 10px; justify-content: center; margin-top: 20px; } .spin-btns .btn.big { flex: 1 1 0; width: 0; margin: 0; }
+.spin-btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; } .spin-btns .btn.big { flex: 1 1 128px; margin: 0; }
 @media (max-width: 480px) {
   /* four-across squeezes each button to ~1/4 of a phone screen and the
      nowrap labels burst out (AUTOSPIN most of all) — go two-by-two */
@@ -1477,6 +1483,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 @media (min-width: 1250px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(182px, 1fr)); gap: 16px; } }
 @media (min-width: 1600px) { .shop-grid { grid-template-columns: repeat(auto-fit, minmax(204px, 1fr)); } }
 .shop-booth { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; display: flex; flex-direction: column; }
+.shop-hint { min-height: 15px; margin-top: 6px; }
 /* Uniform visual stage: packs come in different aspect ratios (Calendar is square 1/1,
    most are 5/8), so every booth reserves the same visual height and centers the pack —
    names, prices and Buy buttons then line up across the row. */

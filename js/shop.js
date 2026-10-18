@@ -80,10 +80,25 @@
       }
       var leftEl = $('.shop-left', booth);
       if (leftEl && remaining != null) leftEl.textContent = remaining + ' of ' + sl.limit + ' left';
+      var hintEl = $('.shop-hint', booth);
+      if (hintEl) hintEl.textContent = buyHint(sl, remaining, data.store_credit);
     });
   }
 
+  // Why a booth's Buy button is greyed out, in words ('' = no hint needed;
+  // a sold-out limited booth already explains itself via "0 of N left").
+  function buyHint(sl, remaining, credit) {
+    if (remaining != null && remaining <= 0) return '';
+    if (credit < sl.price) return 'Need $' + sl.price + ' Store Credit — sell dupes below!';
+    return '';
+  }
+
   function draw(el, data) {
+    // Booth pack visuals are drawn from set metadata (the sets may not be
+    // loaded), so make sure their per-set stylesheets are enabled.
+    if (window.CardSets && window.CardSets.ensureCss) {
+      window.CardSets.ensureCss(data.slots.map(function (sl) { return sl.set_id; }).filter(Boolean));
+    }
     var slots = data.slots.map(function (sl) {
       var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
       var canBuy = data.store_credit >= sl.price && (remaining == null || remaining > 0);
@@ -104,6 +119,7 @@
         '<div class="muted small shop-left">' + (remaining != null ? remaining + ' of ' + sl.limit + ' left' : '&nbsp;') + '</div>' +
         '<button class="btn primary" data-buyslot="' + sl.slot + '"' + (canBuy ? '' : ' disabled') + '>Buy</button>' +
         buyAllBtn +
+        '<div class="muted small shop-hint">' + buyHint(sl, remaining, data.store_credit) + '</div>' +
         '</div></div>';
     }).join('');
 

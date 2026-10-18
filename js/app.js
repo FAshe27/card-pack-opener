@@ -76,6 +76,7 @@
         } else {
           var oks = await Promise.all(files.map(function (f) { return loadScript('sets/' + f); }));
           oks.forEach(function (ok, i) { if (!ok) S.loadWarnings.push('Could not load sets/' + files[i]); });
+          if (CS.enableAllCss) CS.enableAllCss(); /* eager fallback: every set loaded, so every set sheet applies */
         }
         var custom = await Store.listCustomSets();
         custom.forEach(function (raw) { window.CardSets.register(raw, 'imported'); });

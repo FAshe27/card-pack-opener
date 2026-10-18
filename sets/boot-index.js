@@ -57,6 +57,7 @@ window.CardSets.bootIndex = {
    "emblem": "🐦",
    "packName": "Birdwatching Pack",
    "skin": "birds",
+   "css": "",
    "primary": "#87CEEB",
    "secondary": "#45b3e0",
    "total": 382
@@ -70,6 +71,7 @@ window.CardSets.bootIndex = {
    "emblem": "✈️",
    "packName": "Civilian Aviation Pack",
    "skin": "civ",
+   "css": "civ",
    "primary": "#6F6F6E",
    "secondary": "#96c1fa",
    "total": 376
@@ -84,6 +86,7 @@ window.CardSets.bootIndex = {
    "emblem": "🍔",
    "packName": "Value Meal Pack",
    "skin": "fastfood",
+   "css": "",
    "primary": "#e4002b",
    "secondary": "#ffc72c",
    "total": 250
@@ -98,6 +101,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏎️",
    "packName": "Formula 1 Pack",
    "skin": "f1",
+   "css": "",
    "primary": "#780606",
    "secondary": "#530616",
    "total": 375
@@ -111,6 +115,7 @@ window.CardSets.bootIndex = {
    "emblem": "✈️",
    "packName": "Afterburner Pack",
    "skin": "air",
+   "css": "",
    "primary": "#6b7a4a",
    "secondary": "#39424c",
    "total": 330
@@ -125,6 +130,7 @@ window.CardSets.bootIndex = {
    "emblem": "⚾",
    "packName": "MLB Pack",
    "skin": "mlb",
+   "css": "",
    "primary": "#4D8064",
    "secondary": "#4b5a51",
    "total": 381
@@ -138,6 +144,7 @@ window.CardSets.bootIndex = {
    "emblem": "🎬",
    "packName": "Movie Pack",
    "skin": "movies",
+   "css": "",
    "primary": "#DC143C",
    "secondary": "#3e424b",
    "total": 376
@@ -151,6 +158,7 @@ window.CardSets.bootIndex = {
    "emblem": "🎶",
    "packName": "Music Album Pack",
    "skin": "music",
+   "css": "",
    "primary": "#001540",
    "secondary": "#420c09",
    "total": 376
@@ -164,6 +172,7 @@ window.CardSets.bootIndex = {
    "emblem": "🛞",
    "packName": "Pit Road Pack",
    "skin": "nascar",
+   "css": "",
    "primary": "#FF000D",
    "secondary": "#800000",
    "total": 378
@@ -177,6 +186,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏀",
    "packName": "NBA Pack",
    "skin": "nba",
+   "css": "",
    "primary": "#573013",
    "secondary": "#9e6900",
    "total": 381
@@ -190,6 +200,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏈",
    "packName": "NFL Pack",
    "skin": "nfl",
+   "css": "",
    "primary": "#636B2F",
    "secondary": "#193315",
    "total": 384
@@ -203,6 +214,7 @@ window.CardSets.bootIndex = {
    "emblem": "🌿",
    "packName": "Plant Pack",
    "skin": "plants",
+   "css": "",
    "primary": "#06402B",
    "secondary": "#2E6F40",
    "total": 376
@@ -216,6 +228,7 @@ window.CardSets.bootIndex = {
    "emblem": "🐋",
    "packName": "Deep Dive Pack",
    "skin": "sea",
+   "css": "",
    "primary": "#0f6fb5",
    "secondary": "#0a1f52",
    "total": 330
@@ -229,6 +242,7 @@ window.CardSets.bootIndex = {
    "emblem": "🪐",
    "packName": "Deep Space Pack",
    "skin": "space",
+   "css": "",
    "primary": "#0b1640",
    "secondary": "#4b2a8c",
    "total": 332
@@ -243,6 +257,7 @@ window.CardSets.bootIndex = {
    "emblem": "💾",
    "packName": "Technology Pack",
    "skin": "tech",
+   "css": "tech",
    "primary": "#000080",
    "secondary": "#240238",
    "total": 377
@@ -256,6 +271,7 @@ window.CardSets.bootIndex = {
    "emblem": "⚛️",
    "packName": "Element Pack",
    "skin": "periodic",
+   "css": "",
    "primary": "#0e7490",
    "secondary": "#a3e635",
    "total": 118
@@ -269,6 +285,7 @@ window.CardSets.bootIndex = {
    "emblem": "📅",
    "packName": "Calendar Pack",
    "skin": "calendar",
+   "css": "calendar",
    "primary": "#1d4ed8",
    "secondary": "#f59e0b",
    "total": 366
@@ -282,6 +299,7 @@ window.CardSets.bootIndex = {
    "emblem": "🃏",
    "packName": "Playing Card Pack",
    "skin": "playing",
+   "css": "playing",
    "primary": "#1b2a5e",
    "secondary": "#c8102e",
    "total": 52
@@ -295,6 +313,7 @@ window.CardSets.bootIndex = {
    "emblem": "🥤",
    "packName": "Beverage Pack",
    "skin": "beverages",
+   "css": "beverages",
    "primary": "#b45309",
    "secondary": "#7c2d12",
    "total": 376
@@ -309,6 +328,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏎️",
    "packName": "Street Legal Pack",
    "skin": "cars",
+   "css": "cars",
    "primary": "#2563eb",
    "secondary": "#0b1220",
    "total": 504
@@ -322,6 +342,7 @@ window.CardSets.bootIndex = {
    "emblem": "🎢",
    "packName": "Coaster Pack",
    "skin": "coasters",
+   "css": "coasters",
    "primary": "#6d28d9",
    "secondary": "#1e1b4b",
    "total": 376
@@ -336,6 +357,7 @@ window.CardSets.bootIndex = {
    "emblem": "🐾",
    "packName": "Dog Pack",
    "skin": "dogs",
+   "css": "dogs",
    "primary": "#84cc16",
    "secondary": "#422006",
    "total": 377
@@ -349,6 +371,7 @@ window.CardSets.bootIndex = {
    "emblem": "⭐",
    "packName": "State Pack",
    "skin": "states",
+   "css": "states",
    "primary": "#0a1a3c",
    "secondary": "#d4af37",
    "total": 50
@@ -362,6 +385,7 @@ window.CardSets.bootIndex = {
    "emblem": "🧭",
    "packName": "Country Pack",
    "skin": "countries",
+   "css": "countries",
    "primary": "#2563eb",
    "secondary": "#7c5a10",
    "total": 215
@@ -375,6 +399,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏞️",
    "packName": "National Park Pack",
    "skin": "nps",
+   "css": "nps",
    "primary": "#17402a",
    "secondary": "#c96a32",
    "total": 180
@@ -388,6 +413,7 @@ window.CardSets.bootIndex = {
    "emblem": "🐠",
    "packName": "Aquarium Pack",
    "skin": "aquariums",
+   "css": "aquariums",
    "primary": "#0e7d86",
    "secondary": "#07414d",
    "total": 330
@@ -401,6 +427,7 @@ window.CardSets.bootIndex = {
    "emblem": "⛏️",
    "packName": "Minecraft Pack",
    "skin": "minecraft",
+   "css": "minecraft",
    "primary": "#5da344",
    "secondary": "#8a5f3c",
    "total": 396
@@ -414,6 +441,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏰",
    "packName": "Disney Pack",
    "skin": "disney",
+   "css": "disney",
    "primary": "#1b3a78",
    "secondary": "#d9a441",
    "total": 375
@@ -428,6 +456,7 @@ window.CardSets.bootIndex = {
    "emblem": "⭐",
    "packName": "Pixar Pack",
    "skin": "pixar",
+   "css": "pixar",
    "primary": "#2b6cb8",
    "secondary": "#f2c230",
    "total": 416
@@ -442,6 +471,7 @@ window.CardSets.bootIndex = {
    "emblem": "🌊",
    "packName": "Bodies of Water",
    "skin": "water",
+   "css": "water",
    "primary": "#07507e",
    "secondary": "#3ec6dd",
    "total": 413
@@ -455,6 +485,7 @@ window.CardSets.bootIndex = {
    "emblem": "⛽",
    "packName": "Gas Stations",
    "skin": "gas",
+   "css": "gas",
    "primary": "#14213d",
    "secondary": "#f26522",
    "total": 340
@@ -469,6 +500,7 @@ window.CardSets.bootIndex = {
    "emblem": "🛣️",
    "packName": "US Interstates",
    "skin": "hwy",
+   "css": "hwy",
    "primary": "#0f2a52",
    "secondary": "#d22630",
    "total": 366
@@ -483,6 +515,7 @@ window.CardSets.bootIndex = {
    "emblem": "💥",
    "packName": "Superheroes",
    "skin": "hero",
+   "css": "hero",
    "primary": "#16295c",
    "secondary": "#e23636",
    "total": 420
@@ -497,6 +530,7 @@ window.CardSets.bootIndex = {
    "emblem": "🎭",
    "packName": "Broadway",
    "skin": "stage",
+   "css": "stage",
    "primary": "#17101a",
    "secondary": "#7a1f2b",
    "total": 415
@@ -511,6 +545,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏎️",
    "packName": "IndyCar",
    "skin": "indy",
+   "css": "indy",
    "primary": "#8f2d26",
    "secondary": "#17181c",
    "total": 500
@@ -525,6 +560,7 @@ window.CardSets.bootIndex = {
    "emblem": "🏁",
    "packName": "Mario Kart Pack",
    "skin": "mkrt",
+   "css": "",
    "primary": "#e60012",
    "secondary": "#171a21",
    "total": 460
@@ -539,6 +575,7 @@ window.CardSets.bootIndex = {
    "emblem": "🐉",
    "packName": "Skyrim Pack",
    "skin": "skyrim",
+   "css": "skyrim",
    "primary": "#8fc1e3",
    "secondary": "#232c38",
    "total": 400
@@ -553,6 +590,7 @@ window.CardSets.bootIndex = {
    "emblem": "🍃",
    "packName": "Animal Crossing Pack",
    "skin": "acrs",
+   "css": "acrs",
    "primary": "#59a83b",
    "secondary": "#7a4a21",
    "total": 444
@@ -567,6 +605,7 @@ window.CardSets.bootIndex = {
    "emblem": "🗡",
    "packName": "Zelda Pack",
    "skin": "zelda",
+   "css": "zelda",
    "primary": "#c9a227",
    "secondary": "#1e4634",
    "total": 423
@@ -581,6 +620,7 @@ window.CardSets.bootIndex = {
    "emblem": "🔴",
    "packName": "Pokémon Pack",
    "skin": "pokemon",
+   "css": "pokemon",
    "primary": "#ffcb05",
    "secondary": "#2a75bb",
    "total": 420
@@ -595,6 +635,7 @@ window.CardSets.bootIndex = {
    "emblem": "⭐",
    "packName": "Stardew Valley Pack",
    "skin": "stardew",
+   "css": "stardew",
    "primary": "#4a7c2f",
    "secondary": "#8a5a2b",
    "total": 420
@@ -609,6 +650,7 @@ window.CardSets.bootIndex = {
    "emblem": "🍬",
    "packName": "Candy Pack",
    "skin": "candy",
+   "css": "candy",
    "primary": "#e5488c",
    "secondary": "#7b3fbf",
    "total": 420

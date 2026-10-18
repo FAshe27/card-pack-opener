@@ -116,6 +116,36 @@
   var bootIdx = null;
   var inflight = {};
 
+  /* --- lazy per-set CSS -------------------------------------------
+     A set's stylesheet is NOT in index.html at all; the first time a
+     set loads, a <link> for its sheet is injected — inserted just
+     before css/surprise.css so its cascade position matches the old
+     all-eager order (feature sheets carry no set-scoped selectors, so
+     nothing else can tie). boot-index's per-set "css" field (generated
+     by scanning the css folder) names the file, so injection never
+     404s. Surfaces that draw set visuals from metadata alone (the
+     Shop's booth packs) call CardSets.ensureCss(ids) instead. */
+  var cssDone = {};
+  function enableCss(base) {
+    if (!base || cssDone[base]) return;
+    cssDone[base] = true;
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'css/' + base + '.css';
+    l.setAttribute('data-setcss', base);
+    var anchor = document.querySelector('link[href="css/surprise.css"]');
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(l, anchor);
+    else document.head.appendChild(l);
+  }
+  function cssForId(id) {
+    var m = bootIdx && bootIdx.sets[id];
+    return m ? m.css : '';
+  }
+  /* Fallback-only list (eager boot without a boot-index): mirrors the
+     generator's css scan. The lazy path never uses it — boot-index's
+     per-set css field is authoritative there. */
+  var KNOWN_CSS = ['acrs', 'aquariums', 'beverages', 'calendar', 'candy', 'cars', 'civ', 'coasters', 'countries', 'disney', 'dogs', 'gas', 'hero', 'hwy', 'indy', 'minecraft', 'nps', 'pixar', 'playing', 'pokemon', 'skyrim', 'stage', 'stardew', 'states', 'tech', 'water', 'zelda'];
+
   function loadSetFile(src) {
     return new Promise(function (res) {
       var s = document.createElement('script');
@@ -154,6 +184,7 @@
     if (cur && !cur.stub) return Promise.resolve(cur);
     if (!bootIdx || !bootIdx.sets[id]) return Promise.resolve(cur || null);
     if (inflight[id]) return inflight[id];
+    enableCss(cssForId(id));
     var files = bootIdx.sets[id].files;
     var p = Promise.resolve(true);
     files.forEach(function (f) {
@@ -204,6 +235,8 @@
     load: loadSet,
     loadIds: loadIds,
     loadAll: loadAllSets,
+    ensureCss: function (ids) { (ids || []).forEach(function (id) { enableCss(cssForId(id)); }); },
+    enableAllCss: function () { KNOWN_CSS.forEach(enableCss); },
     pending: pendingStubs,
     all: function () { return order.map(function (id) { return sets.get(id); }); },
     ids: function () { return order.slice(); },
