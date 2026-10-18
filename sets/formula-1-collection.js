@@ -2766,7 +2766,7 @@ CardSets.register({
       "id": "tire-gunner",
       "subtitle": "Pit Crew Role",
       "details": "Wheel off, wheel on, in a second.",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Aston_Martin_pit_USGP_2021.jpg/1280px-Aston_Martin_pit_USGP_2021.jpg"
+      "image": "assets/sets/formula-1/tire-gunner.svg"
     },
     {
       "name": "Tire Carrier",
