@@ -1742,7 +1742,7 @@ CardSets.register({
       "id": "ers",
       "subtitle": "Technology",
       "details": "Energy Recovery System; electric boost.",
-      "image": "http://f1i.com/wp-content/uploads/2020/02/XPB_1037392_1200px.jpg"
+      "image": "assets/sets/formula-1/ers.svg"
     },
     {
       "name": "MGU-H",
@@ -2398,7 +2398,7 @@ CardSets.register({
       "id": "flat-spot",
       "subtitle": "Tire Term",
       "details": "Locked brakes; vibrating rubber.",
-      "image": "http://f1i.com/wp-content/uploads/2022/11/XPB_1185498_1200px.jpg"
+      "image": "assets/sets/formula-1/flat-spot.svg"
     },
     {
       "name": "Dirty Air",
@@ -2494,7 +2494,7 @@ CardSets.register({
       "id": "blue-flags",
       "subtitle": "Race Flag",
       "details": "Move over; leaders coming through.",
-      "image": "https://f1i.com/wp-content/uploads/2018/05/XPB_881034_HiRes-e1526969779862.jpg"
+      "image": "assets/sets/formula-1/blue-flags.svg"
     },
     {
       "name": "Virtual Safety Car",
@@ -2742,7 +2742,7 @@ CardSets.register({
       "id": "floor",
       "subtitle": "Aerodynamics",
       "details": "Venturi tunnels; the 2022 revolution.",
-      "image": "https://pbs.twimg.com/media/HJF-EufXMAESON9?format=jpg&name=large"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Lotus_79_venturi_tunnels.JPG/1280px-Lotus_79_venturi_tunnels.JPG"
     },
     {
       "name": "Front Jack Operator",
@@ -2766,7 +2766,7 @@ CardSets.register({
       "id": "tire-gunner",
       "subtitle": "Pit Crew Role",
       "details": "Wheel off, wheel on, in a second.",
-      "image": "https://p1racenews.hu/wp-content/uploads/2026/01/2025AustrianGP_FRI_AstonMartin_2221561992.jpg"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Aston_Martin_pit_USGP_2021.jpg/1280px-Aston_Martin_pit_USGP_2021.jpg"
     },
     {
       "name": "Tire Carrier",
@@ -2806,7 +2806,7 @@ CardSets.register({
       "id": "nose-cone",
       "subtitle": "Car Part",
       "details": "Crashes first; crumples safely.",
-      "image": "https://e89.zpost.com/forums/attachment.php?s=fdb0fc82e98eaf0312f09fe34230e96a&attachmentid=494354&stc=1&d=1299596560"
+      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Force_India_VJM09_front_nose_and_wing_2016_Malaysia.jpg/1280px-Force_India_VJM09_front_nose_and_wing_2016_Malaysia.jpg"
     },
     {
       "name": "Airbox",
@@ -2886,7 +2886,7 @@ CardSets.register({
       "id": "wheel-nut",
       "subtitle": "Car Part",
       "details": "Single nut; retained since 2022.",
-      "image": "https://f1i.com/wp-content/uploads/2015/02/F1-ecrou-moyeu-ouvert-blown-wheel-nut-2015-vignette.jpg"
+      "image": "assets/sets/formula-1/wheel-nut.svg"
     },
     {
       "name": "Fuel Rig",
