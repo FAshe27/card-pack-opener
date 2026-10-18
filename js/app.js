@@ -183,6 +183,7 @@
     CPS.cloud.clearToken();
     S.opening = null;
     setLocked();
+    if (S.gateOpen) return; // gate already up: re-rendering the view behind it re-fails auth and rebuilds the login box forever
     if (S.view === 'admin') showView('packs');
     applyPrefsUI(); resetStage(); renderView();
     showGate({ msg: msg });
