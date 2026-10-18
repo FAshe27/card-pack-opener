@@ -76,7 +76,7 @@
       <button id="notifBtn" class="icon-btn cloud-only" title="Notifications" aria-label="Notifications">🔔<span class="notif-badge hidden" id="notifBadge"></span></button>
       <button id="soundBtn" class="icon-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
       <button id="playerBtn" class="player-chip" title="Log in"><span class="avatar" id="playerAvatar">L</span><span id="playerName">Log in</span><span class="mode-tag" id="modeTag"></span></button>
-      <div id="acctMenu" class="acct-menu hidden"><button class="acct-menu-item" id="acctProfileBtn">View Your Profile</button><button class="acct-menu-item" id="acctLogoutBtn">Log Out</button></div>
+      <div id="acctMenu" class="acct-menu hidden"><button class="acct-menu-item" id="acctProfileBtn">View Your Profile</button><button class="acct-menu-item" id="acctFaqBtn">❓ FAQ &amp; How to Play</button><button class="acct-menu-item" id="acctLogoutBtn">Log Out</button></div>
     </div>
   </header>
 
@@ -280,6 +280,120 @@
         <p class="muted small">Fresh quests every day at midnight. Finish one, claim spin tickets and arcade tokens.</p>
         <div class="quest-claim-all"><button id="claimAllBtn" class="btn primary hidden">Claim all</button></div>
         <div id="questList" class="quest-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="view-faq" class="view">
+      <div class="panel faq-panel">
+        <h2>❓ FAQ &amp; How to Play</h2>
+        <h3 class="faq-sec">Getting started</h3>
+        <div class="faq-item">
+          <h3 class="faq-q">What is PackRipper?</h3>
+          <p class="faq-a">A card pack-opening game. Open packs from dozens of themed sets, build your collection, chase the rarest cards, and trade with other players. Everything is play money — nothing here costs real money.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">How do I get packs?</h3>
+          <p class="faq-a">Win them on the Prize Wheel, finish Daily quests, play Arcade games, buy them in the Shop with Store Credit, earn them from turn-ins, or trade with other players. New players start with packs to open right away.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">How do I open a pack?</h3>
+          <p class="faq-a">Go to Open Packs, pick a set from the Set picker at the top, then click the pack (or press Space). Click each card to flip it — or use Reveal all. ⚡ Quick Open skips the tear and flips everything at once. A normal pack has 9 cards.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What do the rarities mean?</h3>
+          <p class="faq-a">From most to least common: Common, Uncommon, Rare, Epic, Legendary, and Chase — the rarest of all. The Odds button on Open Packs shows exactly what's in a set and your chances for each rarity.</p>
+        </div>
+        <h3 class="faq-sec">Cards &amp; your collection</h3>
+        <div class="faq-item">
+          <h3 class="faq-q">What's a Holo?</h3>
+          <p class="faq-a">Any card can come in a shiny Holo version (marked ✦). Holos are separate copies in your collection and count toward your variant totals.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What are numbered variants?</h3>
+          <p class="faq-a">Extra-rare special editions of a card, each with its own serial number: 🌈 Rainbow (50 made), 💠 Prism (10 made), 🌑 Obsidian (5 made), and 👑 One-of-One (only 1 exists!). The badge on the card shows its number, like 12/50. Numbered variants only appear on Rare-or-better cards…</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">…so what's a MISPRINT?</h3>
+          <p class="faq-a">A numbered variant that landed on a Common or Uncommon card because of an old bug. The bug is fixed, so no new Misprints can ever be made — the ones out there are a closed, collectible set of oddities.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What is the Vault?</h3>
+          <p class="faq-a">Your safe. Put a copy of a card in the Vault (from the Collection's Vault filter or the card itself) and it can't be traded, gifted, or sold as a duplicate by accident. Take it back out whenever you like.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What are turn-ins?</h3>
+          <p class="faq-a">From the Collection tab you can turn in a set once you own every card in it to complete it and earn rewards — or turn in just your duplicates. Completed sets are announced to everyone and recorded on your profile.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What should I do with duplicates?</h3>
+          <p class="faq-a">Plenty of options: sell full batches to the Shop for Store Credit, turn them in, offer them in trades, list them on the Trading Post, use them to claim bounties, or gift a copy to a friend from the card in your Collection.</p>
+        </div>
+        <h3 class="faq-sec">Tickets, tokens &amp; Store Credit</h3>
+        <div class="faq-item">
+          <h3 class="faq-q">What's Store Credit (💵)?</h3>
+          <p class="faq-a">The Shop's currency. Earn it on the Prize Wheel, inside packs, from Arcade payouts, and by selling duplicates to the Shop. Spend it in the Shop on packs, Spin Tickets, and Arcade Tokens.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">How does the Prize Wheel work?</h3>
+          <p class="faq-a">Spin Tickets (🎫) spin the wheel for packs, Arcade Tokens, and Store Credit. You get three free tickets every day at midnight (Chicago time) if you're holding fewer than 10. Earned enough tickets? SPIN ×5 and SPIN ×10 buttons appear so you don't have to click one at a time.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What are Arcade Tokens (🪙)?</h3>
+          <p class="faq-a">Tokens play the Arcade games: High/Low (1 token), Slots (2), Scratchoffs (2), Plinko (3), and Roulette (from 1). Games pay out in packs, tickets, and tokens. Win tokens on the wheel, finish quests, or buy them in the Shop.</p>
+        </div>
+        <h3 class="faq-sec">The Shop</h3>
+        <div class="faq-item">
+          <h3 class="faq-q">How does the Shop work?</h3>
+          <p class="faq-a">The Shop restocks every 12 hours — midnight and noon Chicago time — with the same stock for everyone. Two packs are $5 with no limit, and the limited booths are: a $2 Deal pack (5 per restock), a $1 Mystery pack (10 — every pack rolls a random set when you buy it!), Spin Tickets at $3 (15), and Arcade Tokens at $1 (20).</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What's the Buy all button?</h3>
+          <p class="faq-a">On a limited item, Buy all buys every one you have left this restock in a single tap — for the full remaining price. It only lights up when your Store Credit covers all of them; there's no partial buy.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">How do I sell duplicates to the Shop?</h3>
+          <p class="faq-a">At the bottom of the Shop: 20 Commons = $1 · 12 Uncommons = $1 · 6 Rares = $1 · 4 Epics = $1 · 2 Legendaries = $1 · 1 Chase = $2. Numbered and vaulted copies are never sold.</p>
+        </div>
+        <h3 class="faq-sec">Every day</h3>
+        <div class="faq-item">
+          <h3 class="faq-q">What are Daily quests?</h3>
+          <p class="faq-a">Fresh quests every day at midnight — things like opening packs and playing games. Finish them to claim Spin Tickets and Arcade Tokens, or hit Claim all when several are ready.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What's the Card of the Day?</h3>
+          <p class="faq-a">One card is featured each day — and its set is guaranteed to be the first pack in the Shop that day.</p>
+        </div>
+        <h3 class="faq-sec">Playing with others</h3>
+        <div class="faq-item">
+          <h3 class="faq-q">How does trading work?</h3>
+          <p class="faq-a">Open the Players tab, pick a player, and build a trade offer from your cards and packs. They can accept, decline, or counter. Your trade history lives under Players too.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What's the Market tab?</h3>
+          <p class="faq-a">Two boards: the Bounty Board, where players post what they're offering for a card they want (first player holding that card can claim it), and the Trading Post, where you list a card and field offers, then accept the best one. Everything offered is held safely until the deal goes through.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">Can I just give a card away?</h3>
+          <p class="faq-a">Yes — open one of your cards and choose Gift to send a copy to another player. Vaulted copies can't be gifted until you release them.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What's the bell 🔔 for?</h3>
+          <p class="faq-a">Notifications: trade offers, bounty claims, big pulls, set completions, and announcements. Open it to read them, and use the settings inside to choose which kinds you get.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What are Stats and profiles?</h3>
+          <p class="faq-a">Stats shows your numbers, the site's biggest recent pulls, and galleries of numbered variants. Click your name in the top right and choose View Your Profile for your profile page — including your 🏆 Trophy Case, where your best cards are displayed. You can view other players' profiles and Trophy Cases from the Players tab too.</p>
+        </div>
+        <h3 class="faq-sec">Account help</h3>
+        <div class="faq-item">
+          <h3 class="faq-q">I forgot my PIN — what now?</h3>
+          <p class="faq-a">Ask Franklin. He can reset your PIN from the admin side; nobody can see your old one.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">Can I turn the sound off?</h3>
+          <p class="faq-a">Tap the 🔊 button in the top right to mute or unmute the site sounds.</p>
+        </div>
       </div>
     </section>
 
