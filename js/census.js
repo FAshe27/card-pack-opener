@@ -60,7 +60,7 @@
       el.style.display = '';
       el.onclick = function (ev) {
         var row = ev.target.closest('[data-owners]');
-        if (row && el.contains(row)) openOwners(set, card, 'misprint');
+        if (row && el.contains(row)) openOwners(set, card, 'misprint', variant);
       };
       return;
     }
@@ -89,17 +89,22 @@
     var mine = myVariantSerials(set.id, card.id);
     if (mine.length) {
       rows += '<div class="vc-row"><span>Your serials</span><span class="vc-mine">' +
-        mine.map(function (v) { return CPS.cards.VARIANTS[v.tier].name + ' #' + v.serial; }).join(', ') + '</span></div>';
+        mine.map(function (v) { return '<span class="vc-serial-link" data-myserial="' + v.serial + '" data-mytier="' + esc(v.tier) + '" title="Show this numbered copy">' + CPS.cards.VARIANTS[v.tier].name + ' #' + v.serial + '</span>'; }).join(', ') + '</span></div>';
     }
     el.innerHTML = rows;
     el.style.display = '';
     el.onclick = function (ev) {
+      var mineEl = ev.target.closest('[data-myserial]');
+      if (mineEl && el.contains(mineEl)) {
+        C.openCardModal(set.id, card.id, null, { tier: mineEl.getAttribute('data-mytier'), serial: parseInt(mineEl.getAttribute('data-myserial'), 10) });
+        return;
+      }
       var row = ev.target.closest('[data-owners]');
-      if (row && el.contains(row)) openOwners(set, card, row.getAttribute('data-owners'));
+      if (row && el.contains(row)) openOwners(set, card, row.getAttribute('data-owners'), variant);
     };
   }
 
-  function openOwners(set, card, tier) {
+  function openOwners(set, card, tier, variant) {
     var C = CPS.appCtx, esc = C.esc;
     var V = CPS.cards.VARIANTS;
     var title = tier === 'misprint' ? 'Misprinted numbered copies'
@@ -111,7 +116,7 @@
       '<div style="margin-top:14px"><button class="btn small" data-owners-back>← Back to card</button></div>';
     C.openModal(html, function (box) {
       var back = box.querySelector('[data-owners-back]');
-      if (back) back.addEventListener('click', function () { C.openCardModal(set.id, card.id); });
+      if (back) back.addEventListener('click', function () { C.openCardModal(set.id, card.id, null, variant || null); });
       CPS.cloud.call('variant_owners', { p_set: set.id, p_card: card.id, p_tier: tier }).then(function (rows) {
         var list = box.querySelector('#ownersList');
         if (!list) return;
@@ -130,9 +135,14 @@
               ? 'Pulled and owned by ' + nameHtml
               : 'Pulled by ' + esc(r.puller) + ', owned by ' + nameHtml;
           }
-          return '<div class="owners-row"><span class="owners-serial">' + esc(serial) + tags + '</span>' +
+          return '<div class="owners-row"' + (r.mine ? ' data-mycopy="' + r.serial + '" data-mytier="' + esc(r.tier) + '" title="Show your numbered copy"' : '') + '><span class="owners-serial">' + esc(serial) + tags + '</span>' +
             '<span class="owners-name">' + nameHtml + '</span></div>';
         }).join('');
+        list.querySelectorAll('[data-mycopy]').forEach(function (rowEl) {
+          rowEl.addEventListener('click', function () {
+            C.openCardModal(set.id, card.id, null, { tier: rowEl.getAttribute('data-mytier'), serial: parseInt(rowEl.getAttribute('data-mycopy'), 10) });
+          });
+        });
       }).catch(function (e) {
         var list = box.querySelector('#ownersList');
         if (list) list.innerHTML = '<p class="muted">Could not load the owners list.</p>';

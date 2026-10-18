@@ -90,6 +90,10 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .variant-census .vc-n { font-weight: 800; font-variant-numeric: tabular-nums; }
 .variant-census .vc-done { color: var(--good); }
 .variant-census .vc-mine { color: var(--accent2); font-weight: 700; }
+.variant-census .vc-serial-link { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+.variant-census .vc-serial-link:hover { text-decoration: underline; }
+.owners-row[data-mycopy] { cursor: pointer; }
+.owners-row[data-mycopy]:hover .owners-serial { text-decoration: underline; }
 .variant-census .vc-link { cursor: pointer; }
 .variant-census .vc-link:hover .vc-n { text-decoration: underline; }
 .variant-census .vc-go { color: var(--accent2); font-weight: 800; }
