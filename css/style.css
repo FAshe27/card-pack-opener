@@ -826,7 +826,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 
 /* numbered variants: rainbow border, amped holo, serial badge */
 .card.variant::after {
-  content: ''; position: absolute; inset: -2.5px; border-radius: 14px; z-index: -1; pointer-events: none;
+  content: ''; position: absolute; inset: -2.5px; border-radius: 14.5px; clip-path: inset(0 round 14.5px); z-index: -1; pointer-events: none;
   background: conic-gradient(#ff5f5f, #ffb21e, #f7f75f, #38c97f, #3f8cff, #b35cff, #ff5f5f);
   animation: variant-hue 5s linear infinite;
 }

@@ -172,7 +172,11 @@
       sec.innerHTML = '<div class="sbx-public-stage"></div>';
       stage = sec.querySelector('.sbx-public-stage');
     }
-    stage.innerHTML = '';
+    // Do NOT clear the stage here: every public module replaces its own
+    // content at render() entry, and emptying the stage first collapses
+    // the page to zero height — the browser clamps the scroll position
+    // to the top before the module can capture/restore it (the Shop's
+    // dupe-sell refresh used to dump mobile readers back at the top).
     try {
       it.render(stage);
     } catch (e) {

@@ -249,8 +249,29 @@
       }
     }
     if (!sel && !view.touched) {
-      for (var j = 0; j < tiles.length; j++) {
-        if (selectable(tiles[j])) { sel = tiles[j]; break; }
+      /* Default to the copy this modal was opened on (fromCard), so the
+         panel's selection — and its "Acting on" line — agree with the
+         face on display. The old default (first selectable tile) picked
+         the first numbered copy even when the modal was opened on a
+         plain copy, and a different serial than the one opened when the
+         player owns several (Franklin, 2026-10-18). */
+      var fc = view.fromCard, pref = null;
+      if (fc && fc.variant) {
+        pref = function (t) { return t.kind === 'variant' && t.inst.tier === fc.variant.tier && t.inst.serial === fc.variant.serial; };
+      } else if (fc && fc.holo) {
+        pref = function (t) { return t.kind === 'holo' || t.kind === 'holoVault'; };
+      } else {
+        pref = function (t) { return t.kind === 'plain' || t.kind === 'plainVault'; };
+      }
+      if (pref) {
+        for (var k = 0; k < tiles.length; k++) {
+          if (selectable(tiles[k]) && pref(tiles[k])) { sel = tiles[k]; break; }
+        }
+      }
+      if (!sel) {
+        for (var j = 0; j < tiles.length; j++) {
+          if (selectable(tiles[j])) { sel = tiles[j]; break; }
+        }
       }
       if (sel) view.selKey = sel.key;
     }
@@ -330,6 +351,20 @@
     view.touched = true;
     if (view.sel === t) { view.selKey = null; view.sel = null; paintPanel(view); return; }
     view.selKey = t.key;
+    /* The face on display always shows the copy selected here: re-open
+       the modal on the tapped copy, the same re-open the holo toggle
+       and this panel's vault action already use. The fresh panel then
+       re-selects this copy from fromCard. (Franklin, 2026-10-18: the
+       pane should always show the card selected in the bottom menu —
+       previously selecting a tile only moved the action bar while the
+       face kept showing the copy the modal was opened on.) */
+    var ctx = CPS.appCtx;
+    if (ctx && ctx.openCardModal) {
+      if (t.kind === 'variant') { ctx.openCardModal(view.set.id, view.card.id, null, { tier: t.inst.tier, serial: t.inst.serial }); return; }
+      if (t.kind === 'holo' || t.kind === 'holoVault') { ctx.openCardModal(view.set.id, view.card.id, true, null); return; }
+      ctx.openCardModal(view.set.id, view.card.id, false, null);
+      return;
+    }
     paintPanel(view);
   }
 
