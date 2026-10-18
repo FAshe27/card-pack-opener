@@ -63,5 +63,7 @@ CardSets.manifest = [
   'stardew-valley.js',
   'stardew-valley-additions.js',
   'candy.js',
-  'candy-additions.js'
+  'candy-additions.js',
+  'dinosaurs.js',
+  'dinosaurs-additions.js'
 ];
