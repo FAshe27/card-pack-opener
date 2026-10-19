@@ -47,7 +47,8 @@ window.CardSets.bootIndex = {
   "stardew-valley",
   "candy",
   "dinosaurs",
-  "theme-parks"
+  "theme-parks",
+  "trains"
  ],
  "sets": {
   "birdwatching": {
@@ -685,6 +686,21 @@ window.CardSets.bootIndex = {
    "css": "theme-parks",
    "primary": "#146b8a",
    "secondary": "#e07b2c",
+   "total": 420
+  },
+  "trains": {
+   "files": [
+    "trains.js",
+    "trains-additions.js"
+   ],
+   "name": "Trains & Railroads",
+   "code": "TRAINS",
+   "emblem": "🚂",
+   "packName": "Train Pack",
+   "skin": "trains",
+   "css": "",
+   "primary": "#33566e",
+   "secondary": "#7a3b2e",
    "total": 420
   }
  }
