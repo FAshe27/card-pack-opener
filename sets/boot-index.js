@@ -46,7 +46,8 @@ window.CardSets.bootIndex = {
   "pokemon",
   "stardew-valley",
   "candy",
-  "dinosaurs"
+  "dinosaurs",
+  "theme-parks"
  ],
  "sets": {
   "birdwatching": {
@@ -669,6 +670,21 @@ window.CardSets.bootIndex = {
    "css": "",
    "primary": "#4e7a3d",
    "secondary": "#37474f",
+   "total": 420
+  },
+  "theme-parks": {
+   "files": [
+    "theme-parks.js",
+    "theme-parks-additions.js"
+   ],
+   "name": "Theme Parks & Attractions",
+   "code": "PARK",
+   "emblem": "🎡",
+   "packName": "Theme Parks Pack",
+   "skin": "theme-parks",
+   "css": "theme-parks",
+   "primary": "#146b8a",
+   "secondary": "#e07b2c",
    "total": 420
   }
  }

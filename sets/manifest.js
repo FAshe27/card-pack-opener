@@ -65,5 +65,7 @@ CardSets.manifest = [
   'candy.js',
   'candy-additions.js',
   'dinosaurs.js',
-  'dinosaurs-additions.js'
+  'dinosaurs-additions.js',
+  'theme-parks.js',
+  'theme-parks-additions.js'
 ];

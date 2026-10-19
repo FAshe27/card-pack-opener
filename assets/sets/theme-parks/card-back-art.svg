@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+  <!-- Placeholder card back for Theme Parks & Attractions: ferris wheel over midway stripes.
+       Stand-in until Franklin's baked pack art replaces it. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#146b8a"/>
+      <stop offset="0.62" stop-color="#0f5772"/>
+      <stop offset="1" stop-color="#083c50"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.98" r="0.75">
+      <stop offset="0" stop-color="#e07b2c" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#e07b2c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#sky)"/>
+  <rect width="300" height="420" fill="url(#glow)"/>
+  <!-- string lights -->
+  <g fill="#fff4d6">
+    <circle cx="30" cy="36" r="3"/><circle cx="75" cy="24" r="3"/><circle cx="120" cy="36" r="3"/>
+    <circle cx="165" cy="24" r="3"/><circle cx="210" cy="36" r="3"/><circle cx="255" cy="24" r="3"/>
+    <circle cx="52" cy="64" r="2.4"/><circle cx="142" cy="66" r="2.4"/><circle cx="232" cy="64" r="2.4"/>
+  </g>
+  <!-- ferris wheel -->
+  <g stroke="#eef6f3" stroke-width="5" fill="none" stroke-linecap="round">
+    <circle cx="150" cy="185" r="105"/>
+    <circle cx="150" cy="185" r="10" fill="#e07b2c" stroke="none"/>
+    <line x1="150" y1="185" x2="150" y2="80"/><line x1="150" y1="185" x2="224" y2="111"/>
+    <line x1="150" y1="185" x2="224" y2="259"/><line x1="150" y1="185" x2="150" y2="290"/>
+    <line x1="150" y1="185" x2="76" y2="259"/><line x1="150" y1="185" x2="76" y2="111"/>
+    <line x1="150" y1="290" x2="112" y2="368"/><line x1="150" y1="290" x2="188" y2="368"/>
+  </g>
+  <g fill="#ffc46e">
+    <circle cx="150" cy="80" r="9"/><circle cx="224" cy="111" r="9"/><circle cx="224" cy="259" r="9"/>
+    <circle cx="150" cy="290" r="9"/><circle cx="76" cy="259" r="9"/><circle cx="76" cy="111" r="9"/>
+  </g>
+  <!-- midway stripes at foot -->
+  <g>
+    <rect x="0" y="368" width="300" height="10" fill="#e07b2c"/>
+    <rect x="0" y="384" width="300" height="6" fill="#ffc46e" opacity="0.8"/>
+    <rect x="0" y="396" width="300" height="24" fill="#083c50"/>
+  </g>
+  <text x="150" y="413" text-anchor="middle" font-family="Georgia, serif" font-size="11" letter-spacing="3" fill="#eef6f3">THEME PARKS</text>
+</svg>
