@@ -48,7 +48,8 @@ window.CardSets.bootIndex = {
   "candy",
   "dinosaurs",
   "theme-parks",
-  "trains"
+  "trains",
+  "tv-shows"
  ],
  "sets": {
   "birdwatching": {
@@ -701,6 +702,21 @@ window.CardSets.bootIndex = {
    "css": "",
    "primary": "#33566e",
    "secondary": "#7a3b2e",
+   "total": 420
+  },
+  "tv-shows": {
+   "files": [
+    "tv-shows.js",
+    "tv-shows-additions.js"
+   ],
+   "name": "TV Shows",
+   "code": "TV",
+   "emblem": "📺",
+   "packName": "TV Pack",
+   "skin": "tv-shows",
+   "css": "",
+   "primary": "#1f2a44",
+   "secondary": "#c9a86a",
    "total": 420
   }
  }

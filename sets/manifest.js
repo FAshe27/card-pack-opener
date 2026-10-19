@@ -69,5 +69,7 @@ CardSets.manifest = [
   'theme-parks.js',
   'theme-parks-additions.js',
   'trains.js',
-  'trains-additions.js'
+  'trains-additions.js',
+  'tv-shows.js',
+  'tv-shows-additions.js'
 ];
