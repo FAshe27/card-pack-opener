@@ -825,12 +825,21 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 }
 
 /* numbered variants: rainbow border, amped holo, serial badge */
-.card.variant::after {
-  content: ''; position: absolute; inset: -2.5px; border-radius: 14.5px; clip-path: inset(0 round 14.5px); z-index: -1; pointer-events: none;
-  background: conic-gradient(#ff5f5f, #ffb21e, #f7f75f, #38c97f, #3f8cff, #b35cff, #ff5f5f);
-  animation: variant-hue 5s linear infinite;
+/* The frame is a gradient border painted on the card's OWN box (conic
+   background clipped to the border area behind a transparent border), so
+   no layer ever paints outside the card's border-radius. The old ::after
+   frame (inset -2.5px + clip-path + an animated filter) lost its corner
+   shaping on iOS Safari and left square flaps past the corners. The hue
+   cycle now rotates the conic itself via a registered @property angle;
+   engines without @property keep the same ring, static. */
+@property --va { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.card.variant {
+  border: 2.5px solid transparent;
+  background-image: conic-gradient(from var(--va), #ff5f5f, #ffb21e, #f7f75f, #38c97f, #3f8cff, #b35cff, #ff5f5f);
+  background-origin: border-box;
+  animation: variant-spin 5s linear infinite;
 }
-@keyframes variant-hue { to { filter: hue-rotate(360deg); } }
+@keyframes variant-spin { to { --va: 360deg; } }
 .card.variant .front::after {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; mix-blend-mode: color-dodge;
   background:
@@ -844,12 +853,11 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   background-image: radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.6px); background-size: 7cqw 7cqw; animation: twinkle 1.6s ease-in-out infinite;
 }
 /* One-of-One: solid gold */
-.card.vt-oneofone::after {
-  background: conic-gradient(#ffd700, #fff3b0, #ffb700, #ffdf5e, #ffd700, #fff3b0, #ffd700);
-  animation: gold-pulse 2.5s ease-in-out infinite;
+.card.vt-oneofone {
+  background-image: conic-gradient(from var(--va), #ffd700, #fff3b0, #ffb700, #ffdf5e, #ffd700, #fff3b0, #ffd700);
   box-shadow: 0 0 18px rgba(255,210,102,.55);
+  animation-duration: 7.5s;
 }
-@keyframes gold-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
 .card.vt-oneofone .front::after {
   background:
     radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.31), transparent 42%),
@@ -857,11 +865,10 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
   background-size: 100% 100%, 200% 200%; animation: holo-fast 2.2s ease-in-out infinite;
 }
 /* Prism: crystalline ice-blue refraction */
-.card.vt-prism::after {
-  background: conic-gradient(#a0e7ff, #ffffff, #7fd4ff, #d0f0ff, #a0e7ff, #ffffff, #a0e7ff);
-  animation: prism-pulse 3s ease-in-out infinite;
+.card.vt-prism {
+  background-image: conic-gradient(from var(--va), #a0e7ff, #ffffff, #7fd4ff, #d0f0ff, #a0e7ff, #ffffff, #a0e7ff);
+  animation-duration: 6s;
 }
-@keyframes prism-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.25); } }
 .card.vt-prism .front::after {
   background:
     radial-gradient(circle at var(--mx) 30%, rgba(255,255,255,.34), transparent 42%),
@@ -913,7 +920,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .badge-holo { bottom: -8px; right: -6px; background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); color: #222; }
 /* variant serial stays hidden until the card is flipped (pack reveal) */
 .flippable:not(.flipped) .badge-variant, .flippable:not(.flipped) .misprint-void { display: none; }
-.card.flippable:not(.flipped).variant::after { display: none; }
+.card.flippable:not(.flipped).variant { background-image: none; animation: none; }
 .badge-variant { top: -8px; right: -6px; background: linear-gradient(90deg,#ff5f5f,#ffb21e,#38c97f,#3f8cff,#b35cff); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); }
 .card.vt-prism .badge-variant { background: linear-gradient(135deg, #7fd4ff, #a0e7ff); color: #0a2a3a; text-shadow: none; }
 .card.vt-obsidian .badge-variant { background: linear-gradient(135deg, #6b3a9e, #a86ad4); color: #fff; }
