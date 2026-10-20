@@ -391,6 +391,7 @@
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
     $('#stageControls').classList.add('hidden');
+    $('#stage').style.minHeight = ''; $('#revealGrid').style.removeProperty('--cardw');
     renderPacksSide();
   }
 
@@ -446,6 +447,7 @@
     var sp = $('#stagePack');
     sp.innerHTML = '<div class="pack-wrap">' + CPS.cards.pack(set, 'ready') + '</div><div class="tear-hint">Click the pack to tear it open</div>';
     sp.classList.remove('hidden');
+    fitStagePre(set, pulls.length);
     audio.click();
     renderPacksSide();
     var pr = $('#stagePack .pack').getBoundingClientRect();
@@ -485,6 +487,121 @@
     buildGrid(o);
   }
 
+  /* ============ FIT-TO-WINDOW REVEAL SIZING (staged prototype) ============
+     Sizes the reveal cards FROM the space actually available, instead of
+     fixed card widths + the stage reservation constants in style.css:
+       - budget: on <=900px, the whole page must fit the window with no
+         scroll (desktop >900px: fit inside the stage box, min-height
+         700px) — minus the packs control strip, stage padding/gaps and
+         the summary + Reveal All block;
+       - columns: whichever count (3..5 phone/tablet, 3..6 desktop) yields
+         the WIDEST cards in that budget, so tall reveals (12-15 card
+         Stuffed packs) gain columns instead of only shrinking;
+       - cap: today's card width for this grid/viewport — cards can shrink
+         to fit, never grow past the approved size;
+       - floor: if the strict no-scroll budget would crush phone cards
+         under FIT_MINW, use the "stage at the top of the window" budget
+         instead (top bar scrolled away by the scroll startOpen already
+         performs) so cards stay readable; the grid records which budget
+         won in data-fit-mode.
+     The width is written to --cardw on #revealGrid (style.css falls back
+     to today's widths when unset) and, on <=900px, the stage's inline
+     min-height becomes the exact fitted content height, replacing the
+     reservation constants for the reveal. fitStagePre() applies the same
+     height the moment the pack is staged, so the control strip does not
+     move between tear and reveal. FIT-BEGIN */
+  var FIT_SCH_EST = 76;   /* summary + Reveal All height while hidden (measured 76px in the rig); buildGrid re-fits with the real height */
+  var FIT_MINW = 80;      /* phone readability floor for the strict no-scroll budget */
+
+  function fitScH() {
+    var sc = $('#stageControls');
+    return (sc && !sc.classList.contains('hidden')) ? sc.getBoundingClientRect().height : FIT_SCH_EST;
+  }
+  function fitTodayW(playing, gridW) {
+    if (playing) {
+      if (window.innerWidth <= 560) return gridW * 0.333 - 8;
+      return (Math.min(gridW, 584) - 32) / 3;
+    }
+    if (window.innerWidth <= 560) return gridW * 0.333 - 8;
+    return Math.max(108, Math.min(184, (gridW - 64) / 5));
+  }
+  function fitBudget() {
+    var stage = $('#stage'); if (!stage) return { strict: 0, scrolled: 0, padT: 0, padB: 0, gapY: 22, scH: 0 };
+    var st = getComputedStyle(stage);
+    var padT = parseFloat(st.paddingTop) || 0, padB = parseFloat(st.paddingBottom) || 0;
+    var gapY = parseFloat(st.rowGap); if (isNaN(gapY)) gapY = parseFloat(st.gap) || 22;
+    var scH = fitScH();
+    if (window.innerWidth > 900) {
+      var mh = parseFloat(st.minHeight) || 700;
+      return { strict: mh - padT - padB - gapY - scH, scrolled: 0, padT: padT, padB: padB, gapY: gapY, scH: scH };
+    }
+    var controls = document.querySelector('.packs-controls');
+    var cH = controls ? controls.getBoundingClientRect().height : 0;
+    var stageTopDoc = stage.getBoundingClientRect().top + window.scrollY;
+    /* strict: the whole page (top bar included) fits the window, no scroll at all.
+       scrolled: the stage is scrolled to the top of the window the way startOpen
+       already scrolls it — 84px (the stage's scroll-margin-top) stays visible
+       above it, then stage + control strip must fill the rest exactly. */
+    var strict = window.innerHeight - 14 - cH - padT - gapY - scH - padB - stageTopDoc;
+    var scrolled = window.innerHeight - 84 - cH - padT - gapY - scH - padB;
+    return { strict: strict, scrolled: scrolled, padT: padT, padB: padB, gapY: gapY, scH: scH };
+  }
+  function fitPick(n, gridW, ratio, gap, cap, budgetH) {
+    var maxCols = window.innerWidth <= 900 ? 5 : 6;
+    var best = null;
+    for (var cols = 3; cols <= maxCols; cols++) {
+      var rows = Math.ceil(n / cols);
+      var wW = (gridW - (cols - 1) * gap) / cols;
+      var wH = ((budgetH - (rows - 1) * gap) / rows) / ratio;
+      var w = Math.min(wW, wH, cap);
+      if (!best || w > best.w + 0.5) best = { w: w, cols: cols, rows: rows };
+    }
+    return best;
+  }
+  function fitSolve(n, gridW, ratio, playing) {
+    var grid = $('#revealGrid'), gap = 16;
+    if (grid) { var g = parseFloat(getComputedStyle(grid).columnGap); if (!isNaN(g)) gap = g; }
+    var cap = fitTodayW(playing, gridW);
+    var b = fitBudget();
+    var pick = fitPick(n, gridW, ratio, gap, cap, b.strict);
+    var mode = 'window';
+    if (window.innerWidth <= 900 && pick && pick.w < FIT_MINW) {
+      var p2 = fitPick(n, gridW, ratio, gap, cap, b.scrolled);
+      if (p2 && p2.w > pick.w) { pick = p2; mode = 'stage-top'; }
+    }
+    if (!pick) return null;
+    pick.gridH = pick.rows * pick.w * ratio + (pick.rows - 1) * gap;
+    pick.total = b.padT + pick.gridH + b.gapY + b.scH + b.padB;
+    pick.mode = mode;
+    return pick;
+  }
+  function fitApply(n, gridW, ratio, playing) {
+    var grid = $('#revealGrid'), stage = $('#stage');
+    if (!grid || !stage) return;
+    var pick = fitSolve(n, gridW, ratio, playing);
+    if (!pick) return;
+    grid.style.setProperty('--cardw', pick.w.toFixed(1) + 'px');
+    grid.dataset.fitCols = pick.cols; grid.dataset.fitMode = pick.mode;
+    if (window.innerWidth <= 900) stage.style.minHeight = Math.round(Math.max(pick.total, 448)) + 'px';  /* 448 = the idle reservation: small reveals keep the panel height instead of collapsing */
+    else stage.style.minHeight = '';
+  }
+  function fitReveal() {
+    var o = S.opening, grid = $('#revealGrid');
+    if (!o || !grid || grid.classList.contains('hidden')) return;
+    var n = grid.querySelectorAll('.card').length; if (!n) return;
+    fitApply(n, grid.clientWidth, o.set.id === 'periodic' ? 1 : 7 / 5, grid.classList.contains('playing-3x3'));
+  }
+  function fitStagePre(set, n) {
+    var stage = $('#stage'); if (!stage || !n || window.innerWidth > 900) return;
+    var st = getComputedStyle(stage);
+    var gridW = stage.clientWidth - (parseFloat(st.paddingLeft) || 0) - (parseFloat(st.paddingRight) || 0);
+    gridW = Math.min(gridW, set.id === 'playing' ? 584 : 1000);
+    var pick = fitSolve(n, gridW, set.id === 'periodic' ? 1 : 7 / 5, set.id === 'playing');
+    if (pick) stage.style.minHeight = Math.round(Math.max(pick.total, 448)) + 'px';
+  }
+  window.addEventListener('resize', function () { fitReveal(); });
+  /* FIT-END */
+
   function buildGrid(o) {
     var grid = $('#revealGrid');
     grid.classList.toggle('playing-3x3', o.set.id === 'playing');
@@ -502,6 +619,7 @@
     $('#stageControls').classList.remove('hidden');
     $('#revealAllBtn').classList.remove('hidden');
     updateSummary();
+    fitReveal();
   }
 
   function updateSummary() {
