@@ -5,7 +5,7 @@
   var ctx = CPS.appCtx;
   var esc = ctx.esc;
 
-var NOTIF_KIND_ICON = { gift_card: '🎁', gift_pack: '📦', gift_spin: '🎟️',
+var NOTIF_KIND_ICON = { gift_card: '🎁', gift_thanks: '🙏', gift_pack: '📦', gift_spin: '🎟️',
   trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌', variant_pull: '🌈', chase_pull: '🎯' };
 
 function notifTime(iso) {
