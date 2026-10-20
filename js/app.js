@@ -546,8 +546,12 @@
        scrolled: the stage is scrolled to the top of the window the way startOpen
        already scrolls it — 84px (the stage's scroll-margin-top) stays visible
        above it, then stage + control strip must fill the rest exactly. */
-    var strict = window.innerHeight - 14 - cH - padT - gapY - scH - padB - stageTopDoc;
-    var scrolled = window.innerHeight - 84 - cH - padT - gapY - scH - padB;
+    /* Phone budgets no longer reserve scH (the summary + Reveal All row):
+       that row may sit a touch below the fold so the cards themselves stay
+       ~105px instead of ~88 (Franklin's call, 2026-10-20). pick.total still
+       counts scH, so the stage keeps its full fitted height. */
+    var strict = window.innerHeight - 14 - cH - padT - gapY - padB - stageTopDoc;
+    var scrolled = window.innerHeight - 84 - cH - padT - gapY - padB;
     return { strict: strict, scrolled: scrolled, padT: padT, padB: padB, gapY: gapY, scH: scH };
   }
   function fitPick(n, gridW, ratio, gap, cap, budgetH) {
@@ -590,9 +594,13 @@
     var b = fitBudget();
     var pick = fitPick(n, gridW, ratio, gap, cap, b.strict);
     var mode = 'window';
-    if (window.innerWidth <= 900 && pick && pick.w < FIT_MINW) {
+    if (window.innerWidth <= 900 && pick) {
+      /* On phones the stage-top budget is always the roomier one (the
+         strict budget subtracts the whole page chrome above the stage),
+         so take it whenever it beats strict — the old floor gate let a
+         barely-passing strict pick (81px) block a much roomier one. */
       var p2 = fitPick(n, gridW, ratio, gap, cap, b.scrolled);
-      if (p2 && p2.w > pick.w) { pick = p2; mode = 'stage-top'; }
+      if (p2 && p2.w > pick.w + 0.5) { pick = p2; mode = 'stage-top'; }
     }
     if (!pick) return null;
     pick.gridH = pick.rows * pick.w * ratio + (pick.rows - 1) * gap;
