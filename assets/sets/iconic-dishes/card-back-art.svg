@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+  <!-- Placeholder card back for Iconic Dishes: a plated dome on a paprika tablecloth.
+       Stand-in until Franklin's baked pack art replaces it. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c2452f"/>
+      <stop offset="0.6" stop-color="#b33a2b"/>
+      <stop offset="1" stop-color="#75211a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.95" r="0.75">
+      <stop offset="0" stop-color="#e9a13b" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#e9a13b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#bg)"/>
+  <!-- gingham check -->
+  <g fill="#fff8ec" opacity="0.05">
+    <rect x="0" y="28" width="300" height="28"/><rect x="0" y="112" width="300" height="28"/>
+    <rect x="0" y="196" width="300" height="28"/><rect x="0" y="280" width="300" height="28"/><rect x="0" y="364" width="300" height="28"/>
+    <rect x="28" y="0" width="28" height="420"/><rect x="112" y="0" width="28" height="420"/>
+    <rect x="196" y="0" width="28" height="420"/><rect x="280" y="0" width="20" height="420"/>
+  </g>
+  <rect width="300" height="420" fill="url(#glow)"/>
+  <!-- fork and knife -->
+  <g stroke="#fff8ec" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.9">
+    <line x1="62" y1="150" x2="62" y2="290"/>
+    <line x1="50" y1="150" x2="50" y2="196"/><line x1="74" y1="150" x2="74" y2="196"/>
+    <line x1="50" y1="196" x2="74" y2="196"/>
+    <line x1="238" y1="150" x2="238" y2="290"/>
+    <path d="M238 150 q22 30 0 62"/>
+  </g>
+  <!-- cloche dome on a plate -->
+  <ellipse cx="150" cy="292" rx="96" ry="14" fill="#fff8ec"/>
+  <path d="M62 290 a88 74 0 0 1 176 0 z" fill="#f3e3cd"/>
+  <circle cx="150" cy="208" r="10" fill="#e9a13b"/>
+  <rect x="146" y="212" width="8" height="10" fill="#e9a13b"/>
+  <!-- steam -->
+  <g stroke="#fff8ec" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.75">
+    <path d="M118 168 q-8 -16 0 -30 q8 -14 0 -28"/>
+    <path d="M150 160 q-8 -16 0 -30 q8 -14 0 -28"/>
+    <path d="M182 168 q-8 -16 0 -30 q8 -14 0 -28"/>
+  </g>
+  <text x="150" y="356" text-anchor="middle" font-family="Georgia, serif" font-size="25" fill="#fff8ec" letter-spacing="3">ICONIC DISHES</text>
+  <text x="150" y="384" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#ffd9a8" letter-spacing="6">DISH</text>
+</svg>
