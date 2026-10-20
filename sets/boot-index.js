@@ -49,7 +49,8 @@ window.CardSets.bootIndex = {
   "dinosaurs",
   "theme-parks",
   "trains",
-  "tv-shows"
+  "tv-shows",
+  "star-wars"
  ],
  "sets": {
   "birdwatching": {
@@ -717,6 +718,21 @@ window.CardSets.bootIndex = {
    "css": "",
    "primary": "#1f2a44",
    "secondary": "#c9a86a",
+   "total": 420
+  },
+  "star-wars": {
+   "files": [
+    "star-wars.js",
+    "star-wars-additions.js"
+   ],
+   "name": "Star Wars",
+   "code": "WARS",
+   "emblem": "🌌",
+   "packName": "Star Wars Pack",
+   "skin": "star-wars",
+   "css": "",
+   "primary": "#11131a",
+   "secondary": "#ffe81f",
    "total": 420
   }
  }
