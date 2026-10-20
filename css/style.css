@@ -694,6 +694,18 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .tear-hint { color: var(--muted); animation: pulse 1.6s ease-in-out infinite; font-weight: 600; }
 .reveal-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; width: 100%; max-width: 1000px; }
 .reveal-grid .card { width: var(--cardw, clamp(108px, calc((100% - 64px) / 5), 184px)); cursor: pointer; }
+/* Reveal cards: the outer corner radius scales with the card, like every other
+   card measurement (the .cf panel radius and the rarity frame strip are both
+   3.4cqw). The global .card radius is a fixed 12px, tuned at the old 184px
+   desktop width, where 12px is the concentric sum (3.4cqw panel + 3.4cqw
+   frame). At the solver's smaller widths (70-123px) that fixed 12px balloons
+   to 10-17% of the card while the panel corner shrinks to ~3px, so the frame
+   reads as a separate, rounder shell floating around the face. 6.5% / 4.65%
+   reproduces 12px at 184x258 and stays concentric at every size (percentages
+   resolve against the card's own box; cqw here would resolve against the
+   viewport). Per-set shapes keep their own rules: Periodic (later in this
+   file) and Calendar (its own sheet, loaded after this one) override this. */
+.reveal-grid .card { border-radius: 6.5% / 4.65%; }
 .stage-controls { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .stage-summary { color: var(--muted); text-align: center; } .stage-summary b { color: var(--text); }
 .stage-summary b[class^=rt-] { color: inherit; } .stage-summary .rt-rare { color: var(--c-rare); } .stage-summary .rt-epic { color: var(--c-epic); } .stage-summary .rt-legendary { color: var(--c-legendary); } .stage-summary .rt-uncommon { color: var(--c-uncommon); } .stage-summary .rt-common { color: var(--c-common); }
