@@ -71,5 +71,7 @@ CardSets.manifest = [
   'trains.js',
   'trains-additions.js',
   'tv-shows.js',
-  'tv-shows-additions.js'
+  'tv-shows-additions.js',
+  'star-wars.js',
+  'star-wars-additions.js'
 ];
