@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+  <!-- Placeholder card back for World Landmarks: a classical temple front
+       (pediment + columns) over bronze stone stripes. Stand-in until
+       Franklin's baked pack art replaces it. -->
+  <defs>
+    <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a6224"/>
+      <stop offset="0.6" stop-color="#684213"/>
+      <stop offset="1" stop-color="#4a2d0c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="1.02" r="0.8">
+      <stop offset="0" stop-color="#c9a227" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#c9a227" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#stone)"/>
+  <rect width="300" height="420" fill="url(#glow)"/>
+  <!-- temple front -->
+  <g>
+    <polygon points="150,88 52,146 248,146" fill="#f4ecdd"/>
+    <rect x="60" y="152" width="180" height="10" fill="#e6d7b8"/>
+    <g fill="#f4ecdd">
+      <rect x="72" y="170" width="14" height="128"/>
+      <rect x="106" y="170" width="14" height="128"/>
+      <rect x="143" y="170" width="14" height="128"/>
+      <rect x="180" y="170" width="14" height="128"/>
+      <rect x="214" y="170" width="14" height="128"/>
+    </g>
+    <rect x="60" y="304" width="180" height="10" fill="#e6d7b8"/>
+    <rect x="52" y="320" width="196" height="9" fill="#d9c69c"/>
+    <rect x="44" y="335" width="212" height="9" fill="#cbb887"/>
+  </g>
+  <circle cx="150" cy="122" r="9" fill="#c9a227"/>
+  <text x="150" y="382" text-anchor="middle" font-family="Georgia, serif" font-size="17" letter-spacing="3" fill="#f4ecdd">LANDMARKS</text>
+</svg>
