@@ -1399,6 +1399,14 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .trade-side { flex: 1; min-width: 0; }
 .trade-cap-top { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #999; margin-bottom: 4px; }
 .trade-card .card { width: 100%; max-width: 150px; }
+/* Small trade-card renders (gift modal/pop, trade lists, builder — 84px on
+   phones, 120px on desktop): the fixed 12px outer radius doesn't scale with
+   the card while the frame (.front padding) and inner radius (both 3.4cqw)
+   do, so the outer corner balloons (~2x too round at 84px). 6.8% = inner
+   3.4% + frame 3.4% keeps the arcs concentric at any width — the same
+   %-radius trick as .reveal-grid's 6.5% / 4.65%. Periodic tiles keep
+   their tuned 13.7%. */
+.trade-card .card:not([data-set="periodic"]) { border-radius: 6.8% / 4.86%; }
 .trade-cap { margin-top: 6px; font-size: .85rem; }
 .trade-cap b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .trade-swap { font-size: 24px; color: #f5b942; flex: none; }

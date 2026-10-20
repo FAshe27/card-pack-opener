@@ -774,6 +774,63 @@
   }
 
   /* --- collection */
+  /* Collection grid paging (2026-10-20 diet fix): the grid used to be
+     built as ONE innerHTML burst of the whole set (420 full card
+     renders). Phones survive that via content-visibility, but a
+     browser that lays everything out at once (automation, very tall
+     windows, find-in-page) hits a render cliff — the same cliff that
+     killed the Stats gallery at 104 cards before it was chunked.
+     The grid now renders COLL_PAGE cards at a time and appends the
+     next chunk as the pager nears the viewport (or on demand via its
+     button). Grid clicks are delegated on #collGrid, so appended
+     chunks need no rebinding. Any fresh renderCollection (filter,
+     search, sort, state refresh) resets paging to the first chunk. */
+  var COLL_PAGE = 60;
+  var collPage = { list: null, set: null, st: null, shown: 0, obs: null };
+  function collCellHtml(c) {
+    var set = collPage.set, st = collPage.st, e = st.cards[c.id];
+    return CPS.cards.collected(set, c, onHand(e), onHandHolo(e), { v: e ? (e.v || 0) : 0, vh: e ? (e.vh || 0) : 0, turned: isTurned(set.id, c.id), total: e ? e.n : 0 });
+  }
+  function collPagerEl() {
+    var grid = $('#collGrid'), p = $('#collPager');
+    if (!p) {
+      p = document.createElement('div');
+      p.id = 'collPager';
+      grid.parentNode.insertBefore(p, grid.nextSibling);
+    }
+    return p;
+  }
+  function appendCollChunk() {
+    var list = collPage.list; if (!list) return;
+    var grid = $('#collGrid'), pager = collPagerEl();
+    var end = Math.min(collPage.shown + COLL_PAGE, list.length);
+    if (end > collPage.shown) {
+      grid.insertAdjacentHTML('beforeend', list.slice(collPage.shown, end).map(collCellHtml).join(''));
+      collPage.shown = end;
+    }
+    $('#collCount').textContent = collPage.shown < list.length
+      ? collPage.shown + ' / ' + list.length + ' shown' : list.length + ' shown';
+    if (collPage.shown < list.length) {
+      pager.innerHTML = '<div style="text-align:center;padding:12px"><button class="btn" id="collMoreBtn">Show more cards (' + (list.length - collPage.shown) + ' more)</button></div>';
+      $('#collMoreBtn').addEventListener('click', appendCollChunk);
+      if (window.IntersectionObserver) {
+        if (collPage.obs) collPage.obs.disconnect();
+        collPage.obs = new IntersectionObserver(function (entries) {
+          if (entries.some(function (en) { return en.isIntersecting; })) appendCollChunk();
+        }, { rootMargin: '600px' });
+        collPage.obs.observe(pager);
+      }
+    } else {
+      pager.innerHTML = '';
+      if (collPage.obs) { collPage.obs.disconnect(); collPage.obs = null; }
+    }
+  }
+  function resetCollPager() {
+    if (collPage.obs) { collPage.obs.disconnect(); collPage.obs = null; }
+    collPage.list = null; collPage.shown = 0;
+    var p = $('#collPager'); if (p) p.innerHTML = '';
+  }
+
   function renderCollection() {
     var set = S.set, st = ps(), f = S.coll;
 
@@ -782,6 +839,7 @@
       $('#compSub').textContent = 'Cards land in their home sets \u2014 no collection here.';
       $('#compRing').style.setProperty('--p', 0); $('#compPct').textContent = '\u2014';
       $('#rarityProgress').innerHTML = ''; $('#collGrid').innerHTML = '';
+      resetCollPager();
       return;
     }
     var owned = ownedCount(set, st), total = set.cards.length;
@@ -809,7 +867,13 @@
     sel.value = f.rarity;
 
     if (isCloud() && !S.myVariants) ensureVariants().then(function () {
-      if (S.view === 'collection') renderCollection();
+      if (S.view !== 'collection') return;
+      // Variants arrived: update the variants panel directly (as
+      // renderView's hook does). Only the numbered filter's grid
+      // depends on variant data — rebuilding all 420 cells here made
+      // every first Collection entry render the grid twice.
+      if (S.coll.own === 'numbered') renderCollection();
+      else renderVariantsSection(set);
     });
 
     var q = f.q.trim().toLowerCase();
@@ -841,11 +905,11 @@
     else if (f.sort === 'name') list.sort(function (a, b) { return a.name.localeCompare(b.name, undefined, { numeric: true }); });
     if (q) list.sort(function (a, b) { return (cnt(a) > 0 ? 0 : 1) - (cnt(b) > 0 ? 0 : 1); });
 
-    $('#collCount').textContent = list.length + ' shown';
-    $('#collGrid').innerHTML = list.length ? list.map(function (c) {
-      var e = st.cards[c.id];
-      return CPS.cards.collected(set, c, onHand(e), onHandHolo(e), { v: e ? (e.v || 0) : 0, vh: e ? (e.vh || 0) : 0, turned: isTurned(set.id, c.id), total: e ? e.n : 0 });   // card + count pills below it
-    }).join('') : '<div class="empty">No cards match these filters.</div>';
+    resetCollPager();
+    collPage.list = list; collPage.set = set; collPage.st = st;
+    $('#collGrid').innerHTML = list.length ? '' : '<div class="empty">No cards match these filters.</div>';
+    if (list.length) appendCollChunk();
+    else $('#collCount').textContent = '0 shown';
     renderVariantsSection(set);
     var tb = $('#turnInAllBtn');
     if (tb) {
@@ -2152,7 +2216,12 @@
     $('#free10Btn').addEventListener('click', function () { addFree(10); });
 
     // collection
-    $('#collSearch').addEventListener('input', function (e) { S.coll.q = e.target.value; renderCollection(); });
+    var collSearchTimer = null;
+    $('#collSearch').addEventListener('input', function (e) {
+      S.coll.q = e.target.value;
+      if (collSearchTimer) clearTimeout(collSearchTimer);
+      collSearchTimer = setTimeout(renderCollection, 150);
+    });
     $('#collRarity').addEventListener('change', function (e) { S.coll.rarity = e.target.value; renderCollection(); });
     $('#collSort').addEventListener('change', function (e) { S.coll.sort = e.target.value; renderCollection(); });
     $('#playerList').addEventListener('click', function (e) {
