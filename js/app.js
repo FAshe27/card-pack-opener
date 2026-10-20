@@ -391,7 +391,7 @@
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
     $('#stageControls').classList.add('hidden');
-    $('#stage').style.minHeight = ''; $('#revealGrid').style.removeProperty('--cardw');
+    $('#stage').style.minHeight = ''; $('#revealGrid').style.removeProperty('--cardw'); $('#revealGrid').style.maxWidth = '';
     renderPacksSide();
   }
 
@@ -494,9 +494,13 @@
          scroll (desktop >900px: fit inside the stage box, min-height
          700px) — minus the packs control strip, stage padding/gaps and
          the summary + Reveal All block;
-       - columns: whichever count (3..5 phone/tablet, 3..6 desktop) yields
-         the WIDEST cards in that budget, so tall reveals (12-15 card
-         Stuffed packs) gain columns instead of only shrinking;
+       - columns: BALANCED grids first (3..5 phone/tablet, 3..6 desktop):
+         a column count that divides the card count evenly wins over a
+         marginally wider orphan layout (9 always renders 3x3, 12 takes
+         the widest of 3/4/6, 15 the widest of 3/5); with no divisor in
+         range, the layout with the smallest last-row orphan wins. A
+         non-balanced layout is chosen only when no balanced one fits
+         the budget at/above the readability floor;
        - cap: today's card width for this grid/viewport — cards can shrink
          to fit, never grow past the approved size;
        - floor: if the strict no-scroll budget would crush phone cards
@@ -548,15 +552,36 @@
   }
   function fitPick(n, gridW, ratio, gap, cap, budgetH) {
     var maxCols = window.innerWidth <= 900 ? 5 : 6;
-    var best = null;
+    var floor = window.innerWidth <= 900 ? FIT_MINW : 0;
+    var cands = [];
     for (var cols = 3; cols <= maxCols; cols++) {
       var rows = Math.ceil(n / cols);
       var wW = (gridW - (cols - 1) * gap) / cols;
       var wH = ((budgetH - (rows - 1) * gap) / rows) / ratio;
       var w = Math.min(wW, wH, cap);
-      if (!best || w > best.w + 0.5) best = { w: w, cols: cols, rows: rows };
+      cands.push({ w: w, cols: cols, rows: rows, orphan: (cols - (n % cols)) % cols, balanced: n % cols === 0 });
     }
-    return best;
+    function widest(list) { var b = null; for (var i = 0; i < list.length; i++) if (!b || list[i].w > b.w + 0.5) b = list[i]; return b; }
+    function viable(list) { return list.filter(function (c) { return c.w >= floor; }); }
+    /* Balanced first: a column count that divides the pack evenly beats a
+       marginally wider layout with an orphan row (9 -> 3x3 everywhere;
+       12 -> widest of 3/4/6; 15 -> widest of 3/5). Single-row layouts
+       count as balanced only for tiny packs (n <= 3, e.g. Periodic 1x3);
+       a 5-card States pack still prefers its 3+2 over five-across. */
+    var bal = viable(cands.filter(function (c) { return c.balanced && (c.rows >= 2 || n <= 3); }));
+    if (bal.length) return widest(bal);
+    var balAny = viable(cands.filter(function (c) { return c.balanced; }));
+    if (balAny.length) return widest(balAny);
+    /* No divisor fits at/above the floor: minimize the last-row orphan,
+       then take the widest — among floor-clearing multi-row layouts
+       when any exist. */
+    var multi = cands.filter(function (c) { return c.rows >= 2 || n <= 3; });
+    var pool = viable(multi);
+    if (!pool.length) return widest(cands);  /* nothing clears the floor: widest overall (the pre-balanced rule) */
+    var minOrphan = Math.min.apply(null, pool.map(function (c) { return c.orphan; }));
+    var near = pool.filter(function (c) { return c.orphan === minOrphan; });
+    if (near.length) return widest(near);
+    return widest(cands);
   }
   function fitSolve(n, gridW, ratio, playing) {
     var grid = $('#revealGrid'), gap = 16;
@@ -571,6 +596,7 @@
     }
     if (!pick) return null;
     pick.gridH = pick.rows * pick.w * ratio + (pick.rows - 1) * gap;
+    pick.rowW = pick.cols * pick.w + (pick.cols - 1) * gap;
     pick.total = b.padT + pick.gridH + b.gapY + b.scH + b.padB;
     pick.mode = mode;
     return pick;
@@ -581,6 +607,7 @@
     var pick = fitSolve(n, gridW, ratio, playing);
     if (!pick) return;
     grid.style.setProperty('--cardw', pick.w.toFixed(1) + 'px');
+    grid.style.maxWidth = Math.ceil(pick.rowW) + 'px';  /* ceil: rounding down can wrap the row early */
     grid.dataset.fitCols = pick.cols; grid.dataset.fitMode = pick.mode;
     if (window.innerWidth <= 900) stage.style.minHeight = Math.round(Math.max(pick.total, 448)) + 'px';  /* 448 = the idle reservation: small reveals keep the panel height instead of collapsing */
     else stage.style.minHeight = '';
@@ -589,6 +616,7 @@
     var o = S.opening, grid = $('#revealGrid');
     if (!o || !grid || grid.classList.contains('hidden')) return;
     var n = grid.querySelectorAll('.card').length; if (!n) return;
+    grid.style.maxWidth = '';
     fitApply(n, grid.clientWidth, o.set.id === 'periodic' ? 1 : 7 / 5, grid.classList.contains('playing-3x3'));
   }
   function fitStagePre(set, n) {
