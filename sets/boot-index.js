@@ -50,7 +50,8 @@ window.CardSets.bootIndex = {
   "theme-parks",
   "trains",
   "tv-shows",
-  "star-wars"
+  "star-wars",
+  "iconic-dishes"
  ],
  "sets": {
   "birdwatching": {
@@ -733,6 +734,21 @@ window.CardSets.bootIndex = {
    "css": "",
    "primary": "#11131a",
    "secondary": "#ffe81f",
+   "total": 420
+  },
+  "iconic-dishes": {
+   "files": [
+    "iconic-dishes.js",
+    "iconic-dishes-additions.js"
+   ],
+   "name": "Iconic Dishes",
+   "code": "DISH",
+   "emblem": "🍽️",
+   "packName": "Iconic Dishes Pack",
+   "skin": "iconic-dishes",
+   "css": "iconic-dishes",
+   "primary": "#b33a2b",
+   "secondary": "#e9a13b",
    "total": 420
   }
  }
