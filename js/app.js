@@ -438,7 +438,7 @@
     }
     save();
 
-    S.opening = { set: set, pulls: pulls, torn: false, revealed: pulls.map(function () { return false; }), finished: false, auto: false, hero: !!(server && server.hero) };
+    S.opening = { set: set, pulls: pulls, torn: false, revealed: pulls.map(function () { return false; }), finished: false, auto: false, hero: !!(server && server.hero), stuffed: !!(server && server.stuffed), stuffedHero: !!(server && server.stuffed_hero) };
     refreshQuests();
     $('#stageIdle').classList.add('hidden');
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
@@ -478,7 +478,9 @@
     pk.classList.add('gone');
     await U.sleep(260);
     if (S.opening !== o) return;
-    if (o.hero) fx.banner('HERO PACK!', 'hero');
+    if (o.stuffedHero) fx.banner('STUFFED HERO PACK!', 'hero');
+    else if (o.hero) fx.banner('HERO PACK!', 'hero');
+    else if (o.stuffed) fx.banner('STUFFED PACK!', 'hero');
     $('#stagePack').classList.add('hidden');
     buildGrid(o);
   }
@@ -581,7 +583,9 @@
     var o = S.opening; if (!o || o.torn) return;
     o.torn = true; o.quick = true;
     $('#stagePack').classList.add('hidden');
-    if (o.hero) fx.banner('HERO PACK!', 'hero');
+    if (o.stuffedHero) fx.banner('STUFFED HERO PACK!', 'hero');
+    else if (o.hero) fx.banner('HERO PACK!', 'hero');
+    else if (o.stuffed) fx.banner('STUFFED PACK!', 'hero');
     buildGrid(o);
     $$('.card', $('#revealGrid')).forEach(function (el) { el.style.animationDelay = '0ms'; });
     o.auto = true;
