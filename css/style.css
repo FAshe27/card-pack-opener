@@ -693,7 +693,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .pack-wrap { display: flex; justify-content: center; width: 100%; }
 .tear-hint { color: var(--muted); animation: pulse 1.6s ease-in-out infinite; font-weight: 600; }
 .reveal-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; width: 100%; max-width: 1000px; }
-.reveal-grid .card { width: clamp(108px, calc((100% - 64px) / 5), 184px); cursor: pointer; }
+.reveal-grid .card { width: var(--cardw, clamp(108px, calc((100% - 64px) / 5), 184px)); cursor: pointer; }
 .stage-controls { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .stage-summary { color: var(--muted); text-align: center; } .stage-summary b { color: var(--text); }
 .stage-summary b[class^=rt-] { color: inherit; } .stage-summary .rt-rare { color: var(--c-rare); } .stage-summary .rt-epic { color: var(--c-epic); } .stage-summary .rt-legendary { color: var(--c-legendary); } .stage-summary .rt-uncommon { color: var(--c-uncommon); } .stage-summary .rt-common { color: var(--c-common); }
@@ -725,9 +725,9 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
    and size cards in thirds, so exactly 3 fit per row at today's 184px size;
    below 584px the thirds shrink proportionally, like the normal grid. */
 .reveal-grid.playing-3x3 { max-width: 584px; }
-.reveal-grid.playing-3x3 .card { width: calc((100% - 32px) / 3); }
+.reveal-grid.playing-3x3 .card { width: var(--cardw, calc((100% - 32px) / 3)); }
 @media (max-width: 560px) {
-  .reveal-grid.playing-3x3 .card { width: calc(33.3% - 8px); }  /* match today's phone rule: already 3-across */
+  .reveal-grid.playing-3x3 .card { width: var(--cardw, calc(33.3% - 8px)); }  /* match today's phone rule: already 3-across */
   .packs-controls { padding: 14px 14px 16px; }
   .packs-controls-row #openBtn, .packs-controls-row #quickOpenBtn { min-width: 0; flex: 1 1 100%; }
 }
@@ -1132,7 +1132,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   .set-picker .set-dd { flex: 1; }
   .set-dd-btn { max-width: none; width: 100%; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,108,255,.18); font-weight: 700; }
   .set-dd-list { max-width: none; }
-    .reveal-grid { gap: 10px; } .reveal-grid .card { width: calc(33.3% - 8px); }
+    .reveal-grid { gap: 10px; } .reveal-grid .card { width: var(--cardw, calc(33.3% - 8px)); }
   .coll-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px 14px; padding: 13px 9px 0 0; }
   .coll-badges { top: -13px; right: -7px; gap: 2px; } .coll-badges .badge-count, .coll-badges .badge-holo { font-size: 9.5px; padding: 0 5px; height: 15px; line-height: 15px; }
   .badge-new, .badge-count, .badge-holo { font-size: 9px; padding: 2px 6px; }
