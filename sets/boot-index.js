@@ -51,7 +51,8 @@ window.CardSets.bootIndex = {
   "trains",
   "tv-shows",
   "star-wars",
-  "iconic-dishes"
+  "iconic-dishes",
+  "world-landmarks"
  ],
  "sets": {
   "birdwatching": {
@@ -749,6 +750,21 @@ window.CardSets.bootIndex = {
    "css": "iconic-dishes",
    "primary": "#b33a2b",
    "secondary": "#e9a13b",
+   "total": 420
+  },
+  "world-landmarks": {
+   "files": [
+    "world-landmarks.js",
+    "world-landmarks-additions.js"
+   ],
+   "name": "World Landmarks",
+   "code": "LAND",
+   "emblem": "🏛️",
+   "packName": "World Landmarks Pack",
+   "skin": "world-landmarks",
+   "css": "world-landmarks",
+   "primary": "#7a4e1d",
+   "secondary": "#c9a227",
    "total": 420
   }
  }
