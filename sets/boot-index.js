@@ -53,7 +53,8 @@ window.CardSets.bootIndex = {
   "star-wars",
   "iconic-dishes",
   "world-landmarks",
-  "natural-wonders"
+  "natural-wonders",
+  "world-cities"
  ],
  "sets": {
   "birdwatching": {
@@ -781,6 +782,21 @@ window.CardSets.bootIndex = {
    "css": "natural-wonders",
    "primary": "#2f5d3a",
    "secondary": "#c98a3d",
+   "total": 420
+  },
+  "world-cities": {
+   "files": [
+    "world-cities.js",
+    "world-cities-additions.js"
+   ],
+   "name": "World Cities",
+   "code": "CITY",
+   "emblem": "🌆",
+   "packName": "World Cities Pack",
+   "skin": "world-cities",
+   "css": "world-cities",
+   "primary": "#2e4057",
+   "secondary": "#e8873a",
    "total": 420
   }
  }
