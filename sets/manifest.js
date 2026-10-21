@@ -79,5 +79,7 @@ CardSets.manifest = [
   'world-landmarks.js',
   'world-landmarks-additions.js',
   'natural-wonders.js',
-  'natural-wonders-additions.js'
+  'natural-wonders-additions.js',
+  'world-cities.js',
+  'world-cities-additions.js'
 ];
