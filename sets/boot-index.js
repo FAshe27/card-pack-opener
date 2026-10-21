@@ -878,7 +878,7 @@ window.CardSets.bootIndex = {
    "css": "",
    "primary": "#a855f7",
    "secondary": "#ec4899",
-   "total": 4
+   "total": 5
   },
   "spongebob": {
    "files": [
