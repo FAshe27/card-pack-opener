@@ -87,5 +87,7 @@ CardSets.manifest = [
   'gems-minerals.js',
   'gems-minerals-additions.js',
   'cereals.js',
-  'cereals-additions.js'
+  'cereals-additions.js',
+  'us-navy.js',
+  'us-navy-additions.js'
 ];
