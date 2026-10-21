@@ -33,7 +33,7 @@
     return { sweep: sweep, dupes: dupes };
   }
 
-  function refresh() {
+  function refresh(retried) {
     var C = ctx(); if (!C || !C.S || !C.S.player) return;
     var bA = document.getElementById('turnInAllSetsBtn');
     var bD = document.getElementById('turnInDupesAllBtn');
@@ -41,10 +41,21 @@
     if (!C.isCloud()) { bA.classList.add('hidden'); bD.classList.add('hidden'); return; }
     /* Lazy sets: counts need the owned sets' card lists — load any that
        are still stubs, then repaint with the full picture. */
+    /* The stub scan must cover exactly the sets ensureOwnedSets() will
+       load — app.js's ownedSetIds rule: state holding cards or pulls.
+       Scanning every state key also caught 'jumbled', whose state never
+       holds cards (its pulls land in home sets), so its stub could never
+       clear and the .then below re-invoked refresh() forever — a promise
+       loop that hard-froze the tab on ANY Collection open (2026-10-21,
+       once the Jumbled exclusives put 'jumbled' in the registry). The
+       retried flag is a hard stop on top: at most one reload round per
+       render, even if a set file ever fails to load. */
     var stubOwned = Object.keys(C.S.player.sets || {}).some(function (id) {
+      var st = C.S.player.sets[id];
+      if (!st || !((st.cards && Object.keys(st.cards).length) || (st.stats && st.stats.pulled > 0))) return false;
       var s = window.CardSets.get(id); return s && s.stub;
     });
-    if (stubOwned && C.ensureOwnedSets) C.ensureOwnedSets().then(function () { refresh(); });
+    if (stubOwned && !retried && C.ensureOwnedSets) C.ensureOwnedSets().then(function () { refresh(true); });
     var p = previews();
     bD.classList.toggle('hidden', !p.dupes.eligible);
     bD.textContent = 'Turn in duplicates from all sets (' + p.dupes.eligible + ')';
