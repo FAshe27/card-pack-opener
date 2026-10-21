@@ -39,8 +39,34 @@
       '</svg>';
   }
 
-  function artOrImage(set, card) {
-    if (card.image) return '<img src="' + esc(card.image) + '" alt="' + esc(card.name) + '" loading="lazy" draggable="false">';
+  /* Grid thumbnail (Wikimedia only). Direct thumbor URLs refuse widths
+     that were never pre-generated (HTTP 400), but Special:FilePath
+     generates any width on demand — the pattern the Trains set files
+     already use at width=1024. Grid cells (cards shown ~100-160px wide)
+     ask it for 400px: ~70 KB and ~0.7 MP decoded instead of the 1024-
+     1280px art's ~5 MB, which is what wedged phone browsers on the
+     Collection page (2026-10-21 freeze). Full art is untouched in
+     every other context; a failed thumb falls back to the original. */
+  function thumbUrl(u) {
+    if (!u) return u;
+    var clean = u.split('?')[0], file = null, m;
+    if ((m = clean.match(/commons\.wikimedia\.org\/wiki\/Special:FilePath\/(.+)$/))) file = m[1];
+    else if (/^(https?:)?\/\/(upload|thumb)\.wikimedia\.org\//.test(clean)) {
+      var parts = clean.split('/'), last = parts[parts.length - 1];
+      file = /^\d+px-/.test(last) ? parts[parts.length - 2] : last;
+    }
+    if (!file) return u;
+    return 'https://commons.wikimedia.org/wiki/Special:FilePath/' + file + '?width=400';
+  }
+
+  function artOrImage(set, card, thumb) {
+    if (card.image) {
+      if (thumb) {
+        var t = thumbUrl(card.image);
+        if (t !== card.image) return '<img src="' + esc(t) + '" data-o="' + esc(card.image) + '" onerror="if(this.dataset.o){var s=this.dataset.o;delete this.dataset.o;this.src=s}" alt="' + esc(card.name) + '" loading="lazy" decoding="async" draggable="false">';
+      }
+      return '<img src="' + esc(card.image) + '" alt="' + esc(card.name) + '" loading="lazy" decoding="async" draggable="false">';
+    }
     return art(set, card);
   }
 
@@ -86,12 +112,12 @@
     return '<span class="cf-name' + f.cls + '"' + (f.size ? ' style="font-size:' + f.size + 'cqw"' : '') + '>' + esc(name) + '</span>';
   }
 
-  function front(set, card, holo) {
+  function front(set, card, holo, thumb) {
     var r = R.RARITIES[R.INDEX[card.rarity]];
     var layout = card.logo ? (String(card.details || '').trim() ? ' cf-has-logo' : ' cf-logo-only') : '';
     return '<div class="face front"><div class="cf' + layout + '">' +
       '<div class="cf-top">' + nameHtml(card.name) + '<span class="cf-gem" title="' + r.label + '"></span></div>' +
-      '<div class="cf-art">' + artOrImage(set, card) + '</div>' +
+      '<div class="cf-art">' + artOrImage(set, card, thumb) + '</div>' +
       '<div class="cf-type"><span class="cf-sub">' + esc(card.subtitle) + '</span><span class="cf-rar">' + r.label + '</span></div>' +
       detailsBox(card) +
       '<div class="cf-foot"><span' + (codeCls(set) ? ' class="cf-code' + codeCls(set) + '"' : '') + '>' + esc(set.code) + '</span>' + (holo ? '<span class="foil">HOLO</span>' : '') +
@@ -159,7 +185,7 @@
     if (opts.variant && VARIANTS[opts.variant.tier] && (card.rarity === 'common' || card.rarity === 'uncommon'))
       badges += '<span class="misprint-void" title="Misprint — a numbered variant on a ' + (card.rarity === 'common' ? 'Common' : 'Uncommon') + ' card, minted by the old lottery bug. No new Misprints can be made.">MISPRINT</span>';
     return '<div class="' + cls.join(' ') + '" data-set="' + esc(set.id) + '" data-card="' + esc(card.id) + '" style="' + themeStyle(set) + '">' +
-      '<div class="card-inner">' + front(set, card, opts.holo) + (opts.flippable ? back(set) : '') + '</div>' + badges + '</div>';
+      '<div class="card-inner">' + front(set, card, opts.holo, opts.thumb) + (opts.flippable ? back(set) : '') + '</div>' + badges + '</div>';
   }
 
   function silhouette(set, card) {
@@ -180,7 +206,7 @@
       (x.turned ? '<span class="badge-turned" title="Turned in — permanently collected">✓</span>' : '') +
       (x.v > 0 ? '<span class="badge-vault" title="' + x.v + ' in your Vault">🔒' + (x.v > 1 ? x.v : '') + '</span>' : '');
     var cls = 'coll-item' + (x.turned ? ' turned' : '') + ((x.total || 0) > 0 && n === 0 ? ' vaulted' : '');
-    return '<div class="' + cls + '"><div class="coll-card">' + (n > 0 ? render(set, card, { holo: h > 0 }) : render(set, card, { cls: 'unowned' })) +
+    return '<div class="' + cls + '"><div class="coll-card">' + (n > 0 ? render(set, card, { holo: h > 0, thumb: true }) : render(set, card, { cls: 'unowned', thumb: true })) +
       (b ? '<div class="coll-badges">' + b + '</div>' : '') + '</div></div>';
   }
 

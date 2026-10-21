@@ -826,6 +826,7 @@
   }
   function appendCollChunk() {
     var list = collPage.list; if (!list) return;
+    collPage.lastAppend = Date.now();
     var grid = $('#collGrid'), pager = collPagerEl();
     var end = Math.min(collPage.shown + COLL_PAGE, list.length);
     if (end > collPage.shown) {
@@ -840,7 +841,15 @@
       if (window.IntersectionObserver) {
         if (collPage.obs) collPage.obs.disconnect();
         collPage.obs = new IntersectionObserver(function (entries) {
-          if (entries.some(function (en) { return en.isIntersecting; })) appendCollChunk();
+          if (!entries.some(function (en) { return en.isIntersecting; })) return;
+          /* Throttle the cascade (2026-10-21): on a fast phone the pager
+             can still be within rootMargin the instant a chunk lands,
+             re-firing immediately and bursting the whole set into the
+             page at once. At most one auto-append per 350ms; the Show
+             more button is never throttled. */
+          var wait = 350 - (Date.now() - (collPage.lastAppend || 0));
+          if (wait <= 0) appendCollChunk();
+          else if (!collPage.throttleT) collPage.throttleT = setTimeout(function () { collPage.throttleT = null; appendCollChunk(); }, wait);
         }, { rootMargin: '600px' });
         collPage.obs.observe(pager);
       }
@@ -851,6 +860,7 @@
   }
   function resetCollPager() {
     if (collPage.obs) { collPage.obs.disconnect(); collPage.obs = null; }
+    if (collPage.throttleT) { clearTimeout(collPage.throttleT); collPage.throttleT = null; }
     collPage.list = null; collPage.shown = 0;
     var p = $('#collPager'); if (p) p.innerHTML = '';
   }
