@@ -58,7 +58,8 @@ window.CardSets.bootIndex = {
   "motorcycles",
   "gems-minerals",
   "cereals",
-  "us-navy"
+  "us-navy",
+  "jumbled"
  ],
  "sets": {
   "birdwatching": {
@@ -862,6 +863,20 @@ window.CardSets.bootIndex = {
    "primary": "#1b3a5c",
    "secondary": "#c9a227",
    "total": 420
+  },
+  "jumbled": {
+   "files": [
+    "jumbled-exclusives.js"
+   ],
+   "name": "Jumbled Mess",
+   "code": "JUMBLE",
+   "emblem": "🎲",
+   "packName": "Jumbled Mess",
+   "skin": "jumbled",
+   "css": "",
+   "primary": "#a855f7",
+   "secondary": "#ec4899",
+   "total": 1
   }
  }
 };

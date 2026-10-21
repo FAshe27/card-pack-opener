@@ -247,7 +247,7 @@
 
   function fillSetSelect() {
     var sets = window.CardSets.all().slice();
-    if (typeof CPS !== 'undefined' && CPS.jumbled &&
+    if (typeof CPS !== 'undefined' && CPS.jumbled && !window.CardSets.get('jumbled') &&
         (CPS.jumbled.count() > 0 || S.set.id === 'jumbled')) sets.push(CPS.jumbled.pseudoSet());
     sets.sort(function (a, b) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
@@ -870,6 +870,11 @@
     var set = S.set, st = ps(), f = S.coll;
 
     if (set.id === 'jumbled') {
+      var rj = window.CardSets.get('jumbled');
+      if (rj && !rj.stub && rj.cards.length) {
+        set = rj; /* the Jumbled-only exclusives (mig. 169) DO have a collection */
+      } else {
+        if (rj && rj.stub) window.CardSets.load('jumbled').then(function () { if (S.set.id === 'jumbled' && S.view === 'collection') renderCollection(); });
       $('#compTitle').textContent = 'Jumbled Mess';
       $('#compSub').textContent = 'Cards land in their home sets \u2014 no collection here.';
       $('#compRing').classList.remove('complete');
@@ -877,6 +882,7 @@
       $('#rarityProgress').innerHTML = ''; $('#collGrid').innerHTML = '';
       resetCollPager();
       return;
+      }
     }
     var owned = ownedCount(set, st), total = set.cards.length;
     var turnedN = 0, complete = 0;
@@ -986,7 +992,8 @@
 
   async function turnInDupesFlow() {
     var set = S.set, st = ps();
-    if (!isCloud() || !set || set.id === 'jumbled') return;
+    if (set && set.id === 'jumbled') { var rjT = window.CardSets.get('jumbled'); if (rjT && !rjT.stub && rjT.cards.length) set = rjT; }
+    if (!isCloud() || !set || (set.id === 'jumbled' && !set.cards.length)) return;
     await ensureVariants();
     var p = turnInDupesPreview(set, st);
     if (!p.eligible) { toast('No duplicates to turn in — every card here is a single copy, already turned in, vaulted, or numbered.', 'warn'); return; }
@@ -1045,7 +1052,8 @@
 
   async function turnInAllFlow() {
     var set = S.set, st = ps();
-    if (!isCloud() || !set || set.id === 'jumbled') return;
+    if (set && set.id === 'jumbled') { var rjT = window.CardSets.get('jumbled'); if (rjT && !rjT.stub && rjT.cards.length) set = rjT; }
+    if (!isCloud() || !set || (set.id === 'jumbled' && !set.cards.length)) return;
     await ensureVariants();
     var p = turnInPreview(set, st);
     if (!p.eligible) { toast('Nothing to turn in — everything owned here is already turned in, vaulted, or numbered.', 'warn'); return; }
@@ -1779,7 +1787,7 @@
     var set = S.set;
     if (set.id === 'jumbled') {
       $('#oddsSetName').textContent = '\u00b7 Jumbled Mess';
-      $('#oddsIntro').textContent = '5 cards, each from a random set at that set\u2019s own odds. First four: Uncommon or better. Fifth: Rare or better.';
+      $('#oddsIntro').textContent = '5 cards, each from a random set. First four: Uncommon 62% \u00b7 Rare 26% \u00b7 Epic 10% \u00b7 Legendary 2%. Fifth: Rare 80% \u00b7 Epic 14% \u00b7 Legendary 5% \u00b7 Chase 1% \u2014 and 1 in 10 of those Chases is the Jumbled Mess Chase, found nowhere else. A few cards live only in these packs: see the Jumbled Mess collection.';
       $('#oddsTable').innerHTML = ''; $('#slotList').innerHTML = '';
       return;
     }

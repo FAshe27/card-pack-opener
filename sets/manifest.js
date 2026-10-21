@@ -89,5 +89,6 @@ CardSets.manifest = [
   'cereals.js',
   'cereals-additions.js',
   'us-navy.js',
-  'us-navy-additions.js'
+  'us-navy-additions.js',
+  'jumbled-exclusives.js'
 ];

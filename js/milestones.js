@@ -110,10 +110,10 @@
                        pop on the next successful load */ }
       running = false;
       if (!r || r.baseline) return;
-      var freshFull = r.fresh_full || [];
+      var freshFull = (r.fresh_full || []).filter(function (sid) { return sid !== 'jumbled'; }); /* Jumbled Mess: no collection rewards/celebrations yet (Franklin, mig. 169) */
       var freshRar = {};
       (r.fresh_rar || []).forEach(function (fr) {
-        if (!fr || !fr.set || !fr.rarity) return;
+        if (!fr || !fr.set || !fr.rarity || fr.set === 'jumbled') return;
         if (freshFull.indexOf(fr.set) !== -1) return; /* the full-set pop-up subsumes its rarities */
         (freshRar[fr.set] = freshRar[fr.set] || []).push(fr.rarity);
       });
