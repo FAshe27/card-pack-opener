@@ -32,7 +32,11 @@
   function go() { if (!running) { running = true; requestAnimationFrame(step); } }
   function burst(x, y, o) {
     if (reduce) return; ensure(); o = o || {};
-    var colors = o.colors || ['#fff'], n = o.count || 40;
+    /* Bursts share the confetti ceiling: a reveal can fire half a dozen
+       of them at once (one per good flip), and uncapped stacks are the
+       same iOS freeze pressure the ceiling exists to stop. */
+    var room = 450 - parts.length; if (room <= 0) return;
+    var colors = o.colors || ['#fff'], n = Math.min(o.count || 40, room);
     for (var i = 0; i < n; i++) {
       var ang = Math.random() * Math.PI * 2, sp = (o.speed || 6) * (0.4 + Math.random() * 0.8);
       parts.push({ x: x, y: y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, g: o.gravity == null ? 0.12 : o.gravity,

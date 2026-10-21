@@ -563,7 +563,7 @@
       var wW = (gridW - (cols - 1) * gap) / cols;
       var wH = ((budgetH - (rows - 1) * gap) / rows) / ratio;
       var w = Math.min(wW, wH, cap);
-      cands.push({ w: w, cols: cols, rows: rows, orphan: (cols - (n % cols)) % cols, balanced: n % cols === 0 });
+      cands.push({ w: w, wW: wW, cols: cols, rows: rows, orphan: (cols - (n % cols)) % cols, balanced: n % cols === 0 });
     }
     function widest(list) { var b = null; for (var i = 0; i < list.length; i++) if (!b || list[i].w > b.w + 0.5) b = list[i]; return b; }
     function viable(list) { return list.filter(function (c) { return c.w >= floor; }); }
@@ -581,7 +581,28 @@
        when any exist. */
     var multi = cands.filter(function (c) { return c.rows >= 2 || n <= 3; });
     var pool = viable(multi);
-    if (!pool.length) return widest(cands);  /* nothing clears the floor: widest overall (the pre-balanced rule) */
+    if (!pool.length) {
+      /* Squeezed budget (short viewport + tall control strip): nothing
+         clears the readability floor. A near-floor fitting layout
+         (>= 70px) still wins as-is — but when even the widest layout
+         is stamp-sized, the height budget loses: keep the balanced
+         shape at its WIDTH-driven size and let the stage grow past
+         the fold (Franklin's rule: 9 always renders 3x3; a taller
+         stage beats 59px stamps in a 5-across orphan row, 2026-10-20).
+         Falls back to the min-orphan multi-row shape for counts with
+         no divisor in range. */
+      var oldPick = widest(cands);
+      if (oldPick && oldPick.w >= 70) return oldPick;
+      var sq = cands.filter(function (c) { return c.balanced && (c.rows >= 2 || n <= 3); });
+      if (!sq.length) {
+        var mo = Math.min.apply(null, multi.map(function (x) { return x.orphan; }));
+        sq = multi.filter(function (c) { return c.orphan === mo; });
+      }
+      if (!sq.length) sq = cands;
+      var bw = null;
+      sq.forEach(function (c) { var w = Math.min(c.wW, cap); if (!bw || w > bw.w + 0.5) bw = { w: w, cols: c.cols, rows: c.rows, orphan: c.orphan, balanced: c.balanced, sq: true }; });
+      return bw;
+    }
     var minOrphan = Math.min.apply(null, pool.map(function (c) { return c.orphan; }));
     var near = pool.filter(function (c) { return c.orphan === minOrphan; });
     if (near.length) return widest(near);
@@ -600,7 +621,10 @@
          so take it whenever it beats strict — the old floor gate let a
          barely-passing strict pick (81px) block a much roomier one. */
       var p2 = fitPick(n, gridW, ratio, gap, cap, b.scrolled);
-      if (p2 && p2.w > pick.w + 0.5) { pick = p2; mode = 'stage-top'; }
+      /* A squeezed strict pick (height budget ignored, stage will grow)
+         must not outbid a stage-top pick that genuinely fits — take the
+         fitting one whenever it exists. */
+      if (p2 && (p2.w > pick.w + 0.5 || (pick.sq && !p2.sq))) { pick = p2; mode = 'stage-top'; }
     }
     if (!pick) return null;
     pick.gridH = pick.rows * pick.w * ratio + (pick.rows - 1) * gap;
