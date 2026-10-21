@@ -57,7 +57,8 @@ window.CardSets.bootIndex = {
   "world-cities",
   "motorcycles",
   "gems-minerals",
-  "cereals"
+  "cereals",
+  "us-navy"
  ],
  "sets": {
   "birdwatching": {
@@ -846,6 +847,21 @@ window.CardSets.bootIndex = {
    "primary": "#e07b24",
    "secondary": "#7a3b12",
    "total": 400
+  },
+  "us-navy": {
+   "files": [
+    "us-navy.js",
+    "us-navy-additions.js"
+   ],
+   "name": "US Navy",
+   "code": "NAVY",
+   "emblem": "⚓",
+   "packName": "US Navy Pack",
+   "skin": "us-navy",
+   "css": "us-navy",
+   "primary": "#1b3a5c",
+   "secondary": "#c9a227",
+   "total": 420
   }
  }
 };
