@@ -52,7 +52,8 @@ window.CardSets.bootIndex = {
   "tv-shows",
   "star-wars",
   "iconic-dishes",
-  "world-landmarks"
+  "world-landmarks",
+  "natural-wonders"
  ],
  "sets": {
   "birdwatching": {
@@ -765,6 +766,21 @@ window.CardSets.bootIndex = {
    "css": "world-landmarks",
    "primary": "#7a4e1d",
    "secondary": "#c9a227",
+   "total": 420
+  },
+  "natural-wonders": {
+   "files": [
+    "natural-wonders.js",
+    "natural-wonders-additions.js"
+   ],
+   "name": "Natural Wonders",
+   "code": "WOND",
+   "emblem": "🏞️",
+   "packName": "Natural Wonders Pack",
+   "skin": "natural-wonders",
+   "css": "natural-wonders",
+   "primary": "#2f5d3a",
+   "secondary": "#c98a3d",
    "total": 420
   }
  }
