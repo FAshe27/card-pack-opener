@@ -1,5 +1,10 @@
-/* js/matchmaker.js — Wantlist + Trade Matchmaker (migration 167).
+/* js/matchmaker.js — Wantlist + Trade Matchmaker (migrations 167+168).
    Franklin approved the spec as-is 2026-10-21; built STAGED.
+   168 (Franklin, 2026-10-21, minutes after the 167 ship): "Add
+   Missing" is based on TURNED-IN cards, not owned cards — completion
+   means turned in only. Bulk add adds every not-yet-turned-in card;
+   the modal toggle and grid star are offered for any card that isn't
+   turned in (owned or not); a want clears when you turn the card in.
    Registers as CPS.matchmaker; consumes CPS.appCtx like the other
    split-out modules (market.js / giftpop.js). Loads after app.js.
 
@@ -18,11 +23,14 @@
          by Matchmaker itself.
        - "Your spares others want": the reverse view.
        - "Your wantlist": manager with per-want remove + bulk add
-         (all missing from a set / Rare+ only), previewed with a
-         confirm before a single add loop over cps_wantlist_add.
+         (all not-turned-in from a set / Rare+ only, per ctx.isTurned),
+         previewed with a confirm before a single add loop over
+         cps_wantlist_add.
      * Want/Unwant toggle in the card modal, via the guarded app.js
        hook `if (CPS.matchmaker) CPS.matchmaker.cardHook(...)`.
-     * A ☆ star on missing-card tiles in the collection grid,
+     * A ☆ star on not-turned-in tiles in the collection grid (167
+       showed it on on-hand-0 tiles only; 168 widens it to any tile
+       whose .coll-item isn't flagged 'turned' — owned tiles included),
        injected by DOM (MutationObserver on #collGrid — the grid is
        paged in chunks, so decoration re-runs per chunk). Clicks are
        captured before the grid's own click-to-modal handler.
@@ -215,15 +223,15 @@
       '<div class="panel"><h2>☆ Your wantlist <span class="muted small">(' + (M.wants ? M.wants.length : 0) + ' / 100)</span></h2>' +
       ((M.wants && M.wants.length)
         ? '<div class="mm-wants">' + M.wants.map(wantRow).join('') + '</div>'
-        : '<div class="empty">Your wantlist is empty. Star a missing card in your collection, open a card and tap ☆ Want, or bulk-add below.</div>') +
+        : '<div class="empty">Your wantlist is empty. Star any card you haven\'t turned in yet, open a card and tap ☆ Want, or bulk-add below.</div>') +
       '<div class="mm-bulk"><label>Bulk add from <select id="mmBulkSet">' +
       sets.map(function (s) { return '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>'; }).join('') +
       '</select></label> ' +
       '<button class="btn small" id="mmBulkAll">Add all missing</button> ' +
       '<button class="btn small" id="mmBulkRare">Add Rare+ missing</button> ' +
       '<button class="btn small" id="mmRefresh">↻ Refresh matches</button></div>' +
-      '<p class="muted small">Bulk add skips cards you already own or already want, preview first, and stops at the 100-want cap. ' +
-      'A want removes itself the moment you own the card.</p></div>';
+      '<p class="muted small">Bulk add is based on turned-in cards: it skips cards you\'ve already turned in (and any you already want), previews first, and stops at the 100-want cap. ' +
+      'A want removes itself when you turn the card in — owning a copy no longer clears it.</p></div>';
 
     bindFaces(host);
     host.querySelectorAll('[data-mm-trade]').forEach(function (b) {
@@ -263,21 +271,22 @@
     var set = setObj(sid);
     if (!set) return;
     if (set.stub && window.CardSets.load) { set = await window.CardSets.load(sid); if (!set) return; }
-    var st = (ctx.ps(set) || {}).cards || {};
     var RARE = { rare: 1, epic: 1, legendary: 1, chase: 1 };
+    /* 168: "missing" = not yet TURNED IN (the completion basis), not
+       "not owned" — a card you own one copy of still wants another
+       for the turn-in. ctx.isTurned mirrors cps.turn_ins. */
     var missing = set.cards.filter(function (c) {
-      var e = st[c.id];
-      if (e && e.n > 0) return false;
+      if (ctx.isTurned && ctx.isTurned(sid, c.id)) return false;
       if (wantOf(sid, c.id)) return false;
       if (rarePlus && !RARE[c.rarity]) return false;
       return true;
     });
-    if (!missing.length) { ctx.toast('Nothing new to add from ' + set.name + '.', 'good'); return; }
+    if (!missing.length) { ctx.toast('Nothing new to add from ' + set.name + ' — every card there is turned in or already wanted.', 'good'); return; }
     var room = 100 - (M.wants ? M.wants.length : 0);
     if (room <= 0) { ctx.toast('Your wantlist is full (100 max).', 'warn'); return; }
     var take = missing.slice(0, room);
     var ok = await ctx.confirmDialog('Add ' + take.length + ' wants?',
-      '<p>Add ' + take.length + ' missing card' + (take.length === 1 ? '' : 's') + ' from <b>' + esc(set.name) + '</b>' +
+      '<p>Add ' + take.length + ' not-turned-in card' + (take.length === 1 ? '' : 's') + ' from <b>' + esc(set.name) + '</b>' +
       (rarePlus ? ' (Rare and up)' : '') + ' to your wantlist?' +
       (missing.length > take.length ? '</p><p class="muted">Only the first ' + take.length + ' fit under the 100-want cap.</p>' : '</p>'),
       'Add wants');
@@ -341,10 +350,11 @@
     if (!info || info.querySelector('.mm-modal')) return;
     var st = (ctx.ps(set) || {}).cards || {};
     var e = st[card.id];
-    if (e && e.n > 0) return; // owned: no want toggle (server purges it anyway)
+    if (ctx.isTurned && ctx.isTurned(set.id, card.id)) return; // turned in: card is complete, no want (168)
     if (set.id === 'jumbled') return;
     var div = document.createElement('div');
     div.className = 'mm-modal';
+    div._mmOwned = !!(e && e.n > 0);
     info.appendChild(div);
     paintModalToggle(div, set, card);
     if (M.wants == null) loadWants(true).then(function () { paintModalToggle(div, set, card); decorateGrid(); });
@@ -360,13 +370,18 @@
       (w ? '<span class="mm-seg"><button class="btn small' + (w.holo_pref === 'any' ? ' primary' : '') + '" data-mm-pref="any">Any copy</button>' +
             '<button class="btn small' + (w.holo_pref === 'holo' ? ' primary' : '') + '" data-mm-pref="holo">✦ Holo only</button></span>' : '') +
       '</div>' +
-      (w ? '<div class="muted small">On your wantlist — Matchmaker checks other players\' spares for it.</div>' : '');
+      (w ? '<div class="muted small">On your wantlist — Matchmaker checks other players\' spares for it.</div>'
+         : (div._mmOwned ? '<div class="muted small">You own a copy but haven\'t turned this in yet — a want can still land the copy you\'ll turn in.</div>' : ''));
     var act = div.querySelector('[data-mm-act]');
     if (act) act.addEventListener('click', async function () {
       act.disabled = true;
       try {
         if (w) { await removeWant(set.id, card.id); ctx.toast('Removed from your wantlist.'); }
-        else { await addWant(set.id, card.id, 'any'); ctx.toast('☆ Added to your wantlist!', 'good'); }
+        else {
+          var ar = await addWant(set.id, card.id, 'any');
+          ctx.toast(ar && ar.added === false && ar.reason === 'turned_in'
+            ? 'Already turned in — no want needed.' : '☆ Added to your wantlist!', 'good');
+        }
         paintModalToggle(div, set, card);
         decorateGrid();
         refreshBadge();
@@ -386,7 +401,13 @@
     if (!grid || !ctx.isCloud()) return;
     grid.querySelectorAll('.coll-card').forEach(function (wrap) {
       var cardEl = wrap.querySelector('.card');
-      if (!cardEl || !cardEl.classList.contains('unowned')) return;
+      if (!cardEl) return;
+      /* 168 basis: the star belongs on every NOT-turned-in tile,
+         owned or not. cardface.collected flags turned-in cells with
+         a 'turned' class on the .coll-item wrapper (and a ✓ badge);
+         those are the only tiles skipped. */
+      var item = wrap.parentElement;
+      if (item && item.classList.contains('turned')) return;
       if (wrap.querySelector('.mm-star')) return;
       var sid = cardEl.getAttribute('data-set'), cid = cardEl.getAttribute('data-card');
       if (!sid || !cid || sid === 'jumbled') return;
@@ -421,7 +442,11 @@
       b.disabled = true;
       try {
         if (wantOf(sid, cid)) { await removeWant(sid, cid); ctx.toast('Removed from your wantlist.'); }
-        else { await addWant(sid, cid, 'any'); ctx.toast('☆ Added to your wantlist!', 'good'); }
+        else {
+          var sr = await addWant(sid, cid, 'any');
+          ctx.toast(sr && sr.added === false && sr.reason === 'turned_in'
+            ? 'Already turned in — no want needed.' : '☆ Added to your wantlist!', 'good');
+        }
         paintAllStars();
         refreshBadge();
       } catch (err) { ctx.cloudError(err); }
