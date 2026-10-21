@@ -932,7 +932,11 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .badge-holo { bottom: -8px; right: -6px; background: linear-gradient(90deg,#ff9bd2,#9be7ff,#fff79b); color: #222; }
 /* variant serial stays hidden until the card is flipped (pack reveal) */
 .flippable:not(.flipped) .badge-variant, .flippable:not(.flipped) .misprint-void { display: none; }
-.card.flippable:not(.flipped).variant { background-image: none; animation: none; }
+/* the frame stays hidden pre-flip via background-image only — the spin animation
+   must keep running: starting it in the same style change as the flip made
+   iOS Safari drop the .card-inner flip transition (variant cards popped
+   instead of flipping; fixed 2026-10-21). */
+.card.flippable:not(.flipped).variant { background-image: none; }
 .badge-variant { top: -8px; right: -6px; background: linear-gradient(90deg,#ff5f5f,#ffb21e,#38c97f,#3f8cff,#b35cff); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); }
 .card.vt-prism .badge-variant { background: linear-gradient(135deg, #7fd4ff, #a0e7ff); color: #0a2a3a; text-shadow: none; }
 .card.vt-obsidian .badge-variant { background: linear-gradient(135deg, #6b3a9e, #a86ad4); color: #fff; }
