@@ -1,0 +1,63 @@
+/* pack skin "motorcycles": PLACEHOLDER pure-CSS skin — Motorcycles.
+   Garage look: burnt-rust wrapper under a steel-blue sheen, faint diagonal
+   road stripes drifting across the pack, silver-foil crimps
+   (class pack-skin-motorcycles). A stand-in until Franklin's own baked
+   pack art replaces it; it touches nothing shared — this file is scoped
+   to the motorcycles set. Card art is real photography filling the frame
+   (artFit cover, panel #f4efe8); section 2 only adds a slim rust frame
+   line around the art. Section 3 wires the placeholder card back inside
+   the site frame (the standing in-frame default). */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-motorcycles .pack-top {
+  background:
+    linear-gradient(115deg, transparent 28%, rgba(255,255,255,.16) 44%, rgba(46,74,90,.22) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(255,255,255,.20), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(46,74,90,.35), transparent 70%),
+    /* faint diagonal road stripes */
+    repeating-linear-gradient(45deg, rgba(244,239,232,.05) 0 10px, transparent 10px 26px),
+    linear-gradient(180deg, #b34a26 0%, #a63d21 60%, #6e2812 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-motorcycles .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(46,74,90,.5), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(244,239,232,.12), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.10), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(244,239,232,.04) 0 10px, transparent 10px 26px),
+    linear-gradient(180deg, #a63d21 0%, #8f3319 55%, #571d0d 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-motorcycles .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,255,255,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-motorcycles .crimp { background: repeating-linear-gradient(100deg, rgba(40,14,6,.55) 0 4px, rgba(214,214,224,.55) 4px 6px, rgba(255,255,255,.30) 6px 9px); }
+.pack-skin-motorcycles .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(30,10,4,.66) 0 4px, rgba(176,176,190,.55) 4px 6px, rgba(255,255,255,.16) 6px 9px); }
+.pack-skin-motorcycles .pack-top::after { border-bottom-color: rgba(46,74,90,.8); }
+.pack-skin-motorcycles .pack-code { color: #f4efe8; opacity: .95; text-shadow: 0 1px 0 rgba(40,14,6,.65), 0 0 12px rgba(46,74,90,.9); }
+.pack-skin-motorcycles .pack-emblem { background:
+  radial-gradient(circle at 50% 50%, rgba(244,239,232,.92) 0 34%, rgba(244,239,232,.25) 35% 52%, transparent 53%),
+  radial-gradient(circle at 35% 30%, rgba(46,74,90,.55), rgba(90,32,14,.94) 72%);
+  border-color: rgba(46,74,90,.9); box-shadow: 0 0 26px rgba(166,61,33,.6), inset 0 0 18px rgba(46,74,90,.35); text-shadow: 0 0 16px rgba(244,239,232,.95); }
+.pack-skin-motorcycles .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(46,74,90,.9), 0 2px 8px rgba(40,14,6,.7); }
+.pack-skin-motorcycles .pack-sub { color: #f0c8ae; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ---------- */
+.card[data-set="motorcycles"] .cf-art {
+  border-color: rgba(166,61,33,.55);
+  box-shadow: inset 0 0 18px rgba(46,74,90,.18);
+}
+.card[data-set="motorcycles"].ticket-card .cf-art,
+.card[data-set="motorcycles"].token-card .cf-art,
+.card[data-set="motorcycles"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder art, in-frame) ---------- */
+.card[data-set="motorcycles"] .cb {
+  background: url('../assets/sets/motorcycles/card-back-art.svg') center / cover no-repeat #8f3319;
+  border: none;
+}
+.card[data-set="motorcycles"] .cb-emblem, .card[data-set="motorcycles"] .cb-name { display: none; }
