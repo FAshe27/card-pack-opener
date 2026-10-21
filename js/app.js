@@ -873,7 +873,7 @@
       if (rj && !rj.stub && rj.cards.length) {
         set = rj; /* the Jumbled-only exclusives (mig. 169) DO have a collection */
       } else {
-        if (rj && rj.stub) window.CardSets.load('jumbled').then(function () { if (S.set.id === 'jumbled' && S.view === 'collection') renderCollection(); });
+        if (rj && rj.stub && !rj._collRetry) { rj._collRetry = 1; window.CardSets.load('jumbled').then(function () { if (S.set.id === 'jumbled' && S.view === 'collection') renderCollection(); }); }
       $('#compTitle').textContent = 'Jumbled Mess';
       $('#compSub').textContent = 'Cards land in their home sets \u2014 no collection here.';
       $('#compRing').classList.remove('complete');
