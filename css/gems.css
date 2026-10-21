@@ -1,0 +1,84 @@
+/* pack skin "gems": PLACEHOLDER pure-CSS skin — Gems, Minerals & Rocks.
+   Deep amethyst-violet wrapper under a faceted sheen, crystal sparkle
+   drifting across the tear top, a teal geodes-glow rising at the foot
+   of the pack, silver-foil crimps (class pack-skin-gems). A stand-in
+   until Franklin's own baked pack art replaces it; it touches nothing
+   shared — this file is scoped to the gems-minerals set. Card art is
+   real specimen photography whole on the theme's pale panel (artFit
+   contain, #f6f1ea); section 2 only adds a slim violet frame line
+   around the art. Section 3 wires the placeholder card back inside
+   the site frame (the standing in-frame default). */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-gems .pack-top {
+  background:
+    /* a diagonal facet sheen sweeping the wrapper */
+    linear-gradient(115deg, transparent 28%, rgba(255,255,255,.20) 44%, rgba(140,230,220,.13) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(255,255,255,.25), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(20,90,86,.28), transparent 70%),
+    /* crystal sparkle */
+    radial-gradient(rgba(246,241,234,.8) 1px, transparent 1.5px),
+    radial-gradient(rgba(150,235,225,.6) 1px, transparent 1.5px),
+    linear-gradient(180deg, #6d34a5 0%, #4b2078 60%, #33154f 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-gems .pack-body {
+  background:
+    /* geode glow rising off the bottom of the wrapper */
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(14,124,123,.48), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(246,241,234,.14), transparent 70%),
+    /* the last of the sheen washing the top of the body */
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.10), transparent 70%),
+    /* faint sparkle, sparser than the top */
+    radial-gradient(rgba(246,241,234,.5) 1px, transparent 1.5px),
+    radial-gradient(rgba(150,235,225,.4) 1px, transparent 1.5px),
+    linear-gradient(180deg, #542a82 0%, #2c1450 55%, #1d0c38 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-gems .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,255,255,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-gems .crimp { background: repeating-linear-gradient(100deg, rgba(24,6,44,.55) 0 4px, rgba(214,214,224,.55) 4px 6px, rgba(255,255,255,.30) 6px 9px); }
+.pack-skin-gems .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(16,4,30,.66) 0 4px, rgba(176,176,190,.55) 4px 6px, rgba(255,255,255,.16) 6px 9px); }
+.pack-skin-gems .pack-top::after { border-bottom-color: rgba(150,235,225,.7); }
+.pack-skin-gems .pack-code { color: #f6f1ea; opacity: .95; text-shadow: 0 1px 0 rgba(20,4,40,.65), 0 0 12px rgba(140,230,220,.9); }
+.pack-skin-gems .pack-emblem { background:
+  /* facet wedges in the ring — a cut-gem table */
+  conic-gradient(from -35deg at 50% 50%, rgba(255,255,255,.32) 0deg 40deg, transparent 40deg 90deg, rgba(255,255,255,.32) 90deg 130deg, transparent 130deg 180deg, rgba(255,255,255,.32) 180deg 220deg, transparent 220deg 270deg, rgba(255,255,255,.32) 270deg 310deg, transparent 310deg),
+  radial-gradient(circle at 35% 30%, rgba(140,230,220,.5), rgba(38,16,66,.94) 72%);
+  border-color: rgba(150,235,225,.9); box-shadow: 0 0 26px rgba(91,42,134,.6), inset 0 0 18px rgba(140,230,220,.3); text-shadow: 0 0 16px rgba(246,241,234,.95); }
+.pack-skin-gems .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(140,230,220,.9), 0 2px 8px rgba(20,4,40,.7); }
+.pack-skin-gems .pack-sub { color: #d9c8f2; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Real specimen shots sit whole on the theme's pale panel (artFit
+   contain, panel #f6f1ea behind them). The frame swaps the stock
+   translucent border for a slim violet line with a faint teal inset
+   shadow. */
+.card[data-set="gems-minerals"] .cf-art {
+  border-color: rgba(91,42,134,.55);
+  box-shadow: inset 0 0 18px rgba(14,124,123,.16);
+}
+/* Slips (ticket/token/credit cards borrowed into a gems pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="gems-minerals"].ticket-card .cf-art,
+.card[data-set="gems-minerals"].token-card .cf-art,
+.card[data-set="gems-minerals"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder art, in-frame) ----------
+   The placeholder back art sits inside the site frame (the standing
+   default): the stock .back frame stays, the .cb panel carries the
+   art, and the printed emblem/name hide because the art carries the
+   design (a cut diamond over violet facet stripes). */
+.card[data-set="gems-minerals"] .cb {
+  background: url('../assets/sets/gems/card-back-art.svg') center / cover no-repeat #2c1450;
+  border: none;
+}
+.card[data-set="gems-minerals"] .cb-emblem, .card[data-set="gems-minerals"] .cb-name { display: none; }
