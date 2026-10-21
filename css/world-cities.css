@@ -1,0 +1,81 @@
+/* pack skin "world-cities": PLACEHOLDER pure-CSS skin — World Cities.
+   Skyline-at-dusk look: deep slate-indigo wrapper under an amber sheen,
+   window-light sparkle drifting across the tear top, a warm city glow
+   rising at the foot of the pack, silver-foil crimps (class
+   pack-skin-world-cities). A stand-in until Franklin's own baked pack
+   art replaces it; it touches nothing shared — this file is scoped to
+   the world-cities set. Card art is real photography filling the frame
+   (artFit cover, panel #eef1f5); section 2 only adds a slim slate frame
+   line around the art. Section 3 wires the placeholder card back inside
+   the site frame (the standing in-frame default). */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-world-cities .pack-top {
+  background:
+    /* a diagonal dusk sheen sweeping the wrapper */
+    linear-gradient(115deg, transparent 28%, rgba(255,255,255,.16) 44%, rgba(232,135,58,.18) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(255,255,255,.20), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(232,135,58,.30), transparent 70%),
+    /* lit-window sparkle */
+    radial-gradient(rgba(255,226,170,.85) 1px, transparent 1.5px),
+    radial-gradient(rgba(255,196,110,.6) 1px, transparent 1.5px),
+    linear-gradient(180deg, #3a5173 0%, #2e4057 60%, #1d2a3d 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-world-cities .pack-body {
+  background:
+    /* city glow rising off the bottom of the wrapper */
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(232,135,58,.48), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(255,226,170,.14), transparent 70%),
+    /* the last of the sheen washing the top of the body */
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.10), transparent 70%),
+    /* faint window sparkle, sparser than the top */
+    radial-gradient(rgba(255,226,170,.5) 1px, transparent 1.5px),
+    radial-gradient(rgba(255,196,110,.4) 1px, transparent 1.5px),
+    linear-gradient(180deg, #2e4057 0%, #24344b 55%, #16222f 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-world-cities .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,255,255,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-world-cities .crimp { background: repeating-linear-gradient(100deg, rgba(10,20,34,.55) 0 4px, rgba(214,214,224,.55) 4px 6px, rgba(255,255,255,.30) 6px 9px); }
+.pack-skin-world-cities .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(6,14,24,.66) 0 4px, rgba(176,176,190,.55) 4px 6px, rgba(255,255,255,.16) 6px 9px); }
+.pack-skin-world-cities .pack-top::after { border-bottom-color: rgba(255,196,110,.7); }
+.pack-skin-world-cities .pack-code { color: #eef1f5; opacity: .95; text-shadow: 0 1px 0 rgba(10,20,34,.65), 0 0 12px rgba(255,196,110,.9); }
+.pack-skin-world-cities .pack-emblem { background:
+  radial-gradient(circle at 35% 30%, rgba(255,196,110,.5), rgba(22,34,47,.94) 72%);
+  border-color: rgba(255,196,110,.9); box-shadow: 0 0 26px rgba(46,64,87,.6), inset 0 0 18px rgba(255,196,110,.3); text-shadow: 0 0 16px rgba(238,241,245,.95); }
+.pack-skin-world-cities .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(255,196,110,.9), 0 2px 8px rgba(10,20,34,.7); }
+.pack-skin-world-cities .pack-sub { color: #ffd9a8; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Real skyline photography fills the frame whole (artFit cover, panel
+   #eef1f5 behind it). The frame swaps the stock translucent border for
+   a slim slate line with a faint amber inset shadow. */
+.card[data-set="world-cities"] .cf-art {
+  border-color: rgba(46,64,87,.55);
+  box-shadow: inset 0 0 18px rgba(232,135,58,.18);
+}
+/* Slips (ticket/token/credit cards borrowed into a world-cities pack
+   opening) keep stock art framing — they are not set cards. */
+.card[data-set="world-cities"].ticket-card .cf-art,
+.card[data-set="world-cities"].token-card .cf-art,
+.card[data-set="world-cities"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder art, in-frame) ----------
+   The placeholder back art sits inside the site frame (the standing
+   default): the stock .back frame stays, the .cb panel carries the
+   art, and the printed emblem/name hide because the art carries the
+   design (a skyline silhouette over a dusk gradient). */
+.card[data-set="world-cities"] .cb {
+  background: url('../assets/sets/world-cities/card-back-art.svg') center / cover no-repeat #24344b;
+  border: none;
+}
+.card[data-set="world-cities"] .cb-emblem, .card[data-set="world-cities"] .cb-name { display: none; }
