@@ -33,6 +33,16 @@
     return setId;
   }
 
+  function setEmblem(setId) {
+    if (setId === 'jumbled') return '\u{1F3B2}';
+    try {
+      var s = window.CardSets && window.CardSets.get(setId);
+      if (s && s.pack && s.pack.emblem) return s.pack.emblem;
+      if (s && s.emblem) return s.emblem;
+    } catch (e) {}
+    return '\u{1F381}';
+  }
+
   /* Enrich a server-shaped config {wheels:[{id,name,segments:[...]}]} with
      colors and display labels, using the client's set data. */
   function enrich(cfg) {
@@ -52,6 +62,7 @@
             if (sg.kind === 'packs') {
               out.label = sg.packs + ' × ' + setName(sg.set_id);
               out.color = setColor(sg.set_id, i++);
+              out.emblem = setEmblem(sg.set_id);
             } else if (sg.kind === 'tokens') {
               out.label = sg.tokens + ' x 🪙 Arcade Tokens';
               out.color = '#6b6bd6';
@@ -129,13 +140,27 @@
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(mid);
-      ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
-      ctx.font = '700 15px system-ui, -apple-system, sans-serif';
       ctx.shadowColor = 'rgba(0,0,0,.65)';
-      ctx.shadowBlur = 5;
-      ctx.fillStyle = '#fff';
-      ctx.fillText(sg.label, R - 16, 0, R - 70);
+      if (sg.kind === 'packs') {
+        /* Set slices carry the set's emblem instead of its name: at 60+
+           slices the full-name labels collide into mush near the hub,
+           while one glyph per slice stays legible (Franklin, 2026-10-21).
+           The winning set is still named in the result banner/summary. */
+        ctx.translate(R - Math.round(R * 0.088), 0);
+        ctx.rotate(Math.PI / 2);
+        ctx.textAlign = 'center';
+        ctx.font = Math.round(R * 0.08) + 'px "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif';
+        ctx.shadowBlur = 7;
+        ctx.fillStyle = '#fff';
+        ctx.fillText(sg.emblem || '\u{1F381}', 0, 0);
+      } else {
+        ctx.textAlign = 'right';
+        ctx.font = '700 15px system-ui, -apple-system, sans-serif';
+        ctx.shadowBlur = 5;
+        ctx.fillStyle = '#fff';
+        ctx.fillText(sg.label, R - 16, 0, R - 70);
+      }
       ctx.restore();
     });
     /* rim + hub */
