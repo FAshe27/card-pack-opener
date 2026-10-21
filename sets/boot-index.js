@@ -864,7 +864,7 @@ window.CardSets.bootIndex = {
    "css": "us-navy",
    "primary": "#1b3a5c",
    "secondary": "#c9a227",
-   "total": 420
+   "total": 421
   },
   "jumbled": {
    "files": [
