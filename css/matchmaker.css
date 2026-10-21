@@ -1,0 +1,41 @@
+/* css/matchmaker.css — Wantlist + Trade Matchmaker (migration 167).
+   All classes are .mm-* namespaced (module-collision rule). Loaded
+   eagerly from index.html next to bounties.css / trading.css — this is
+   a feature sheet, not a per-set sheet, so the lazy per-set CSS rules
+   do not apply. */
+
+.mm-list { display: flex; flex-direction: column; gap: 10px; }
+.mm-row { display: flex; gap: 12px; align-items: center; padding: 10px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); }
+.mm-row .mm-face { flex: 0 0 auto; width: 84px; cursor: pointer; }
+.mm-row .mm-face .card { width: 100%; }
+.mm-row-main { flex: 1 1 auto; min-width: 0; }
+.mm-row-actions { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
+@media (max-width: 560px) {
+  .mm-row { flex-wrap: wrap; }
+  .mm-row-actions { flex-direction: row; width: 100%; }
+}
+
+.mm-wants { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.mm-want-row { display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); }
+.mm-match-dot { color: #34d399; }
+.mm-bulk { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+.mm-bulk select { max-width: 220px; }
+
+.mm-modal { margin-top: 10px; }
+.mm-modal-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.mm-modal .mm-on { border-color: #f5b942; color: #f5b942; }
+.mm-seg { display: inline-flex; gap: 4px; }
+
+/* ☆ star on missing-card tiles in the collection grid.
+   .coll-card is position:relative (style.css), badges sit top-right,
+   so the star pins bottom-right. .trade-face's small-card radius fix
+   does not apply here — the star is a plain round button. */
+.mm-star { position: absolute; right: 2px; bottom: 2px; z-index: 3;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--line); background: rgba(20, 18, 12, .88);
+  color: #f5b942; font-size: 17px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; }
+.mm-star.on { background: #f5b942; color: #1a1408; border-color: #f5b942; }
+.mm-star:disabled { opacity: .5; }
