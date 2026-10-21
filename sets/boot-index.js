@@ -55,7 +55,8 @@ window.CardSets.bootIndex = {
   "world-landmarks",
   "natural-wonders",
   "world-cities",
-  "motorcycles"
+  "motorcycles",
+  "gems-minerals"
  ],
  "sets": {
   "birdwatching": {
@@ -813,6 +814,21 @@ window.CardSets.bootIndex = {
    "css": "motorcycles",
    "primary": "#a63d21",
    "secondary": "#2e4a5a",
+   "total": 420
+  },
+  "gems-minerals": {
+   "files": [
+    "gems-minerals.js",
+    "gems-minerals-additions.js"
+   ],
+   "name": "Gems, Minerals & Rocks",
+   "code": "GEMS",
+   "emblem": "💎",
+   "packName": "Gems & Minerals Pack",
+   "skin": "gems",
+   "css": "gems",
+   "primary": "#5b2a86",
+   "secondary": "#0e7c7b",
    "total": 420
   }
  }
