@@ -147,11 +147,11 @@
            slices the full-name labels collide into mush near the hub,
            while one glyph per slice stays legible (Franklin, 2026-10-21).
            The winning set is still named in the result banner/summary. */
-        ctx.translate(R - Math.round(R * 0.088), 0);
+        ctx.translate(R - Math.round(R * 0.1), 0);
         ctx.rotate(Math.PI / 2);
         ctx.textAlign = 'center';
-        ctx.font = Math.round(R * 0.08) + 'px "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif';
-        ctx.shadowBlur = 7;
+        ctx.font = Math.round(R * 0.095) + 'px "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif';
+        ctx.shadowBlur = 0; /* emoji + shadow = a gray smudge on iOS Safari (it shadows the whole bitmap); text labels keep theirs */
         ctx.fillStyle = '#fff';
         ctx.fillText(sg.emblem || '\u{1F381}', 0, 0);
       } else {
