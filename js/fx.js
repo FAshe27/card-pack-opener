@@ -8,7 +8,7 @@
     cx = cv.getContext('2d'); resize(); window.addEventListener('resize', resize);
   }
   function resize() {
-    var d = window.devicePixelRatio || 1;
+    var d = Math.min(window.devicePixelRatio || 1, 2); /* cap at 2: a full-screen canvas at iPhone DPR 3 over a blurred modal saturates iOS Safari */
     cv.width = innerWidth * d; cv.height = innerHeight * d; cx.setTransform(d, 0, 0, d, 0, 0);
   }
   function step() {
@@ -43,8 +43,10 @@
   }
   function confetti(n) {
     if (reduce) return; ensure();
+    var room = 450 - parts.length; /* celebrations never stack past ~450 particles total: two pop-ups firing together (260 + 300) froze iOS Safari on the first-ever set completion, 2026-10-20 */
+    if (room <= 0) return;
     var colors = ['#ff4fa3', '#ffb21e', '#38c97f', '#3f8cff', '#b35cff', '#ffffff', '#12c2e9'];
-    for (var i = 0; i < (n || 180); i++) {
+    for (var i = 0; i < Math.min(n || 180, room); i++) {
       parts.push({ x: Math.random() * innerWidth, y: -20 - Math.random() * innerHeight * 0.5, vx: (Math.random() - 0.5) * 3,
         vy: 2 + Math.random() * 4, g: 0.05, drag: 0.995, life: 200 + Math.random() * 120, s: 4 + Math.random() * 4,
         c: colors[i % colors.length], shape: 'confetti', rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.4 });
