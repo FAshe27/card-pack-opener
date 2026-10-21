@@ -774,6 +774,7 @@
   function finish(o) {
     o.finished = true;
     updateSummary();
+    if (CPS.matchmaker) CPS.matchmaker.packFinish(o);
     CPS.slips.applyPackGrants(o.pulls);
     $('#revealAllBtn').classList.add('hidden');
     renderPacksSide();
@@ -1344,7 +1345,7 @@
   }
 
   /* --- trade builder view */
-  async function openTradeBuilder(prefillTo) {
+  async function openTradeBuilder(prefillTo, prefillWant) {
     if (!isCloud()) return;
     openModal('<div class="muted" style="padding:24px">Loading…</div>');
     if (window.CardSets.loadAll) await window.CardSets.loadAll();
@@ -1357,7 +1358,10 @@
       }
       var to = prefillTo && others.some(function (p) { return p.id === prefillTo; }) ? prefillTo : others[0].id;
       TB = { to: to, step: 1, their: [], toName: '', setId: '', q: '', rarity: '',
-             picks: [], offer: [], want: [], myColl: tbMyCollection() };
+             picks: [], offer: [], want: [], myColl: tbMyCollection(),
+             mmWant: (prefillWant && prefillWant.setId && prefillWant.cardId)
+               ? { setId: prefillWant.setId, cardId: prefillWant.cardId, holo: !!prefillWant.holo } : null,
+             mmApplied: false };
       await ensureVariants();
       $('#tradeWithSel').innerHTML = others.map(function (p) {
         return '<option value="' + esc(p.id) + '"' + (p.id === to ? ' selected' : '') + '>' + esc(p.display_name) + '</option>';
@@ -1386,6 +1390,14 @@
 
   function renderTradeBuilder() {
     if (!TB) return;
+    /* Matchmaker draft hook: at step 2, pre-pick the matched card on
+       their side (once). If the spare has moved on, say so once. */
+    if (TB.step === 2 && TB.mmWant && !TB.mmApplied) {
+      TB.mmApplied = true;
+      var mw = TB.mmWant, found = TB.their.filter(function (c) { return c.set_id === mw.setId && c.card_id === mw.cardId; })[0];
+      if (found) TB.picks = [{ setId: mw.setId, cardId: mw.cardId, holo: mw.holo && (found.h || 0) > 0, h: found.h || 0 }];
+      else toast('That card is no longer in their collection — the match has moved on.', 'warn');
+    }
     var steps = ['Your offer', TB.toName ? 'Pick from ' + TB.toName : 'Their card', 'Review'];
     $('#tradeSteps').innerHTML = steps.map(function (s, i) {
       var n = i + 1;
@@ -1610,6 +1622,7 @@
       if (ti) ti.addEventListener('click', function () { turnInFlow(setId, cardId, forceHolo, variant); });
       if (CPS.census) CPS.census.fill(box, set, card, variant);
       if (CPS.popfill) CPS.popfill(box, set, card);
+      if (CPS.matchmaker) CPS.matchmaker.cardHook(box, set, card);
     });
   }
 
@@ -2275,7 +2288,7 @@
     $('#tradeBackBtn').addEventListener('click', function () { showView('players'); });
     $('#tradeHistBtn').addEventListener('click', function () { showView('trade-history'); });
     $('#tradeHistBackBtn').addEventListener('click', function () { showView('players'); });
-    $('#tradeWithSel').addEventListener('change', function () { if (TB) { TB.to = this.value; tbLoadTheir(); } });
+    $('#tradeWithSel').addEventListener('change', function () { if (TB) { TB.to = this.value; TB.mmWant = null; tbLoadTheir(); } });
     $('#tradeSearch').addEventListener('input', function () { if (TB) { TB.q = this.value; tbRenderGrid(); } });
     $('#tradeSetSel').addEventListener('change', function () { if (TB) { TB.setId = this.value; tbRenderGrid(); } });
     $('#tradeRarity').addEventListener('change', function () { if (TB) { TB.rarity = this.value; tbRenderGrid(); } });
