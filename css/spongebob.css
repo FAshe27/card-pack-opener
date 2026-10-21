@@ -1,0 +1,68 @@
+/* pack skin "spongebob": PLACEHOLDER pure-CSS skin — SpongeBob.
+   Bikini Bottom look: SpongeBob-yellow wrapper under a sea-blue sheen,
+   bubbles drifting up across the pack, silver-foil crimps
+   (class pack-skin-spongebob). A stand-in until Franklin's own baked
+   pack art replaces it; it touches nothing shared — this file is scoped
+   to the spongebob set. Card art is animation stills and renders filling
+   the frame (artFit cover, panel #fffbe0); section 2 only adds a slim
+   yellow frame line around the art. Section 3 wires the placeholder
+   card back inside the site frame (the standing in-frame default). */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-spongebob .pack-top {
+  background:
+    linear-gradient(115deg, transparent 28%, rgba(255,255,255,.20) 44%, rgba(38,116,184,.22) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(255,255,255,.24), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(38,116,184,.30), transparent 70%),
+    /* rising bubbles */
+    radial-gradient(circle 7px at 18% 62%, rgba(255,255,255,.20) 96%, transparent 100%),
+    radial-gradient(circle 5px at 30% 40%, rgba(255,255,255,.16) 96%, transparent 100%),
+    radial-gradient(circle 9px at 82% 55%, rgba(255,255,255,.18) 96%, transparent 100%),
+    radial-gradient(circle 4px at 68% 30%, rgba(255,255,255,.15) 96%, transparent 100%),
+    linear-gradient(180deg, #ffe135 0%, #ffd814 60%, #e8b90e 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-spongebob .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(38,116,184,.55), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(255,251,224,.14), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.12), transparent 70%),
+    radial-gradient(circle 6px at 22% 48%, rgba(255,255,255,.16) 96%, transparent 100%),
+    radial-gradient(circle 8px at 78% 66%, rgba(255,255,255,.14) 96%, transparent 100%),
+    radial-gradient(circle 4px at 58% 36%, rgba(255,255,255,.15) 96%, transparent 100%),
+    linear-gradient(180deg, #ffd814 0%, #f2c40d 55%, #c9930a 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-spongebob .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,255,255,.14), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-spongebob .crimp { background: repeating-linear-gradient(100deg, rgba(120,86,4,.55) 0 4px, rgba(214,214,224,.55) 4px 6px, rgba(255,255,255,.30) 6px 9px); }
+.pack-skin-spongebob .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(96,66,2,.66) 0 4px, rgba(176,176,190,.55) 4px 6px, rgba(255,255,255,.16) 6px 9px); }
+.pack-skin-spongebob .pack-top::after { border-bottom-color: rgba(38,116,184,.8); }
+.pack-skin-spongebob .pack-code { color: #fffbe0; opacity: .95; text-shadow: 0 1px 0 rgba(120,86,4,.65), 0 0 12px rgba(38,116,184,.9); }
+.pack-skin-spongebob .pack-emblem { background:
+  radial-gradient(circle at 50% 50%, rgba(255,251,224,.92) 0 34%, rgba(255,251,224,.25) 35% 52%, transparent 53%),
+  radial-gradient(circle at 35% 30%, rgba(38,116,184,.55), rgba(146,104,6,.94) 72%);
+  border-color: rgba(38,116,184,.9); box-shadow: 0 0 26px rgba(255,216,20,.6), inset 0 0 18px rgba(38,116,184,.35); text-shadow: 0 0 16px rgba(255,251,224,.95); }
+.pack-skin-spongebob .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(38,116,184,.9), 0 2px 8px rgba(120,86,4,.7); }
+.pack-skin-spongebob .pack-sub { color: #fdf3c0; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ---------- */
+.card[data-set="spongebob"] .cf-art {
+  border-color: rgba(232,185,14,.55);
+  box-shadow: inset 0 0 18px rgba(38,116,184,.18);
+}
+.card[data-set="spongebob"].ticket-card .cf-art,
+.card[data-set="spongebob"].token-card .cf-art,
+.card[data-set="spongebob"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder art, in-frame) ---------- */
+.card[data-set="spongebob"] .cb {
+  background: url('../assets/sets/spongebob/card-back-art.svg') center / cover no-repeat #2674b8;
+  border: none;
+}
+.card[data-set="spongebob"] .cb-emblem, .card[data-set="spongebob"] .cb-name { display: none; }

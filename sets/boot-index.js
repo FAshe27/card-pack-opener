@@ -59,7 +59,8 @@ window.CardSets.bootIndex = {
   "gems-minerals",
   "cereals",
   "us-navy",
-  "jumbled"
+  "jumbled",
+  "spongebob"
  ],
  "sets": {
   "birdwatching": {
@@ -877,6 +878,21 @@ window.CardSets.bootIndex = {
    "primary": "#a855f7",
    "secondary": "#ec4899",
    "total": 1
+  },
+  "spongebob": {
+   "files": [
+    "spongebob.js",
+    "spongebob-additions.js"
+   ],
+   "name": "SpongeBob",
+   "code": "SPON",
+   "emblem": "🧽",
+   "packName": "SpongeBob Pack",
+   "skin": "spongebob",
+   "css": "spongebob",
+   "primary": "#ffe135",
+   "secondary": "#2674b8",
+   "total": 420
   }
  }
 };
