@@ -60,7 +60,8 @@ window.CardSets.bootIndex = {
   "cereals",
   "us-navy",
   "jumbled",
-  "spongebob"
+  "spongebob",
+  "insects"
  ],
  "sets": {
   "birdwatching": {
@@ -892,6 +893,21 @@ window.CardSets.bootIndex = {
    "css": "spongebob",
    "primary": "#ffe135",
    "secondary": "#2674b8",
+   "total": 420
+  },
+  "insects": {
+   "files": [
+    "insects.js",
+    "insects-additions.js"
+   ],
+   "name": "Insects & Arthropods",
+   "code": "INSE",
+   "emblem": "🦋",
+   "packName": "Insects & Arthropods Pack",
+   "skin": "insects",
+   "css": "insects",
+   "primary": "#4e7a27",
+   "secondary": "#d98a2b",
    "total": 420
   }
  }

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+  <!-- Placeholder card back for Insects & Arthropods: a line-drawn butterfly on leaf green.
+       Stand-in until Franklin's baked pack art replaces it. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5d8f31"/>
+      <stop offset="0.6" stop-color="#4e7a27"/>
+      <stop offset="1" stop-color="#274012"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.95" r="0.75">
+      <stop offset="0" stop-color="#d98a2b" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#d98a2b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#bg)"/>
+  <!-- diagonal leaf stripes -->
+  <g stroke="#f6f3e4" stroke-width="10" opacity="0.05">
+    <line x1="-60" y1="420" x2="240" y2="120"/>
+    <line x1="-20" y1="460" x2="280" y2="160"/>
+    <line x1="-100" y1="380" x2="200" y2="80"/>
+    <line x1="60" y1="500" x2="360" y2="200"/>
+  </g>
+  <rect width="300" height="420" fill="url(#glow)"/>
+  <!-- line-drawn butterfly -->
+  <g stroke="#f6f3e4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.92">
+    <path d="M150 190 C110 130 52 128 48 172 C45 205 96 224 148 216"/>
+    <path d="M150 190 C190 130 248 128 252 172 C255 205 204 224 152 216"/>
+    <path d="M148 222 C110 236 66 262 78 292 C88 318 140 282 149 244"/>
+    <path d="M152 222 C190 236 234 262 222 292 C212 318 160 282 151 244"/>
+    <line x1="150" y1="182" x2="150" y2="252"/>
+    <path d="M150 182 C138 158 122 148 108 144"/>
+    <path d="M150 182 C162 158 178 148 192 144"/>
+  </g>
+  <g fill="#f6f3e4" opacity="0.92">
+    <circle cx="108" cy="144" r="6"/>
+    <circle cx="192" cy="144" r="6"/>
+    <circle cx="96" cy="180" r="7"/>
+    <circle cx="204" cy="180" r="7"/>
+  </g>
+  <text x="150" y="356" text-anchor="middle" font-family="Georgia, serif" font-size="25" letter-spacing="6" fill="#f6f3e4" opacity="0.9">INSECTS</text>
+  <text x="150" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="15" letter-spacing="4" fill="#f6f3e4" opacity="0.65">PACKRIPPER</text>
+</svg>

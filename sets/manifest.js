@@ -92,5 +92,7 @@ CardSets.manifest = [
   'us-navy-additions.js',
   'jumbled-exclusives.js',
   'spongebob.js',
-  'spongebob-additions.js'
+  'spongebob-additions.js',
+  'insects.js',
+  'insects-additions.js'
 ];

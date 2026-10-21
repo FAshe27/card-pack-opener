@@ -144,7 +144,7 @@
   /* Fallback-only list (eager boot without a boot-index): mirrors the
      generator's css scan. The lazy path never uses it — boot-index's
      per-set css field is authoritative there. */
-  var KNOWN_CSS = ['acrs', 'aquariums', 'beverages', 'calendar', 'candy', 'cars', 'cereals', 'civ', 'coasters', 'countries', 'disney', 'dogs', 'gas', 'gems', 'hero', 'hwy', 'iconic-dishes', 'indy', 'minecraft', 'motorcycles', 'natural-wonders', 'nps', 'pixar', 'playing', 'pokemon', 'skyrim', 'spongebob', 'stage', 'stardew', 'states', 'tech', 'theme-parks', 'us-navy', 'water', 'world-landmarks', 'world-cities', 'zelda'];
+  var KNOWN_CSS = ['acrs', 'aquariums', 'beverages', 'calendar', 'candy', 'cars', 'cereals', 'civ', 'coasters', 'countries', 'disney', 'dogs', 'gas', 'gems', 'hero', 'hwy', 'iconic-dishes', 'indy', 'insects', 'minecraft', 'motorcycles', 'natural-wonders', 'nps', 'pixar', 'playing', 'pokemon', 'skyrim', 'spongebob', 'stage', 'stardew', 'states', 'tech', 'theme-parks', 'us-navy', 'water', 'world-landmarks', 'world-cities', 'zelda'];
 
   function loadSetFile(src) {
     return new Promise(function (res) {
