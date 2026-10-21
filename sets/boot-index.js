@@ -54,7 +54,8 @@ window.CardSets.bootIndex = {
   "iconic-dishes",
   "world-landmarks",
   "natural-wonders",
-  "world-cities"
+  "world-cities",
+  "motorcycles"
  ],
  "sets": {
   "birdwatching": {
@@ -797,6 +798,21 @@ window.CardSets.bootIndex = {
    "css": "world-cities",
    "primary": "#2e4057",
    "secondary": "#e8873a",
+   "total": 420
+  },
+  "motorcycles": {
+   "files": [
+    "motorcycles.js",
+    "motorcycles-additions.js"
+   ],
+   "name": "Motorcycles",
+   "code": "MOTO",
+   "emblem": "🏍️",
+   "packName": "Motorcycles Pack",
+   "skin": "motorcycles",
+   "css": "motorcycles",
+   "primary": "#a63d21",
+   "secondary": "#2e4a5a",
    "total": 420
   }
  }
