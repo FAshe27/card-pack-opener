@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+  <!-- Placeholder card back for Natural Wonders: mountain peaks over a
+       winding river on forest green. Stand-in until Franklin's baked
+       pack art replaces it. -->
+  <defs>
+    <linearGradient id="forest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a7050"/>
+      <stop offset="0.6" stop-color="#274e31"/>
+      <stop offset="1" stop-color="#183320"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="1.02" r="0.8">
+      <stop offset="0" stop-color="#c98a3d" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#c98a3d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#forest)"/>
+  <rect width="300" height="420" fill="url(#glow)"/>
+  <circle cx="226" cy="86" r="24" fill="#c98a3d" opacity="0.85"/>
+  <g>
+    <polygon points="18,268 108,138 198,268" fill="#eef3e6"/>
+    <polygon points="92,268 168,168 244,268" fill="#d7e3c8"/>
+    <polygon points="150,268 232,150 300,268 300,300 150,300" fill="#b9cda6"/>
+    <polygon points="108,138 88,168 102,168 108,158 116,170 128,168" fill="#ffffff"/>
+    <polygon points="232,150 216,174 228,174 234,164 240,176 252,174" fill="#ffffff"/>
+  </g>
+  <path d="M150 300 C 120 322, 182 336, 152 356 C 124 374, 168 388, 150 404" fill="none" stroke="#7fb2d9" stroke-width="9" stroke-linecap="round" opacity="0.9"/>
+  <text x="150" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="17" letter-spacing="3" fill="#eef3e6">NATURAL WONDERS</text>
+</svg>
