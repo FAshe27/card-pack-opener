@@ -956,6 +956,12 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .ring { --p: 0; --g: 0; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(#34d399 calc(var(--g) * 1%), var(--accent) calc(var(--g) * 1%), var(--accent) calc(var(--p) * 1%), rgba(255,255,255,.08) calc(var(--p) * 1%)); position: relative; flex: none; }
 .ring::before { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: var(--panel); }
 .ring span { position: relative; font-weight: 800; font-size: 1.15rem; }
+/* True completion (every card turned in): the ring goes One-of-One gold
+   with the same rotating shimmer as the 1/1 card frame (registered --va
+   angle, no animated filter — iOS-safe per the 2026-10-19 variant fix). */
+.ring.complete { background: conic-gradient(from var(--va), #ffd700, #fff3b0, #ffb700, #ffdf5e, #ffd700, #fff3b0, #ffd700); box-shadow: 0 0 18px rgba(255,210,102,.55); animation: variant-spin 7.5s linear infinite; }
+.ring.complete span { color: #ffd766; }
+.complete-note { color: #ffd766; font-weight: 800; }
 .comp-title { font-weight: 800; font-size: 1.2rem; } .comp-sub { color: var(--muted); font-size: .9rem; margin-top: 4px; }
 .rarity-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 @media (max-width: 560px) { .rarity-progress { grid-template-columns: repeat(2, 1fr); } }

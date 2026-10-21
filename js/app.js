@@ -861,6 +861,7 @@
     if (set.id === 'jumbled') {
       $('#compTitle').textContent = 'Jumbled Mess';
       $('#compSub').textContent = 'Cards land in their home sets \u2014 no collection here.';
+      $('#compRing').classList.remove('complete');
       $('#compRing').style.setProperty('--p', 0); $('#compPct').textContent = '\u2014';
       $('#rarityProgress').innerHTML = ''; $('#collGrid').innerHTML = '';
       resetCollPager();
@@ -874,8 +875,16 @@
     $('#compRing').style.setProperty('--g', total ? (turnedN / total * 100).toFixed(1) : 0);
     $('#compPct').textContent = (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%';
     $('#compTitle').textContent = set.name;
-    $('#compSub').innerHTML = '<span class="packs-opened-note">Packs opened <b>' + st.stats.opened + '</b></span><br><span class="owned-note">' + complete + ' / ' + total + ' unique cards owned (' + (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%)</span>' +
-      '<br><span class="turned-note">' + turnedN + ' turned in (' + (total ? (turnedN / total * 100).toFixed(1) : '0.0') + '%)</span>';
+    /* Pomp for a true completion (Franklin's definition: every card in
+       the set TURNED IN): gold shimmer ring + a congrats line in place
+       of the two amount lines. Owned-100% alone does not trigger it. */
+    var done = total > 0 && turnedN === total;
+    $('#compRing').classList.toggle('complete', done);
+    $('#compSub').innerHTML = '<span class="packs-opened-note">Packs opened <b>' + st.stats.opened + '</b></span><br>' +
+      (done
+        ? '<span class="complete-note">Congrats! You\u2019ve completed this collection!</span>'
+        : '<span class="owned-note">' + complete + ' / ' + total + ' unique cards owned (' + (pct * 100 >= 99.95 || pct === 0 ? Math.round(pct * 100) : (pct * 100).toFixed(1)) + '%)</span>' +
+          '<br><span class="turned-note">' + turnedN + ' turned in (' + (total ? (turnedN / total * 100).toFixed(1) : '0.0') + '%)</span>');
 
     $('#rarityProgress').innerHTML = R.RARITIES.filter(function (r) { return set.pools[r.key].length; }).map(function (r) {
       var pool = set.pools[r.key], have = pool.filter(function (c) { return (st.cards[c.id] && st.cards[c.id].n) || isTurned(set.id, c.id); }).length;
