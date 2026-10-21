@@ -247,8 +247,7 @@
 
   function fillSetSelect() {
     var sets = window.CardSets.all().slice();
-    if (typeof CPS !== 'undefined' && CPS.jumbled && !window.CardSets.get('jumbled') &&
-        (CPS.jumbled.count() > 0 || S.set.id === 'jumbled')) sets.push(CPS.jumbled.pseudoSet());
+    if (typeof CPS !== 'undefined' && CPS.jumbled && !window.CardSets.get('jumbled')) sets.push(CPS.jumbled.pseudoSet()); /* Jumbled Mess is always listed, packs or not (Franklin) */
     sets.sort(function (a, b) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     });
@@ -1915,11 +1914,12 @@
 
   async function renderAdmin() {
     if (!isAdmin() || !S.dev) return;
-    var setOpts = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
-      .sort(function (a, b) { return a.name.localeCompare(b.name); })
+    var grantSets = window.CardSets.all().filter(function (x) { return S.onlineSets.indexOf(x.id) >= 0; })
+      .sort(function (a, b) { return a.name.localeCompare(b.name); });
+    if (typeof CPS !== 'undefined' && CPS.jumbled && !grantSets.some(function (x) { return x.id === 'jumbled'; })) grantSets.push(CPS.jumbled.pseudoSet());
+    var setOpts = grantSets
       .map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === S.set.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') +
-      '<option value="jumbled">Jumbled Mess</option>' +
-      '<option value="__random">🎲 Random Packs</option>';
+      '<option value="__random">Random Packs</option>';
 
 
     $('#gaAllSet').innerHTML = setOpts || '<option value="">(upload a set first)</option>';
