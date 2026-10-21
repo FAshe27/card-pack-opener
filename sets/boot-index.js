@@ -56,7 +56,8 @@ window.CardSets.bootIndex = {
   "natural-wonders",
   "world-cities",
   "motorcycles",
-  "gems-minerals"
+  "gems-minerals",
+  "cereals"
  ],
  "sets": {
   "birdwatching": {
@@ -830,6 +831,21 @@ window.CardSets.bootIndex = {
    "primary": "#5b2a86",
    "secondary": "#0e7c7b",
    "total": 420
+  },
+  "cereals": {
+   "files": [
+    "cereals.js",
+    "cereals-additions.js"
+   ],
+   "name": "Breakfast Cereals",
+   "code": "CEREAL",
+   "emblem": "🥣",
+   "packName": "Breakfast Cereals Pack",
+   "skin": "cereals",
+   "css": "cereals",
+   "primary": "#e07b24",
+   "secondary": "#7a3b12",
+   "total": 400
   }
  }
 };
