@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/cotd.css">
 <link rel="stylesheet" href="css/bounties.css">
 <link rel="stylesheet" href="css/trading.css">
+<link rel="stylesheet" href="css/matchmaker.css">
   <link rel="stylesheet" href="css/composer.css">
 <link rel="stylesheet" href="css/profile.css">
 <link rel="stylesheet" href="css/sandbox.css">
@@ -221,9 +222,11 @@
       <div class="market-toggle" role="tablist">
         <button id="marketBuyersBtn" class="market-toggle-btn active" role="tab">Bounties<span class="tab-badge hidden" id="bountyBadge"></span></button>
         <button id="marketSellersBtn" class="market-toggle-btn" role="tab">Trading Post<span class="tab-badge hidden" id="tradeBadge"></span></button>
+        <button id="marketMatchesBtn" class="market-toggle-btn" role="tab">Matches<span class="tab-badge hidden" id="mmBadge"></span></button>
       </div>
       <div id="bountyPanel"><p class="muted small">Loading…</p></div>
       <div id="tradingPanel" class="hidden"><p class="muted small">Loading…</p></div>
+      <div id="matchmakerPanel" class="hidden"><p class="muted small">Loading…</p></div>
     </section>
 
     <!-- ============ PRIZE WHEEL ============ -->
@@ -496,6 +499,7 @@
   <script defer src="js/bounties.js"></script>
   <script defer src="js/trading.js"></script>
   <script defer src="js/market.js"></script>
+  <script defer src="js/matchmaker.js"></script>
   <script defer src="js/shop.js"></script>
 <script defer src="js/sandbox.js"></script>
   <script defer src="js/plinko.js"></script>
