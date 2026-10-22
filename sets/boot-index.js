@@ -62,7 +62,8 @@ window.CardSets.bootIndex = {
   "jumbled",
   "spongebob",
   "insects",
-  "cryptids"
+  "cryptids",
+  "reptiles"
  ],
  "sets": {
   "birdwatching": {
@@ -925,6 +926,21 @@ window.CardSets.bootIndex = {
    "primary": "#2e5c3a",
    "secondary": "#8cc896",
    "total": 400
+  },
+  "reptiles": {
+   "files": [
+    "reptiles.js",
+    "reptiles-additions.js"
+   ],
+   "name": "Reptiles & Amphibians",
+   "code": "REPT",
+   "emblem": "🐍",
+   "packName": "Reptiles & Amphibians Pack",
+   "skin": "reptiles",
+   "css": "reptiles",
+   "primary": "#256d46",
+   "secondary": "#b7791f",
+   "total": 420
   }
  }
 };
