@@ -174,11 +174,11 @@
            slices the full-name labels collide into mush near the hub,
            while one glyph per slice stays legible (Franklin, 2026-10-21).
            The winning set is still named in the result banner/summary. */
-        ctx.translate(R - Math.round(R * 0.098), 0);
+        ctx.translate(R - Math.round(R * 0.102), 0);
         ctx.rotate(Math.PI / 2);
         var cell = emblemReady ? emblemCell(sg.emblem) : -1;
         if (cell >= 0) {
-          var EW = window.WHEEL_EMBLEMS, es = Math.round(R * 0.115);
+          var EW = window.WHEEL_EMBLEMS, es = Math.round(R * 0.088); /* fits inside the slice wedge (~0.091R of arc at this ring); 0.115 spilled over the edges (Franklin, 2026-10-21) */
           ctx.shadowBlur = 0; /* shadows smudge transparent images on iOS too */
           ctx.drawImage(emblemImg, (cell % EW.cols) * EW.cell, Math.floor(cell / EW.cols) * EW.cell, EW.cell, EW.cell, -es / 2, -es / 2, es, es);
         } else {
