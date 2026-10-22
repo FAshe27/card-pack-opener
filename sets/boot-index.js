@@ -63,7 +63,8 @@ window.CardSets.bootIndex = {
   "spongebob",
   "insects",
   "cryptids",
-  "reptiles"
+  "reptiles",
+  "wild-mammals"
  ],
  "sets": {
   "birdwatching": {
@@ -940,6 +941,21 @@ window.CardSets.bootIndex = {
    "css": "reptiles",
    "primary": "#256d46",
    "secondary": "#b7791f",
+   "total": 420
+  },
+  "wild-mammals": {
+   "files": [
+    "wild-mammals.js",
+    "wild-mammals-additions.js"
+   ],
+   "name": "Wild Mammals",
+   "code": "MAMM",
+   "emblem": "🐅",
+   "packName": "Wild Mammals Pack",
+   "skin": "wild-mammals",
+   "css": "wild-mammals",
+   "primary": "#a67c2e",
+   "secondary": "#e0b45c",
    "total": 420
   }
  }
