@@ -706,6 +706,15 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
    viewport). Per-set shapes keep their own rules: Periodic (later in this
    file) and Calendar (its own sheet, loaded after this one) override this. */
 .reveal-grid .card { border-radius: 6.5% / 4.65%; }
+/* Square sets keep their 1/1 shape in mixed reveal lines (Jumbled packs
+   pull from many sets at once): a flex line is as tall as its tallest
+   (portrait) card, and WebKit stretches the square cards to that height,
+   discarding their aspect-ratio - Franklin's phone showed a Calendar
+   tile at exactly 5/7 (2026-10-21). Opting out of stretch lets the
+   ratio rule size them; centering the tile in the line is deliberate.
+   Single-set reveals are all one shape, so this changes nothing there. */
+.reveal-grid .card[data-set="calendar"],
+.reveal-grid .card[data-set="periodic"] { align-self: center; }
 .stage-controls { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .stage-summary { color: var(--muted); text-align: center; } .stage-summary b { color: var(--text); }
 .stage-summary b[class^=rt-] { color: inherit; } .stage-summary .rt-rare { color: var(--c-rare); } .stage-summary .rt-epic { color: var(--c-epic); } .stage-summary .rt-legendary { color: var(--c-legendary); } .stage-summary .rt-uncommon { color: var(--c-uncommon); } .stage-summary .rt-common { color: var(--c-common); }
