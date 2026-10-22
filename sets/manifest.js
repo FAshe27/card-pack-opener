@@ -96,5 +96,7 @@ CardSets.manifest = [
   'insects.js',
   'insects-additions.js',
   'cryptids.js',
-  'cryptids-additions.js'
+  'cryptids-additions.js',
+  'reptiles.js',
+  'reptiles-additions.js'
 ];
