@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+  <!-- Placeholder card back for Reptiles & Amphibians: a line-drawn coiled snake on pond green.
+       Stand-in until Franklin's baked pack art replaces it. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f8557"/>
+      <stop offset="0.6" stop-color="#256d46"/>
+      <stop offset="1" stop-color="#123420"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.95" r="0.75">
+      <stop offset="0" stop-color="#b7791f" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#b7791f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#bg)"/>
+  <g stroke="#eef2e2" stroke-width="10" opacity="0.05">
+    <line x1="-60" y1="420" x2="240" y2="120"/>
+    <line x1="-20" y1="460" x2="280" y2="160"/>
+    <line x1="-100" y1="380" x2="200" y2="80"/>
+    <line x1="60" y1="500" x2="360" y2="200"/>
+  </g>
+  <rect width="300" height="420" fill="url(#glow)"/>
+  <g stroke="#eef2e2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.92">
+    <path d="M70 275 C70 235 120 225 165 232 C215 240 238 258 232 278 C226 300 180 306 140 298 C105 291 92 278 108 264 C122 252 158 254 172 262"/>
+    <path d="M172 262 C196 246 204 218 192 196 C184 181 168 172 156 180 C146 187 148 202 158 208"/>
+    <path d="M158 208 L150 226 M158 208 L168 224"/>
+  </g>
+  <g fill="#eef2e2" opacity="0.92">
+    <circle cx="160" cy="192" r="5"/>
+  </g>
+  <text x="150" y="356" text-anchor="middle" font-family="Georgia, serif" font-size="25" letter-spacing="6" fill="#eef2e2" opacity="0.9">REPTILES</text>
+  <text x="150" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="15" letter-spacing="4" fill="#eef2e2" opacity="0.65">PACKRIPPER</text>
+</svg>
