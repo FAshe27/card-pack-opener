@@ -38,8 +38,9 @@
       ] },
       // V2 tables (2026-10-21, Franklin: "prizes need to scale for 5 and 8
       // alarm"): the harder vaults now pay BIGGER prizes, not just the same
-      // prizes sooner — optimal-stop EV ≈ 1.54x (5 alarms) and ≈ 2.34x
-      // (8 alarms) the 3-alarm baseline. See TABLES-V2.md in the package.
+      // prizes sooner — optimal-stop EV ≈ 1.54x (5 alarms) the 3-alarm
+      // baseline. See TABLES-V2.md in the package. (The 8-alarm table was
+      // replaced by Franklin's own in V3 — see the note above it.)
       5: { name: 'Heist', alarms: 5, tiers: [
         { tiles: 3,  tokens: 3, pr: 0,   pj: 0  },
         { tiles: 5,  tokens: 0, pr: 3,   pj: 3  },
@@ -49,12 +50,18 @@
         { tiles: 14, tokens: 0, pr: 40,  pj: 25 },
         { tiles: 17, tokens: 0, pr: 100, pj: 25 }
       ] },
+      // V3 (2026-10-21): Franklin dictated this table himself after playing
+      // V2 ("the prizes scale up a little too fast for the top tier") — the
+      // Slots top prize no longer lands at 6 tiles, and the top tier IS the
+      // full clear: 17 tiles pays 100 random + 100 Jumbled. Optimal stop 6,
+      // EV ≈ 1.4x the 3-alarm baseline. See TABLES-V3.md in the package.
       8: { name: 'Inside Job', alarms: 8, tiers: [
-        { tiles: 2,  tokens: 3, pr: 0,   pj: 0  },
-        { tiles: 4,  tokens: 0, pr: 10,  pj: 5  },
-        { tiles: 6,  tokens: 0, pr: 50,  pj: 25 },
-        { tiles: 9,  tokens: 0, pr: 75,  pj: 25 },
-        { tiles: 12, tokens: 0, pr: 100, pj: 25 }
+        { tiles: 2,  tokens: 3, pr: 0,   pj: 0   },
+        { tiles: 4,  tokens: 0, pr: 10,  pj: 5   },
+        { tiles: 6,  tokens: 0, pr: 25,  pj: 25  },
+        { tiles: 9,  tokens: 0, pr: 50,  pj: 25  },
+        { tiles: 12, tokens: 0, pr: 75,  pj: 50  },
+        { tiles: 17, tokens: 0, pr: 100, pj: 100 }
       ] }
     }
   };
@@ -94,6 +101,14 @@
     var tiers = CONFIG.modes[mode].tiers, best = null, i;
     for (i = 0; i < tiers.length; i++) if (depth >= tiers[i].tiles) best = tiers[i];
     return best;
+  }
+  // Announcement rule (V3, 2026-10-21): the "global announcement" note is
+  // for full clears and for banking the vault's OWN top (last) tier only.
+  // V2 keyed it on pr >= 50, which fired on ~7% of Inside Job runs once
+  // the scaled tables put 50+25 at 6 tiles — Franklin caught it in play.
+  function isTopTier(mode, p) {
+    var tiers = CONFIG.modes[mode].tiers;
+    return !!p && p === tiers[tiers.length - 1];
   }
   function nextTier(mode, depth) {
     var tiers = CONFIG.modes[mode].tiers, i;
@@ -234,7 +249,7 @@
 
   /* ---------------- rendering ---------------- */
   var root = null;
-  var ui = { tuningOpen: false, simOut: {} }; // per-mode sim result html (not persisted)
+  var ui = { tuningOpen: false, payoutsOpen: false, simOut: {} }; // panel open states + per-mode sim result html (not persisted)
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -297,21 +312,39 @@
     if (run.full) txt = '🎉 <b>FULL CLEAR!</b> Every safe tile cracked — banked <b>' +
       esc(prizeText(run.banked)) + '</b> (fake).' +
       '<div class="vb-announce">📣 GLOBAL ANNOUNCEMENT (real build): a Vault Breaker full clear!</div>';
-    else if (run.banked && run.banked.pr >= 50) txt +=
+    else if (isTopTier(run.mode, run.banked)) txt +=
       '<div class="vb-announce">📣 GLOBAL ANNOUNCEMENT (real build): a top-tier Vault Breaker cash-out!</div>';
     return '<div class="vb-result"><span class="vb-win">' + txt + '</span></div>';
   }
 
   function tableHtml(mode) {
-    var m = CONFIG.modes[mode];
+    var m = CONFIG.modes[mode], safe = safeTiles(mode);
     var rows = m.tiers.map(function (t) {
-      return '<tr><td>' + t.tiles + ' tiles</td><td>' + (survival(mode, t.tiles) * 100).toFixed(1) +
-        '%</td><td>' + esc(prizeText(t)) + '</td></tr>';
+      var fc = t.tiles === safe; // a tier AT the full-clear depth is the
+        // full-clear row itself (Inside Job V3: top tier = 17 tiles)
+      return '<tr><td>' + t.tiles + ' tiles' + (fc ? ' (full clear)' : '') + '</td><td>' +
+        (survival(mode, t.tiles) * 100).toFixed(fc ? 3 : 1) +
+        '%</td><td>' + esc(prizeText(t)) + (fc ? ' + announcement' : '') + '</td></tr>';
     }).join('');
-    rows += '<tr><td>' + safeTiles(mode) + ' tiles (full clear)</td><td>' +
-      (survival(mode, safeTiles(mode)) * 100).toFixed(3) + '%</td><td>' +
-      esc(prizeText(m.tiers[m.tiers.length - 1])) + ' + announcement</td></tr>';
+    if (m.tiers[m.tiers.length - 1].tiles < safe) {
+      rows += '<tr><td>' + safe + ' tiles (full clear)</td><td>' +
+        (survival(mode, safe) * 100).toFixed(3) + '%</td><td>' +
+        esc(prizeText(m.tiers[m.tiers.length - 1])) + ' + announcement</td></tr>';
+    }
     return '<table class="vb-table"><tr><th>Cash out at</th><th>Reach it</th><th>Pays</th></tr>' + rows + '</table>';
+  }
+
+  // Payouts & odds dropdown (V3, 2026-10-21, Franklin: "can we get the
+  // odds/rewards table in a drop down like in other arcade games?"): all
+  // three vaults stacked so they can be compared without switching modes.
+  function payoutsHtml() {
+    var blocks = MODE_KEYS.map(function (k) {
+      var mm = CONFIG.modes[k];
+      return '<div class="vb-payout-block"><h3 class="vb-pt-title">' + k + ' alarms — ' +
+        esc(mm.name) + ' · pays</h3>' + tableHtml(k) + '</div>';
+    }).join('');
+    return '<details class="vb-payouts" id="vbPayouts"' + (ui.payoutsOpen ? ' open' : '') + '>' +
+      '<summary>Payouts &amp; odds</summary>' + blocks + '</details>';
   }
 
   function tuningHtml() {
@@ -376,8 +409,7 @@
         '<div class="vb-controls">' + cashBtn +
           '<button type="button" class="btn" id="vbReset">Reset fake balance</button></div>' +
         resultHtml() +
-        '<div class="vb-prizetable"><h3 class="vb-pt-title">' + mode + ' alarms — ' + esc(m.name) + ' · pays</h3>' +
-          tableHtml(mode) + '</div>' +
+        payoutsHtml() +
         '<div class="vb-stats muted small">Runs: ' + st.runs + ' · Busts: ' + st.busts +
           ' · Cash-outs: ' + st.cashouts + ' · Best depth: ' + st.best + ' tiles' +
           ' · Won: ' + st.wonRandom + ' random packs, ' + st.wonJumbled + ' Jumbled packs, ' +
@@ -409,6 +441,8 @@
     });
     var tun = q('#vbTuning');
     if (tun) tun.addEventListener('toggle', function () { ui.tuningOpen = tun.open; });
+    var pay = q('#vbPayouts');
+    if (pay) pay.addEventListener('toggle', function () { ui.payoutsOpen = pay.open; });
     qa('[data-vb-sim]').forEach(function (b) {
       b.addEventListener('click', function () {
         var md = parseInt(b.getAttribute('data-vb-sim'), 10);
@@ -432,6 +466,7 @@
     teardown: teardown,
     _test: {
       CONFIG: CONFIG, comb: comb, survival: survival, prizeFor: prizeFor,
+      isTopTier: isTopTier,
       nextTier: nextTier, prizeText: prizeText, newBoard: newBoard,
       simulate: simulate, bestStopDepth: bestStopDepth, prizeValue: prizeValue,
       state: function () { return S; },
