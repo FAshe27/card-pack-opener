@@ -133,7 +133,7 @@
   var BS = null;        // bounty return-nav session
 
   function allSets() {
-    return sortByName(window.CardSets.all().filter(function (s) { return s.id !== 'jumbled'; }));
+    return sortByName(window.CardSets.all());
   }
   function freshBounty(sets) {
     return {
@@ -546,7 +546,7 @@
     // pack offer: count disabled until a set is chosen, clamped to holdings
     var packSet = box.querySelector('#pbPackSet'), packsHave = box.querySelector('#pbPacksHave');
     var packsInp = box.querySelector('#pbPacks');
-    var invSets = BD.sets.filter(function (s) { return (ctx.ps({ id: s.id }).packs || 0) > 0; });
+    var invSets = BD.sets.filter(function (s) { return s.id !== 'jumbled' && (ctx.ps({ id: s.id }).packs || 0) > 0; });
     packSet.innerHTML = '<option value="">—</option>' + invSets.map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + ' (' + ctx.ps({ id: s.id }).packs + ')</option>';
     }).join('');
