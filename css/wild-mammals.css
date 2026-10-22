@@ -1,0 +1,83 @@
+/* pack skin "wild-mammals": PLACEHOLDER pure-CSS skin — Wild Mammals.
+   Savanna gold under a dusk-brown wash, warm dust haze drifting
+   across the tear top, an ember-gold glow rising at the foot of the
+   pack, gold-foil crimps (class pack-skin-wild-mammals). A stand-in until
+   Franklin's own baked pack art replaces it; it touches nothing shared —
+   this file is scoped to the wild-mammals set. Card art is wildlife
+   photography on the theme's dark panel (artFit cover,
+   #171208); section 2 only adds a slim savanna-gold frame line around
+   the art. Section 3 wires the placeholder card back inside the site
+   frame (the standing in-frame default). */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-wild-mammals .pack-top {
+  background:
+    /* a diagonal sunlit sheen sweeping the wrapper */
+    linear-gradient(115deg, transparent 28%, rgba(255,255,255,.16) 44%, rgba(166,124,46,.20) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(246,228,190,.22), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(5,10,18,.35), transparent 70%),
+    /* dust sparkle */
+    radial-gradient(rgba(246,228,190,.75) 1px, transparent 1.5px),
+    radial-gradient(rgba(224,180,92,.55) 1px, transparent 1.5px),
+    linear-gradient(180deg, #6b4f16 0%, #54400f 60%, #241a06 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-wild-mammals .pack-body {
+  background:
+    /* ember-gold glow rising off the bottom of the wrapper */
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(166,124,46,.55), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(246,228,190,.12), transparent 70%),
+    /* dusk wash over the top of the body */
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(90,50,10,.28), transparent 70%),
+    /* faint sparkle, sparser than the top */
+    radial-gradient(rgba(246,228,190,.45) 1px, transparent 1.5px),
+    radial-gradient(rgba(224,180,92,.35) 1px, transparent 1.5px),
+    linear-gradient(180deg, #5d4712 0%, #463607 55%, #1c1404 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-wild-mammals .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(246,228,190,.10), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-wild-mammals .crimp { background: repeating-linear-gradient(100deg, rgba(20,14,2,.60) 0 4px, rgba(214,214,224,.55) 4px 6px, rgba(255,255,255,.30) 6px 9px); }
+.pack-skin-wild-mammals .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(16,10,1,.70) 0 4px, rgba(176,176,190,.55) 4px 6px, rgba(255,255,255,.16) 6px 9px); }
+.pack-skin-wild-mammals .pack-top::after { border-bottom-color: rgba(224,180,92,.65); }
+.pack-skin-wild-mammals .pack-code { color: #f6e4be; opacity: .95; text-shadow: 0 1px 0 rgba(16,10,1,.7), 0 0 12px rgba(224,180,92,.85); }
+.pack-skin-wild-mammals .pack-emblem { background:
+  /* stripe wedges in the ring — tiger stripes in the grass */
+  conic-gradient(from -35deg at 50% 50%, rgba(255,255,255,.26) 0deg 40deg, transparent 40deg 90deg, rgba(255,255,255,.26) 90deg 130deg, transparent 130deg 180deg, rgba(255,255,255,.26) 180deg 220deg, transparent 220deg 270deg, rgba(255,255,255,.26) 270deg 310deg, transparent 310deg),
+  radial-gradient(circle at 35% 30%, rgba(224,180,92,.45), rgba(30,20,4,.94) 72%);
+  border-color: rgba(224,180,92,.85); box-shadow: 0 0 26px rgba(120,84,20,.65), inset 0 0 18px rgba(224,180,92,.28); text-shadow: 0 0 16px rgba(246,228,190,.95); }
+.pack-skin-wild-mammals .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(224,180,92,.85), 0 2px 8px rgba(16,10,1,.75); }
+.pack-skin-wild-mammals .pack-sub { color: #e8d5a8; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ----------
+   Illustrations and photos sit on the theme's dark panel (artFit cover,
+   panel #171208 behind them). The frame swaps the stock translucent
+   border for a slim forest-green line with a faint dust inset shadow. */
+.card[data-set="wild-mammals"] .cf-art {
+  border-color: rgba(166,124,46,.6);
+  box-shadow: inset 0 0 18px rgba(224,180,92,.14);
+}
+/* Slips (ticket/token/credit cards borrowed into a wild-mammals pack opening)
+   keep stock art framing — they are not set cards. */
+.card[data-set="wild-mammals"].ticket-card .cf-art,
+.card[data-set="wild-mammals"].token-card .cf-art,
+.card[data-set="wild-mammals"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder art, in-frame) ----------
+   The placeholder back art sits inside the site frame (the standing
+   default): the stock .back frame stays, the .cb panel carries the
+   art, and the printed emblem/name hide because the art carries the
+   design (a line-drawn dragon over deep-forest stripes). */
+.card[data-set="wild-mammals"] .cb {
+  background: url('../assets/sets/wild-mammals/card-back-art.svg') center / cover no-repeat #463607;
+  border: none;
+}
+.card[data-set="wild-mammals"] .cb-emblem, .card[data-set="wild-mammals"] .cb-name { display: none; }
