@@ -94,5 +94,7 @@ CardSets.manifest = [
   'spongebob.js',
   'spongebob-additions.js',
   'insects.js',
-  'insects-additions.js'
+  'insects-additions.js',
+  'cryptids.js',
+  'cryptids-additions.js'
 ];
