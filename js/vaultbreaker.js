@@ -90,7 +90,8 @@
     run: null,          // server run payload (kept after it ends, for the reveal)
     busy: false,        // an RPC is in flight: input locks
     tables: null,       // server prize tables from vault_state, when loaded
-    stats: freshStats() // this visit only, like Plinko's session tallies
+    stats: freshStats(), // this visit only, like Plinko's session tallies
+    countedRuns: {}     // run_ids already counted in stats.runs this visit
   };
   var root = null;
   var ui = { payoutsOpen: false }; // dropdown open state survives re-renders
@@ -340,12 +341,32 @@
     } catch (e) { /* non-fatal: counts catch up on the next natural load */ }
   }
 
+  /* Count each run once per visit in the session stats, however the
+     run arrives — started here, resumed by vault_start, or restored
+     by vault_state after a page reload. A reload zeroes this module's
+     memory, so without this a restored run that is then cashed out
+     showed "Runs: 0 · Cash-outs: 1". Keyed on the payload's run_id
+     (the cps.vault_runs row id, present in every run payload), so
+     repeat state loads and error resyncs within one visit can never
+     recount the same run, while the next run started in the visit
+     counts as run 2. Adopting a run also credits its current depth
+     to Best, so a restored run's depth is on the board even before
+     its next pick/settle response lands. */
+  function noteRun(run) {
+    if (!run || run.status !== 'active' || !run.run_id) return;
+    if (S.countedRuns[run.run_id]) return;
+    S.countedRuns[run.run_id] = true;
+    S.stats.runs++;
+    if (run.depth > S.stats.best) S.stats.best = run.depth;
+  }
+
   function applyResponse(r, grants) {
     if (!r) return;
     if (typeof r.tokens_now === 'number') S.tokens = r.tokens_now;
     if (r.run) {
       var prev = S.run;
       S.run = r.run;
+      noteRun(r.run);
       if (prev && prev.status === 'active' && r.run.status !== 'active') {
         if (r.run.status === 'busted') S.stats.busts++;
         else if (r.run.status === 'cashed') settleStats(r.run);
@@ -371,7 +392,7 @@
       S.tokens = r.tokens_now;
       if (r.tables) S.tables = r.tables;
       S.run = r.run || null;
-      if (S.run) S.mode = S.run.mode;
+      if (S.run) { S.mode = S.run.mode; noteRun(S.run); }
       S.loaded = true;
       syncBadges();
     } catch (e) {
@@ -394,8 +415,7 @@
     S.busy = true; paint();
     try {
       var r = await CPS.cloud.call('vault_start', { p_mode: S.mode });
-      if (!r.resumed) S.stats.runs++;
-      S.busy = false;
+      S.busy = false; // the run (fresh or resumed) is counted by noteRun in applyResponse
       applyResponse(r, null);
     } catch (e) {
       S.busy = false;
