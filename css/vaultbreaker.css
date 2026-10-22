@@ -50,7 +50,9 @@
 .vb-announce {
   margin-top: 8px; font-size: 13px; font-weight: 800; color: #7ee787;
 }
-.vb-prizetable { max-width: 520px; margin: 6px auto 10px; text-align: left; }
+.vb-payouts { text-align: left; max-width: 520px; margin: 6px auto 10px; }
+.vb-payouts summary { cursor: pointer; font-weight: 700; }
+.vb-payout-block { margin: 10px 0 14px; }
 .vb-pt-title { text-align: center; font-size: 15px; margin: 8px 0 6px; }
 .vb-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .vb-table th, .vb-table td { padding: 5px 8px; border-bottom: 1px solid #2c2f3a; text-align: left; }
