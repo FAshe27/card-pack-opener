@@ -76,6 +76,12 @@
     if (key === 'roulette') {
       return '<div class="arc-art-roulette" aria-hidden="true"><span class="arc-wheel"><i></i></span></div>';
     }
+    if (key === 'vaultbreaker') {
+      var cells = '';
+      for (var vi = 0; vi < 15; vi++) cells += '<i></i>';
+      return '<div class="arc-art-vault" aria-hidden="true"><span class="arc-vault-grid">' +
+        cells + '</span><span class="arc-vault-lock">🔓</span></div>';
+    }
     // scratchoffs
     return '<div class="arc-art-scratch" aria-hidden="true"><div class="arc-ticket">' +
       '<span class="arc-foil"></span><span class="arc-foil"></span><span class="arc-foil"></span>' +
@@ -95,6 +101,8 @@
       blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.' }
     ,{ id: 'roulette', title: 'ROULETTE', tag: 'From 1 🪙 a spin', accent: 'roulette', view: 'sbx-roulette',
       blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds.' }
+    ,{ id: 'vaultbreaker', title: 'VAULT BREAKER', tag: '3 🪙 a run', accent: 'vault', soon: true,
+      blurb: 'Crack a 5×5 vault tile by tile — cash out any time, but hidden alarms end the run. Bigger vault, bigger prize.' }
   ];
 
   function renderLobby(box) {

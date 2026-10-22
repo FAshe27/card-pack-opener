@@ -51,6 +51,7 @@
 .arc-tile-plinko { --tile: var(--c-legendary); }
 .arc-tile-scratch { --tile: var(--c-uncommon); }
 .arc-tile-roulette { --tile: var(--c-epic); }
+.arc-tile-vault { --tile: var(--c-rare); }
 
 .arc-tile-head {
   display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
@@ -159,6 +160,9 @@
   .arc-ticket { grid-template-columns: repeat(3, 21px); gap: 5px; padding: 9px; }
   .arc-foil { width: 21px; height: 21px; }
   .arc-coin { font-size: 1.5rem; right: -8px; }
+  .arc-vault-grid { grid-template-columns: repeat(5, 16px); gap: 4px; padding: 9px; }
+  .arc-vault-grid i { width: 16px; height: 16px; }
+  .arc-vault-lock { font-size: 1.5rem; right: -8px; }
 }
 
 /* Roulette coming-soon tile art: a CSS wheel (red/black pockets, green zero). */
@@ -173,6 +177,27 @@
 .arc-wheel i {
   position: absolute; inset: 24px; border-radius: 50%;
   background: #14161c; border: 2px solid #39404e;
+}
+
+/* ---- tile art: Vault Breaker (mini vault grid + open lock) ---- */
+.arc-art-vault { position: relative; }
+.arc-vault-grid {
+  display: grid; grid-template-columns: repeat(5, 20px); gap: 5px;
+  padding: 11px; border-radius: 8px;
+  background: linear-gradient(150deg, #232b4a, #171d33);
+  border: 1.5px solid rgba(232,236,246,.28);
+  box-shadow: 0 8px 20px rgba(0,0,0,.4);
+}
+.arc-vault-grid i {
+  width: 20px; height: 20px; border-radius: 5px;
+  background: radial-gradient(circle at 35% 30%, #46538a, #232c4d 70%);
+  box-shadow: inset 0 0 6px rgba(0,0,0,.55);
+}
+.arc-vault-grid i:nth-child(8) { background: radial-gradient(circle at 35% 30%, #ffe9b0, #d4a017 70%); }
+.arc-vault-lock {
+  position: absolute; right: -14px; bottom: -10px;
+  font-size: 1.9rem; transform: rotate(-10deg);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
 }
 
 /* High / Low pre-run preview: the face-down card on the idle table. */
