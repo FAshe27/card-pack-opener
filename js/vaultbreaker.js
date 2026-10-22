@@ -20,7 +20,7 @@
 
   /* ================= CONFIG — tweak freely ================= */
   var CONFIG = {
-    cost: 2,                 // fake tokens per run, all modes
+    cost: 3,                 // fake tokens per run, all modes (Franklin, 2026-10-21: raised from 2)
     startBalance: 100,       // fake balance a fresh / reset prototype holds
     tiles: 25,               // 5x5 grid
     // tiers: cash-out prize by safe tiles cracked (highest tier reached
@@ -28,7 +28,7 @@
     // packs — all FAKE tallies in the prototype.
     modes: {
       3: { name: 'Day Job', alarms: 3, tiers: [
-        { tiles: 4,  tokens: 2, pr: 0,  pj: 0  },
+        { tiles: 4,  tokens: 3, pr: 0,  pj: 0  },
         { tiles: 6,  tokens: 0, pr: 0,  pj: 3  },
         { tiles: 8,  tokens: 0, pr: 3,  pj: 3  },
         { tiles: 10, tokens: 0, pr: 5,  pj: 5  },
@@ -36,23 +36,25 @@
         { tiles: 15, tokens: 0, pr: 20, pj: 20 },
         { tiles: 18, tokens: 0, pr: 50, pj: 25 }
       ] },
+      // V2 tables (2026-10-21, Franklin: "prizes need to scale for 5 and 8
+      // alarm"): the harder vaults now pay BIGGER prizes, not just the same
+      // prizes sooner — optimal-stop EV ≈ 1.54x (5 alarms) and ≈ 2.34x
+      // (8 alarms) the 3-alarm baseline. See TABLES-V2.md in the package.
       5: { name: 'Heist', alarms: 5, tiers: [
-        { tiles: 3,  tokens: 2, pr: 0,  pj: 0  },
-        { tiles: 5,  tokens: 0, pr: 0,  pj: 3  },
-        { tiles: 7,  tokens: 0, pr: 3,  pj: 3  },
-        { tiles: 9,  tokens: 0, pr: 5,  pj: 5  },
-        { tiles: 11, tokens: 0, pr: 10, pj: 10 },
-        { tiles: 14, tokens: 0, pr: 20, pj: 20 },
-        { tiles: 17, tokens: 0, pr: 50, pj: 25 }
+        { tiles: 3,  tokens: 3, pr: 0,   pj: 0  },
+        { tiles: 5,  tokens: 0, pr: 3,   pj: 3  },
+        { tiles: 7,  tokens: 0, pr: 5,   pj: 5  },
+        { tiles: 9,  tokens: 0, pr: 25,  pj: 20 },
+        { tiles: 11, tokens: 0, pr: 30,  pj: 20 },
+        { tiles: 14, tokens: 0, pr: 40,  pj: 25 },
+        { tiles: 17, tokens: 0, pr: 100, pj: 25 }
       ] },
       8: { name: 'Inside Job', alarms: 8, tiers: [
-        { tiles: 2,  tokens: 2, pr: 0,  pj: 0  },
-        { tiles: 4,  tokens: 0, pr: 0,  pj: 3  },
-        { tiles: 6,  tokens: 0, pr: 3,  pj: 3  },
-        { tiles: 8,  tokens: 0, pr: 5,  pj: 5  },
-        { tiles: 10, tokens: 0, pr: 10, pj: 10 },
-        { tiles: 12, tokens: 0, pr: 20, pj: 20 },
-        { tiles: 14, tokens: 0, pr: 50, pj: 25 }
+        { tiles: 2,  tokens: 3, pr: 0,   pj: 0  },
+        { tiles: 4,  tokens: 0, pr: 10,  pj: 5  },
+        { tiles: 6,  tokens: 0, pr: 50,  pj: 25 },
+        { tiles: 9,  tokens: 0, pr: 75,  pj: 25 },
+        { tiles: 12, tokens: 0, pr: 100, pj: 25 }
       ] }
     }
   };
@@ -98,8 +100,9 @@
     for (i = 0; i < tiers.length; i++) if (depth < tiers[i].tiles) return tiers[i];
     return null;
   }
-  function prizeValue(p) { // pack-equivalents for EV comparisons; 2 tokens = 1 pack
-    return p ? (p.pr + p.pj + (p.tokens || 0) / 2) : 0;
+  function prizeValue(p) { // pack-equivalents for EV comparisons: a Jumbled
+    // pack counts as 1/2 a random pack, and 2 tokens = 1 pack (V2, 2026-10-21)
+    return p ? (p.pr + p.pj / 2 + (p.tokens || 0) / 2) : 0;
   }
   function bestStopDepth(mode) {
     var m = CONFIG.modes[mode], bestD = m.tiers[0].tiles, bestEV = -1, i, d, ev;
@@ -322,7 +325,7 @@
       }).join('');
       return '<div class="vb-tune-block"><h4>' + mode + ' alarms — ' + esc(m.name) +
         ' (' + safeTiles(mode) + ' safe tiles)</h4>' + tableHtml(mode) +
-        '<p class="muted small">Best modelled stop (pack-equivalents, 2 tokens = 1 pack): ' +
+        '<p class="muted small">Best modelled stop (pack-equivalents: Jumbled = ½ pack, 2 tokens = 1 pack): ' +
         '<b>' + bestStopDepth(mode) + ' tiles</b>.</p>' +
         '<div class="vb-simrow"><label class="small">Stop at <select data-vb-simstop="' + mode + '">' +
         opts + '</select></label> ' +
