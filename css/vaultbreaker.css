@@ -1,0 +1,68 @@
+/* Vault Breaker — Sandbox prototype (fake tokens). 5x5 vault grid, pot,
+   cash-out. .vb-* namespace only; colours follow the Plinko/Arcade
+   palette (dark board, gold for money, red for the alarm). */
+.vb-wrap { text-align: center; margin-top: 18px; }
+.vb-badge {
+  font-size: 11px; font-weight: 800; letter-spacing: .04em;
+  color: #f0a832; border: 1px solid #f0a832; border-radius: 999px;
+  padding: 2px 8px; vertical-align: middle; white-space: nowrap;
+}
+.vb-balance { margin: 2px 0 12px; font-size: 15px; }
+.vb-modes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+.vb-board {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+  max-width: min(92vw, 340px); margin: 0 auto;
+  background: #14161c; border: 2px solid #2c2f3a; border-radius: 14px; padding: 8px;
+}
+.vb-tile {
+  aspect-ratio: 1 / 1; min-height: 52px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; line-height: 1; cursor: pointer;
+  background: #1d2027; border: 1px solid #2c2f3a; border-radius: 10px;
+  color: inherit; -webkit-tap-highlight-color: transparent;
+}
+.vb-tile-live:hover { border-color: #f0a832; filter: brightness(1.3); }
+.vb-tile-live:active { transform: scale(.96); }
+.vb-tile:disabled { cursor: default; opacity: 1; }
+.vb-tile-idle { opacity: .55; }
+.vb-safe { background: #20261e; }
+.vb-gem-common    { border-color: #9aa0a6; box-shadow: inset 0 0 0 2px rgba(154,160,166,.35); }
+.vb-gem-uncommon  { border-color: #2ea043; box-shadow: inset 0 0 0 2px rgba(46,160,67,.4); }
+.vb-gem-rare      { border-color: #2f81f7; box-shadow: inset 0 0 0 2px rgba(47,129,247,.45); }
+.vb-gem-epic      { border-color: #a371f7; box-shadow: inset 0 0 0 2px rgba(163,113,247,.5); }
+.vb-gem-legendary { border-color: #f0a832; box-shadow: inset 0 0 0 2px rgba(240,168,50,.55); }
+.vb-gem-chase     { border-color: #ffdf5d; box-shadow: 0 0 10px 2px rgba(255,223,93,.55); background: #2b2111; }
+.vb-alarm { background: #3a1416; border-color: #f85149; box-shadow: 0 0 10px 2px rgba(248,81,73,.5); }
+.vb-shown-alarm { background: #241d20; border-color: #6e3a3d; opacity: .8; }
+.vb-shown-safe { opacity: .45; }
+.vb-pot { margin: 14px auto 4px; max-width: 520px; font-size: 15px; }
+.vb-next { margin-top: 2px; }
+.vb-controls { margin: 12px 0 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.vb-controls .btn { font-size: 15px; padding: 10px 18px; }
+.vb-cash { font-weight: 800; }
+.vb-result { min-height: 40px; margin-bottom: 6px; }
+.vb-win, .vb-bust {
+  display: inline-block; font-weight: 700; font-size: 15px;
+  border-radius: 12px; padding: 9px 16px; max-width: 520px;
+}
+.vb-win  { color: #ffdf5d; background: #2b2111; border: 2px solid #d4a017; }
+.vb-bust { color: #ffa198; background: #2b1215; border: 2px solid #f85149; }
+.vb-announce {
+  margin-top: 8px; font-size: 13px; font-weight: 800; color: #7ee787;
+}
+.vb-prizetable { max-width: 520px; margin: 6px auto 10px; text-align: left; }
+.vb-pt-title { text-align: center; font-size: 15px; margin: 8px 0 6px; }
+.vb-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.vb-table th, .vb-table td { padding: 5px 8px; border-bottom: 1px solid #2c2f3a; text-align: left; }
+.vb-table th { color: #c8ccd4; }
+.vb-stats { margin-bottom: 10px; }
+.vb-tuning { text-align: left; max-width: 560px; margin: 0 auto; }
+.vb-tuning summary { cursor: pointer; font-weight: 700; }
+.vb-tune-block { margin: 12px 0; }
+.vb-tune-block h4 { margin: 6px 0; font-size: 14px; }
+.vb-simrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+.vb-simout { margin-top: 6px; }
+@media (max-width: 420px) {
+  .vb-tile { min-height: 52px; font-size: 21px; }
+  .vb-controls .btn { flex: 1 1 100%; }
+}
