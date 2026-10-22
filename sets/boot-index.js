@@ -61,7 +61,8 @@ window.CardSets.bootIndex = {
   "us-navy",
   "jumbled",
   "spongebob",
-  "insects"
+  "insects",
+  "cryptids"
  ],
  "sets": {
   "birdwatching": {
@@ -909,6 +910,21 @@ window.CardSets.bootIndex = {
    "primary": "#4e7a27",
    "secondary": "#d98a2b",
    "total": 420
+  },
+  "cryptids": {
+   "files": [
+    "cryptids.js",
+    "cryptids-additions.js"
+   ],
+   "name": "Cryptids & Mythology",
+   "code": "CRYP",
+   "emblem": "🐉",
+   "packName": "Cryptids & Mythology Pack",
+   "skin": "cryptids",
+   "css": "cryptids",
+   "primary": "#2e5c3a",
+   "secondary": "#8cc896",
+   "total": 400
   }
  }
 };
