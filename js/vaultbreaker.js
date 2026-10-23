@@ -11,6 +11,12 @@
    this registration is 'public' with noTab, and the Arcade lobby
    tile points at the sbx-vaultbreaker view.
 
+   First-tile safety (migration 175, 2026-10-23, Franklin's ask):
+   the server guarantees a run's first pick is never an alarm, so
+   the payouts table below uses first-tile-safe reach odds and the
+   dropdown says so. This build also adds the graduated games'
+   "← Back to Arcade" button (the Plinko/Roulette pattern).
+
    Game shape (locked through Franklin's V1–V3 playtests): 5x5 grid,
    pick a vault per run — 3 alarms "Day Job" / 5 "Heist" / 8 "Inside
    Job" — 3 tokens entry, crack safe tiles to grow the pot, cash out
@@ -118,7 +124,11 @@
   }
   function survival(mode, depth) { // exact odds for the payouts table
     if (depth <= 0) return 1;
-    return comb(safeTiles(mode), depth) / comb(CONFIG.tiles, depth);
+    // First tile is always safe (migration 175): reaching depth d
+    // means surviving the other d - 1 picks among the remaining 24
+    // tiles, which hold every alarm.
+    return comb(CONFIG.tiles - 1 - CONFIG.modes[mode].alarms, depth - 1) /
+      comb(CONFIG.tiles - 1, depth - 1);
   }
   function prizeFor(mode, depth) {
     var tiers = tiersOf(mode), best = null, i;
@@ -235,7 +245,8 @@
         esc(CONFIG.modes[k].name) + ' · pays</h3>' + tableHtml(k) + '</div>';
     }).join('');
     return '<details class="vb-payouts" id="vbPayouts"' + (ui.payoutsOpen ? ' open' : '') + '>' +
-      '<summary>Payouts &amp; odds</summary>' + blocks + '</details>';
+      '<summary>Payouts &amp; odds</summary>' +
+      '<p class="muted small">First tile is always safe.</p>' + blocks + '</details>';
   }
 
   function paint() {
@@ -258,6 +269,7 @@
     var st = S.stats;
     root.innerHTML =
       '<div class="panel vb-wrap">' +
+        '<div class="vb-backrow"><button class="btn ghost" id="vbBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🔓 Vault Breaker</h2>' +
         '<p class="muted small">Crack the vault one tile at a time. Every safe tile grows the pot — ' +
         'cash out whenever you like, but trip a hidden alarm and the pot is gone.</p>' +
@@ -276,6 +288,10 @@
           st.wonTokens + ' tokens</div>' +
       '</div>';
 
+    var bk = q('#vbBack');
+    if (bk) bk.addEventListener('click', function () {
+      if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('arcade');
+    });
     qa('[data-vb-mode]').forEach(function (b) {
       b.addEventListener('click', function () {
         if (runLive() || S.busy) return;
