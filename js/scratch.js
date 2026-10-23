@@ -174,7 +174,7 @@
   // view remount (mirrors js/plinko.js).
   async function refreshPackCounts() {
     if (!ctx.S || !ctx.S.player || !ctx.S.player.sets) return;
-    var st = await CPS.cloud.call('get_state', {});
+    var st = await CPS.cloud.call('get_balances', {});
     var inv = st && st.inventory;
     var sets = ctx.S.player.sets;
     if (!sets || !inv) return;

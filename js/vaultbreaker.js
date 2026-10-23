@@ -341,7 +341,7 @@
      refresh — pull the inventory counts the way js/plinko.js does. */
   async function refreshPackCounts() {
     try {
-      var st = await CPS.cloud.call('get_state');
+      var st = await CPS.cloud.call('get_balances');
       var sets = ctx.S && ctx.S.player && ctx.S.player.sets;
       var inv = st && st.inventory;
       if (!sets || !inv) return;

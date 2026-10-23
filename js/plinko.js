@@ -185,12 +185,12 @@
   /* Pack prizes land in S.player.sets only on a full state load, so the
      top-bar Open Packs badge (and the packs side list) lagged behind a
      Plinko win until the next refresh (Franklin, 2026-10-14). Pull just
-     the inventory counts from get_state, apply them the way the app's
+     the inventory counts from get_balances, apply them the way the app's
      own loader does, and repaint the packs side — no view remount, so
      the result line and session stats stay put. */
   async function refreshPackCounts() {
     try {
-      var st = await CPS.cloud.call('get_state');
+      var st = await CPS.cloud.call('get_balances');
       var sets = ctx.S && ctx.S.player && ctx.S.player.sets;
       var inv = st && st.inventory;
       if (!sets || !inv) return;
