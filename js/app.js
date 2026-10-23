@@ -495,7 +495,7 @@
          the summary + Reveal All block;
        - columns: BALANCED grids first (3..5 phone/tablet, 3..6 desktop):
          a column count that divides the card count evenly wins over a
-         marginally wider orphan layout (9 always renders 3x3, 12 takes
+         marginally wider orphan layout (9 renders 3x3 on phone/tablet, 5+4 on desktop; 12 takes
          the widest of 3/4/6, 15 the widest of 3/5); with no divisor in
          range, the layout with the smallest last-row orphan wins. A
          non-balanced layout is chosen only when no balanced one fits
@@ -566,8 +566,16 @@
     }
     function widest(list) { var b = null; for (var i = 0; i < list.length; i++) if (!b || list[i].w > b.w + 0.5) b = list[i]; return b; }
     function viable(list) { return list.filter(function (c) { return c.w >= floor; }); }
+    /* Desktop 9-card packs render 5+4, the pre-solver rows (Franklin's
+       call, 2026-10-23); phone/tablet keeps the balanced 3x3 below. The
+       100px guard hands truly squeezed budgets back to the normal path. */
+    if (window.innerWidth > 900 && n === 9) {
+      var c5 = null;
+      for (var ci = 0; ci < cands.length; ci++) if (cands[ci].cols === 5) c5 = cands[ci];
+      if (c5 && c5.w >= 100) return c5;
+    }
     /* Balanced first: a column count that divides the pack evenly beats a
-       marginally wider layout with an orphan row (9 -> 3x3 everywhere;
+       marginally wider layout with an orphan row (9 -> 3x3 on phone/tablet, 5+4 on desktop;
        12 -> widest of 3/4/6; 15 -> widest of 3/5). Single-row layouts
        count as balanced only for tiny packs (n <= 3, e.g. Periodic 1x3);
        a 5-card States pack still prefers its 3+2 over five-across. */
@@ -586,7 +594,7 @@
          (>= 70px) still wins as-is — but when even the widest layout
          is stamp-sized, the height budget loses: keep the balanced
          shape at its WIDTH-driven size and let the stage grow past
-         the fold (Franklin's rule: 9 always renders 3x3; a taller
+         the fold (Franklin's rule: 9 renders 3x3 on phones; a taller
          stage beats 59px stamps in a 5-across orphan row, 2026-10-20).
          Falls back to the min-orphan multi-row shape for counts with
          no divisor in range. */
