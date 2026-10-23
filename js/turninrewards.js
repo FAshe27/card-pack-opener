@@ -137,5 +137,22 @@
     } catch (e) { running = false; /* rewards must never break the app */ }
   }
 
-  CPS.turninRewards = { check: check };
+  /* Instant path (migration 179): the turn-in RPCs now pay rewards in
+     the same transaction and return them, so the flow that crossed a
+     threshold announces it from the response -- no waiting for the next
+     state load. The server has ALREADY granted these; the pop-up only
+     announces. Marking the (set, count) as seen keeps the follow-up
+     load-time check from re-asking about this crossing (it would find
+     nothing owed anyway -- the server dedupes). */
+  function announce(setId, paid) {
+    try {
+      if (!paid || !paid.length) return;
+      var set = window.CardSets && window.CardSets.get(setId);
+      if (!set) return;
+      try { seen[setId + ':' + turnedCount(set)] = true; } catch (e) { /* non-fatal */ }
+      deliver([{ set: set, paid: paid }]);
+    } catch (e) { /* rewards must never break the app */ }
+  }
+
+  CPS.turninRewards = { check: check, announce: announce };
 })(window.CPS);

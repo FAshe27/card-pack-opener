@@ -87,6 +87,11 @@
     try {
       var r = await CPS.cloud.call('turn_in_all_sets', { p_include_holos: includeHolos });
       await C.refreshCloud();
+      if (CPS.turninRewards && r && r.turnin_rewards_by_set) {
+        Object.keys(r.turnin_rewards_by_set).forEach(function (sid) {
+          CPS.turninRewards.announce(sid, r.turnin_rewards_by_set[sid]);
+        });
+      }
       C.toast('✓ Turned in ' + r.turned + ' card' + (r.turned === 1 ? '' : 's') + ' across all sets!' +
         (r.skipped_holo ? ' Skipped ' + r.skipped_holo + ' holo-only.' : '') +
         (r.skipped_locked ? ' Skipped ' + r.skipped_locked + ' locked.' : ''), 'good', 5000);
