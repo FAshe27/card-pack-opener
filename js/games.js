@@ -101,7 +101,7 @@
       blurb: 'Buy a ticket in 3 tiers, scratch 9 foil spots, match 3 of a rarity to win packs.' }
     ,{ id: 'roulette', title: 'ROULETTE', tag: 'From 1 🪙 a spin', accent: 'roulette', view: 'sbx-roulette',
       blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds.' }
-    ,{ id: 'vaultbreaker', title: 'VAULT BREAKER', tag: '3 🪙 a run', accent: 'vault', soon: true,
+    ,{ id: 'vaultbreaker', title: 'VAULT BREAKER', tag: '3 🪙 a run', accent: 'vault', view: 'sbx-vaultbreaker',
       blurb: 'Crack a 5×5 vault tile by tile — cash out any time, but hidden alarms end the run. Bigger vault, bigger prize.' }
   ];
 

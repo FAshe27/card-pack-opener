@@ -6,11 +6,10 @@
    positions never reach this module until a run is over, and every
    prize is paid server-side from cps.vault_prize.
 
-   Phase A (this build): still a Sandbox 'testing' item, and the
-   RPCs themselves raise 'Admin only.' for non-admin accounts.
-   Graduation (later, Franklin's word, mirroring Plinko 147): drop
-   the server gate, flip this registration to 'public' with noTab,
-   and point the Arcade lobby tile at the view.
+   Public build (graduated 2026-10-22 on Franklin's word, mirroring
+   Plinko 147): migration 174 dropped the RPCs' Phase A admin gate,
+   this registration is 'public' with noTab, and the Arcade lobby
+   tile points at the sbx-vaultbreaker view.
 
    Game shape (locked through Franklin's V1–V3 playtests): 5x5 grid,
    pick a vault per run — 3 alarms "Day Job" / 5 "Heist" / 8 "Inside
@@ -303,7 +302,7 @@
     root = el;
     if (!ctx || !ctx.isCloud || !ctx.isCloud()) {
       el.innerHTML = '<div class="panel"><h2>🔓 Vault Breaker</h2>' +
-        '<p class="muted">Vault Breaker plays for real tokens and packs — log in online to play.</p></div>';
+        '<p class="muted">Vault Breaker — log in online to play.</p></div>';
       return;
     }
     paint();
@@ -476,7 +475,7 @@
       CPS.sandbox.register({
         id: 'vaultbreaker', title: 'Vault Breaker',
         blurb: 'Crack a 5x5 vault tile by tile — cash out anytime, but 3 / 5 / 8 hidden alarms end the run. Real tokens.',
-        status: 'testing',
+        status: 'public', noTab: true,
         render: function (el) { CPS.vaultbreaker.render(el); },
         teardown: function () { CPS.vaultbreaker.teardown(); }
       });
