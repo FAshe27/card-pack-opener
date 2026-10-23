@@ -64,7 +64,8 @@ window.CardSets.bootIndex = {
   "insects",
   "cryptids",
   "reptiles",
-  "wild-mammals"
+  "wild-mammals",
+  "works-of-art"
  ],
  "sets": {
   "birdwatching": {
@@ -957,6 +958,21 @@ window.CardSets.bootIndex = {
    "primary": "#a67c2e",
    "secondary": "#e0b45c",
    "total": 420
+  },
+  "works-of-art": {
+   "files": [
+    "works-of-art.js",
+    "works-of-art-additions.js"
+   ],
+   "name": "Works of Art",
+   "code": "ART",
+   "emblem": "🎨",
+   "packName": "Works of Art Pack",
+   "skin": "art",
+   "css": "art",
+   "primary": "#7a1f2b",
+   "secondary": "#c9a227",
+   "total": 480
   }
  }
 };
