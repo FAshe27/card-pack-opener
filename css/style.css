@@ -694,6 +694,9 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .tear-hint { color: var(--muted); animation: pulse 1.6s ease-in-out infinite; font-weight: 600; }
 .reveal-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; width: 100%; max-width: 1000px; }
 .reveal-grid .card { width: var(--cardw, clamp(108px, calc((100% - 64px) / 5), 184px)); cursor: pointer; }
+/* While the packs view is being re-shown, showView tags the grid .no-anim for
+   one frame so the reveal cards' deal/flip animations don't replay on return. */
+#revealGrid.no-anim .card, #revealGrid.no-anim .card-inner, #revealGrid.no-anim .face { animation: none !important; transition: none !important; }
 /* Reveal cards: the outer corner radius scales with the card, like every other
    card measurement (the .cf panel radius and the rarity frame strip are both
    3.4cqw). The global .card radius is a fixed 12px, tuned at the old 184px

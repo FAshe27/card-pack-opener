@@ -334,6 +334,18 @@
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
+    if (name === 'packs' && S.opening && S.opening.torn) {
+      var rg = $('#revealGrid');
+      if (rg && !rg.classList.contains('hidden')) {
+        /* Re-showing the packs view (display:none -> block) restarts the reveal
+           cards' deal animation and re-runs the flip transitions, leaving the
+           revealed cards invisible or frozen mid-flip for a second or more.
+           Suppress animation/transition on the grid for the re-entry frame so
+           the finished reveal is simply there when the view paints. */
+        rg.classList.add('no-anim');
+        requestAnimationFrame(function () { requestAnimationFrame(function () { rg.classList.remove('no-anim'); }); });
+      }
+    }
     if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
     window.scrollTo(0, 0);
     renderView();
