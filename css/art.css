@@ -1,0 +1,56 @@
+/* pack skin "art": PLACEHOLDER pure-CSS skin — Works of Art.
+   Deep gallery-red wrapper, gilt-gold glow at the foot, silver-foil
+   crimps (class pack-skin-art). A stand-in until Franklin's own baked
+   pack art replaces it; scoped to this set only. */
+.pack-skin-art .pack-top {
+  background:
+    linear-gradient(115deg, transparent 28%, rgba(255,255,255,.18) 44%, rgba(201,162,39,.13) 58%, transparent 74%),
+    radial-gradient(ellipse 120px 26px at 26% 20%, rgba(255,255,255,.22), transparent 70%),
+    radial-gradient(ellipse 90px 20px at 72% 30%, rgba(40,4,10,.30), transparent 70%),
+    radial-gradient(rgba(245,239,224,.75) 1px, transparent 1.5px),
+    radial-gradient(rgba(201,162,39,.55) 1px, transparent 1.5px),
+    linear-gradient(180deg, #93303d 0%, #7a1f2b 60%, #47121b 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 53px 53px, 71px 71px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 4px 2px, 19px 11px, 0 0;
+}
+.pack-skin-art .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(201,162,39,.42), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 50% 116%, rgba(245,239,224,.13), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.10), transparent 70%),
+    radial-gradient(rgba(245,239,224,.45) 1px, transparent 1.5px),
+    radial-gradient(rgba(201,162,39,.35) 1px, transparent 1.5px),
+    linear-gradient(180deg, #862833 0%, #641824 55%, #380d15 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 59px 59px, 83px 83px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 11px 23px, 31px 7px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-art .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,255,255,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-art .crimp { background: repeating-linear-gradient(100deg, rgba(36,6,12,.55) 0 4px, rgba(214,214,224,.55) 4px 6px, rgba(255,255,255,.30) 6px 9px); }
+.pack-skin-art .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(26,4,9,.66) 0 4px, rgba(176,176,190,.55) 4px 6px, rgba(255,255,255,.16) 6px 9px); }
+.pack-skin-art .pack-top::after { border-bottom-color: rgba(201,162,39,.7); }
+.pack-skin-art .pack-code { color: #f5efe0; opacity: .95; text-shadow: 0 1px 0 rgba(30,5,10,.65), 0 0 12px rgba(201,162,39,.9); }
+.pack-skin-art .pack-emblem { background:
+  conic-gradient(from -35deg at 50% 50%, rgba(255,255,255,.28) 0deg 40deg, transparent 40deg 90deg, rgba(255,255,255,.28) 90deg 130deg, transparent 130deg 180deg, rgba(255,255,255,.28) 180deg 220deg, transparent 220deg 270deg, rgba(255,255,255,.28) 270deg 310deg, transparent 310deg),
+  radial-gradient(circle at 35% 30%, rgba(201,162,39,.5), rgba(52,10,18,.94) 72%);
+  border-color: rgba(201,162,39,.9); box-shadow: 0 0 26px rgba(122,31,43,.6), inset 0 0 18px rgba(201,162,39,.3); text-shadow: 0 0 16px rgba(245,239,224,.95); }
+.pack-skin-art .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(201,162,39,.9), 0 2px 8px rgba(30,5,10,.7); }
+.pack-skin-art .pack-sub { color: #ecdfc4; }
+.card[data-set="works-of-art"] .cf-art {
+  border-color: rgba(122,31,43,.55);
+  box-shadow: inset 0 0 18px rgba(201,162,39,.16);
+}
+.card[data-set="works-of-art"].ticket-card .cf-art,
+.card[data-set="works-of-art"].token-card .cf-art,
+.card[data-set="works-of-art"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+.card[data-set="works-of-art"] .cb {
+  background: url('../assets/sets/art/card-back-art.svg') center / cover no-repeat #641824;
+  border: none;
+}
+.card[data-set="works-of-art"] .cb-emblem, .card[data-set="works-of-art"] .cb-name { display: none; }
