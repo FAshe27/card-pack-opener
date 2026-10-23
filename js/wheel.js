@@ -1,8 +1,10 @@
 /* Prize wheel: canvas rendering + spin animation.
-   The wheel STRUCTURE (tiers / weights / gateways) mirrors
-   supabase/migrations/003_wheel.sql (cps.wheel_config). KEEP IN SYNC.
-   Segments are generated from the live set list, so newly added sets appear
-   on all wheels automatically with no adjustments. */
+   The wheel STRUCTURE mirrors supabase/migrations/176_wheel_categories.sql
+   (cps.wheel_config): 8 category slices weighted by their active set
+   count, one Bonus slice (weight 3), hop slices at weight 1.5. Segments
+   come from the server config; categories carry their member set list so
+   single spins can play a sub-wheel (see playHops / openSubWheel).
+   Bulk modes (wheelMulti, autospin) never show sub-wheels. */
 (function (CPS) {
   var TAU = Math.PI * 2;
 
@@ -14,6 +16,43 @@
   ];
 
   var GOTO_COLORS = { w1: '#8e6cc9', w2: '#ffb21e', w3: '#ff5d5d' };
+
+  /* Category map (mirrors cps.wheel_segments in migration 176; the server
+     config is authoritative for cloud play - this is for guest mode and
+     sub-wheel coloring). Any set id missing here falls to Curiosities. */
+  var CATEGORIES = [
+    { key: 'animals',       name: 'Animals',              icon: '🐾', color: '#43aa8b', sets: ['birdwatching', 'sea', 'aquariums', 'dogs', 'insects', 'reptiles', 'wild-mammals', 'dinosaurs'] },
+    { key: 'world',         name: 'World & Nature',       icon: '🌍', color: '#3d8bfd', sets: ['countries', 'states', 'world-cities', 'world-landmarks', 'nps', 'natural-wonders', 'water', 'plants', 'gems-minerals'] },
+    { key: 'sports',        name: 'Sports & Racing',      icon: '🏆', color: '#e63946', sets: ['mlb', 'nba-collection', 'nfl-collection', 'formula-1-collection', 'nascar-collection', 'indy'] },
+    { key: 'gaming',        name: 'Gaming',               icon: '🎮', color: '#7c5cff', sets: ['acrs', 'minecraft', 'mkrt', 'pokemon', 'skyrim', 'stardew-valley', 'zelda'] },
+    { key: 'entertainment', name: 'Entertainment',        icon: '🎬', color: '#f372b5', sets: ['movies-pack-images', 'tv-shows', 'disney', 'pixar', 'spongebob', 'star-wars', 'hero', 'stage', 'music-pack', 'works-of-art'] },
+    { key: 'food',          name: 'Food & Drink',         icon: '🍔', color: '#ffb020', sets: ['beverages', 'cereals', 'candy', 'fast-food', 'iconic-dishes'] },
+    { key: 'machines',      name: 'Machines & Transport', icon: '🚗', color: '#8d99ae', sets: ['civilian-aircraft', 'aircraft', 'us-navy', 'cars', 'motorcycles', 'trains', 'hwy'] },
+    { key: 'curiosities',   name: 'Curiosities',          icon: '🔮', color: '#2ec4b6', sets: ['space', 'technology-collection', 'periodic', 'cryptids', 'calendar', 'playing', 'gas', 'coasters', 'theme-parks'] }
+  ];
+  var CAT_OF_SET = {};
+  CATEGORIES.forEach(function (c) { c.sets.forEach(function (id) { CAT_OF_SET[id] = c.key; }); });
+  function categoryOf(setId) {
+    var k = CAT_OF_SET[setId] || 'curiosities';
+    for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].key === k) return CATEGORIES[i];
+    return CATEGORIES[CATEGORIES.length - 1];
+  }
+  /* Bonus sub-roll prizes (migration 176): values are Prize/Double/Triple. */
+  var BONUS_PRIZES = [
+    { bp: 'jumbled', icon: '🎲', color: '#9d6bc7', amounts: [1, 3, 5],   label: function (a) { return a + ' × Jumbled Mess pack' + (a === 1 ? '' : 's'); } },
+    { bp: 'credit',  icon: '💵', color: '#c9a227', amounts: [5, 10, 15], label: function (a) { return '$' + a + ' Store Credit'; } },
+    { bp: 'tickets', icon: '🎟️', color: '#7c5cff', amounts: [2, 4, 6],  label: function (a) { return a + ' Spin Tickets'; } },
+    { bp: 'tokens',  icon: '🪙', color: '#43aa8b', amounts: [5, 15, 25], label: function (a) { return a + ' Arcade Tokens'; } },
+    { bp: 'random',  icon: '🎁', color: '#f372b5', amounts: [2, 4, 6],  label: function (a) { return a + ' Random Packs'; } }
+  ];
+  function shade(hex, amt) {
+    var n = parseInt(String(hex).replace('#', ''), 16);
+    if (isNaN(n)) return hex;
+    var r = Math.max(0, Math.min(255, (n >> 16) + amt));
+    var g = Math.max(0, Math.min(255, ((n >> 8) & 255) + amt));
+    var b = Math.max(0, Math.min(255, (n & 255) + amt));
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
   var FALLBACK = ['#3f8cff', '#38c97f', '#b35cff', '#ff7a59', '#ffb21e', '#ff4fa3', '#2dd4bf', '#f472b6'];
 
   /* Baked emblem sprite (Franklin, 2026-10-21): live fillText emoji go
@@ -82,11 +121,21 @@
             var out = {
               key: sg.key, kind: sg.kind,
               set_id: sg.set_id || null, packs: sg.packs || 0,
-              tokens: sg.tokens || 0,
+              tokens: sg.tokens || 0, credit: sg.credit || 0,
               weight: sg.weight, wheel: sg.wheel || null,
-              label: sg.label || ''
+              label: sg.label || '',
+              category: sg.category || null, sets: sg.sets || null,
+              icon: sg.icon || null, color: sg.color || null
             };
-            if (sg.kind === 'packs') {
+            if (sg.kind === 'category') {
+              out.label = (sg.icon || '') + ' ' + (sg.label || sg.category || 'Category');
+              out.color = sg.color || FALLBACK[i++ % FALLBACK.length];
+              out.emblem = sg.icon || '🎁';
+            } else if (sg.kind === 'bonus') {
+              out.label = '⭐ BONUS';
+              out.color = sg.color || '#ffd60a';
+              out.emblem = '⭐';
+            } else if (sg.kind === 'packs') {
               out.label = sg.packs + ' × ' + setName(sg.set_id);
               out.color = setColor(sg.set_id, i++);
               out.emblem = setEmblem(sg.set_id);
@@ -103,23 +152,28 @@
     };
   }
 
-  /* Guest-mode config: same structure, resolved against the client's set list. */
+  /* Guest-mode config: same category structure, resolved against the
+     client's set list (ids grouped by the category map above). */
   function localConfig() {
     var sets = ((window.CardSets && window.CardSets.all()) || []).slice()
       .sort(function (a, b) { return a.id < b.id ? -1 : a.id > b.id ? 1 : 0; });
+    var byCat = {};
+    sets.forEach(function (st) {
+      var c = categoryOf(st.id);
+      (byCat[c.key] = byCat[c.key] || []).push(st.id);
+    });
     return enrich({
       wheels: STRUCTURE.map(function (w) {
+        var mult = w.tiers[0].packs || 1;
         var segs = [];
+        CATEGORIES.forEach(function (c) {
+          var members = byCat[c.key] || [];
+          if (!members.length) return;
+          segs.push({ key: 'cat:' + c.key, kind: 'category', category: c.key, label: c.name, icon: c.icon, color: c.color, packs: mult, weight: members.length, sets: members.slice() });
+        });
+        segs.push({ key: 'bonus', kind: 'bonus', label: 'BONUS', icon: '⭐', color: '#ffd60a', weight: 3 });
         w.tiers.forEach(function (t) {
-          if (t.packs) {
-            sets.forEach(function (s) {
-              segs.push({ key: 'packs:' + s.id, kind: 'packs', set_id: s.id, packs: t.packs, weight: t.weight });
-            });
-          } else if (t.tokens) {
-            segs.push({ key: 'tokens:' + t.tokens, kind: 'tokens', tokens: t.tokens, label: t.tokens + ' Arcade tokens', weight: t.weight });
-          } else {
-            segs.push({ key: 'goto:' + t.goto, kind: 'goto', wheel: t.goto, label: t.label, weight: t.weight });
-          }
+          if (t.goto) segs.push({ key: 'goto:' + t.goto, kind: 'goto', wheel: t.goto, label: t.label, weight: 1.5 });
         });
         return { id: w.id, name: w.name, segments: segs };
       })
@@ -193,6 +247,7 @@
         ctx.font = '700 15px system-ui, -apple-system, sans-serif';
         ctx.shadowBlur = 5;
         ctx.fillStyle = '#fff';
+        if (sg.kind === 'bonus') { ctx.fillStyle = '#231600'; ctx.shadowBlur = 0; ctx.font = '800 17px system-ui, -apple-system, sans-serif'; }
         ctx.fillText(sg.label, R - 16, 0, R - 70);
       }
       ctx.restore();
@@ -325,7 +380,21 @@
       stopIdle(canvas);
       var i = 0, last = null, first = true;
       function next() {
-        if (i >= hops.length) { resolve(last); return; }
+        if (i >= hops.length) {
+          /* Single spins only: a category or Bonus landing plays its
+             sub-wheel before the result banner. Autospin (app.js state)
+             and bulk modes (wheelMulti sets CPS.wheel._noSub) skip it. */
+          var lastHop = hops[hops.length - 1];
+          var A = CPS.appCtx;
+          var isAuto = !!(A && A.S && A.S.autospin);
+          if (lastHop && !CPS.wheel._noSub && !isAuto &&
+              (lastHop.kind === 'category' || lastHop.kind === 'bonus')) {
+            openSubWheel(cfg, lastHop, function () { resolve(last); });
+          } else {
+            resolve(last);
+          }
+          return;
+        }
         var hop = hops[i++];
         var wheel = byId[hop.wheel] || cfg.wheels[0];
         var nameEl = document.getElementById('wheelName');
@@ -344,14 +413,174 @@
     });
   }
 
+  /* --- Sub-wheel (migration 176 presentation): a popup wheel that spins
+     to the SERVER-DECIDED outcome of a category or Bonus landing. It never
+     re-rolls: the winner index is fixed by the hop's prize fields before
+     the animation starts. Single spins only (see playHops). --- */
+  var subEls = null;
+  function ensureSubEls() {
+    if (subEls) return subEls;
+    if (!document.getElementById('subwheelCss')) {
+      var st = document.createElement('style');
+      st.id = 'subwheelCss';
+      st.textContent =
+        '.subwheel-overlay{position:fixed;inset:0;background:rgba(10,6,20,.8);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}' +
+        '.subwheel-box{background:#1f1930;border:2px solid #ffb020;border-radius:18px;padding:18px;text-align:center;max-width:450px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,.6);color:#f3eefc;font-family:system-ui,-apple-system,sans-serif}' +
+        '.subwheel-box h3{margin:0 0 2px;font-size:20px}' +
+        '.subwheel-stage{position:relative;width:min(100%,340px);margin:10px auto 4px}' +
+        '.subwheel-stage canvas{width:100%;height:auto;display:block}' +
+        '.subwheel-pointer{position:absolute;left:50%;top:-6px;transform:translateX(-50%);color:#ffb020;font-size:27px;z-index:3;text-shadow:0 2px 6px rgba(0,0,0,.6)}' +
+        '.subwheel-result{font-size:16px;min-height:25px;margin-top:8px}' +
+        '.subwheel-btn{margin-top:10px;background:linear-gradient(180deg,#ffc44d,#ffb020);color:#231600;border:none;border-radius:10px;padding:10px 34px;font-size:15px;font-weight:800;cursor:pointer}' +
+        '.subwheel-btn:disabled{opacity:.45;cursor:default}';
+      document.head.appendChild(st);
+    }
+    var ov = document.createElement('div');
+    ov.className = 'subwheel-overlay';
+    ov.innerHTML = '<div class="subwheel-box"><h3></h3>' +
+      '<div class="subwheel-stage"><div class="subwheel-pointer">\u25BC</div>' +
+      '<canvas width="520" height="520"></canvas></div>' +
+      '<div class="subwheel-result">Spinning\u2026</div>' +
+      '<button class="subwheel-btn" disabled>Nice!</button></div>';
+    ov.style.display = 'none';
+    document.body.appendChild(ov);
+    subEls = {
+      ov: ov,
+      title: ov.querySelector('h3'),
+      canvas: ov.querySelector('canvas'),
+      result: ov.querySelector('.subwheel-result'),
+      btn: ov.querySelector('.subwheel-btn')
+    };
+    return subEls;
+  }
+
+  function drawSubFace(items, rot) {
+    var cv = subEls.canvas, ctx = cv.getContext('2d');
+    var S = cv.width, C = S / 2, R = C - 6, n = items.length;
+    ctx.clearRect(0, 0, S, S);
+    items.forEach(function (it, idx) {
+      var a0 = rot + (idx / n) * TAU - Math.PI / 2;
+      var a1 = a0 + TAU / n;
+      ctx.beginPath(); ctx.moveTo(C, C); ctx.arc(C, C, R, a0, a1); ctx.closePath();
+      ctx.fillStyle = it.color; ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 3; ctx.stroke();
+      var mid = (a0 + a1) / 2;
+      ctx.save(); ctx.translate(C, C); ctx.rotate(mid);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = Math.round(R * 0.11) + 'px "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif';
+      ctx.shadowColor = 'rgba(0,0,0,.65)'; ctx.shadowBlur = 0;
+      ctx.fillText(it.icon || '🎁', R * 0.84, 0);
+      ctx.save(); ctx.translate(R * 0.52, 0);
+      ctx.font = '700 14px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#fff'; ctx.shadowBlur = 4;
+      var words = String(it.label).split(' '), lines = [], line = '';
+      words.forEach(function (wd) {
+        var t = line ? line + ' ' + wd : wd;
+        if (ctx.measureText(t).width > 120 && line) { lines.push(line); line = wd; } else line = t;
+      });
+      if (line) lines.push(line);
+      lines.forEach(function (l, li) { ctx.fillText(l, 0, (li - (lines.length - 1) / 2) * 16); });
+      ctx.restore(); ctx.restore();
+    });
+    ctx.beginPath(); ctx.arc(C, C, R, 0, TAU);
+    ctx.strokeStyle = '#ffb020'; ctx.lineWidth = 5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(C, C, 30, 0, TAU);
+    ctx.fillStyle = '#1c1c28'; ctx.fill();
+    ctx.strokeStyle = '#ffb020'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#ffb020'; ctx.font = '700 18px system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('★', C, C + 1);
+  }
+
+  function spinSubTo(items, winIdx, done) {
+    var n = items.length;
+    var frac = (winIdx + 0.25 + Math.random() * 0.5) / n;
+    var targetRot = TAU * 5 + (TAU - frac * TAU);
+    var from = 0, t0 = null, lastIdx = -1;
+    function frame(t) {
+      if (t0 === null) t0 = t;
+      var pr = Math.min(1, (t - t0) / 3000);
+      var e = 1 - Math.pow(1 - pr, 4);
+      var rot = from + (targetRot - from) * e;
+      var ptrLocal = ((-rot % TAU) + TAU) % TAU;
+      var idx = Math.min(n - 1, Math.floor(ptrLocal / (TAU / n)));
+      if (lastIdx >= 0 && idx !== lastIdx && CPS.audio && CPS.audio.tick) CPS.audio.tick();
+      lastIdx = idx;
+      drawSubFace(items, rot);
+      if (pr < 1) requestAnimationFrame(frame); else done();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* Build the sub-wheel for a terminal hop and play it. done() fires when
+     the player taps Nice! (or immediately, if anything is missing). */
+  function openSubWheel(cfg, hop, done) {
+    var wheel = null, seg = null;
+    (cfg.wheels || []).forEach(function (w) { if (w.id === hop.wheel) wheel = w; });
+    if (wheel) (wheel.segments || []).forEach(function (sg) { if (sg.key === hop.key) seg = sg; });
+    if (!seg) { done(); return; }
+    var items = null, winIdx = -1, title = '';
+    if (hop.kind === 'category') {
+      var sets = seg.sets || [];
+      var base = seg.color || '#888';
+      items = sets.map(function (sid, idx) {
+        return { label: setName(sid), icon: setEmblem(sid), color: shade(base, idx % 2 ? -30 : 16) };
+      });
+      winIdx = sets.indexOf(hop.prize_set_id);
+      title = (seg.icon || '') + ' ' + (seg.category ? (function () { for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].key === seg.category) return CATEGORIES[i].name; return seg.label; })() : seg.label) + ' — which set?';
+    } else if (hop.kind === 'bonus') {
+      var widx = hop.wheel === 'w1' ? 0 : hop.wheel === 'w2' ? 1 : 2;
+      items = BONUS_PRIZES.map(function (b) {
+        return { label: b.label(b.amounts[widx]), icon: b.icon, color: b.color, bp: b.bp };
+      });
+      items.forEach(function (it, idx) { if (it.bp === hop.bonus_prize) winIdx = idx; });
+      title = '⭐ BONUS — which prize?';
+    }
+    if (!items || !items.length || winIdx < 0) { done(); return; }
+    var els = ensureSubEls();
+    els.title.textContent = title;
+    els.result.textContent = 'Spinning…';
+    els.btn.disabled = true;
+    els.ov.style.display = 'flex';
+    drawSubFace(items, 0);
+    spinSubTo(items, winIdx, function () {
+      var it = items[winIdx];
+      els.result.innerHTML = 'You got <b>' + escHtml(it.label) + '</b>';
+      els.btn.disabled = false;
+      els.btn.onclick = function () {
+        els.ov.style.display = 'none';
+        els.btn.onclick = null;
+        done();
+      };
+    });
+  }
+
   function escHtml(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
 
-  /* Result banner HTML for a spin prize (packs or Arcade tokens). */
+  /* Result banner HTML for a spin prize. */
   function prizeHtml(prize, setName) {
+    if (prize && prize.kind === 'tickets') {
+      var tk = prize.tickets || 0;
+      return '🎉 You won <b>' + tk + ' Spin Ticket' + (tk === 1 ? '' : 's') + '</b>!';
+    }
+    if (prize && prize.kind === 'random_packs') {
+      var bySet = prize.packs_by_set || {};
+      var parts = Object.keys(bySet).sort().map(function (sid) {
+        var st = null;
+        try { st = window.CardSets && window.CardSets.get(sid); } catch (e) {}
+        var nm = sid === 'jumbled' ? 'Jumbled Mess' : ((st && st.name) || sid);
+        return escHtml(nm) + (bySet[sid] > 1 ? ' ×' + bySet[sid] : '');
+      });
+      return '🎉 <b>BONUS!</b> You won <b>' + (prize.packs || 0) + ' Random Packs</b>' +
+        (parts.length ? '<br>' + parts.join(' · ') : '') + '!';
+    }
+    if (prize && prize.bonus && prize.kind === 'packs') {
+      return '🎉 <b>BONUS!</b> You won <b>' + (prize.packs || 0) + ' Jumbled Mess pack' + (prize.packs === 1 ? '' : 's') + '</b>!';
+    }
     if (prize && prize.kind === 'tokens') {
       var n = prize.tokens || 0;
       return '🎉 You won <b>' + n + ' Arcade token' + (n === 1 ? '' : 's') + '</b>!';
@@ -395,6 +624,7 @@
     if (!cfg || !cfg.wheels.length) { A.toast("The wheel isn't ready yet.", 'warn'); return; }
     S.spinning = true;
     S._wheelEnd = null;
+    CPS.wheel._noSub = true; /* bulk modes never play sub-wheels */
     CPS.wheel.draw(document.getElementById('wheelCanvas'), cfg.wheels[0], 0);
     var nm = document.getElementById('wheelName'); if (nm) nm.textContent = cfg.wheels[0].name;
     A.renderWheel();
@@ -412,12 +642,13 @@
         var pset = !isTok && !isCred && prize.set_id ? window.CardSets.get(prize.set_id) : null;
         if (endState) S._wheelEnd = { wheelId: endState.wheelId, key: endState.key, rot: endState.rotation, resultHtml: CPS.wheel.prizeHtml(prize, pset && pset.name) };
         A.audio.coin();
+        CPS.wheel._noSub = false;
         S.spinning = false;
         A.renderWheel();
         A.renderPacksSide();
         showResults(out, count);
       });
-    }).catch(function (e) { CPS.wheel.stopIdle(document.getElementById('wheelCanvas')); S.spinning = false; A.renderWheel(); A.cloudError(e); });
+    }).catch(function (e) { CPS.wheel.stopIdle(document.getElementById('wheelCanvas')); CPS.wheel._noSub = false; S.spinning = false; A.renderWheel(); A.cloudError(e); });
   }
   /* Shared prize-summary popup: SPIN x10 passes its server aggregate,
      AUTOSPIN passes the tally it accumulated in app.js (S._autoAgg). */
@@ -427,6 +658,7 @@
       var st = window.CardSets.get(sid) || (sid === 'jumbled' && CPS.jumbled ? CPS.jumbled.pseudoSet() : null);
       rows += '<div class="multi-row"><span>' + (sid === 'jumbled' ? '🎲 ' : ((st && st.pack && st.pack.emblem) || '🎁') + ' ') + A.esc(st ? st.name : sid) + ' packs</span><b>×' + bySet[sid] + '</b></div>';
     });
+    if (agg.tickets > 0) rows += '<div class="multi-row"><span>🎟️ Spin Tickets</span><b>×' + agg.tickets + '</b></div>';
     if (agg.tokens > 0) rows += '<div class="multi-row"><span>🪙 Arcade tokens</span><b>×' + agg.tokens + '</b></div>';
     if (agg.credit > 0) rows += '<div class="multi-row"><span>💵 Store Credit</span><b>$' + agg.credit + '</b></div>';
     if (!rows) rows = '<div class="multi-row"><span>No prizes this time.</span></div>';
@@ -435,7 +667,7 @@
       '<button class="btn primary" data-close style="margin-top:16px">Nice!</button></div>');
   }
   function showResults(out, count) {
-    showSummary({ n: out.spins_used || count || 10, bySet: out.packs_by_set || {}, tokens: out.tokens_won || 0, credit: out.credit_won || 0 });
+    showSummary({ n: out.spins_used || count || 10, bySet: out.packs_by_set || {}, tokens: out.tokens_won || 0, credit: out.credit_won || 0, tickets: out.tickets_won || 0 });
   }
   /* SPIN ALL: one multi call for the whole balance (server clamps at
      1000 per migration 162; on a pre-162 server it harmlessly spins
