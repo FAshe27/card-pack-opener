@@ -2226,7 +2226,7 @@
         resultHtml: CPS.wheel.prizeHtml(prize, pset && pset.name)
       };
     }
-    if (S.autospin && S._autoAgg) { var A = S._autoAgg; A.n++; if (isTok) A.tokens += prize.tokens || 0; else if (isCred) A.credit += prize.credit || 0; else if (prize.set_id) A.bySet[prize.set_id] = (A.bySet[prize.set_id] || 0) + (prize.packs || 0); }
+    if (S.autospin && S._autoAgg && CPS.wheelMulti) CPS.wheelMulti.addPrize(S._autoAgg, prize);
     audio.coin();
     S.spinning = false;
     renderWheel();

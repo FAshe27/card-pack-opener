@@ -650,6 +650,18 @@
       });
     }).catch(function (e) { CPS.wheel.stopIdle(document.getElementById('wheelCanvas')); CPS.wheel._noSub = false; S.spinning = false; A.renderWheel(); A.cloudError(e); });
   }
+  /* Autospin tally (called from app.js doOneSpin per spin): counts every
+     prize kind the wheel can return, including Bonus 'tickets' and
+     'random_packs' (which expand per set), so showSummary lists them. */
+  function addPrize(A, prize) {
+    if (!A || !prize) return;
+    A.n = (A.n || 0) + 1;
+    if (prize.kind === 'tokens') A.tokens = (A.tokens || 0) + (prize.tokens || 0);
+    else if (prize.kind === 'credit') A.credit = (A.credit || 0) + (prize.credit || 0);
+    else if (prize.kind === 'tickets') A.tickets = (A.tickets || 0) + (prize.tickets || 0);
+    else if (prize.kind === 'random_packs' && prize.packs_by_set) Object.keys(prize.packs_by_set).forEach(function (sid) { A.bySet[sid] = (A.bySet[sid] || 0) + (prize.packs_by_set[sid] || 0); });
+    else if (prize.set_id) A.bySet[prize.set_id] = (A.bySet[prize.set_id] || 0) + (prize.packs || 0);
+  }
   /* Shared prize-summary popup: SPIN x10 passes its server aggregate,
      AUTOSPIN passes the tally it accumulated in app.js (S._autoAgg). */
   function showSummary(agg) {
@@ -678,5 +690,5 @@
     if (n < 2) { A.toast('Spin All needs at least 2 spin tickets.', 'warn'); A.audio.error(); return; }
     start(Math.min(n, 1000));
   }
-  CPS.wheelMulti = { start: start, startAll: startAll, showSummary: showSummary };
+  CPS.wheelMulti = { start: start, startAll: startAll, showSummary: showSummary, addPrize: addPrize };
 })(window.CPS);
