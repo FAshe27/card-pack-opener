@@ -1,11 +1,13 @@
-/* Turn in cards from ALL sets — the global sweep + global duplicates.
+/* Turn in cards from ALL sets — the global sweep.
    Buttons live in the Collection view in their own .coll-actions row
    above the per-set one; app.js calls CPS.turninAll.refresh() from
    renderCollection so the counts stay current. Counts are the per-set
-   preview rules (turnInPreview / turnInDupesPreview in app.js) summed
-   across every set; the server does the real work and re-checks
-   everything (migration 118: cps_turn_in_all_sets /
-   cps_turn_in_dupes_all_sets). Turn-ins are permanent. */
+   preview rules (turnInPreview in app.js) summed across every set;
+   the server does the real work and re-checks everything
+   (migration 118: cps_turn_in_all_sets). Turn-ins are permanent.
+   (The duplicates-only buttons were removed 2026-10-23 at Franklin's
+   call — the sweep is the one turn-in path now; the dupes RPCs remain
+   on the server, unused.) */
 (function (CPS) {
   'use strict';
   function ctx() { return CPS.appCtx; }
@@ -14,7 +16,6 @@
     var C = ctx();
     var vmap = C.variantCountMap();
     var sweep = { eligible: 0, holoOnly: 0, onlyCopy: 0, locked: 0 };
-    var dupes = { eligible: 0, holoOnly: 0 };
     window.CardSets.all().forEach(function (sd) {
       var st = C.S.player.sets[sd.id]; if (!st) return;
       sd.cards.forEach(function (c) {
@@ -27,18 +28,16 @@
         sweep.eligible++;
         if (plain < 1) sweep.holoOnly++;
         if (e.n - (e.v || 0) === 1) sweep.onlyCopy++;
-        if (fung >= 2) { dupes.eligible++; if (plain < 1) dupes.holoOnly++; }
       });
     });
-    return { sweep: sweep, dupes: dupes };
+    return { sweep: sweep };
   }
 
   function refresh(retried) {
     var C = ctx(); if (!C || !C.S || !C.S.player) return;
     var bA = document.getElementById('turnInAllSetsBtn');
-    var bD = document.getElementById('turnInDupesAllBtn');
-    if (!bA || !bD) return;
-    if (!C.isCloud()) { bA.classList.add('hidden'); bD.classList.add('hidden'); return; }
+    if (!bA) return;
+    if (!C.isCloud()) { bA.classList.add('hidden'); return; }
     /* Lazy sets: counts need the owned sets' card lists — load any that
        are still stubs, then repaint with the full picture. */
     /* The stub scan must cover exactly the sets ensureOwnedSets() will
@@ -57,10 +56,8 @@
     });
     if (stubOwned && !retried && C.ensureOwnedSets) C.ensureOwnedSets().then(function () { refresh(true); });
     var p = previews();
-    bD.classList.toggle('hidden', !p.dupes.eligible);
-    bD.textContent = 'Turn in duplicates from all sets (' + p.dupes.eligible + ')';
     bA.classList.toggle('hidden', !p.sweep.eligible);
-    bA.textContent = 'Turn in cards from all sets (' + p.sweep.eligible + ' eligible)';
+    bA.textContent = 'Turn in one of EVERY card — all sets (' + p.sweep.eligible + ')';
   }
 
   async function holoPrompt(C, holoOnly) {
@@ -78,8 +75,8 @@
     if (C.ensureOwnedSets) await C.ensureOwnedSets();
     var p = previews().sweep;
     if (!p.eligible) { C.toast('Nothing to turn in — everything you own is already turned in, vaulted, or numbered.', 'warn'); return; }
-    var ok = await C.confirmDialog('Turn in cards from ALL sets',
-      '<p>Turn in <b>' + p.eligible + '</b> card' + (p.eligible === 1 ? '' : 's') + ' across <b>every set</b> — one copy of each?</p>' +
+    var ok = await C.confirmDialog('Turn in one of EVERY card — all sets',
+      '<p>Turn in <b>one copy of every card you own</b>, across <b>every set</b> — <b>' + p.eligible + '</b> card' + (p.eligible === 1 ? '' : 's') + ' total, including cards you only have one copy of.</p>' +
       '<p class="muted">Turning in destroys a copy and marks the card <b>permanently collected</b>: it counts toward your completion forever, even if you never own it again. <b>There is no undo.</b></p>' +
       (p.onlyCopy ? '<p class="muted">' + p.onlyCopy + ' of these ' + (p.onlyCopy === 1 ? 'is' : 'are') + ' your <b>only on-hand copy</b>.</p>' : '') +
       (p.locked ? '<p class="muted">' + p.locked + ' card' + (p.locked === 1 ? '' : 's') + ' skipped — only vaulted or numbered copies on hand.</p>' : ''),
@@ -96,33 +93,9 @@
     } catch (e) { C.cloudError(e); }
   }
 
-  async function dupesFlow() {
-    var C = ctx();
-    if (!C.isCloud()) return;
-    await C.ensureVariants();
-    if (C.ensureOwnedSets) await C.ensureOwnedSets();
-    var p = previews().dupes;
-    if (!p.eligible) { C.toast('No duplicates to turn in — every card is a single copy, already turned in, vaulted, or numbered.', 'warn'); return; }
-    var ok = await C.confirmDialog('Turn in duplicates from ALL sets',
-      '<p>Turn in <b>one copy</b> of every card you hold duplicates of, in <b>every set</b> — <b>' + p.eligible + '</b> card' + (p.eligible === 1 ? '' : 's') + '. Your other copies stay in your collection.</p>' +
-      '<p class="muted">Turning in destroys the copy and marks the card <b>permanently collected</b>: it counts toward your completion forever, even if you never own it again. <b>There is no undo.</b></p>',
-      'Turn them in');
-    if (!ok) return;
-    var includeHolos = await holoPrompt(C, p.holoOnly);
-    if (includeHolos === null) return; /* holo dialog dismissed = abort the whole turn-in */
-    try {
-      var r = await CPS.cloud.call('turn_in_dupes_all_sets', { p_include_holos: includeHolos });
-      await C.refreshCloud();
-      C.toast('✓ Turned in ' + r.turned + ' duplicate' + (r.turned === 1 ? '' : 's') + ' across all sets!' +
-        (r.skipped_holo ? ' Skipped ' + r.skipped_holo + ' holo-only.' : ''), 'good', 5000);
-    } catch (e) { C.cloudError(e); }
-  }
-
   function bind() {
     var bA = document.getElementById('turnInAllSetsBtn');
-    var bD = document.getElementById('turnInDupesAllBtn');
     if (bA) bA.addEventListener('click', sweepFlow);
-    if (bD) bD.addEventListener('click', dupesFlow);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
 
