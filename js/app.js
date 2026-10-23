@@ -983,7 +983,7 @@
     if (tb) {
       var elig = isCloud() ? turnInPreview(set, st).eligible : 0;
       tb.classList.toggle('hidden', !elig);
-      tb.textContent = 'Turn in one of EVERY card in this set (' + elig + ')';
+      tb.textContent = 'Turn in cards from this set (' + elig + ')';
     }
     if (CPS.turninAll) CPS.turninAll.refresh();
   }

@@ -57,7 +57,7 @@
     if (stubOwned && !retried && C.ensureOwnedSets) C.ensureOwnedSets().then(function () { refresh(true); });
     var p = previews();
     bA.classList.toggle('hidden', !p.sweep.eligible);
-    bA.textContent = 'Turn in one of EVERY card — all sets (' + p.sweep.eligible + ')';
+    bA.textContent = 'Turn in cards from all sets (' + p.sweep.eligible + ')';
   }
 
   async function holoPrompt(C, holoOnly) {
