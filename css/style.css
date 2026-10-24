@@ -118,7 +118,7 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 /* ===================================================== top bar */
 .topbar {
   position: sticky; top: 0; z-index: 20; transform: translateZ(0); display: flex; align-items: center; gap: 18px; padding: 12px 22px;
-  background: rgba(11,14,23,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line);
+  background: rgba(11,14,23,.94); /* no backdrop-filter: live blur under the sticky bar repaints every frame (Firefox Android chugs — Cory, 2026-10-24) */ border-bottom: 1px solid var(--line);
 }
 .brand { display: flex; align-items: center; gap: 8px; font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; color: inherit; text-decoration: none; cursor: pointer; border-radius: 10px; }
 .brand:hover .logo { filter: brightness(1.15); } .brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
