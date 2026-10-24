@@ -102,5 +102,7 @@ CardSets.manifest = [
   'wild-mammals.js',
   'wild-mammals-additions.js',
   'works-of-art.js',
-  'works-of-art-additions.js'
+  'works-of-art-additions.js',
+  'runescape-3.js',
+  'runescape-3-additions.js'
 ];
