@@ -67,7 +67,8 @@ window.CardSets.bootIndex = {
   "wild-mammals",
   "works-of-art",
   "runescape-3",
-  "rct"
+  "rct",
+  "numbers"
  ],
  "sets": {
   "birdwatching": {
@@ -1004,6 +1005,20 @@ window.CardSets.bootIndex = {
    "primary": "#2e6b30",
    "secondary": "#e07b2a",
    "total": 171
+  },
+  "numbers": {
+   "files": [
+    "numbers.js"
+   ],
+   "name": "Numbers",
+   "code": "NUM",
+   "emblem": "🔢",
+   "packName": "Numbers Pack",
+   "skin": "numbers",
+   "css": "numbers",
+   "primary": "#2b2a6e",
+   "secondary": "#ffb21e",
+   "total": 300
   }
  }
 };

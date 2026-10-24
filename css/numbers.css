@@ -1,0 +1,73 @@
+/* Numbers set: literally 1-300 (class pack-skin-numbers, data-set="numbers").
+   The card IS the design (Franklin's approved examples, 2026-10-24; the
+   Periodic Table / Playing Cards precedent): each SVG in
+   assets/sets/numbers/images/ is the ENTIRE card face — NUMBERS header,
+   huge digit, rarity pill, word-form name + details strip — so the site's
+   text chrome (name row, subtitle/rarity row, details box, footer) is
+   hidden here and lives only in the card modal, exactly like Periodic.
+
+   BORDER RULE (Franklin, 2026-10-24: "make sure the border of the card
+   matches the border in the card art"): the art draws ONE frame, inset
+   1% of width (10/1000 units) with a 58-unit corner radius in the tier
+   colour. The card's own edge radius is 6.8% / 4.86% — (1% inset + 5.8%
+   frame radius) horizontally, the same px radius vertically at the 5/7
+   aspect — so the card edge and the art frame are concentric arcs
+   sharing one centre, the site's own standard for 5/7 cards (see the
+   trade-card fix in style.css). % radii because cqw on .card itself
+   resolves against the ancestor container, not the card. There is NO
+   second CSS border to clash with the art's frame; rarity also reads
+   from a soft outer glow in the rarity colour (Periodic pattern). */
+
+/* ---------- 1. Full-bleed face, chrome hidden, concentric corners ---------- */
+.card[data-set="numbers"] { aspect-ratio: 5/7; border-radius: 6.8% / 4.86%;
+  box-shadow: 0 0 26px 3px color-mix(in srgb, var(--rc) 55%, transparent); }
+.card[data-set="numbers"] .front { padding: 0; background: #10101c; }
+.card[data-set="numbers"] .cf { padding: 0; gap: 0; background: #10101c; border-radius: inherit; overflow: hidden; }
+.card[data-set="numbers"] .cf-top,
+.card[data-set="numbers"] .cf-type,
+.card[data-set="numbers"] .cf-details,
+.card[data-set="numbers"] .cf-foot { display: none; }
+.card[data-set="numbers"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #10101c; }
+/* Face-down, the back's inner frame (.cb) must curve with the card edge:
+   concentric radius = card radius 6.8cqw - the back's 4cqw padding = 2.8cqw. */
+.card[data-set="numbers"] .cb { border-radius: 2.8cqw; }
+/* NO PRE-FLIP TELLS (Franklin, 2026-10-24): while a Numbers card sits
+   face-down in the pack reveal, nothing may hint at its rarity — the glow
+   above is forced fully off until the flip (the site's reveal never
+   applies its .glow effects pre-flip; this covers the set's own glow,
+   box-shadow only, so the deal/flip animations are untouched — killing
+   `animation` on .card would break the flip transition on iOS). The glow
+   appears only once the card is flipped; collection/modal renders are
+   not flippable and keep it. Same pattern as Periodic. */
+.card.flippable:not(.flipped)[data-set="numbers"] { box-shadow: none !important; }
+
+/* ---------- 2. Pack skin "numbers": PLACEHOLDER pure-CSS skin ----------
+   Deep indigo counting-room with gold crimps and a soft gold glow at the
+   emblem. A stand-in until Franklin's own baked pack art replaces it;
+   scoped to this set only. */
+.pack-skin-numbers .pack-top {
+  background:
+    radial-gradient(ellipse 90% 30% at 50% -8%, rgba(255,255,255,.45), transparent 70%),
+    linear-gradient(180deg, #4a47a8 0%, #35328a 60%, #26245f 100%);
+}
+.pack-skin-numbers .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(255,178,30,.30), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(122,118,255,.25), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 14px, transparent 14px 28px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.05) 0 14px, transparent 14px 28px),
+    linear-gradient(180deg, #2b2a6e 0%, #201e4e 60%, #141233 100%);
+}
+.pack-skin-numbers .pack-body::before {
+  background: radial-gradient(ellipse 90% 30% at 50% 0%, rgba(255,255,255,.32), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%); mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+}
+.pack-skin-numbers .crimp { background: repeating-linear-gradient(100deg, rgba(8,7,26,.65) 0 4px, rgba(255,178,30,.5) 4px 6px, rgba(43,42,110,.3) 6px 9px); }
+.pack-skin-numbers .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(8,7,26,.7) 0 4px, rgba(255,178,30,.4) 4px 6px, rgba(43,42,110,.2) 6px 9px); }
+.pack-skin-numbers .pack-top::after { border-bottom-color: rgba(16,14,44,.55); }
+.pack-skin-numbers .pack-code { color: #f3ecd8; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.6), 0 0 12px rgba(255,178,30,.8); }
+.pack-skin-numbers .pack-emblem { background:
+  radial-gradient(circle at 35% 30%, rgba(255,214,140,.45), rgba(20,18,51,.9) 72%);
+  border-color: rgba(255,178,30,.9); box-shadow: 0 0 26px rgba(255,178,30,.45), inset 0 0 18px rgba(255,178,30,.22); text-shadow: 0 0 16px rgba(255,236,200,.9); }
+.pack-skin-numbers .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(43,42,110,.9), 0 2px 8px rgba(0,0,0,.7); }
+.pack-skin-numbers .pack-sub { color: #c9c6f2; }
