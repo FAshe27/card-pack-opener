@@ -65,7 +65,8 @@ window.CardSets.bootIndex = {
   "cryptids",
   "reptiles",
   "wild-mammals",
-  "works-of-art"
+  "works-of-art",
+  "runescape-3"
  ],
  "sets": {
   "birdwatching": {
@@ -971,6 +972,21 @@ window.CardSets.bootIndex = {
    "skin": "art",
    "css": "art",
    "primary": "#7a1f2b",
+   "secondary": "#c9a227",
+   "total": 480
+  },
+  "runescape-3": {
+   "files": [
+    "runescape-3.js",
+    "runescape-3-additions.js"
+   ],
+   "name": "RuneScape",
+   "code": "RS3",
+   "emblem": "⚔️",
+   "packName": "RuneScape Pack",
+   "skin": "runescape",
+   "css": "runescape",
+   "primary": "#37503f",
    "secondary": "#c9a227",
    "total": 480
   }
