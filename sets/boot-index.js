@@ -68,7 +68,8 @@ window.CardSets.bootIndex = {
   "works-of-art",
   "runescape-3",
   "rct",
-  "numbers"
+  "numbers",
+  "potatoes"
  ],
  "sets": {
   "birdwatching": {
@@ -1019,6 +1020,20 @@ window.CardSets.bootIndex = {
    "primary": "#2b2a6e",
    "secondary": "#ffb21e",
    "total": 300
+  },
+  "potatoes": {
+   "files": [
+    "potatoes.js"
+   ],
+   "name": "Potatoes",
+   "code": "SPUD",
+   "emblem": "🥔",
+   "packName": "Potatoes Pack",
+   "skin": "potatoes",
+   "css": "potatoes",
+   "primary": "#6b4a2b",
+   "secondary": "#d9a441",
+   "total": 350
   }
  }
 };

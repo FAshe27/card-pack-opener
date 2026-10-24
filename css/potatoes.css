@@ -1,0 +1,66 @@
+/* pack skin "potatoes": PLACEHOLDER pure-CSS skin — Potatoes.
+   A burlap-sack wrapper: warm sack browns with a woven speckle, a
+   golden harvest glow at the foot of the pack, twine-coloured crimps
+   (class pack-skin-potatoes). A stand-in until Franklin's own baked
+   pack art replaces it; it touches nothing shared — this file is
+   scoped to the potatoes set. Cards use the standard chrome with
+   real photography (artFit cover, panel #241a12); section 2 adds a
+   slim sack-brown frame line around the art. Section 3 is a CSS-only
+   placeholder card back inside the site frame (the standing in-frame
+   default) — no baked art file. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-potatoes .pack-top {
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255,235,190,.16) 46%, transparent 72%),
+    radial-gradient(rgba(59,38,18,.55) 1px, transparent 1.6px),
+    radial-gradient(rgba(255,226,160,.35) 1px, transparent 1.6px),
+    linear-gradient(180deg, #8a6238 0%, #6b4a2b 60%, #4e3319 100%);
+  background-size: 100% 100%, 7px 7px, 11px 11px, 100% 100%;
+  background-position: 0 0, 1px 2px, 5px 4px, 0 0;
+}
+.pack-skin-potatoes .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(217,164,65,.42), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.09), transparent 70%),
+    radial-gradient(rgba(59,38,18,.5) 1px, transparent 1.6px),
+    radial-gradient(rgba(255,226,160,.28) 1px, transparent 1.6px),
+    linear-gradient(180deg, #755231 0%, #503418 55%, #38220e 100%);
+  background-size: 100% 100%, 100% 100%, 7px 7px, 11px 11px, 100% 100%;
+  background-position: 0 0, 0 0, 3px 1px, 7px 6px, 0 0;
+  background-repeat: no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-potatoes .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,240,200,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-potatoes .crimp { background: repeating-linear-gradient(100deg, rgba(46,29,12,.6) 0 4px, rgba(198,164,105,.6) 4px 6px, rgba(255,240,200,.3) 6px 9px); }
+.pack-skin-potatoes .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(34,21,8,.7) 0 4px, rgba(160,128,80,.55) 4px 6px, rgba(255,240,200,.16) 6px 9px); }
+.pack-skin-potatoes .pack-top::after { border-bottom-color: rgba(217,164,65,.75); }
+.pack-skin-potatoes .pack-code { color: #fdf3da; opacity: .95; text-shadow: 0 1px 0 rgba(40,24,6,.7), 0 0 12px rgba(217,164,65,.55); }
+.pack-skin-potatoes .pack-emblem {
+  background: radial-gradient(circle at 50% 38%, #a97c46 0%, #7a5527 58%, #54370f 100%);
+  box-shadow: inset 0 0 0 2px rgba(253,243,218,.35), inset 0 -8px 14px rgba(30,18,4,.55), 0 2px 8px rgba(20,10,0,.45);
+}
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ---------- */
+.card[data-set="potatoes"] .cf-art {
+  border-color: rgba(107,74,43,.6);
+  box-shadow: inset 0 0 18px rgba(56,34,14,.22);
+}
+.card[data-set="potatoes"].ticket-card .cf-art,
+.card[data-set="potatoes"].token-card .cf-art,
+.card[data-set="potatoes"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder, CSS-only, in-frame) ---------- */
+.card[data-set="potatoes"] .cb {
+  background:
+    radial-gradient(rgba(59,38,18,.5) 1px, transparent 1.6px),
+    radial-gradient(rgba(255,226,160,.3) 1px, transparent 1.6px),
+    linear-gradient(160deg, #8a6238 0%, #5d3d1e 55%, #3a2410 100%);
+  background-size: 7px 7px, 11px 11px, 100% 100%;
+  background-position: 1px 2px, 5px 4px, 0 0;
+}

@@ -106,5 +106,6 @@ CardSets.manifest = [
   'runescape-3.js',
   'runescape-3-additions.js',
   'rct.js',
-  'numbers.js'
+  'numbers.js',
+  'potatoes.js'
 ];
