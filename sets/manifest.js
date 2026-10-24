@@ -104,5 +104,6 @@ CardSets.manifest = [
   'works-of-art.js',
   'works-of-art-additions.js',
   'runescape-3.js',
-  'runescape-3-additions.js'
+  'runescape-3-additions.js',
+  'rct.js'
 ];
