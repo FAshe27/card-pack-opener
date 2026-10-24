@@ -2,7 +2,7 @@
    Franklin's approved v3 layout: the ride icon fills the full inner width at a
    uniform 1:1 scale (a square art zone - never stretched, cropped or squished),
    and the name/subtitle strip is ADDED BELOW the art inside the border, so the
-   card is a squat 580/654 rectangle instead of the standard 5/7.
+   card is a squat 580/688 rectangle instead of the standard 5/7.
    Rarity reads as a thin outline on the card itself (border technique, the
    iOS-safe method from the variant-frame fix): site rarity colours via --rc,
    Chase gets the animated conic rainbow ring (registered @property angle
@@ -15,7 +15,7 @@
    card); descendants use cqw, which resolves against the card. */
 
 /* ---------- 1. Squat card geometry + rarity outline ---------- */
-.card[data-set="rct"] { aspect-ratio: 580/654; border-radius: 7% / 6.21%; }
+.card[data-set="rct"] { aspect-ratio: 580/688; border-radius: 7% / 5.90%; }
 .card[data-set="rct"]:not(.variant) { border: 3px solid var(--rc); }
 .card[data-set="rct"].r-chase:not(.variant) {
   border: 3px solid transparent;
@@ -46,11 +46,11 @@
    Details and the code/number foot live in the card modal (.zoom-details),
    so they are hidden on the small face like the calendar tiles. */
 .card[data-set="rct"] .cf-top { order: 2; align-items: center; gap: 2cqw;
-  padding: 1.5cqw 3cqw 0; border-top: .5cqw solid rgba(255,255,255,.07); }
+  padding: 1.1cqw 3cqw 0; border-top: .5cqw solid rgba(255,255,255,.07); }
 .card[data-set="rct"] .cf-name { font-size: 6.4cqw; }
 .card[data-set="rct"] .cf-gem { width: 4cqw; height: 4cqw; }
-.card[data-set="rct"] .cf-type { order: 3; padding: 0 3cqw 1.6cqw; border-bottom: 0;
-  font-size: 3.9cqw; }
+.card[data-set="rct"] .cf-type { order: 3; padding: 0 3cqw 1.2cqw; border-bottom: 0;
+  font-size: 3.9cqw; line-height: 1.22; margin-top: auto; }
 .card[data-set="rct"] .cf-details, .card[data-set="rct"] .cf-foot { display: none; }
 /* Surprise slips (ticket/token/credit faces) keep the plain art frame. */
 .card[data-set="rct"].ticket-card .cf-art,
@@ -93,6 +93,6 @@
 .pack-skin-rct .pack-sub { color: #cfe3c2; }
 
 /* Squat pack to match the squat icon cards */
-.pack.pack-skin-rct { aspect-ratio: 580/654; }
+.pack.pack-skin-rct { aspect-ratio: 580/688; }
 .pack.pack-skin-rct .pack-top { border-radius: 14px 14px 0 0; }
 .pack.pack-skin-rct .pack-body { border-radius: 0 0 14px 14px; }
