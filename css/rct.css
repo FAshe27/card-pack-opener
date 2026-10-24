@@ -1,0 +1,98 @@
+/* RollerCoaster Tycoon set: squat icon cards (class pack-skin-rct, data-set="rct").
+   Franklin's approved v3 layout: the ride icon fills the full inner width at a
+   uniform 1:1 scale (a square art zone - never stretched, cropped or squished),
+   and the name/subtitle strip is ADDED BELOW the art inside the border, so the
+   card is a squat 580/654 rectangle instead of the standard 5/7.
+   Rarity reads as a thin outline on the card itself (border technique, the
+   iOS-safe method from the variant-frame fix): site rarity colours via --rc,
+   Chase gets the animated conic rainbow ring (registered @property angle
+   spin from style.css - no animated filters anywhere).
+   Corners are concentric: outer radius 7% of width / 6.21% of height is the
+   same px radius on both axes (7cqw); the inner panel radius is exactly
+   7cqw - the 3px border, and the card back's frame is 7cqw - its 4cqw
+   padding = 3cqw, so every arc shares one centre. Radii on the card itself
+   are in % (cqw on .card resolves against the ancestor container, not the
+   card); descendants use cqw, which resolves against the card. */
+
+/* ---------- 1. Squat card geometry + rarity outline ---------- */
+.card[data-set="rct"] { aspect-ratio: 580/654; border-radius: 7% / 6.21%; }
+.card[data-set="rct"]:not(.variant) { border: 3px solid var(--rc); }
+.card[data-set="rct"].r-chase:not(.variant) {
+  border: 3px solid transparent;
+  background-image: conic-gradient(from var(--va), #ff4fa3, #ffb21e, #f5f56a, #38c97f, #12c2e9, #3f8cff, #b35cff, #ff4fa3);
+  background-origin: border-box;
+  animation: variant-spin 5s linear infinite;
+}
+/* Face-down in the pack reveal the outline would spoil the flip, so it stays
+   hidden until the card is flipped (paint-only change, like the variant
+   pre-flip rule in style.css). Collection/modal renders are not flippable
+   and keep the outline. */
+.card.flippable:not(.flipped)[data-set="rct"] { border-color: transparent; background-image: none; }
+
+/* The face fills the card inside the border; the flat ground behind the
+   panel's corners replaces the usual rarity-gradient frame (the outline
+   on the card itself does that job now). */
+.card[data-set="rct"] .front { padding: 0; background: #10131f; }
+.card[data-set="rct"] .cf { padding: 0; gap: 0; border-radius: calc(7cqw - 3px); overflow: hidden; }
+
+/* Square art zone: full inner width, uniform 1:1 scale. The icons are
+   square, so cover centre-fits them with zero crop; scenario screenshots
+   centre-crop to the square (the approved v3 behaviour). Pixel art stays
+   crisp: nearest-neighbour resampling, never a geometry change. */
+.card[data-set="rct"] .cf-art { order: 1; flex: none; width: 100%; aspect-ratio: 1/1; border: 0; border-radius: 0; }
+.card[data-set="rct"] .cf-art img { image-rendering: pixelated; }
+
+/* Text strip below the art: name row, then subtitle + rarity row.
+   Details and the code/number foot live in the card modal (.zoom-details),
+   so they are hidden on the small face like the calendar tiles. */
+.card[data-set="rct"] .cf-top { order: 2; align-items: center; gap: 2cqw;
+  padding: 1.5cqw 3cqw 0; border-top: .5cqw solid rgba(255,255,255,.07); }
+.card[data-set="rct"] .cf-name { font-size: 6.4cqw; }
+.card[data-set="rct"] .cf-gem { width: 4cqw; height: 4cqw; }
+.card[data-set="rct"] .cf-type { order: 3; padding: 0 3cqw 1.6cqw; border-bottom: 0;
+  font-size: 3.9cqw; }
+.card[data-set="rct"] .cf-details, .card[data-set="rct"] .cf-foot { display: none; }
+/* Surprise slips (ticket/token/credit faces) keep the plain art frame. */
+.card[data-set="rct"].ticket-card .cf-art,
+.card[data-set="rct"].token-card .cf-art,
+.card[data-set="rct"].credit-card .cf-art { border: 0; }
+
+/* Face-down, the back's inner frame (.cb) must curve with the card edge:
+   concentric radius = card radius 7cqw - the back's 4cqw padding = 3cqw. */
+.card[data-set="rct"] .cb { border-radius: 3cqw; }
+
+/* ---------- 2. Pack skin "rct": PLACEHOLDER pure-CSS skin ----------
+   Isometric park grass with a tan path diamond and a warm signage glow at
+   the emblem; deep-green crimps. A stand-in until Franklin's own baked
+   pack art replaces it; scoped to this set only. */
+.pack-skin-rct .pack-top {
+  background:
+    radial-gradient(ellipse 90% 30% at 50% -8%, rgba(255,255,255,.5), transparent 70%),
+    linear-gradient(180deg, #7cb75c 0%, #4c8a3f 60%, #356b2c 100%);
+}
+.pack-skin-rct .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(224,123,42,.32), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(124,183,92,.25), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(216,178,116,.07) 0 14px, transparent 14px 28px),
+    repeating-linear-gradient(-45deg, rgba(216,178,116,.07) 0 14px, transparent 14px 28px),
+    linear-gradient(180deg, #2e5d27 0%, #224a24 60%, #173218 100%);
+}
+.pack-skin-rct .pack-body::before {
+  background: radial-gradient(ellipse 90% 30% at 50% 0%, rgba(255,255,255,.35), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%); mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+}
+.pack-skin-rct .crimp { background: repeating-linear-gradient(100deg, rgba(10,26,12,.6) 0 4px, rgba(224,123,42,.5) 4px 6px, rgba(46,93,39,.3) 6px 9px); }
+.pack-skin-rct .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(10,26,12,.7) 0 4px, rgba(224,123,42,.4) 4px 6px, rgba(46,93,39,.2) 6px 9px); }
+.pack-skin-rct .pack-top::after { border-bottom-color: rgba(23,50,24,.55); }
+.pack-skin-rct .pack-code { color: #f3ecd8; opacity: .95; text-shadow: 0 1px 0 rgba(0,0,0,.6), 0 0 12px rgba(224,123,42,.8); }
+.pack-skin-rct .pack-emblem { background:
+  radial-gradient(circle at 35% 30%, rgba(255,214,140,.5), rgba(23,50,24,.9) 72%);
+  border-color: rgba(224,123,42,.9); box-shadow: 0 0 26px rgba(224,123,42,.5), inset 0 0 18px rgba(224,123,42,.25); text-shadow: 0 0 16px rgba(255,236,200,.9); }
+.pack-skin-rct .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(46,93,39,.9), 0 2px 8px rgba(0,0,0,.7); }
+.pack-skin-rct .pack-sub { color: #cfe3c2; }
+
+/* Squat pack to match the squat icon cards */
+.pack.pack-skin-rct { aspect-ratio: 580/654; }
+.pack.pack-skin-rct .pack-top { border-radius: 14px 14px 0 0; }
+.pack.pack-skin-rct .pack-body { border-radius: 0 0 14px 14px; }
