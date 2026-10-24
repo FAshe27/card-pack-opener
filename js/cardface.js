@@ -49,14 +49,18 @@
      every other context; a failed thumb falls back to the original. */
   function thumbUrl(u) {
     if (!u) return u;
-    var clean = u.split('?')[0], file = null, m;
+    var clean = u.split('?')[0], file = null, host = 'commons.wikimedia.org', m;
     if ((m = clean.match(/commons\.wikimedia\.org\/wiki\/Special:FilePath\/(.+)$/))) file = m[1];
+    else if ((m = clean.match(/en\.wikipedia\.org\/wiki\/Special:FilePath\/(.+)$/))) { file = m[1]; host = 'en.wikipedia.org'; }
     else if (/^(https?:)?\/\/(upload|thumb)\.wikimedia\.org\//.test(clean)) {
       var parts = clean.split('/'), last = parts[parts.length - 1];
       file = /^\d+px-/.test(last) ? parts[parts.length - 2] : last;
+      /* Fair-use files live ONLY on en.wikipedia — asking Commons for
+         them 404s (283 Movies/Broadway grid thumbs, 2026-10-24). */
+      if (clean.indexOf('/wikipedia/en/') !== -1) host = 'en.wikipedia.org';
     }
     if (!file) return u;
-    return 'https://commons.wikimedia.org/wiki/Special:FilePath/' + file + '?width=400';
+    return 'https://' + host + '/wiki/Special:FilePath/' + file + '?width=400';
   }
 
   function artOrImage(set, card, thumb) {

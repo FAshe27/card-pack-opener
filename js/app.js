@@ -2487,6 +2487,7 @@
       var lg = img.closest('.cf-logo');
       if (lg) { lg.classList.add('broken'); return; } // missing logo file: just hide it
       if (!img.closest('.cf-art')) return;
+      if (img.dataset && img.dataset.o) return; /* grid thumb failed: the img's own onerror swaps in the full art — don't stomp it with placeholder art */
       var el = img.closest('.card'), set = window.CardSets.get(el.dataset.set), c = set && set.byId.get(el.dataset.card);
       if (c) img.outerHTML = CPS.cards.art(set, c);
     }, true);
