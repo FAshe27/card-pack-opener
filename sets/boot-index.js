@@ -66,7 +66,8 @@ window.CardSets.bootIndex = {
   "reptiles",
   "wild-mammals",
   "works-of-art",
-  "runescape-3"
+  "runescape-3",
+  "rct"
  ],
  "sets": {
   "birdwatching": {
@@ -989,6 +990,20 @@ window.CardSets.bootIndex = {
    "primary": "#37503f",
    "secondary": "#c9a227",
    "total": 480
+  },
+  "rct": {
+   "files": [
+    "rct.js"
+   ],
+   "name": "RollerCoaster Tycoon",
+   "code": "RCT",
+   "emblem": "🎢",
+   "packName": "RollerCoaster Tycoon Pack",
+   "skin": "rct",
+   "css": "rct",
+   "primary": "#2e6b30",
+   "secondary": "#e07b2a",
+   "total": 171
   }
  }
 };
