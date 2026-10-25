@@ -139,6 +139,12 @@
 
   
   function enterCloud(state) {
+    // Delta bookkeeping (186): remember the last full state object and
+    // its server versions so refreshCloud can ask for changed blocks
+    // only. Guarded to full-state shapes; anything else just ingests.
+    if (state && state.account && state.collection) {
+      S.rawState = state; S.stateVer = state.ver || 0; S.stateGVer = state.gver || 0;
+    }
     var sets = {};
     function get(id) {
       return sets[id] || (sets[id] = { packs: 0, cards: {}, recent: [], stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } });
@@ -184,8 +190,27 @@
      trailing run and resolves after it, so awaiters still see state at
      least as fresh as their own action. */
   var _cloudFlight = null, _cloudTrail = null;
+  /* Delta fetch (186): with a known version, ask the server for just
+     the state blocks that changed; merge them onto the remembered raw
+     state and ingest that. Returns null when nothing changed. ANY
+     surprise (missing RPC, odd shape) falls back to a full get_state,
+     which is also the path for first loads and pre-delta sessions. */
+  async function fetchStateSmart() {
+    if (!S.stateVer || !S.rawState) return CPS.cloud.call('get_state');
+    try {
+      var d = await CPS.cloud.call('get_state_delta', { p_ver: S.stateVer, p_gver: S.stateGVer || 0 });
+      if (d && d.unchanged) return null;
+      if (d && d.blocks) {
+        var m = Object.assign({}, S.rawState, d.blocks);
+        m.ver = d.ver; m.gver = d.gver; m.game_tokens = d.game_tokens;
+        return m;
+      }
+      if (d && d.account) return d;
+      return CPS.cloud.call('get_state');
+    } catch (e) { return CPS.cloud.call('get_state'); }
+  }
   async function _refreshCloudOnce() {
-    try { enterCloud(await CPS.cloud.call('get_state')); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); refreshQuests(); refreshNotifBadge(); }
+    try { var st = await fetchStateSmart(); if (st) enterCloud(st); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); refreshQuests(); refreshNotifBadge(); }
     catch (e) { cloudError(e); }
   }
   function refreshCloud() {
