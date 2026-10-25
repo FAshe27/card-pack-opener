@@ -15,6 +15,7 @@
 (function (CPS) {
   var ctx = CPS.appCtx;
   var G = null; // {run, card, streak, bank}
+  var resumeTried = false; // one game_state probe per page visit until a run starts/ends
   var acting = false; // in-flight guard: double-taps can't double-spend or double-claim
   var page = 'lobby'; // 'lobby' | 'highlow' | 'slots'
 
@@ -150,6 +151,12 @@
 
   /* ---------------- High / Low page ---------------- */
   function renderHighLow(box) {
+    // A page reload used to forfeit the run — the run lives server-side
+    // (cps.game_runs), so probe once and pick it back up (migration 183).
+    if (!G && !resumeTried && !acting && ctx.isCloud()) {
+      resumeTried = true;
+      resumeRun();
+    }
     var tokens = ctx.S.gameTokens || 0;
     var html = headerHTML() + backHTML();
     html += '<div class="panel"><h3>High / Low</h3>';
@@ -247,6 +254,17 @@
     } catch (e) { ctx.cloudError(e); } finally { acting = false; }
   }
 
+  async function resumeRun() {
+    try {
+      var r = await CPS.cloud.call('game_state', {});
+      if (r && r.run && !G) {
+        G = { run: r.run, card: r.card, streak: r.streak || 0, bank: r.bank || [], over: false };
+        if (G.streak > 0 || G.bank.length) ctx.toast('Run resumed — your streak and bank are intact.', 'good');
+        if (page === 'highlow') render();
+      }
+    } catch (e) { /* a failed probe just leaves the start screen */ }
+  }
+
   async function guess(higher) {
     if (acting || !G || G.over) return;
     acting = true;
@@ -280,7 +298,7 @@
       if (typeof r.game_tokens === 'number') setTokens(r.game_tokens);
       ctx.toast(bits.length ? 'Claimed: ' + bits.join(', ') : 'No prizes banked.', bits.length ? 'good' : '');
       ctx.audio.reveal('epic');
-      G = null;
+      G = null; resumeTried = true;
       render();
       ctx.renderPacksSide();
       ctx.updateWheelBadge();

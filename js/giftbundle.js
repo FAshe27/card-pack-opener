@@ -36,7 +36,13 @@
     var cards = ps(set).cards;
     return set.cards.filter(function (card) {
       var e = cards[card.id];
-      return e && onHand(e) > 0 && (!G.q || card.name.toLowerCase().indexOf(G.q) !== -1);
+      if (!e || onHand(e) <= 0) return false;
+      if (G.rarity && card.rarity !== G.rarity) return false;
+      if (G.q) {
+        var hay = ('#' + card.num + ' ' + card.num + ' ' + card.name + ' ' + (card.subtitle || '')).toLowerCase();
+        if (hay.indexOf(G.q) < 0) return false;
+      }
+      return true;
     });
   }
   function packCount(set) { return ps(set).packs || 0; }
@@ -226,7 +232,11 @@
       '<div class="gb-controls"><select id="gbSet">' + sets.map(function (s) {
         return '<option value="' + esc(s.id) + '"' + (s.id === G.setId ? ' selected' : '') + '>' + esc(s.name) + '</option>';
       }).join('') + '</select>' +
-      '<input id="gbQ" type="search" placeholder="Search your cards…" value="' + esc(G.q) + '"></div>' +
+      '<input id="gbQ" type="search" placeholder="Search your cards…" value="' + esc(G.q) + '">' +
+      '<select id="gbRarity"><option value="">All rarities</option>' +
+      ((window.CPSRarities && window.CPSRarities.RARITIES) || ['common', 'uncommon', 'rare', 'epic', 'legendary', 'chase'].map(function (k) { return { key: k, label: k }; })).map(function (r) {
+        return '<option value="' + esc(r.key) + '"' + (G.rarity === r.key ? ' selected' : '') + '>' + esc(r.label || r.key) + '</option>';
+      }).join('') + '</select></div>' +
       '<div id="gbGrid"></div><div id="gbPicks"></div><div id="gbCopy"></div>' +
       '<span class="fld-label">Packs (optional)</span>' +
       '<div class="gb-controls"><select id="gbPackSet"><option value="">— No packs —</option>' + psets.map(function (s) {
@@ -243,6 +253,7 @@
 
     $('#gbSet').addEventListener('change', function () { G.setId = this.value; G.shown = PAGE; renderGrid(); });
     $('#gbQ').addEventListener('input', function () { G.q = this.value.trim().toLowerCase(); G.shown = PAGE; renderGrid(); });
+    $('#gbRarity').addEventListener('change', function () { G.rarity = this.value; G.shown = PAGE; renderGrid(); });
     $('#gbPackSet').addEventListener('change', function () {
       G.packSet = this.value;
       $('#gbPacks').disabled = !G.packSet;
@@ -299,7 +310,7 @@
     try {
       if (window.CardSets && window.CardSets.loadAll) await window.CardSets.loadAll();
       await ensureVariants();
-      G = { to: toId, toName: toName, setId: '', q: '', shown: PAGE, picks: [], active: -1,
+      G = { to: toId, toName: toName, setId: '', q: '', rarity: '', shown: PAGE, picks: [], active: -1,
         packSet: '', packs: 0, tokens: 0, tickets: 0 };
       showForm();
     } catch (e) { closeModal(true); cloudError(e); }

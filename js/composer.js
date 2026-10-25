@@ -33,6 +33,27 @@
     if (shown < total) return total + ' cards · showing the ' + shown + ' rarest — type to search';
     return total + (total === 1 ? ' card' : ' cards');
   }
+  /* Picker paging (round 3): the Market composers used to hard-cap
+     every grid at the 40 rarest with no way to page past them. Each
+     picker now keeps a {sig, shown} window on its state object; the
+     window resets whenever the set/search changes, and the count line
+     grows a Show more button while results remain. */
+  var PAGE = 60;
+  function pgState(holder, key) { return holder[key] || (holder[key] = { sig: null, shown: PAGE }); }
+  function pageSlice(holder, key, sig, list) {
+    var st = pgState(holder, key);
+    if (st.sig !== sig) { st.sig = sig; st.shown = PAGE; }
+    return list.slice(0, st.shown);
+  }
+  function pageMore(cl, holder, key, matched, rerender) {
+    var st = pgState(holder, key);
+    if (!cl || matched <= st.shown) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn small'; b.style.marginLeft = '8px';
+    b.textContent = 'Show more (' + (matched - st.shown) + ' more)';
+    b.addEventListener('click', function () { st.shown += PAGE; rerender(); });
+    cl.appendChild(b);
+  }
   function variantCountMap() {
     if (ctx.variantCountMap) return ctx.variantCountMap();
     var m = {};
@@ -622,9 +643,9 @@
     });
     list.sort(sortByRarity);
     var matched = list.length;
-    list = list.slice(0, 40);
+    list = pageSlice(BD, '_pgWant', s.id + '|' + q, list);
     var cl = box.querySelector('#pbCardCount');
-    if (cl) cl.textContent = countLine(matched, list.length, !!q);
+    if (cl) { cl.textContent = countLine(matched, list.length, !!q); pageMore(cl, BD, '_pgWant', matched, function () { pbRenderResults(box); }); }
     grid.innerHTML = list.map(function (c) {
       var sel = BD.wantCard && BD.wantCard.set === s.id && BD.wantCard.id === c.id;
       return '<button class="bounty-pick' + (sel ? ' selected' : '') + '" data-card="' + esc(c.id) + '">' +
@@ -725,9 +746,9 @@
     });
     list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
     var matched = list.length;
-    list = list.slice(0, 40);
+    list = pageSlice(BD, '_pgOffer', s.id + '|' + q, list);
     var cl = box.querySelector('#pbOfferCount');
-    if (cl) cl.textContent = countLine(matched, list.length, !!q);
+    if (cl) { cl.textContent = countLine(matched, list.length, !!q); pageMore(cl, BD, '_pgOffer', matched, function () { pbRenderOfferGrid(box); }); }
     grid.innerHTML = list.map(function (o) {
       return '<div class="bounty-pick" data-card="' + esc(o.card.id) + '">' +
         '<span class="bounty-pick-name">' + esc(o.card.name) + (o.holo ? ' ✦' : '') + '</span>' +
@@ -1081,9 +1102,9 @@
     });
     list.sort(function (x, y) { return sortByRarity(x.card, y.card); });
     var matched = list.length;
-    list = list.slice(0, 40);
+    list = pageSlice(LD, '_pgList', s.id + '|' + q, list);
     var cl = box.querySelector('#tpCardCount');
-    if (cl) cl.textContent = countLine(matched, list.length, !!q);
+    if (cl) { cl.textContent = countLine(matched, list.length, !!q); pageMore(cl, LD, '_pgList', matched, function () { plRenderGrid(box); }); }
     grid.innerHTML = list.map(function (o) {
       var sel = LD.card && LD.card.set === s.id && LD.card.id === o.card.id;
       return '<button class="tp-pick' + (sel ? ' selected' : '') + '" data-card="' + esc(o.card.id) + '">' +
@@ -1272,7 +1293,7 @@
       '<div class="row wrap"><span class="muted small">tap Add — or Add ✦ for a holo copy (up to 5 — numbered serials listed separately)</span></div>' +
       '<div id="ofCards" class="trade-offer-chips"></div>' +
       '<div class="trade-footer"><span class="trade-recap" id="ofRecap"></span>' +
-      '<button class="btn primary big" id="ofGo">Submit offer</button>' +
+      '<button class="btn primary big" id="ofGo">Review offer</button>' +
       '<button class="btn" data-close>Cancel</button></div>' +
       '</div>',
       bindOfferForm);
@@ -1354,7 +1375,12 @@
       OD.q = e.target.value; ofRenderGrid(box);
     });
     ofRenderGrid(box); ofRenderCards(box);
-    box.querySelector('#ofGo').addEventListener('click', function () { ofSubmit(box, this); });
+    box.querySelector('#ofGo').addEventListener('click', function () {
+      ofCollect(box);
+      var msgs = ofValidateOffer();
+      if (msgs.length) { showErrors(box, 'ofErrors', msgs); return; }
+      ofShowReview();
+    });
     oSearch.focus();
   }
 
@@ -1394,14 +1420,14 @@
     });
     rows.sort(function (x, y) { return sortByRarity(x.card, y.card); });
     OD._rowTotal = rows.length;
-    return rows.slice(0, 40);
+    return pageSlice(OD, '_pgOffer', OD.set + '|' + q, rows);
   }
 
   function ofRenderGrid(box) {
     var grid = box.querySelector('#ofCardGrid');
     var rows = ofGridRows();
     var cl = box.querySelector('#ofCardCount');
-    if (cl) cl.textContent = countLine(OD._rowTotal || rows.length, rows.length, !!OD.q.trim());
+    if (cl) { cl.textContent = countLine(OD._rowTotal || rows.length, rows.length, !!OD.q.trim()); pageMore(cl, OD, '_pgOffer', OD._rowTotal || 0, function () { ofRenderGrid(box); }); }
     grid.innerHTML = rows.map(function (r, i) {
       return '<div class="tp-pick" data-row="' + i + '">' +
         '<span class="tp-pick-name">' + esc(r.label) + (r.kind === 'plain' && r.holo ? ' ✦' : '') + '</span>' +
@@ -1475,20 +1501,59 @@
     ofRecap(box);
   }
 
-  /* The Phase 1 submit, reading OD (kept in sync by the binders; the
-     DOM is re-collected first so the params match exactly). */
-  async function ofSubmit(box, btn) {
+  /* Re-collect the form DOM into OD (the binders keep OD in sync as
+     you type; this makes the review step see exactly what submits). */
+  function ofCollect(box) {
     OD.tokens = Math.max(0, parseInt(box.querySelector('#ofTokens').value, 10) || 0);
     OD.tickets = Math.max(0, parseInt(box.querySelector('#ofTickets').value, 10) || 0);
     OD.packSet = box.querySelector('#ofPackSet').value || '';
     OD.packs = Math.max(0, parseInt(box.querySelector('#ofPacks').value, 10) || 0);
+  }
+
+  function ofValidateOffer() {
     var msgs = [];
     if (OD.packSet && !OD.packs) msgs.push('Set the pack count for your pack offer.');
     var packs = OD.packSet ? OD.packs : 0;
     if (!OD.tokens && !OD.tickets && !packs && !OD.cards.length) {
       msgs.push('Your offer needs tokens, tickets, packs, or cards.');
     }
-    if (msgs.length) { showErrors(box, 'ofErrors', msgs); return; }
+    return msgs;
+  }
+
+  /* Review step (round 3): the Trading Post offer was the only
+     escrowed flow with no review — every other one (direct trades,
+     bounties, listings, gifts) confirms first. Same shape as pbReview:
+     Back re-opens the form with OD intact; Confirm submits from OD. */
+  function ofShowReview() {
+    var l = OD.listing;
+    var bits = [];
+    if (OD.tokens > 0) bits.push('🪙 ' + OD.tokens + ' token' + (OD.tokens === 1 ? '' : 's'));
+    if (OD.tickets > 0) bits.push('🎟️ ' + OD.tickets + ' ticket' + (OD.tickets === 1 ? '' : 's'));
+    if (OD.packSet && OD.packs > 0) {
+      var ps = setObj(OD.packSet);
+      bits.push('🎁 ' + OD.packs + ' ' + (ps ? ps.name : OD.packSet) + ' pack' + (OD.packs === 1 ? '' : 's'));
+    }
+    OD.cards.forEach(function (o) { bits.push('🃏 ' + o.label + (o.holo ? ' ✦ holo' : '')); });
+    ctx.openModal(
+      '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h3>Review your offer</h3>' +
+      '<div class="cmp-errors" id="ofErrors" hidden></div>' +
+      '<p>For <b>' + esc(l.card_name || l.card_id) + '</b>' +
+      (l.variant_tier ? ' (' + esc(variantLabel(l.variant_tier, l.variant_serial)) + ')' : '') + '</p>' +
+      '<div class="bounty-tradebox"><div><span class="bounty-want-label">YOU GIVE</span>' +
+      '<div>' + (bits.length ? bits.map(function (b) { return '<div>' + esc(b) + '</div>'; }).join('') : '<div class="muted">nothing</div>') + '</div></div></div>' +
+      '<p class="muted small">Everything you offer is escrowed when you submit — it comes back if your offer is declined or the listing is cancelled or expires.</p>' +
+      '<div class="row wrap"><button class="btn" id="ofBack">← Back</button>' +
+      '<button class="btn primary big" id="ofConfirm">Submit offer — escrow my offer</button></div>',
+      function (rbox) {
+        bindClose(rbox, ofCloseForm);
+        rbox.querySelector('#ofBack').addEventListener('click', function () { ofShowForm(); });
+        rbox.querySelector('#ofConfirm').addEventListener('click', function () { ofDoSubmit(rbox, this); });
+      });
+  }
+
+  async function ofDoSubmit(box, btn) {
+    var packs = OD.packSet ? OD.packs : 0;
     btn.disabled = true;
     try {
       await CPS.cloud.call('trade_offer', {

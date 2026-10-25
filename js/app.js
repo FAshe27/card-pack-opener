@@ -162,7 +162,17 @@
     S.favorites = {};
     (state.favorites || []).forEach(function (f) { S.favorites[f[0] + ':' + f[1]] = true; });
     S.turnedIn = {};
-    (state.turn_ins || []).forEach(function (f) { S.turnedIn[f[0] + ':' + f[1]] = true; });
+    // turn_ins arrives as [set, card] pairs (pre-183) or, since
+    // migration 183, as a per-set map {set: [card, ...]} — accept both
+    // so a cached client and a fresh payload never disagree.
+    var ti = state.turn_ins;
+    if (Array.isArray(ti)) {
+      ti.forEach(function (f) { S.turnedIn[f[0] + ':' + f[1]] = true; });
+    } else if (ti) {
+      Object.keys(ti).forEach(function (sid) {
+        (ti[sid] || []).forEach(function (cid) { S.turnedIn[sid + ':' + cid] = true; });
+      });
+    }
     S.player = { id: state.account.id, name: state.account.display_name, cloud: true, sets: sets };
     if (CPS.milestones) CPS.milestones.check();
     if (CPS.online) CPS.online.start();
@@ -1430,8 +1440,13 @@
     var steps = ['Your offer', TB.toName ? 'Pick from ' + TB.toName : 'Their card', 'Review'];
     $('#tradeSteps').innerHTML = steps.map(function (s, i) {
       var n = i + 1;
-      return '<span class="tstep' + (n === TB.step ? ' active' : n < TB.step ? ' done' : '') + '">' + n + '. ' + esc(s) + '</span>';
+      var done = n < TB.step;
+      return '<span class="tstep' + (n === TB.step ? ' active' : done ? ' done' : '') + '"' +
+        (done ? ' data-tstep="' + n + '" title="Go back and edit" style="cursor:pointer"' : '') + '>' + n + '. ' + esc(s) + '</span>';
     }).join('');
+    $('#tradeSteps').querySelectorAll('[data-tstep]').forEach(function (el) {
+      el.addEventListener('click', function () { tbGotoStep(+el.getAttribute('data-tstep')); });
+    });
     $('#tradeTitle').textContent = TB.step === 1 ? 'Choose your offer' : TB.step === 2 ? 'Choose what you want' : 'Review trade';
     $('#tradeReview').classList.add('hidden');
     $('#tradeGrid').classList.remove('hidden');
@@ -1603,8 +1618,22 @@
   function tbContinue() {
     if (!TB || TB.step === 3) return;
     if (!TB.picks.length && !tbCurrentPack()) return;
-    if (TB.step === 1) { TB.offer = TB.picks; TB.step = 2; } else { TB.want = TB.picks; TB.step = 3; }
-    TB.picks = []; TB.setId = ''; TB.q = ''; TB.rarity = ''; TB.packSet = ''; TB.packs = 0;
+    tbGotoStep(TB.step + 1);
+  }
+
+  /* The builder's one navigator: Continue, the step pills and the
+     review screen's Edit buttons all come through here. The current
+     step's in-progress picks are saved to their side first, and the
+     destination step re-seeds its picks (and, via tbRenderPackBar, its
+     pack bundle) from what was saved — going back no longer wipes the
+     other side. */
+  function tbGotoStep(n) {
+    if (!TB || n === TB.step || n < 1 || n > 3) return;
+    if (TB.step === 1) TB.offer = TB.picks;
+    else if (TB.step === 2) TB.want = TB.picks;
+    TB.step = n;
+    TB.picks = n === 1 ? TB.offer.slice() : n === 2 ? TB.want.slice() : [];
+    TB.setId = ''; TB.q = ''; TB.rarity = ''; TB.packSet = ''; TB.packs = 0;
     $('#tradeSearch').value = '';
     renderTradeBuilder();
     window.scrollTo(0, 0);
@@ -1637,13 +1666,15 @@
     var box = $('#tradeReview');
     box.classList.remove('hidden');
     box.innerHTML = '<div class="trade-review-group"><span class="trade-cap-top">You give (' + (TB.offer.length + (TB.offerPack ? TB.offerPack.qty : 0)) + ')</span>' +
-      cardsHtml(TB.offer, true, TB.offerPack) + '</div>' +
+      cardsHtml(TB.offer, true, TB.offerPack) + '<button class="btn small" id="tradeEditOffer" style="margin-top:8px">Edit your offer</button></div>' +
       '<div class="trade-review-swap">\u21c4</div>' +
       '<div class="trade-review-group"><span class="trade-cap-top">You get (' + (TB.want.length + (TB.wantPack ? TB.wantPack.qty : 0)) + ')</span>' +
-      cardsHtml(TB.want, false, TB.wantPack) + '</div>' +
+      cardsHtml(TB.want, false, TB.wantPack) + '<button class="btn small" id="tradeEditWant" style="margin-top:8px">Edit what you get</button></div>' +
       (TB.offerPack ? '<p class="muted small" style="grid-column:1/-1">🔒 Your packs are held in escrow when you send this offer — they’re delivered if ' + esc(TB.toName) + ' accepts, and returned if they decline, or if the offer is cancelled or expires.</p>' : '') +
       '<div class="trade-review-actions"><button class="btn" id="tradeStartOver">Start over</button>' +
       '<button class="btn primary" id="tradeSendBtn">Send offer to ' + esc(TB.toName) + '</button></div>';
+    $('#tradeEditOffer').addEventListener('click', function () { tbGotoStep(1); });
+    $('#tradeEditWant').addEventListener('click', function () { tbGotoStep(2); });
     $('#tradeStartOver').addEventListener('click', function () {
       TB.step = 1; TB.offer = []; TB.want = []; TB.picks = [];
       TB.offerPack = null; TB.wantPack = null; TB.packSet = ''; TB.packs = 0;
@@ -2457,7 +2488,17 @@
     $('#tradeBackBtn').addEventListener('click', function () { showView('players'); });
     $('#tradeHistBtn').addEventListener('click', function () { showView('trade-history'); });
     $('#tradeHistBackBtn').addEventListener('click', function () { showView('players'); });
-    $('#tradeWithSel').addEventListener('change', function () { if (TB) { TB.to = this.value; tbLoadTheir(); } });
+    $('#tradeWithSel').addEventListener('change', async function () {
+      if (!TB) return;
+      var sel = this, v = sel.value;
+      var hasWork = TB.offer.length || TB.want.length || TB.picks.length || TB.offerPack || TB.wantPack;
+      if (v !== TB.to && hasWork) {
+        var ok = await confirmDialog('Switch trading partner?',
+          'Your picks for ' + esc(TB.toName || 'this partner') + ' will be cleared.', 'Switch partner', 'Keep building');
+        if (!ok) { sel.value = TB.to; return; }
+      }
+      TB.to = v; tbLoadTheir();
+    });
     $('#tradePackSet').addEventListener('change', function () {
       if (!TB) return;
       TB.packSet = this.value;
