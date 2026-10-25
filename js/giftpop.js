@@ -196,7 +196,7 @@
       if (!n || !n.items) return;
       var launch = Date.parse(LAUNCH_ISO);
       var fresh = n.items.filter(function (it) {
-        return (it.kind === 'gift_card' || it.kind === 'gift_thanks') &&
+        return (it.kind === 'gift_card' || it.kind === 'gift' || it.kind === 'gift_thanks') &&
           !it.read && !wasSeen(it.id) &&
           Date.parse(it.created_at) >= launch;
       }).sort(function (a, b) { return Date.parse(a.created_at) - Date.parse(b.created_at); });

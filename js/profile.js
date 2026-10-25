@@ -44,7 +44,7 @@ async function openProfile(accountId) {
     var poss = ctx.esc(p.display_name) + '’s';
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
       '<div class="prof-head"><span class="avatar big">' + ctx.esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
-      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button>') + '</div></div>' +
+      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button> <button class="btn small" id="profGiftBtn">🎁 Gift</button>') + '</div></div>' +
       statsHtml +
       '<div class="prof-nav">' +
       '<button class="btn prof-nav-btn" id="profVaultBtn">🔒 View ' + poss + ' Vault<span class="muted">' + (p.favorites || []).length + '</span></button>' +
@@ -57,6 +57,8 @@ async function openProfile(accountId) {
       box.querySelector('#profTrophyBtn').addEventListener('click', function () { openTrophyScreen(accountId, p.display_name); });
       var ptb = box.querySelector('#profTradeBtn');
       if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
+      var pgb = box.querySelector('#profGiftBtn');
+      if (pgb) pgb.addEventListener('click', function () { if (CPS.giftBundle) CPS.giftBundle.open(accountId, p.display_name); });
       var pb = box.querySelector('.prof-best');
       if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { CPS.cardBack = { text: '← Back to ' + p.display_name + '’s profile', go: function () { openProfile(accountId); } }; ctx.openCardModal(best.set.id, best.card.id); }); }
     });

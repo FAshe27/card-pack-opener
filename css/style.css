@@ -1675,3 +1675,20 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .pack-top { overflow: hidden; }
 .pack-shine-top { position: absolute; left: calc(var(--pw) * -.5); top: calc(var(--pw) * -.536); width: calc(var(--pw) * 2); height: calc(var(--pw) * 2.848); background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.45) 50%, transparent 60%); animation: shine 3.5s ease-in-out infinite; pointer-events: none; }
 .pack-skin-calendar .pack-shine-top, .pack-skin-periodic .pack-shine-top { top: calc(var(--pw) * -.335); height: calc(var(--pw) * 1.78); }
+
+/* Bundle gift composer (js/giftbundle.js, migration 181) */
+.gb-controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 10px; }
+.gb-controls select, .gb-controls input[type="search"], .gb-controls input[type="number"] { flex: 1 1 140px; }
+.gb-num { flex: 1 1 140px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+.gb-recap { margin: 10px 0 4px; font-size: 14px; }
+.gb-picked { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.gb-picked .btn { margin-left: auto; }
+.bounty-pick { position: relative; }
+.gb-n { position: absolute; top: 4px; right: 4px; background: rgba(20,16,40,.85); color: #ffd75e;
+  font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 999px; pointer-events: none; }
+.gb-pickrows { display: flex; flex-direction: column; gap: 4px; margin: 8px 0 2px; }
+.gb-pickrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; text-align: left;
+  background: var(--panel2, #241f3a); border: 1px solid var(--line, #3a3358); border-radius: 8px;
+  padding: 6px 10px; color: inherit; font-size: 13px; cursor: pointer; }
+.gb-pickrow.on { border-color: #ffd75e; }
+.gb-x { color: #ff9d9d; font-weight: 700; padding: 0 4px; }
