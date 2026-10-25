@@ -1569,15 +1569,15 @@
     $('#tradePackBar').classList.add('hidden');
     $('#tradeGrid').classList.add('hidden');
     $('#tradeDock').classList.add('hidden');
-    function packHtml(bundle) {
+    function packTile(bundle) {
       if (!bundle) return '';
       var set = window.CardSets.get(bundle.set);
       if (!set) return '';
-      return '<div class="trade-review-cards"><div class="trade-card">' + CPS.cards.pack(set) +
+      return '<div class="trade-card">' + CPS.cards.pack(set) +
         '<div class="trade-cap"><b>🎁 ' + bundle.qty + ' pack' + (bundle.qty === 1 ? '' : 's') + '</b>' +
-        '<span class="muted small">' + esc(set.name) + '</span></div></div></div>';
+        '<span class="muted small">' + esc(set.name) + '</span></div></div>';
     }
-    function cardsHtml(picks, mine) {
+    function cardsHtml(picks, mine, pack) {
       return '<div class="trade-review-cards">' + picks.map(function (p) {
         var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
         if (!set || !card) return '';
@@ -1586,15 +1586,15 @@
           '<div class="trade-cap"><b>' + esc(card.name) + '</b><span class="muted small">' + esc(set.name) +
           (p.holo ? ' \u00b7 \u2726 holo' : '') +
           (tv ? ' \u00b7 ' + CPS.cards.VARIANTS[tv.tier].emoji + ' #' + tv.serial + '/' + CPS.cards.VARIANTS[tv.tier].run : '') + '</span></div></div>';
-      }).join('') + '</div>';
+      }).join('') + packTile(pack) + '</div>';
     }
     var box = $('#tradeReview');
     box.classList.remove('hidden');
     box.innerHTML = '<div class="trade-review-group"><span class="trade-cap-top">You give (' + (TB.offer.length + (TB.offerPack ? TB.offerPack.qty : 0)) + ')</span>' +
-      cardsHtml(TB.offer, true) + packHtml(TB.offerPack) + '</div>' +
+      cardsHtml(TB.offer, true, TB.offerPack) + '</div>' +
       '<div class="trade-review-swap">\u21c4</div>' +
       '<div class="trade-review-group"><span class="trade-cap-top">You get (' + (TB.want.length + (TB.wantPack ? TB.wantPack.qty : 0)) + ')</span>' +
-      cardsHtml(TB.want) + packHtml(TB.wantPack) + '</div>' +
+      cardsHtml(TB.want, false, TB.wantPack) + '</div>' +
       '<div class="trade-review-actions"><button class="btn" id="tradeStartOver">Start over</button>' +
       '<button class="btn primary" id="tradeSendBtn">Send offer to ' + esc(TB.toName) + '</button></div>';
     $('#tradeStartOver').addEventListener('click', function () {
