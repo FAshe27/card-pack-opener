@@ -1595,6 +1595,7 @@
       '<div class="trade-review-swap">\u21c4</div>' +
       '<div class="trade-review-group"><span class="trade-cap-top">You get (' + (TB.want.length + (TB.wantPack ? TB.wantPack.qty : 0)) + ')</span>' +
       cardsHtml(TB.want, false, TB.wantPack) + '</div>' +
+      (TB.offerPack ? '<p class="muted small" style="grid-column:1/-1">🔒 Your packs are held in escrow when you send this offer — they’re delivered if ' + esc(TB.toName) + ' accepts, and returned if they decline, or if the offer is cancelled or expires.</p>' : '') +
       '<div class="trade-review-actions"><button class="btn" id="tradeStartOver">Start over</button>' +
       '<button class="btn primary" id="tradeSendBtn">Send offer to ' + esc(TB.toName) + '</button></div>';
     $('#tradeStartOver').addEventListener('click', function () {

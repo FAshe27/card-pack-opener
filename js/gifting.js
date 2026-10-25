@@ -19,6 +19,10 @@
   async function openGiftModal(setId, cardId) {
     var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
     if (!set || !card) return;
+    if (setId === 'jumbled') {
+      openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="empty" style="padding:24px">Jumbled Mess cards can’t be gifted.</div>');
+      return;
+    }
     var st = ps(set), e = st.cards[card.id];
     if (!e || !e.n) return;
     openModal('<div class="muted" style="padding:24px">Loading…</div>');

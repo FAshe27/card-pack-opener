@@ -220,7 +220,6 @@
     var sets = myCardSets();
     if (!G.setId || !window.CardSets.get(G.setId) || G.setId === 'jumbled') G.setId = sets.length ? sets[0].id : '';
     var psets = packSets();
-    if (!G.packSet && psets.length) G.packSet = psets[0].id;
     openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="gift-modal">' +
       '<h2>🎁 Gift to ' + esc(G.toName) + '</h2>' +
       '<span class="fld-label">Cards (optional, up to ' + MAX_CARDS + ')</span>' +
@@ -230,10 +229,10 @@
       '<input id="gbQ" type="search" placeholder="Search your cards…" value="' + esc(G.q) + '"></div>' +
       '<div id="gbGrid"></div><div id="gbPicks"></div><div id="gbCopy"></div>' +
       '<span class="fld-label">Packs (optional)</span>' +
-      '<div class="gb-controls"><select id="gbPackSet">' + psets.map(function (s) {
+      '<div class="gb-controls"><select id="gbPackSet"><option value="">— No packs —</option>' + psets.map(function (s) {
         return '<option value="' + esc(s.id) + '"' + (s.id === G.packSet ? ' selected' : '') + '>' + esc(s.name) + ' — ' + packCount(s) + ' unopened</option>';
       }).join('') + '</select>' +
-      '<input id="gbPacks" type="number" min="0" step="1" value="' + (G.packs || '') + '" placeholder="Qty"></div>' +
+      '<input id="gbPacks" type="number" min="0" step="1" value="' + (G.packs || '') + '" placeholder="Qty"' + (G.packSet ? '' : ' disabled') + '></div>' +
       '<span class="fld-label">Tokens &amp; tickets (optional)</span>' +
       '<div class="gb-controls"><label class="gb-num">🪙 Tokens <span class="muted">(have ' + (S.gameTokens || 0) + ')</span>' +
       '<input id="gbTokens" type="number" min="0" step="1" value="' + (G.tokens || '') + '"></label>' +
@@ -246,6 +245,7 @@
     $('#gbQ').addEventListener('input', function () { G.q = this.value.trim().toLowerCase(); G.shown = PAGE; renderGrid(); });
     $('#gbPackSet').addEventListener('change', function () {
       G.packSet = this.value;
+      $('#gbPacks').disabled = !G.packSet;
       var max = G.packSet ? packCount(window.CardSets.get(G.packSet)) : 0;
       if (G.packs > max) { G.packs = max; $('#gbPacks').value = max || ''; }
       sync();
@@ -272,6 +272,7 @@
       '<h2>Confirm gift</h2>' +
       '<p>Send <b>' + esc(G.toName) + '</b>:</p>' + art +
       '<p>' + parts().map(esc).join('<br>') + '</p>' +
+      '<p class="muted small">Gifts are sent instantly and can’t be undone.</p>' +
       '<div class="gift-actions"><button class="btn" id="gbBackBtn">Back</button>' +
       '<button class="btn primary" id="gbSendBtn">Send gift</button></div></div>');
     $('#gbBackBtn').addEventListener('click', showForm);

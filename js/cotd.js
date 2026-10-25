@@ -80,7 +80,7 @@
       badge.classList.toggle('done', !!st.claimed);
     }
     pillEl.title = st.claimed ? 'Card of the Day — claimed! Nice hunting.'
-      : "Today's Card of the Day: a " + cap(st.rarity) + ' hiding in ' + st.set_name +
+      : "Today's Card of the Day: " + ('AEIOU'.indexOf(cap(st.rarity).charAt(0)) >= 0 ? 'an ' : 'a ') + cap(st.rarity) + ' hiding in ' + st.set_name +
         ' (+' + st.prize + ' spin tickets). Tap for details.';
   }
 
@@ -91,7 +91,7 @@
       '<div class="cotd-modal">' +
       '<div class="cotd-big">🎯</div>' +
       '<h2>Card of the Day</h2>' +
-      '<p class="cotd-sub">A <b>' + esc(cap(st.rarity)) + '</b> is hiding in the <b>' + esc(st.set_name) + '</b> set.</p>' +
+      '<p class="cotd-sub">' + ('AEIOU'.indexOf(cap(st.rarity).charAt(0)) >= 0 ? 'An' : 'A') + ' <b>' + esc(cap(st.rarity)) + '</b> is hiding in the <b>' + esc(st.set_name) + '</b> set.</p>' +
       '<p class="cotd-prize">Pull it from a pack to win <b>+' + st.prize + ' 🎟️ spin tickets</b>.</p>';
     if (st.found) {
       html += '<p class="cotd-found">First found by <b>' + esc(st.found_by || 'someone') + '</b>' +
