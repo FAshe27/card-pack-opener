@@ -1289,7 +1289,7 @@
     if (!set || !card) return '<span class="muted">?</span>';
     return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo, count: qty > 1 ? qty : 0, variant: variant || null }) + '</div>';
   }
-  function tradeItemsHtml(items, packSet, packQty) {
+  function tradeItemsHtml(items, packSet, packQty, tokens, tickets) {
     var h = '<div class="trade-items">' + (items || []).map(function (it) {
       return tradeMiniCard(it.set_id, it.card_id, it.holo, it.qty, it.tier ? { tier: it.tier, serial: it.serial } : null);
     }).join('');
@@ -1298,6 +1298,8 @@
       if (set) h += '<div class="trade-card">' + CPS.cards.pack(set) +
         '<div class="trade-cap"><b>🎁 ' + packQty + ' pack' + (packQty === 1 ? '' : 's') + '</b></div></div>';
     }
+    if (tokens > 0) h += '<div class="trade-card"><div class="trade-cap"><b>🪙 ' + tokens + ' token' + (tokens === 1 ? '' : 's') + '</b></div></div>';
+    if (tickets > 0) h += '<div class="trade-card"><div class="trade-cap"><b>🎟️ ' + tickets + ' ticket' + (tickets === 1 ? '' : 's') + '</b></div></div>';
     return h + '</div>';
   }
 
@@ -1314,9 +1316,11 @@
     var leftCap = t.direction === 'incoming' ? 'You get' : 'You give';
     var rightCap = t.direction === 'incoming' ? 'You give' : 'You get';
     var nGive = (t.direction === 'incoming' ? t.want_items : t.offer_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0) +
-      (t.direction === 'incoming' ? (t.want_packs || 0) : (t.offer_packs || 0));
+      (t.direction === 'incoming' ? (t.want_packs || 0) : (t.offer_packs || 0)) +
+      ((t.direction === 'incoming' ? t.want_tokens : t.offer_tokens) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.want_tickets : t.offer_tickets) > 0 ? 1 : 0);
     var nGet = (t.direction === 'incoming' ? t.offer_items : t.want_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0) +
-      (t.direction === 'incoming' ? (t.offer_packs || 0) : (t.want_packs || 0));
+      (t.direction === 'incoming' ? (t.offer_packs || 0) : (t.want_packs || 0)) +
+      ((t.direction === 'incoming' ? t.offer_tokens : t.want_tokens) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.offer_tickets : t.want_tickets) > 0 ? 1 : 0);
     var head = t.direction === 'incoming'
       ? '<b>' + esc(t.other_name) + '</b> offers you a trade'
       : 'You offered <b>' + esc(t.other_name) + '</b> a trade';
@@ -1335,9 +1339,9 @@
     }
     return '<div class="trade-row"><div class="trade-head">' + head + '</div>' +
       '<div class="trade-cards"><div class="trade-side"><span class="trade-cap-top">' + leftCap + '</span>' +
-      tradeItemsHtml(t.offer_items, t.offer_pack_set, t.offer_packs) + '</div>' +
+      tradeItemsHtml(t.offer_items, t.offer_pack_set, t.offer_packs, t.offer_tokens, t.offer_tickets) + '</div>' +
       '<span class="trade-swap">\u21c4</span><div class="trade-side"><span class="trade-cap-top">' + rightCap + '</span>' +
-      tradeItemsHtml(t.want_items, t.want_pack_set, t.want_packs) + '</div></div>' +
+      tradeItemsHtml(t.want_items, t.want_pack_set, t.want_packs, t.want_tokens, t.want_tickets) + '</div></div>' +
       '<div class="trade-actions">' + actions + '</div></div>';
   }
 
@@ -1406,7 +1410,8 @@
       }
       var to = prefillTo && others.some(function (p) { return p.id === prefillTo; }) ? prefillTo : others[0].id;
       TB = { to: to, step: 1, their: [], theirPacks: [], toName: '', setId: '', q: '', rarity: '',
-             picks: [], offer: [], want: [], offerPack: null, wantPack: null, packSet: '', packs: 0, myColl: tbMyCollection() };
+             picks: [], offer: [], want: [], offerPack: null, wantPack: null, packSet: '', packs: 0,
+             offerMoney: null, wantMoney: null, tokens: 0, tickets: 0, myColl: tbMyCollection() };
       await ensureVariants();
       $('#tradeWithSel').innerHTML = others.map(function (p) {
         return '<option value="' + esc(p.id) + '"' + (p.id === to ? ' selected' : '') + '>' + esc(p.display_name) + '</option>';
@@ -1430,6 +1435,7 @@
     } catch (e) { TB.their = []; TB.toName = ''; cloudError(e); }
     TB.step = 1; TB.picks = []; TB.offer = []; TB.want = [];
     TB.offerPack = null; TB.wantPack = null; TB.packSet = ''; TB.packs = 0;
+    TB.offerMoney = null; TB.wantMoney = null; TB.tokens = 0; TB.tickets = 0;
     TB.setId = ''; TB.q = ''; TB.rarity = '';
     $('#tradeSearch').value = '';
     renderTradeBuilder();
@@ -1458,6 +1464,8 @@
     $('#tradeFilters').classList.remove('hidden');
     $('#tradePackBar').classList.remove('hidden');
     tbRenderPackBar();
+    $('#tradeMoneyBar').classList.remove('hidden');
+    tbRenderMoneyBar();
     var groups = TB.step === 1 ? tbGroup(TB.myColl) : tbGroup(TB.their);
     /* Trades browse one set at a time (Franklin, 2026-10-24): there is no
        All sets mode. Keep the chosen set while it exists on this side of
@@ -1511,6 +1519,38 @@
     $('#tradePackHave').textContent = TB.packSet
       ? (TB.step === 1 ? 'you have ' : 'they have ') + tbPackAvail(TB.packSet) + ' unopened'
       : 'add unopened packs to this side of the trade';
+  }
+
+  // 184: one currency bundle per side (tokens + tickets), edited via a
+  // per-step scratch (TB.tokens / TB.tickets) synced into
+  // TB.offerMoney / TB.wantMoney exactly like the pack bundle. The
+  // sender's currency escrows at propose time (server-side).
+  function tbCurrentMoney() { return TB.step === 1 ? TB.offerMoney : TB.wantMoney; }
+  function tbMoneyText(m) {
+    if (!m) return '';
+    var bits = [];
+    if (m.tokens > 0) bits.push('🪙 ' + m.tokens + ' token' + (m.tokens === 1 ? '' : 's'));
+    if (m.tickets > 0) bits.push('🎟️ ' + m.tickets + ' ticket' + (m.tickets === 1 ? '' : 's'));
+    return bits.join(' + ');
+  }
+  function tbSyncMoneyScratch() {
+    var m = (TB.tokens > 0 || TB.tickets > 0) ? { tokens: TB.tokens || 0, tickets: TB.tickets || 0 } : null;
+    if (TB.step === 1) TB.offerMoney = m; else if (TB.step === 2) TB.wantMoney = m;
+  }
+  function tbRenderMoneyBar() {
+    var bar = $('#tradeMoneyBar'); if (!bar) return;
+    var saved = tbCurrentMoney();
+    TB.tokens = saved ? saved.tokens : 0;
+    TB.tickets = saved ? saved.tickets : 0;
+    var tok = $('#tradeTokens'), tic = $('#tradeTickets');
+    tok.value = TB.tokens || 0; tic.value = TB.tickets || 0;
+    if (TB.step === 1) {
+      tok.max = S.gameTokens || 0; tic.max = S.spins || 0;
+      $('#tradeMoneyHave').textContent = 'you have 🪙 ' + (S.gameTokens || 0) + ' · 🎟️ ' + (S.spins || 0) + ' — yours escrow when you send';
+    } else {
+      tok.removeAttribute('max'); tic.removeAttribute('max');
+      $('#tradeMoneyHave').textContent = 'they pay this if they accept';
+    }
   }
 
   /* Trade grid paging (2026-10-24): the builder used to render EVERY owned
@@ -1595,7 +1635,8 @@
   function tbRenderDock() {
     var dock = $('#tradeDock');
     var pack = tbCurrentPack();
-    if (TB.step === 3 || (!TB.picks.length && !pack)) { dock.classList.add('hidden'); return; }
+    var money = tbCurrentMoney();
+    if (TB.step === 3 || (!TB.picks.length && !pack && !money)) { dock.classList.add('hidden'); return; }
     dock.classList.remove('hidden');
     $('#tradeChips').innerHTML = TB.picks.map(function (p, i) {
       var set = window.CardSets.get(p.setId), card = set && set.byId.get(p.cardId);
@@ -1610,14 +1651,16 @@
       return '<span class="trade-chip"><b>🎁 ' + pack.qty + ' \u00d7 ' + esc(pset ? pset.name : pack.set) +
         ' pack' + (pack.qty === 1 ? '' : 's') + '</b>' +
         '<button class="chip-x" data-pack-x title="Remove packs">\u00d7</button></span>';
-    })());
+    })()) + (!money ? '' :
+      '<span class="trade-chip"><b>' + tbMoneyText(money) + '</b>' +
+      '<button class="chip-x" data-money-x title="Remove currency">\u00d7</button></span>');
     $('#tradeContinueBtn').innerHTML = (TB.step === 1 ? 'Continue \u2192 pick their card' : 'Continue \u2192 review') +
-      ' (' + TB.picks.length + '/10' + (pack ? ' + 🎁' + pack.qty : '') + ')';
+      ' (' + TB.picks.length + '/10' + (pack ? ' + 🎁' + pack.qty : '') + (money ? ' + 💰' : '') + ')';
   }
 
   function tbContinue() {
     if (!TB || TB.step === 3) return;
-    if (!TB.picks.length && !tbCurrentPack()) return;
+    if (!TB.picks.length && !tbCurrentPack() && !tbCurrentMoney()) return;
     tbGotoStep(TB.step + 1);
   }
 
@@ -1642,6 +1685,7 @@
   function renderTradeReview() {
     $('#tradeFilters').classList.add('hidden');
     $('#tradePackBar').classList.add('hidden');
+    $('#tradeMoneyBar').classList.add('hidden');
     $('#tradeGrid').classList.add('hidden');
     $('#tradeDock').classList.add('hidden');
     function packTile(bundle) {
@@ -1666,11 +1710,17 @@
     var box = $('#tradeReview');
     box.classList.remove('hidden');
     box.innerHTML = '<div class="trade-review-group"><span class="trade-cap-top">You give (' + (TB.offer.length + (TB.offerPack ? TB.offerPack.qty : 0)) + ')</span>' +
-      cardsHtml(TB.offer, true, TB.offerPack) + '<button class="btn small" id="tradeEditOffer" style="margin-top:8px">Edit your offer</button></div>' +
+      cardsHtml(TB.offer, true, TB.offerPack) +
+      (TB.offerMoney ? '<div class="muted small" style="margin-top:6px">' + tbMoneyText(TB.offerMoney) + '</div>' : '') +
+      '<button class="btn small" id="tradeEditOffer" style="margin-top:8px">Edit your offer</button></div>' +
       '<div class="trade-review-swap">\u21c4</div>' +
       '<div class="trade-review-group"><span class="trade-cap-top">You get (' + (TB.want.length + (TB.wantPack ? TB.wantPack.qty : 0)) + ')</span>' +
-      cardsHtml(TB.want, false, TB.wantPack) + '<button class="btn small" id="tradeEditWant" style="margin-top:8px">Edit what you get</button></div>' +
-      (TB.offerPack ? '<p class="muted small" style="grid-column:1/-1">🔒 Your packs are held in escrow when you send this offer — they’re delivered if ' + esc(TB.toName) + ' accepts, and returned if they decline, or if the offer is cancelled or expires.</p>' : '') +
+      cardsHtml(TB.want, false, TB.wantPack) +
+      (TB.wantMoney ? '<div class="muted small" style="margin-top:6px">' + tbMoneyText(TB.wantMoney) + '</div>' : '') +
+      '<button class="btn small" id="tradeEditWant" style="margin-top:8px">Edit what you get</button></div>' +
+      ((TB.offerPack || TB.offerMoney) ? '<p class="muted small" style="grid-column:1/-1">🔒 Held in escrow when you send this offer: your ' +
+        [TB.offerPack ? 'packs' : '', TB.offerMoney ? 'tokens/tickets' : ''].filter(Boolean).join(' and ') +
+        ' — delivered if ' + esc(TB.toName) + ' accepts, and returned if they decline, or if the offer is cancelled or expires.</p>' : '') +
       '<div class="trade-review-actions"><button class="btn" id="tradeStartOver">Start over</button>' +
       '<button class="btn primary" id="tradeSendBtn">Send offer to ' + esc(TB.toName) + '</button></div>';
     $('#tradeEditOffer').addEventListener('click', function () { tbGotoStep(1); });
@@ -1678,6 +1728,7 @@
     $('#tradeStartOver').addEventListener('click', function () {
       TB.step = 1; TB.offer = []; TB.want = []; TB.picks = [];
       TB.offerPack = null; TB.wantPack = null; TB.packSet = ''; TB.packs = 0;
+      TB.offerMoney = null; TB.wantMoney = null; TB.tokens = 0; TB.tickets = 0;
       renderTradeBuilder(); window.scrollTo(0, 0);
     });
     $('#tradeSendBtn').addEventListener('click', async function () {
@@ -1686,9 +1737,11 @@
         await CPS.cloud.call('propose_trade', {
           p_to: TB.to,
           p_offer: { cards: TB.offer.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo, tier: p.tier, serial: p.serial }; }),
-                     pack_set: TB.offerPack ? TB.offerPack.set : null, packs: TB.offerPack ? TB.offerPack.qty : 0 },
+                     pack_set: TB.offerPack ? TB.offerPack.set : null, packs: TB.offerPack ? TB.offerPack.qty : 0,
+                     tokens: TB.offerMoney ? TB.offerMoney.tokens : 0, tickets: TB.offerMoney ? TB.offerMoney.tickets : 0 },
           p_want: { cards: TB.want.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo, tier: p.tier, serial: p.serial }; }),
-                    pack_set: TB.wantPack ? TB.wantPack.set : null, packs: TB.wantPack ? TB.wantPack.qty : 0 }
+                    pack_set: TB.wantPack ? TB.wantPack.set : null, packs: TB.wantPack ? TB.wantPack.qty : 0,
+                    tokens: TB.wantMoney ? TB.wantMoney.tokens : 0, tickets: TB.wantMoney ? TB.wantMoney.tickets : 0 }
         });
         toast('Trade offer sent to ' + TB.toName + '!');
         showView('players');
@@ -2491,7 +2544,7 @@
     $('#tradeWithSel').addEventListener('change', async function () {
       if (!TB) return;
       var sel = this, v = sel.value;
-      var hasWork = TB.offer.length || TB.want.length || TB.picks.length || TB.offerPack || TB.wantPack;
+      var hasWork = TB.offer.length || TB.want.length || TB.picks.length || TB.offerPack || TB.wantPack || TB.offerMoney || TB.wantMoney || TB.tokens > 0 || TB.tickets > 0;
       if (v !== TB.to && hasWork) {
         var ok = await confirmDialog('Switch trading partner?',
           'Your picks for ' + esc(TB.toName || 'this partner') + ' will be cleared.', 'Switch partner', 'Keep building');
@@ -2516,6 +2569,26 @@
       if (TB.packs > m) TB.packs = m;
       tbSyncPackScratch(); tbRenderPackBar(); tbRenderDock();
     });
+    $('#tradeTokens').addEventListener('input', function () {
+      if (!TB) return;
+      TB.tokens = Math.max(0, parseInt(this.value, 10) || 0);
+      tbSyncMoneyScratch(); tbRenderDock();
+    });
+    $('#tradeTokens').addEventListener('change', function () {
+      if (!TB) return;
+      if (TB.step === 1 && TB.tokens > (S.gameTokens || 0)) TB.tokens = S.gameTokens || 0;
+      tbSyncMoneyScratch(); tbRenderMoneyBar(); tbRenderDock();
+    });
+    $('#tradeTickets').addEventListener('input', function () {
+      if (!TB) return;
+      TB.tickets = Math.max(0, parseInt(this.value, 10) || 0);
+      tbSyncMoneyScratch(); tbRenderDock();
+    });
+    $('#tradeTickets').addEventListener('change', function () {
+      if (!TB) return;
+      if (TB.step === 1 && TB.tickets > (S.spins || 0)) TB.tickets = S.spins || 0;
+      tbSyncMoneyScratch(); tbRenderMoneyBar(); tbRenderDock();
+    });
     $('#tradeSearch').addEventListener('input', function () { if (TB) { TB.q = this.value; tbRenderGrid(); } });
     $('#tradeSetSel').addEventListener('change', function () { if (TB) { TB.setId = this.value; tbRenderGrid(); } });
     $('#tradeRarity').addEventListener('change', function () { if (TB) { TB.rarity = this.value; tbRenderGrid(); } });
@@ -2539,6 +2612,10 @@
     });
     $('#tradeChips').addEventListener('click', function (e) {
       if (!TB) return;
+      if (e.target.closest('[data-money-x]')) {
+        TB.tokens = 0; TB.tickets = 0; tbSyncMoneyScratch(); tbRenderMoneyBar(); tbRenderDock();
+        return;
+      }
       if (e.target.closest('[data-pack-x]')) {
         TB.packSet = ''; TB.packs = 0; tbSyncPackScratch(); tbRenderPackBar(); tbRenderDock();
         return;

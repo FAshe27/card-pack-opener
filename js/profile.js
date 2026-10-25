@@ -20,6 +20,32 @@ function bestPull(collection) {
   return best;
 }
 
+var XHIST_ICONS = { trade: '🔁', gift: '🎁', bounty: '🎯', market: '🏪' };
+async function openExchangeHistory(accountId, name) {
+  ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
+    '<h3>📜 Exchanges with ' + ctx.esc(name) + '</h3><div class="muted" style="padding:16px">Loading…</div>');
+  try {
+    var rows = await CPS.cloud.call('exchange_history', { p_other: accountId });
+    var html = '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h3>📜 Exchanges with ' + ctx.esc(name) + '</h3>';
+    if (!rows || !rows.length) {
+      html += '<div class="empty" style="padding:16px">No exchanges with ' + ctx.esc(name) + ' yet — trades, gifts, bounties and Trading Post deals between you will show up here.</div>';
+    } else {
+      html += rows.map(function (e) {
+        var when = '';
+        try { when = new Date(e.at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }); } catch (err) {}
+        return '<div class="xhist-row" style="padding:8px 0;border-bottom:1px solid rgba(127,127,127,.18)">' +
+          '<div>' + (XHIST_ICONS[e.kind] || '•') + ' <b>' + ctx.esc(e.title) + '</b>' +
+          (e.status ? ' <span class="pill st-' + ctx.esc(e.status) + '">' + ctx.esc(e.status) + '</span>' : '') +
+          (e.thanked ? ' <span class="muted small">🙏 thanked</span>' : '') +
+          '<span class="muted small" style="float:right">' + when + '</span></div>' +
+          '<div class="muted small">' + ctx.esc(e.detail) + '</div></div>';
+      }).join('');
+    }
+    ctx.openModal(html);
+  } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
+}
+
 async function openProfile(accountId) {
   ctx.openModal('<div class="muted" style="padding:24px">Loading…</div>');
   try {
@@ -44,7 +70,7 @@ async function openProfile(accountId) {
     var poss = ctx.esc(p.display_name) + '’s';
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
       '<div class="prof-head"><span class="avatar big">' + ctx.esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
-      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button> <button class="btn small" id="profGiftBtn">🎁 Gift</button>') + '</div></div>' +
+      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button> <button class="btn small" id="profGiftBtn">🎁 Gift</button> <button class="btn small" id="profHistBtn">📜 History</button>') + '</div></div>' +
       statsHtml +
       '<div class="prof-nav">' +
       '<button class="btn prof-nav-btn" id="profVaultBtn">🔒 View ' + poss + ' Vault<span class="muted">' + (p.favorites || []).length + '</span></button>' +
@@ -59,6 +85,8 @@ async function openProfile(accountId) {
       if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
       var pgb = box.querySelector('#profGiftBtn');
       if (pgb) pgb.addEventListener('click', function () { if (CPS.giftBundle) CPS.giftBundle.open(accountId, p.display_name); });
+      var phb = box.querySelector('#profHistBtn');
+      if (phb) phb.addEventListener('click', function () { openExchangeHistory(accountId, p.display_name); });
       var pb = box.querySelector('.prof-best');
       if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { CPS.cardBack = { text: '← Back to ' + p.display_name + '’s profile', go: function () { openProfile(accountId); } }; ctx.openCardModal(best.set.id, best.card.id); }); }
     });
