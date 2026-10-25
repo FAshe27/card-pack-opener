@@ -1388,6 +1388,49 @@
     tbRenderGrid(groups);
   }
 
+  /* Trade grid paging (2026-10-24): the builder used to render EVERY owned
+     card at once \u2014 12,074 unique cards for the biggest collection \u2014 and
+     hard-froze the client the moment it opened. Same cure as the Collection
+     grid: TB_PAGE cards at a time, throttled auto-append on scroll plus a
+     Show more button. The signature resets paging when step/partner/filters
+     change; re-renders for pick changes keep the expanded depth. */
+  var TB_PAGE = 60;
+  var tbPage = { list: null, sig: '', shown: 0, obs: null, throttleT: null, lastAppend: 0 };
+  function tbCardHtml(it) {
+    var sel = TB.picks.some(function (p) { return p.setId === it.set.id && p.cardId === it.card.id && !p.tier; });
+    return '<button class="trade-pick' + (sel ? ' selected' : '') + '" data-set="' + esc(it.set.id) +
+      '" data-card="' + esc(it.card.id) + '">' + CPS.cards.collected(it.set, it.card, it.n, it.h) + '</button>';
+  }
+  function tbSyncPager() {
+    var old = $('#tradeMoreBtn');
+    if (old) old.remove();
+    if (tbPage.obs) { tbPage.obs.disconnect(); tbPage.obs = null; }
+    $('#tradeCount').textContent = tbPage.shown < tbPage.list.length
+      ? tbPage.shown + ' / ' + tbPage.list.length + ' shown' : tbPage.list.length + ' shown';
+    if (tbPage.shown >= tbPage.list.length) return;
+    $('#tradeGrid').insertAdjacentHTML('beforeend',
+      '<button class="btn" id="tradeMoreBtn" style="grid-column:1/-1">Show more cards (' + (tbPage.list.length - tbPage.shown) + ' more)</button>');
+    var btn = $('#tradeMoreBtn');
+    btn.addEventListener('click', function () { tbAppendChunk(); });
+    if (window.IntersectionObserver) {
+      tbPage.obs = new IntersectionObserver(function (entries) {
+        if (!entries.some(function (en) { return en.isIntersecting; })) return;
+        var wait = 350 - (Date.now() - (tbPage.lastAppend || 0));
+        if (wait <= 0) tbAppendChunk();
+        else if (!tbPage.throttleT) tbPage.throttleT = setTimeout(function () { tbPage.throttleT = null; tbAppendChunk(); }, wait);
+      }, { rootMargin: '600px' });
+      tbPage.obs.observe(btn);
+    }
+  }
+  function tbAppendChunk() {
+    if (!TB || !tbPage.list || tbPage.shown >= tbPage.list.length) return;
+    tbPage.lastAppend = Date.now();
+    var end = Math.min(tbPage.shown + TB_PAGE, tbPage.list.length);
+    var btn = $('#tradeMoreBtn'); if (btn) btn.remove();
+    $('#tradeGrid').insertAdjacentHTML('beforeend', tbPage.list.slice(tbPage.shown, end).map(tbCardHtml).join(''));
+    tbPage.shown = end;
+    tbSyncPager();
+  }
   function tbRenderGrid(groups) {
     groups = groups || (TB.step === 1 ? tbGroup(TB.myColl) : tbGroup(TB.their));
     var q = TB.q.trim().toLowerCase(), list = [];
@@ -1405,12 +1448,18 @@
     list.sort(function (a, b) {
       return a.set.name < b.set.name ? -1 : a.set.name > b.set.name ? 1 : a.card.num - b.card.num;
     });
-    $('#tradeCount').textContent = list.length + ' shown';
-    $('#tradeGrid').innerHTML = list.length ? list.map(function (it) {
-      var sel = TB.picks.some(function (p) { return p.setId === it.set.id && p.cardId === it.card.id && !p.tier; });
-      return '<button class="trade-pick' + (sel ? ' selected' : '') + '" data-set="' + esc(it.set.id) +
-        '" data-card="' + esc(it.card.id) + '">' + CPS.cards.collected(it.set, it.card, it.n, it.h) + '</button>';
-    }).join('') : '<div class="empty">' + (TB.step === 1 ? 'You don\'t own any cards yet.' : esc(TB.toName) + ' doesn\'t own any cards yet.') + '</div>';
+    var sig = TB.step + '|' + TB.to + '|' + TB.setId + '|' + TB.rarity + '|' + q;
+    if (sig !== tbPage.sig) { tbPage.sig = sig; tbPage.shown = TB_PAGE; }
+    tbPage.list = list;
+    if (tbPage.shown > list.length) tbPage.shown = list.length;
+    if (!list.length) {
+      if (tbPage.obs) { tbPage.obs.disconnect(); tbPage.obs = null; }
+      $('#tradeCount').textContent = '0 shown';
+      $('#tradeGrid').innerHTML = '<div class="empty">' + (TB.step === 1 ? 'You don\'t own any cards yet.' : esc(TB.toName) + ' doesn\'t own any cards yet.') + '</div>';
+    } else {
+      $('#tradeGrid').innerHTML = list.slice(0, tbPage.shown).map(tbCardHtml).join('');
+      tbSyncPager();
+    }
     tbRenderDock();
     if (CPS.tradeCopies) CPS.tradeCopies.render(TB, tbRenderGrid);
   }
