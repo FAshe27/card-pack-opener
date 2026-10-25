@@ -168,9 +168,28 @@
     if (CPS.online) CPS.online.start();
   }
 
-  async function refreshCloud() {
+  /* Single-flight with a trailing re-run: bursts of refreshCloud()
+     (28 call sites — nearly every action ends in one) used to stack
+     full get_state pulls. A call that lands mid-flight now queues ONE
+     trailing run and resolves after it, so awaiters still see state at
+     least as fresh as their own action. */
+  var _cloudFlight = null, _cloudTrail = null;
+  async function _refreshCloudOnce() {
     try { enterCloud(await CPS.cloud.call('get_state')); applyPrefsUI(); renderPacksSide(); if (!S.opening) resetStage(); renderView(); refreshQuests(); refreshNotifBadge(); }
     catch (e) { cloudError(e); }
+  }
+  function refreshCloud() {
+    if (_cloudFlight) {
+      if (!_cloudTrail) {
+        _cloudTrail = _cloudFlight.then(async function () {
+          _cloudTrail = null; _cloudFlight = null;
+          return refreshCloud();
+        });
+      }
+      return _cloudTrail;
+    }
+    _cloudFlight = _refreshCloudOnce();
+    return _cloudFlight;
   }
 
   function cloudError(e) {
@@ -327,6 +346,7 @@
 
   /* --- views */
   function showView(name, quiet) {
+    if (S.view && S.view !== name) S.prevView = S.view;
     if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'bounties' || name === 'trading') name = 'market';
     if (name === 'sets') name = 'admin'; // Sets & Settings now lives in the Admin area
@@ -351,6 +371,7 @@
     renderView();
     if (name === 'admin' && !quiet && isAdmin() && !S.dev) requestDevUnlock();
   }
+  function goBack(fallback) { showView(S.prevView || fallback || 'packs'); }
   function renderView() {
     if (S.view === 'daily') { renderDaily(); return; }
     if (S.view === 'collection') {
@@ -397,7 +418,16 @@
         (st.packs ? 'Click to open and tear a pack' : 'No packs left') + '">' + CPS.cards.pack(set, 'float') + (st.packs ? '<span class="inv-badge stage-badge">' + st.packs + '</span>' : '') + '</div>' +
       '<div class="idle-msg">' + (st.packs
         ? '<b>' + st.packs + ' pack' + (st.packs === 1 ? '' : 's') + ' ready.</b> Click the pack (or press <kbd>Space</kbd>) to open.'
-        : '<b>Out of packs!</b> Win or earn more packs!') + '</div>';
+        : '<b>Out of ' + esc(set.name) + ' packs!</b>' + (function () {
+            var others = 0;
+            if (S.player && S.player.sets) Object.keys(S.player.sets).forEach(function (id) {
+              var s2 = S.player.sets[id];
+              if (id !== set.id && s2 && s2.packs > 0) others++;
+            });
+            return others
+              ? ' You have packs in ' + others + ' other set' + (others === 1 ? '' : 's') + ' — pick one from the set menu above.'
+              : ' Win or earn more packs!';
+          })()) + '</div>';
     $('#stageIdle').classList.remove('hidden');
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
     $('#revealGrid').classList.add('hidden'); $('#revealGrid').innerHTML = '';
@@ -1176,14 +1206,30 @@
     return window.CardSets.loadIds ? window.CardSets.loadIds(ownedSetIds()) : Promise.resolve();
   }
 
+  /* One shared list_notifications fetch: the bell badge and the gift
+     pop-up poller used to each pull the full list on their own 60s
+     cadences (list_notifications is the #3 RPC consumer all-time).
+     Single-flight + a 10s cache collapses the duplicates; the badge
+     tick also nudges the gift poller so there is one fetch per cycle. */
+  var _notifFlight = null, _notifCache = null, _notifCacheAt = 0;
+  function fetchNotifications() {
+    if (_notifFlight) return _notifFlight;
+    if (_notifCache && Date.now() - _notifCacheAt < 10000) return Promise.resolve(_notifCache);
+    _notifFlight = CPS.cloud.call('list_notifications').then(function (n) {
+      _notifCache = n; _notifCacheAt = Date.now(); _notifFlight = null;
+      return n;
+    }, function (e) { _notifFlight = null; throw e; });
+    return _notifFlight;
+  }
   async function refreshNotifBadge() {
     if (!isCloud()) return;
     try {
-      var n = await CPS.cloud.call('list_notifications');
+      var n = await fetchNotifications();
       var b = $('#notifBadge');
       b.textContent = n.unread > 99 ? '99+' : n.unread;
       b.classList.toggle('hidden', !n.unread);
     } catch (e) {  }
+    if (CPS.giftPop && CPS.giftPop.check) CPS.giftPop.check();
   }
 
   /* --- variants */
@@ -2176,11 +2222,28 @@
     var b = $('#wheelBadge');
     if (b) { var n = spinCount(); b.textContent = n; b.classList.toggle('hidden', !(n > 0)); }
   }
-  async function refreshQuests() {
+  /* Single-flight, same reasoning as refreshCloud: refreshQuests is
+     called from 12 sites and bursts stacked identical list_quests
+     fetches (the most-called content RPC). */
+  var _questFlight = null, _questTrail = null;
+  async function _refreshQuestsOnce() {
     if (!isCloud()) { S.quests = null; updateDailyBadge(); return; }
     try { S.quests = await CPS.cloud.call('list_quests', {}); }
     catch (e) { S.quests = []; }
     updateDailyBadge();
+  }
+  function refreshQuests() {
+    if (_questFlight) {
+      if (!_questTrail) {
+        _questTrail = _questFlight.then(async function () {
+          _questTrail = null; _questFlight = null;
+          return refreshQuests();
+        });
+      }
+      return _questTrail;
+    }
+    _questFlight = _refreshQuestsOnce();
+    return _questFlight;
   }
   function updateDailyBadge() {
     var n = (S.quests || []).filter(function (q) { return q.done && !q.claimed; }).length;
@@ -2651,7 +2714,7 @@
     }, true);
   }
 
-  CPS.app = { state: S, config: CONFIG, openPack: startOpen, tear: tear, revealAll: revealAll, showView: showView, selectSet: selectSet };
+  CPS.app = { state: S, config: CONFIG, openPack: startOpen, tear: tear, revealAll: revealAll, showView: showView, selectSet: selectSet, goBack: goBack };
   /* Shared context for split-out modules (js/tickets.js). */
   CPS.appCtx = { S: S, U: U, R: R, audio: audio, fx: fx,
     $: $, $$: $$, esc: esc, save: save, isCloud: isCloud, isLocked: isLocked, isAdmin: isAdmin,
@@ -2662,6 +2725,7 @@
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
     ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
     openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog, quickFinish: quickFinish,
-    showView: showView, refreshNotifBadge: refreshNotifBadge, ensureOwnedSets: ensureOwnedSets };
+    showView: showView, refreshNotifBadge: refreshNotifBadge, ensureOwnedSets: ensureOwnedSets,
+    fetchNotifications: fetchNotifications, goBack: goBack };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
 })(window.CPS);

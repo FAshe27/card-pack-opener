@@ -9,7 +9,7 @@
 (function (CPS) {
   var ctx = CPS.appCtx;
   var B = null;                          // {bounties:[], my_open} from cps_list_bounties
-  var F = { set: '', fillable: false };  // board filters
+  var F = { set: '', fillable: false, q: '' };  // board filters
   var PB = null;                         // post-bounty form state
 
   function el() { return ctx.$('#bountyPanel'); }
@@ -45,11 +45,13 @@
       '<div class="row wrap"><button class="btn primary" id="bountyPostBtn">Post a bounty</button>' +
       '<span class="muted small" id="bountyMyOpen"></span></div></div>' +
       '<div class="panel bounty-filters"><label>Set <select id="bountySetFilter"><option value="">All sets</option></select></label>' +
-      '<label class="inline"><input type="checkbox" id="bountyFillFilter"> Bounties I can fill</label></div>' +
+      '<label class="inline"><input type="checkbox" id="bountyFillFilter"> Bounties I can fill</label>' +
+      '<label>Search <input id="bountySearch" type="search" placeholder="Card, set or poster…" value="' + esc(F.q) + '"></label></div>' +
       '<div id="bountyList"><p class="muted small">Loading…</p></div>';
     ctx.$('#bountyPostBtn').addEventListener('click', openPostModal);
     ctx.$('#bountyFillFilter').addEventListener('change', function (e) { F.fillable = e.target.checked; renderList(); });
     ctx.$('#bountySetFilter').addEventListener('change', function (e) { F.set = e.target.value; renderList(); });
+    ctx.$('#bountySearch').addEventListener('input', function (e) { F.q = e.target.value; renderList(); });
     await load();
   }
 
@@ -248,9 +250,14 @@
 
   function renderList() {
     var box = ctx.$('#bountyList'); if (!box || !B) return;
+    var q = F.q.trim().toLowerCase();
     var list = B.bounties.filter(function (b) {
       if (F.set && b.want_set !== F.set) return false;
       if (F.fillable && !b.can_claim) return false;
+      if (q) {
+        var hay = ((b.card_name || b.want_card || '') + ' ' + (b.set_name || b.want_set || '') + ' ' + (b.poster || '')).toLowerCase();
+        if (hay.indexOf(q) < 0) return false;
+      }
       return true;
     });
     if (!list.length) {

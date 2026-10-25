@@ -167,7 +167,11 @@
               '<button class="btn big" disabled>&#9660; Lower</button></div>';
       html += '<button class="btn ghost" disabled>Claim prizes &amp; end run</button>';
       html += '<div class="prize-box"><b>Prize bank</b><div id="gameBank">' + bankHTML([]) + '</div></div>';
-      html += '<p class="muted small">Cards are numbered 1&ndash;10.</p>';
+      html += '<div class="prize-box"><b>What a correct guess can win</b>' +
+        '<p class="muted small" style="margin:6px 0 0">Every correct guess rolls for each prize &mdash; several can land at once:</p>' +
+        '<p style="margin:6px 0 0">🎁 Pack &mdash; <b>45%</b> &nbsp;·&nbsp; 🎟️ Spin ticket &mdash; <b>35%</b> &nbsp;·&nbsp; 🪙 +1 token &mdash; <b>20%</b></p>' +
+        '<p class="muted small" style="margin:6px 0 0">The fuller your bank, the better the odds: +2% pack, +2% ticket and +1% token for every prize already banked, up to 85% / 75% / 45%.</p></div>';
+      html += '<p class="muted small">Cards are numbered 1&ndash;10. A tie is re-drawn &mdash; it never busts you.</p>';
       html += '</div>';
       if (!(tokens > 0)) html += '<p class="muted small">Earn tokens from packs (5 on a token slip, ~1 in 10 packs).</p>';
     } else {

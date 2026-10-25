@@ -360,7 +360,7 @@ function openFavManager(accountId, seedFavs, _ready) {
     }
     var inp = box.querySelector('.favmgr-search input');
     inp.addEventListener('input', function () { renderResults(box, inp.value); });
-    box.querySelector('#favmgrDone').addEventListener('click', function () { openProfile(accountId); });
+    box.querySelector('#favmgrDone').addEventListener('click', function () { openVaultScreen(accountId); });
   });
 }
 

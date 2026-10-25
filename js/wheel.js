@@ -417,6 +417,9 @@
      to the SERVER-DECIDED outcome of a category or Bonus landing. It never
      re-rolls: the winner index is fixed by the hop's prize fields before
      the animation starts. Single spins only (see playHops). --- */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && subEls && subEls.ov.style.display !== 'none') subOverlayExit();
+  });
   var subEls = null;
   function ensureSubEls() {
     if (subEls) return subEls;
@@ -443,6 +446,7 @@
       '<div class="subwheel-result">Spinning\u2026</div>' +
       '<button class="subwheel-btn" disabled>Nice!</button></div>';
     ov.style.display = 'none';
+    ov.addEventListener('click', function (e) { if (e.target === ov) subOverlayExit(); });
     document.body.appendChild(ov);
     subEls = {
       ov: ov,
@@ -499,7 +503,7 @@
     var from = 0, t0 = null, lastIdx = -1;
     function frame(t) {
       if (t0 === null) t0 = t;
-      var pr = Math.min(1, (t - t0) / 3000);
+      var pr = subSkip ? 1 : Math.min(1, (t - t0) / 3000);
       var e = 1 - Math.pow(1 - pr, 4);
       var rot = from + (targetRot - from) * e;
       var ptrLocal = ((-rot % TAU) + TAU) % TAU;
@@ -510,6 +514,19 @@
       if (pr < 1) requestAnimationFrame(frame); else done();
     }
     requestAnimationFrame(frame);
+  }
+
+  /* Backdrop tap / Escape on the sub-wheel overlay: while it is still
+     spinning, fast-forward the animation to its result; once the
+     result is showing, act exactly like the Nice! button. Everywhere
+     else in the app X / backdrop / Escape always works — this overlay
+     was the one exception. */
+  var subSkip = false;
+  function subOverlayExit() {
+    var els = ensureSubEls();
+    if (els.ov.style.display === 'none') return;
+    if (els.btn.disabled) { subSkip = true; return; }
+    if (els.btn.onclick) els.btn.onclick();
   }
 
   /* Build the sub-wheel for a terminal hop and play it. done() fires when
@@ -538,6 +555,7 @@
     }
     if (!items || !items.length || winIdx < 0) { done(); return; }
     var els = ensureSubEls();
+    subSkip = false;
     els.title.textContent = title;
     els.result.textContent = 'Spinning…';
     els.btn.disabled = true;

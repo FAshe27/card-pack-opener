@@ -6,7 +6,7 @@
 (function (CPS) {
   var ctx = CPS.appCtx;
   var T = null;              // {listings:[], my_open} from cps_trading_post
-  var F = { set: '' };       // board filters
+  var F = { set: '', q: '' };       // board filters
   var PL = null;             // post-listing form state
   var OF = null;             // offer form state
 
@@ -47,10 +47,12 @@
       'refunded automatically. Listings expire after 7 days.</p>' +
       '<div class="row wrap"><button class="btn primary" id="tradePostBtn">List a card</button>' +
       '<span class="muted small" id="tradeMyOpen"></span></div></div>' +
-      '<div class="panel trade-filters"><label>Set <select id="tradeSetFilter"><option value="">All sets</option></select></label></div>' +
+      '<div class="panel trade-filters"><label>Set <select id="tradeSetFilter"><option value="">All sets</option></select></label>' +
+      '<label>Search <input id="tradeSearch" type="search" placeholder="Card, set, note or lister…" value="' + esc(F.q) + '"></label></div>' +
       '<div id="tradingList"><p class="muted small">Loading…</p></div>';
     ctx.$('#tradePostBtn').addEventListener('click', openPostModal);
     ctx.$('#tradeSetFilter').addEventListener('change', function (e) { F.set = e.target.value; renderList(); });
+    ctx.$('#tradeSearch').addEventListener('input', function (e) { F.q = e.target.value; renderList(); });
     await load();
   }
 
@@ -152,7 +154,13 @@
 
   function renderList() {
     var box = ctx.$('#tradingList'); if (!box || !T) return;
-    var list = T.listings.filter(function (l) { return !F.set || l.set_id === F.set; });
+    var q = F.q.trim().toLowerCase();
+    var list = T.listings.filter(function (l) {
+      if (F.set && l.set_id !== F.set) return false;
+      if (!q) return true;
+      var hay = ((listingTitle(l) || '') + ' ' + (l.set_name || l.set_id || '') + ' ' + (l.note || '') + ' ' + (l.lister || '')).toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
     if (!list.length) {
       box.innerHTML = '<div class="panel"><p class="muted">' +
         (T.listings.length ? 'No listings match your filters.' : 'No open listings — post the first one!') + '</p></div>';

@@ -101,6 +101,18 @@
         if (!retryTimer) retryTimer = setTimeout(function () { retryTimer = null; check(); }, 3000);
         return;
       }
+      /* The asked-memory persists across sessions (localStorage,
+         keyed by account): a (set, turned-count) pair's answer can
+         never change — counts only grow, and each milestone pays
+         once — so a fresh login no longer re-asks every candidate
+         set. Since migration 179 pays rewards inside the turn-in
+         itself, this sweep is only a safety net now. Storage full /
+         unavailable just degrades to the old per-session behaviour. */
+      var storeKey = 'cps.turninSeen.' + (ctx.S.account && ctx.S.account.id || '');
+      try {
+        var saved = JSON.parse(localStorage.getItem(storeKey) || '{}');
+        Object.keys(saved).forEach(function (k) { seen[k] = true; });
+      } catch (e) { /* private mode etc. — session memory still applies */ }
       /* Cheap local filter: only ask the server about sets that could
          have passed 25% (the server does the real counting). */
       var candidates = [];
@@ -111,19 +123,25 @@
         var key = set.id + ':' + n;
         if (seen[key]) return;
         seen[key] = true;
-        candidates.push(set);
+        candidates.push({ set: set, key: key });
       });
       if (!candidates.length) return;
 
       running = true;
       var queue = [];
       for (var i = 0; i < candidates.length; i++) {
-        var set = candidates[i];
+        var set = candidates[i].set;
         try {
           var r = await CPS.cloud.call('award_turnin_rewards', { p_set: set.id });
           if (r && r.paid && r.paid.length) queue.push({ set: set, paid: r.paid });
-        } catch (e) { /* not live yet / offline: stays owed, retried next load */ }
+        } catch (e) {
+          /* Failed asks are NOT remembered (in-session or persisted):
+             an owed reward must stay retryable. */
+          delete seen[candidates[i].key];
+        }
       }
+      /* Persist only now that every surviving key has a real answer. */
+      try { localStorage.setItem(storeKey, JSON.stringify(seen)); } catch (e) { }
       if (!queue.length) { running = false; return; }
 
       /* Prizes are already granted; refresh so spins + pack counts on
@@ -149,7 +167,10 @@
       if (!paid || !paid.length) return;
       var set = window.CardSets && window.CardSets.get(setId);
       if (!set) return;
-      try { seen[setId + ':' + turnedCount(set)] = true; } catch (e) { /* non-fatal */ }
+      try {
+        seen[setId + ':' + turnedCount(set)] = true;
+        localStorage.setItem('cps.turninSeen.' + (ctx.S.account && ctx.S.account.id || ''), JSON.stringify(seen));
+      } catch (e) { /* non-fatal */ }
       deliver([{ set: set, paid: paid }]);
     } catch (e) { /* rewards must never break the app */ }
   }

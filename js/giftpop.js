@@ -191,7 +191,10 @@
       if (!ctx.isCloud() || !ctx.S.account) return;
       running = true;
       var n = null;
-      try { n = await CPS.cloud.call('list_notifications'); } catch (e) { /* offline: retry next pass */ }
+      /* Ride app.js's shared notification fetch when it is available
+         (single-flight + cached) so the badge poll and this poller
+         cost one list_notifications call per cycle, not two. */
+      try { n = await (ctx.fetchNotifications ? ctx.fetchNotifications() : CPS.cloud.call('list_notifications')); } catch (e) { /* offline: retry next pass */ }
       running = false;
       if (!n || !n.items) return;
       var launch = Date.parse(LAUNCH_ISO);
@@ -208,7 +211,9 @@
   }
 
   setTimeout(check, 4000);
-  setInterval(function () { if (!document.hidden) check(); }, POLL_MS);
+  /* No own interval: app.js's 60s badge tick calls check() after its
+     refresh, on the same cadence this poller used (POLL_MS). The
+     visibility nudge stays — the shared fetch dedupes the overlap. */
   document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
 
   CPS.giftPop = { check: check };

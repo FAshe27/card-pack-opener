@@ -313,7 +313,19 @@
       c.addEventListener('click', function () { toggle('straight:' + c.getAttribute('data-num')); });
     });
     var bk = root.querySelector('#rltBack');
-    if (bk) bk.addEventListener('click', function () {
+    if (bk) bk.addEventListener('click', async function () {
+      /* Chips on the table are only a layout until Spin — nothing is
+         debited — but a built layout vanishing silently feels like a
+         loss. Confirm first when any are down. */
+      if (state && state.placed && state.placed.size && !state.spinning && ctx.confirmDialog) {
+        var n = state.placed.size;
+        var ok = await ctx.confirmDialog('Leave the table?',
+          '<p>You have <b>' + n + ' chip' + (n === 1 ? '' : 's') + '</b> on the table that ' +
+          (n === 1 ? 'hasn’t' : 'haven’t') + ' been spun yet. No tokens have been taken — but the layout will be cleared.</p>',
+          'Leave anyway', 'Stay');
+        if (!ok) return;
+        state.placed.clear();
+      }
       if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('arcade');
     });
     var spin = root.querySelector('#rltSpin'); if (spin) spin.addEventListener('click', function () { spinWheel(); });
