@@ -39,9 +39,10 @@
       return e && onHand(e) > 0 && (!G.q || card.name.toLowerCase().indexOf(G.q) !== -1);
     });
   }
+  function packCount(set) { return ps(set).packs || 0; }
   function packSets() {
     return window.CardSets.all().filter(function (set) {
-      return set.id !== 'jumbled' && ((S.packs && S.packs[set.id]) || 0) > 0;
+      return set.id !== 'jumbled' && packCount(set) > 0;
     });
   }
   /* Copy availability for one card, ignoring the pick at exceptIdx
@@ -98,10 +99,12 @@
     var list = gridList();
     var shown = list.slice(0, G.shown);
     box.innerHTML = shown.length
-      ? '<div class="bounty-pick-grid">' + shown.map(function (card) {
+      ? '<div class="coll-grid gb-grid">' + shown.map(function (card) {
+          var set = window.CardSets.get(G.setId);
+          var e = ps(set).cards[card.id] || {};
           var n = G.picks.filter(function (p) { return p.setId === G.setId && p.cardId === card.id; }).length;
-          return '<button type="button" class="bounty-pick' + (n ? ' sel' : '') + '" data-gb-card="' + esc(card.id) + '">' +
-            CPS.cards.collected(window.CardSets.get(G.setId), card) +
+          return '<button type="button" class="trade-pick' + (n ? ' selected' : '') + '" data-gb-card="' + esc(card.id) + '">' +
+            CPS.cards.collected(set, card, onHand(e), Math.max(0, (e.h || 0) - (e.vh || 0))) +
             (n ? '<span class="gb-n">' + n + ' in gift</span>' : '') + '</button>';
         }).join('') + '</div>' +
         (list.length > shown.length
@@ -228,7 +231,7 @@
       '<div id="gbGrid"></div><div id="gbPicks"></div><div id="gbCopy"></div>' +
       '<span class="fld-label">Packs (optional)</span>' +
       '<div class="gb-controls"><select id="gbPackSet">' + psets.map(function (s) {
-        return '<option value="' + esc(s.id) + '"' + (s.id === G.packSet ? ' selected' : '') + '>' + esc(s.name) + ' — ' + ((S.packs && S.packs[s.id]) || 0) + ' unopened</option>';
+        return '<option value="' + esc(s.id) + '"' + (s.id === G.packSet ? ' selected' : '') + '>' + esc(s.name) + ' — ' + packCount(s) + ' unopened</option>';
       }).join('') + '</select>' +
       '<input id="gbPacks" type="number" min="0" step="1" value="' + (G.packs || '') + '" placeholder="Qty"></div>' +
       '<span class="fld-label">Tokens &amp; tickets (optional)</span>' +
@@ -243,11 +246,11 @@
     $('#gbQ').addEventListener('input', function () { G.q = this.value.trim().toLowerCase(); G.shown = PAGE; renderGrid(); });
     $('#gbPackSet').addEventListener('change', function () {
       G.packSet = this.value;
-      var max = (S.packs && S.packs[G.packSet]) || 0;
+      var max = G.packSet ? packCount(window.CardSets.get(G.packSet)) : 0;
       if (G.packs > max) { G.packs = max; $('#gbPacks').value = max || ''; }
       sync();
     });
-    $('#gbPacks').addEventListener('input', function () { G.packs = num(this.value, (S.packs && S.packs[G.packSet]) || 0); sync(); });
+    $('#gbPacks').addEventListener('input', function () { G.packs = num(this.value, G.packSet ? packCount(window.CardSets.get(G.packSet)) : 0); sync(); });
     $('#gbTokens').addEventListener('input', function () { G.tokens = num(this.value, S.gameTokens || 0); sync(); });
     $('#gbTickets').addEventListener('input', function () { G.tickets = num(this.value, S.spins || 0); sync(); });
     $('#gbReviewBtn').addEventListener('click', showConfirm);
