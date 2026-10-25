@@ -1381,7 +1381,13 @@
     }
     $('#tradeFilters').classList.remove('hidden');
     var groups = TB.step === 1 ? tbGroup(TB.myColl) : tbGroup(TB.their);
-    $('#tradeSetSel').innerHTML = '<option value="">All sets</option>' + groups.map(function (g) {
+    /* Trades browse one set at a time (Franklin, 2026-10-24): there is no
+       All sets mode. Keep the chosen set while it exists on this side of
+       the trade; otherwise start with the first set alphabetically. */
+    if (!groups.some(function (g) { return g.set.id === TB.setId; })) {
+      TB.setId = groups.length ? groups[0].set.id : '';
+    }
+    $('#tradeSetSel').innerHTML = groups.map(function (g) {
       return '<option value="' + esc(g.set.id) + '"' + (g.set.id === TB.setId ? ' selected' : '') + '>' +
         esc(g.set.name) + ' (' + (g.total || g.cards.length) + ')</option>';
     }).join('');
@@ -1433,6 +1439,10 @@
   }
   function tbRenderGrid(groups) {
     groups = groups || (TB.step === 1 ? tbGroup(TB.myColl) : tbGroup(TB.their));
+    if (!groups.some(function (g) { return g.set.id === TB.setId; })) {
+      TB.setId = groups.length ? groups[0].set.id : '';
+      var setSel = $('#tradeSetSel'); if (setSel) setSel.value = TB.setId;
+    }
     var q = TB.q.trim().toLowerCase(), list = [];
     groups.forEach(function (g) {
       if (TB.setId && g.set.id !== TB.setId) return;
