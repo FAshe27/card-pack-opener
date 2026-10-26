@@ -7,6 +7,7 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+html { background: var(--bg); } /* dark canvas: no white strip under the iOS keyboard / overscroll (the backdrop itself lives on body::before) */
 body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--text); min-height: 100vh;

@@ -58,3 +58,20 @@
 .trophy.locked .trophy-title { color: var(--muted); }
 .trophy-bar { display: block; height: 5px; background: rgba(255,255,255,.08); border-radius: 3px; margin: 5px 4px 0; overflow: hidden; }
 .trophy-bar i { display: block; height: 100%; background: #38c97f; }
+
+/* Spacing cleanup 2026-10-25 (Franklin's screenshot: "the boxes up
+   top are touching"). Measured on his screenshot: the two rows of
+   header buttons sat ~2px apart (they were bare inline buttons with
+   no gap control), and the stat tiles read as one merged bar. The
+   header actions become a real flex row with an 8px gap both ways,
+   and the tiles get a wider seam + slightly smaller numbers on
+   phones so they stop crowding their edges. */
+.prof-head > div { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.prof-head h2 { flex: 0 0 100%; margin: 0; }
+.prof-head .btn { margin: 0; }
+.prof-stats { gap: 12px; }
+.prof-stat { min-width: 0; }
+@media (max-width: 480px) {
+  .prof-stats { gap: 10px; }
+  .prof-stat b { font-size: 1.12rem; }
+}

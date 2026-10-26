@@ -1,9 +1,21 @@
 /* FarmRPG-style Players directory (migration 191): Online + Search
    buttons replace the full player list. Own sheet; style.css untouched.
-   No backdrop-filter / fixed backgrounds (Firefox Android paint rule). */
+   No backdrop-filter / fixed backgrounds (Firefox Android paint rule).
+   Cleanup 2026-10-25 (Franklin's screenshot): the global .btn is
+   white-space:nowrap, so the two buttons could not shrink below their
+   labels and overflowed the panel on phones; and the global .empty
+   carries 40px padding, which turned the hint into a cavern. Both
+   fixed scoped to this view below. */
 .pdir-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
-.pdir-actions .btn { flex: 1; min-width: 150px; margin: 0; }
+.pdir-actions .btn { flex: 1 1 0; min-width: 0; margin: 0; padding: 10px 8px; font-size: .95rem; white-space: normal; text-align: center; line-height: 1.3; }
 .pdir-actions .btn.active { border-color: var(--accent); color: #fff; }
+@media (max-width: 520px) {
+  .pdir-actions { flex-direction: column; }
+  .pdir-actions .btn { width: 100%; flex: none; padding: 12px 10px; font-size: 1rem; }
+  .pdir-search-row { flex-direction: column; align-items: stretch; }
+  .pdir-exact { justify-content: flex-start; }
+}
+#playerList .empty { padding: 16px 10px; }
 .pdir-panel { margin-top: 10px; }
 .pdir-online-head, .pdir-results-head { font-size: .8rem; font-weight: 800; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
 .online-flow { line-height: 1.9; margin: 0; }

@@ -39,7 +39,7 @@
   function render(list) {
     players = Array.isArray(list) ? list : [];
     var box = $('#playerList');
-    if (box) box.innerHTML = '<div class="empty">Tap 🟢 Players Online to see who’s around, or 🔍 Search for Players to find someone.</div>';
+    if (box) box.innerHTML = '<div class="empty">Tap Players Online to see who’s around, or Search for Players to find someone.</div>';
     refreshOnline();
   }
 
