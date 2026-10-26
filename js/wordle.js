@@ -384,6 +384,7 @@
       'The bot plays a fixed opener then random consistent guesses — a floor for solver play, a ceiling for most humans.</p>' +
       '</details></div>';
     bindUi();
+    animRow = -1; // the flip belongs to THIS paint only; later paints must not re-add it
     if (pendingWin) { pendingWin = false; showWinModal(); }
   }
   function bindUi() {
@@ -432,6 +433,24 @@
       S = freshState(); msgText = ''; animRow = -1; paint();
     });
   }
+  /* Typing must NOT repaint the whole stage: paint() rebuilds the board's
+     DOM, and a rebuilt tile restarts its CSS animation — the submitted row
+     re-flipped on every keystroke (Franklin's bug report, 2026-10-26).
+     Instead, typing mutates the current row's existing tiles in place;
+     only the newly-typed tile gains the pop class. Full paints happen on
+     game events (start, submit, finish), never per letter. */
+  function updateCurrentRow() {
+    var g = S.active;
+    if (!rootEl || !g) { paint(); return; }
+    var row = rootEl.querySelector('.wr-row.cur');
+    if (!row) { paint(); return; }
+    var input = g.input || '';
+    row.querySelectorAll('.wr-tile').forEach(function (t, i) {
+      var ch = i < input.length ? input[i] : '';
+      t.textContent = ch;
+      t.className = 'wr-tile' + (ch ? ' filled pop' : '');
+    });
+  }
   function handleKey(k) {
     var g = S.active;
     if (!g || g.status !== 'playing' || !wordsReady()) return;
@@ -439,7 +458,7 @@
     if (k === 'BACK') { g.input = (g.input || '').slice(0, -1); }
     else if (/^[A-Z]$/.test(k) && (g.input || '').length < 5) g.input = (g.input || '') + k;
     else return;
-    save(); paint();
+    save(); updateCurrentRow();
   }
   function onKeyDown(e) {
     if (!rootEl || !rootEl.isConnected) return;
