@@ -110,7 +110,7 @@
       blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds.' }
     ,{ id: 'vaultbreaker', title: 'VAULT BREAKER', tag: '3 🪙 a run', accent: 'vault', view: 'sbx-vaultbreaker',
       blurb: 'Crack a 5×5 vault tile by tile — cash out any time, but hidden alarms end the run. Bigger vault, bigger prize.' }
-    ,{ id: 'wordle', title: 'WORDGUESSER', tag: 'Free daily game', accent: 'wordle', soon: true,
+    ,{ id: 'wordle', title: 'WORDGUESSER', tag: 'Free daily game', accent: 'wordle', view: 'sbx-wordle',
       blurb: 'Guess the 5-letter word in 6 tries. One free game a day — win packs and spin tickets for solving it.' }
   ];
 
