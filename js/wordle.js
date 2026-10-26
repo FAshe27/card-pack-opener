@@ -331,15 +331,6 @@
       }, function () { /* clipboard denied: silent */ });
     }
   }
-  function prizesHtml() {
-    var rows = S.table.map(function (p) {
-      return '<tr><td>' + p.guesses + (p.guesses === 1 ? ' guess' : ' guesses') + '</td><td>' + esc(p.text) + '</td></tr>';
-    }).join('');
-    return '<details class="wr-details"><summary>🏆 Payouts</summary>' +
-      '<table class="wr-table"><tr><th>Solved in</th><th>Prize</th></tr>' + rows + '</table>' +
-      '<p class="small muted">First game every day is free. Extra games cost ' + S.cost +
-      ' tokens. Prizes are real packs and spin tickets, paid the moment you solve.</p></details>';
-  }
   function statusAndActions() {
     var g = S.game, d = displayGame(), statusLine, actionBtn = '';
     if (!S.loaded) {
@@ -384,8 +375,7 @@
       '</div>' +
       '<div class="wr-actions">' + sa.actionBtn +
       '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
-      '</div></div>' +
-      '<div class="panel wr-tools">' + prizesHtml() + '</div>';
+      '</div></div>';
     bindUi();
     animRow = -1; // the flip belongs to THIS paint only
     if (pendingWin) { pendingWin = false; showWinModal(); }
