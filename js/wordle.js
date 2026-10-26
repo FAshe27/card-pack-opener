@@ -301,7 +301,7 @@
       '<p style="text-align:center;letter-spacing:.35em;font-size:1.6rem;margin:10px 0">' + grid + '</p>' +
       '<p style="text-align:center">The word was <b>' + esc(g.answer || '') + '</b></p>' +
       '<p style="text-align:center">Prize: <b>' + esc(g.prize ? g.prize.text : '') + '</b></p>' +
-      '<div class="modal-actions" style="justify-content:center">' +
+      '<div class="modal-actions" style="display:flex;justify-content:center;gap:8px">' +
       '<button class="btn primary" id="wrCopyBtn2">Copy result</button>' +
       '<button class="btn" data-close>Close</button></div></div>');
     if (ctx.fx && ctx.fx.confetti) { try { ctx.fx.confetti(160); } catch (e) { /* non-fatal */ } }
