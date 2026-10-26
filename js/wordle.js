@@ -370,16 +370,21 @@
         (freeAvailable() ? 'Play free game' : 'Start game — ' + CONFIG.cost + ' 🪙') + '</button>';
     }
     rootEl.innerHTML =
-      '<div class="panel wr-head"><h2>🔤 WordGuesser <span class="wr-badge">SANDBOX PROTOTYPE</span></h2>' +
+      /* ONE big box (Franklin, 2026-10-26): header, board, keyboard and the
+         action buttons all live in a single panel, with Play again / Copy
+         result / Stats BELOW the game instead of up in the header. */
+      '<div class="wr-main"><div class="panel wr-game">' +
+      '<div class="wr-head-in"><h2>🔤 WordGuesser <span class="wr-badge">SANDBOX PROTOTYPE</span></h2>' +
       '<p class="muted small">Guess the 5-letter word in 6 tries. Green = right letter, right spot · ' +
       'yellow = in the word, wrong spot · gray = not in the word. Fake tokens and fake prizes — nothing here is real.</p>' +
       '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.balance + '</b> fake tokens</span>' +
-      '<span class="muted small">' + esc(statusLine) + '</span>' + actionBtn +
-      '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
+      '<span class="muted small">' + esc(statusLine) + '</span></div>' +
       '<p class="wr-msg">' + esc(msgText) + '</p></div>' +
-      '<div class="wr-main"><div class="panel wr-game">' +
-      '<div class="wr-toast" id="wrToast" role="status"></div>' +
+      '<div class="wr-play"><div class="wr-toast" id="wrToast" role="status"></div>' +
       (wordsReady() ? boardHtml() + keyboardHtml() : '<p class="muted">Loading word banks…</p>') +
+      '</div>' +
+      '<div class="wr-actions">' + actionBtn +
+      '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
       '</div></div>' +
       '<div class="panel wr-tools">' + prizesHtml() +
       '<details class="wr-details"><summary>Tuning tools (prototype only — gone at graduation)</summary>' +
