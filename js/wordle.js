@@ -461,7 +461,7 @@
       id: 'wordle', title: 'WordGuesser',
       blurb: 'The daily word game: guess the 5-letter word in 6 tries. One free game a day, ' +
              'extra games 10 tokens — win real packs and spin tickets.',
-      status: 'testing',
+      status: 'public', noTab: true,
       render: function (el) { CPS.wordle.render(el); },
       teardown: function () { CPS.wordle.teardown(); }
     });
