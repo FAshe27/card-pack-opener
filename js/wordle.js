@@ -403,6 +403,16 @@
   function paint() {
     if (!rootEl) return;
     var sa = statusAndActions();
+    /* Until a round begins, a translucent cover darkens the board +
+       keyboard so the play area is unmistakably closed (Franklin,
+       2026-10-26), with the start button right on it. It never covers
+       a flipping row (animRow) or a game in progress, and it settles
+       in only on the post-flip repaint like the end-of-game modal. */
+    var coverHtml = '';
+    if (S.loaded && !S.loadError && !S.busy && !S.game && animRow < 0) {
+      coverHtml = '<div class="wr-cover"><button type="button" class="btn primary wr-cover-btn" id="wrCoverBtn">' +
+        (S.freeAvailable ? 'Play free game' : 'Play again — ' + S.cost + ' 🪙') + '</button></div>';
+    }
     rootEl.innerHTML =
       /* ONE big box: header, board, keyboard and the action buttons all
          live in a single panel; Play again / Copy / Stats sit BELOW the
@@ -420,7 +430,7 @@
       (S.loadError ? '<p class="wr-msg">Could not load WordGuesser — please try again in a few minutes.</p>' : '') +
       '</div>' +
       '<div class="wr-play"><div class="wr-toast" id="wrToast" role="status"></div>' +
-      boardHtml() + keyboardHtml() +
+      boardHtml() + keyboardHtml() + coverHtml +
       '</div>' +
       '<div class="wr-actions">' + sa.actionBtn +
       '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
@@ -445,6 +455,8 @@
     });
     var nb = rootEl.querySelector('#wrNewBtn');
     if (nb) nb.addEventListener('click', startGame);
+    var cv = rootEl.querySelector('#wrCoverBtn');
+    if (cv) cv.addEventListener('click', startGame);
     var cb = rootEl.querySelector('#wrCopyBtn');
     if (cb) cb.addEventListener('click', copyResult);
     var sb = rootEl.querySelector('#wrStatsBtn');
