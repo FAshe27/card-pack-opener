@@ -23,6 +23,8 @@
    hairline under it; the play zone wraps board + keyboard so the toast
    floats over the board; actions sit below the game, hairline above. */
 .wr-head-in { width: 100%; border-bottom: 1px solid rgba(140, 160, 220, .16); padding-bottom: 12px; margin-bottom: 16px; }
+/* Title centred to match the centred balance/status lines (Franklin, 2026-10-26). */
+.wr-head-in h2 { text-align: center; }
 .wr-play { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
 .wr-actions { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center; margin-top: 16px; border-top: 1px solid rgba(140, 160, 220, .16); padding-top: 14px; }
 /* Transient error toast, Wordle-style: a light pill over the board top
