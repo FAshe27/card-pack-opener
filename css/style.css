@@ -742,7 +742,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .packs-controls-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; width: 100%; max-width: 700px; }
 .packs-controls-row #openBtn { width: auto; flex: 1 1 300px; max-width: 350px; min-width: 230px; }
 .packs-controls-row #quickOpenBtn { flex: 1 1 210px; max-width: 250px; min-width: 190px; padding-top: 13px; padding-bottom: 13px; }
-.packs-controls-row .btn.ghost { flex: 1 1 100%; border: 0; background: transparent; box-shadow: none; color: var(--muted); padding: 2px; }
+.packs-controls-row .btn.ghost { flex: 0 0 auto; margin: 0 auto; border: 0; background: transparent; box-shadow: none; color: var(--muted); padding: 4px 12px; }
 .packs-controls-row .btn.ghost:hover { background: transparent; color: var(--text); }
 .packs-controls .dev-box { width: 100%; max-width: 520px; }
 /* Unopened-count badge, moved from the deleted sidebar mini-pack onto the stage pack */
