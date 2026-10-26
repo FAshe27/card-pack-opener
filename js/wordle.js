@@ -152,7 +152,8 @@
     // best-known state per letter: G > Y > X, from server marks
     var rank = { G: 2, Y: 1, X: 0 }, best = {}, g = displayGame();
     if (!g) return best;
-    (g.guesses || []).forEach(function (gu) {
+    (g.guesses || []).forEach(function (gu, idx) {
+      if (idx === animRow) return; // still flipping: its colours are not public yet
       for (var i = 0; i < 5; i++) {
         var ch = gu.word[i], v = gu.marks[i];
         if (best[ch] === undefined || rank[v] > rank[best[ch]]) best[ch] = v;
@@ -189,7 +190,7 @@
   }
 
   /* ---------------- rendering ---------------------------------------- */
-  var rootEl = null, animRow = -1, listening = false, pendingWin = false;
+  var rootEl = null, animRow = -1, listening = false, pendingWin = false, flipTimer = null;
   var toastTimer = null;
   /* Wordle-style transient toast: guess errors flash in a pill over the
      board for ~a second and fade — they never park in the status line. */
@@ -326,6 +327,13 @@
   }
   function statusAndActions() {
     var g = S.game, d = displayGame(), statusLine, actionBtn = '';
+    // While the just-submitted row is still flipping, nothing may give its
+    // result away: the header keeps the in-progress wording and the
+    // end-of-game buttons wait for the reveal (Franklin, 2026-10-26).
+    if (animRow >= 0 && !g && !!d && animRow === d.guesses.length - 1) {
+      return { statusLine: d.free ? 'Free game in progress — good luck!'
+                                  : 'Game in progress (' + S.cost + ' tokens paid).', actionBtn: '' };
+    }
     if (!S.loaded) {
       statusLine = 'Loading…';
     } else if (g) {
@@ -372,8 +380,15 @@
       '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
       '</div></div>';
     bindUi();
+    var wasFlip = animRow >= 0;
     animRow = -1; // the flip belongs to THIS paint only
-    if (pendingWin) { pendingWin = false; showWinModal(); }
+    if (wasFlip) {
+      // Let the row finish flipping before anything else lands: the
+      // repaint settles the keyboard colours, the end-of-game status and
+      // buttons, and the win modal (930 ms of animation + margin).
+      if (flipTimer) clearTimeout(flipTimer);
+      flipTimer = setTimeout(function () { flipTimer = null; if (rootEl) paint(); }, 1000);
+    } else if (pendingWin) { pendingWin = false; showWinModal(); }
   }
   function bindUi() {
     if (!rootEl) return;
@@ -396,6 +411,7 @@
     if (!S.loaded && !S.busy) loadState();
   }
   function teardown() {
+    if (flipTimer) { clearTimeout(flipTimer); flipTimer = null; }
     if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
     if (listening) { document.removeEventListener('keydown', onKeyDown); listening = false; }
     rootEl = null;
