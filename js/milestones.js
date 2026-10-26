@@ -110,26 +110,44 @@
                        pop on the next successful load */ }
       running = false;
       if (!r || r.baseline) return;
-      var freshFull = (r.fresh_full || []).filter(function (sid) { return sid !== 'jumbled'; }); /* Jumbled Mess: no collection rewards/celebrations yet (Franklin, mig. 169) */
-      var freshRar = {};
-      (r.fresh_rar || []).forEach(function (fr) {
-        if (!fr || !fr.set || !fr.rarity || fr.set === 'jumbled') return;
-        if (freshFull.indexOf(fr.set) !== -1) return; /* the full-set pop-up subsumes its rarities */
-        (freshRar[fr.set] = freshRar[fr.set] || []).push(fr.rarity);
-      });
-      var queue = [];
-      Object.keys(freshRar).forEach(function (sid) {
-        var set = window.CardSets.get(sid); if (!set) return;
-        queue.push({ set: set, rarities: (freshRar[sid] || []).map(function (rk) { return ctx.rarityOf(rk).label; }) });
-      });
-      freshFull.forEach(function (sid) {
-        var set = window.CardSets.get(sid); if (!set) return;
-        queue.push({ set: set, full: true });
-      });
-      if (!queue.length) return;
-      deliver(queue);
+      deliver(queueFrom(r));
     } catch (e) { running = false; /* milestones must never break the app */ }
   }
 
-  CPS.milestones = { check: check };
+  /* Build the pop-up queue from a sync-shaped result
+     ({fresh_rar:[{set,rarity}], fresh_full:[setId]}). */
+  function queueFrom(r) {
+    var freshFull = (r.fresh_full || []).filter(function (sid) { return sid !== 'jumbled'; }); /* Jumbled Mess: no collection rewards/celebrations yet (Franklin, mig. 169) */
+    var freshRar = {};
+    (r.fresh_rar || []).forEach(function (fr) {
+      if (!fr || !fr.set || !fr.rarity || fr.set === 'jumbled') return;
+      if (freshFull.indexOf(fr.set) !== -1) return; /* the full-set pop-up subsumes its rarities */
+      (freshRar[fr.set] = freshRar[fr.set] || []).push(fr.rarity);
+    });
+    var queue = [];
+    Object.keys(freshRar).forEach(function (sid) {
+      var set = window.CardSets.get(sid); if (!set) return;
+      queue.push({ set: set, rarities: (freshRar[sid] || []).map(function (rk) { return ctx.rarityOf(rk).label; }) });
+    });
+    freshFull.forEach(function (sid) {
+      var set = window.CardSets.get(sid); if (!set) return;
+      queue.push({ set: set, full: true });
+    });
+    return queue;
+  }
+
+  /* Migration 195: the turn-in RPCs return the fresh milestones they
+     just created (computed in-transaction, snapshot already advanced),
+     and the turn-in flows announce them in-flow — the same pattern that
+     made the turn-in % reward messages instant (migration 179). The
+     ambient check()/sync remains the safety net for anything else. */
+  function announce(r) {
+    try {
+      if (!r || r.baseline) return;
+      if (!window.CardSets || !window.CardSets.all().length) return;
+      deliver(queueFrom(r));
+    } catch (e) { /* milestones must never break the app */ }
+  }
+
+  CPS.milestones = { check: check, announce: announce };
 })(window.CPS);

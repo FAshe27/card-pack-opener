@@ -92,6 +92,7 @@
           CPS.turninRewards.announce(sid, r.turnin_rewards_by_set[sid]);
         });
       }
+      if (CPS.milestones && r) CPS.milestones.announce(r.milestones);
       C.toast('✓ Turned in ' + r.turned + ' card' + (r.turned === 1 ? '' : 's') + ' across all sets!' +
         (r.skipped_holo ? ' Skipped ' + r.skipped_holo + ' holo-only.' : '') +
         (r.skipped_locked ? ' Skipped ' + r.skipped_locked + ' locked.' : ''), 'good', 5000);

@@ -1120,6 +1120,7 @@
         (r.skipped_holo ? ' Skipped ' + r.skipped_holo + ' holo-only.' : '') +
         (r.skipped_locked ? ' Skipped ' + r.skipped_locked + ' locked.' : ''), 'good', 5000);
       if (CPS.turninRewards) CPS.turninRewards.announce(set.id, r.turnin_rewards);
+      if (CPS.milestones) CPS.milestones.announce(r.milestones);
     } catch (e) { cloudError(e); }
   }
 
@@ -1823,6 +1824,7 @@
       toast('✓ ' + card.name + ' turned in — permanently collected!', 'good');
       openCardModal(setId, cardId, forceHolo, variant);
       if (CPS.turninRewards) CPS.turninRewards.announce(setId, tr && tr.turnin_rewards);
+      if (CPS.milestones) CPS.milestones.announce(tr && tr.milestones);
     } catch (e2) { cloudError(e2); }
   }
 
