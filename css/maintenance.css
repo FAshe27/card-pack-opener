@@ -1,0 +1,69 @@
+/* Maintenance mode (migration 187) — js/maintenance.js overlay + the
+   Admin-view panel. Scoped .maint- classes; palette is the live site's
+   (style.css :root): bg #0b0e17, panel #161c30 / #1d2440, text
+   #e8ecf6, muted #8e98b3, violet #7c6cff -> cyan #12c2e9 gradient.
+   NOTE (Firefox paint rule): the overlay is always-visible chrome
+   while shown, so NO backdrop-filter and NO background-attachment:
+   fixed anywhere here — the background is an opaque colour plus two
+   static radial glows painted once. */
+
+.maint-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200; /* above .modal (50) and the login gate */
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow: auto;
+  background:
+    radial-gradient(1000px 600px at 20% -10%, #2a1f5c 0, rgba(42, 31, 92, 0) 60%),
+    radial-gradient(900px 600px at 110% 110%, #0f3a52 0, rgba(15, 58, 82, 0) 55%),
+    #0b0e17;
+  color: #e8ecf6;
+}
+
+.maint-box {
+  background: #161c30;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 20px;
+  padding: 34px 28px 26px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+}
+
+.maint-badge {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  font-size: 1.7rem;
+  color: #fff;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #7c6cff, #12c2e9);
+  box-shadow: 0 10px 28px rgba(124, 108, 255, .45);
+}
+
+.maint-title { margin: 0 0 10px; font-size: 1.45rem; line-height: 1.25; }
+.maint-msg { margin: 0 0 8px; color: #e8ecf6; }
+.maint-eta { margin: 0 0 8px; font-weight: 700; color: #12c2e9; }
+.maint-note { margin: 14px 0 0; font-size: .85rem; color: #8e98b3; }
+
+.maint-admin-link {
+  margin-top: 18px;
+  padding: 6px;
+  background: none;
+  border: 0;
+  color: #8e98b3;
+  font-size: .8rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.maint-admin-link:hover { color: #e8ecf6; }
+
+/* Admin-view panel fields */
+#maintPanel .field { display: block; margin-bottom: 10px; }
+#maintPanel textarea,
+#maintPanel input[type="text"] { width: 100%; margin-top: 4px; }
