@@ -8,9 +8,11 @@
 .wr-topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
 .wr-balance { font-size: 15px; }
 .wr-msg { min-height: 20px; margin: 8px 0 0; font-weight: 600; }
-.wr-main { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
-.wr-game { flex: 1 1 340px; display: flex; flex-direction: column; align-items: center; }
-.wr-side { flex: 1 1 240px; max-width: 340px; }
+.wr-main { display: flex; justify-content: center; }
+.wr-game { flex: 1 1 340px; max-width: 560px; display: flex; flex-direction: column; align-items: center; }
+/* Win + stats pop-ups (rendered by the site's shared modal) */
+.wr-share-grid { font-size: 22px; line-height: 1.3; letter-spacing: 3px; margin: 8px 0; }
+.wr-prize-big { font-size: 18px; }
 .wr-board { display: grid; grid-template-rows: repeat(6, 1fr); gap: 5px; margin: 6px 0 14px; }
 .wr-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
 .wr-tile {
@@ -56,6 +58,5 @@
 .wr-tune-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
 .wr-tune-row input { text-transform: uppercase; }
 @media (max-width: 560px) {
-  .wr-side { max-width: none; }
   .wr-key { height: 48px; font-size: 13px; }
 }
