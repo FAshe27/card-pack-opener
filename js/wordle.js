@@ -174,7 +174,7 @@
         return v === 'G' ? '🟩' : (v === 'Y' ? '🟨' : '⬛');
       }).join('');
     });
-    return head + '\n' + rows.join('\n') + '\n\nPlay PackRipper!';
+    return head + '\n' + rows.join('\n');
   }
   function handleKey(k) {
     var g = S.game;
@@ -215,6 +215,23 @@
   /* ---------------- rendering ---------------------------------------- */
   var rootEl = null, animRow = -1, listening = false, pendingWin = false, pendingLose = false, flipTimer = null;
   var toastTimer = null;
+  /* A soft tick as each tile snaps at its flip midpoint (tile c starts
+     at c*120 ms, colour lands at 50% of its .45 s flip: c*120 + 225),
+     through the site audio engine so the sound toggle governs it
+     (Franklin, 2026-10-26). */
+  var flipTickTimers = [];
+  function clearFlipTicks() { flipTickTimers.forEach(clearTimeout); flipTickTimers = []; }
+  function scheduleFlipTicks() {
+    clearFlipTicks();
+    if (!CPS.audio || !CPS.audio.tick) return;
+    for (var c = 0; c < 5; c++) {
+      (function (delay) {
+        flipTickTimers.push(setTimeout(function () {
+          try { CPS.audio.tick(); } catch (e) { /* non-fatal */ }
+        }, delay));
+      })(225 + c * 120);
+    }
+  }
   /* Wordle-style transient toast: guess errors flash in a pill over the
      board for ~a second and fade — they never park in the status line. */
   function nudge(t) {
@@ -439,6 +456,7 @@
     var wasFlip = animRow >= 0;
     animRow = -1; // the flip belongs to THIS paint only
     if (wasFlip) {
+      scheduleFlipTicks();
       // Let the row finish flipping before anything else lands: the
       // repaint settles the keyboard colours, the end-of-game status and
       // buttons, and the win modal (930 ms of animation + margin).
@@ -474,6 +492,7 @@
     if (!S.loaded && !S.busy) loadState();
   }
   function teardown() {
+    clearFlipTicks();
     if (flipTimer) { clearTimeout(flipTimer); flipTimer = null; }
     if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
     if (listening) { document.removeEventListener('keydown', onKeyDown); listening = false; }
