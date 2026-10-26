@@ -39,12 +39,6 @@
     });
   }
   function displayGame() { return S.game || S.lastGame; }
-  function prizeText(packs, tickets) {
-    var parts = [];
-    if (packs > 0) parts.push(packs + ' random pack' + (packs === 1 ? '' : 's'));
-    if (tickets > 0) parts.push(tickets + ' spin ticket' + (tickets === 1 ? '' : 's'));
-    return parts.length ? parts.join(' + ') : 'Nothing';
-  }
 
   /* ---------------- server sync ------------------------------------- */
   function syncBadges() {
@@ -280,8 +274,7 @@
       '<div><b>' + st.win_pct + '%</b><span>Win rate</span></div>' +
       '<div><b>' + st.streak + '</b><span>Streak</span></div>' +
       '<div><b>' + st.best_streak + '</b><span>Best streak</span></div></div>' +
-      '<h4>Guess distribution</h4>' + bars +
-      '<p class="muted small">Prizes won here: <b>' + prizeText(st.packs_won || 0, st.tickets_won || 0) + '</b></p>';
+      '<h4>Guess distribution</h4>' + bars;
   }
   function openStats() {
     if (!ctx.openModal) return;
