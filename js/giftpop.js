@@ -63,7 +63,7 @@
 
   function markRead(id) {
     return CPS.cloud.call('read_notifications', { p_ids: [id] })
-      .then(function () { ctx.refreshNotifBadge(); })
+      .then(function () { ctx.refreshNotifBadge(true); }) // forced: a mark-read must not re-read the 10s cache
       .catch(function () { /* local seen-set still prevents a re-pop here */ });
   }
 

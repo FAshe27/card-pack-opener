@@ -51,7 +51,7 @@ async function openNotifications() {
             var id = el.dataset.notif, view = el.dataset.view;
             try { await CPS.cloud.call('read_notifications', { p_ids: [id] }); } catch (e) {}
             el.classList.remove('unread');
-            ctx.refreshNotifBadge();
+            ctx.refreshNotifBadge(true); // forced: the shared 10s cache still holds the pre-read list
             if (el.dataset.nset) {
               var vt = el.dataset.ntier;
               ctx.closeModal();
@@ -63,12 +63,13 @@ async function openNotifications() {
         var ra = box.querySelector('#notifReadAll');
         if (ra) ra.addEventListener('click', async function () {
           try { await CPS.cloud.call('read_notifications', {}); } catch (e) { ctx.cloudError(e); return; }
-          ctx.refreshNotifBadge();
+          await ctx.refreshNotifBadge(true); // forced fresh, so the badge (and the cache the panel re-reads) match the server
           openNotifications();
         });
         var cr = box.querySelector('#notifClearRead');
         if (cr) cr.addEventListener('click', async function () {
           try { await CPS.cloud.call('clear_notifications', {}); } catch (e) { ctx.cloudError(e); return; }
+          await ctx.refreshNotifBadge(true); // Clear never refreshed the badge at all — the count survived until a page reload
           openNotifications();
         });
         var sb = box.querySelector('#notifSettingsBtn');

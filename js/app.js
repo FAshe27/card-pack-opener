@@ -1254,19 +1254,19 @@
      Single-flight + a 10s cache collapses the duplicates; the badge
      tick also nudges the gift poller so there is one fetch per cycle. */
   var _notifFlight = null, _notifCache = null, _notifCacheAt = 0;
-  function fetchNotifications() {
+  function fetchNotifications(force) {
     if (_notifFlight) return _notifFlight;
-    if (_notifCache && Date.now() - _notifCacheAt < 10000) return Promise.resolve(_notifCache);
+    if (!force && _notifCache && Date.now() - _notifCacheAt < 10000) return Promise.resolve(_notifCache);
     _notifFlight = CPS.cloud.call('list_notifications').then(function (n) {
       _notifCache = n; _notifCacheAt = Date.now(); _notifFlight = null;
       return n;
     }, function (e) { _notifFlight = null; throw e; });
     return _notifFlight;
   }
-  async function refreshNotifBadge() {
+  async function refreshNotifBadge(force) {
     if (!isCloud()) return;
     try {
-      var n = await fetchNotifications();
+      var n = await fetchNotifications(force);
       var b = $('#notifBadge');
       b.textContent = n.unread > 99 ? '99+' : n.unread;
       b.classList.toggle('hidden', !n.unread);
