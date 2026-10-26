@@ -1,0 +1,61 @@
+/* Word Rip — Sandbox prototype styles. Everything namespaced .wr-*.
+   Board colours are the classic Wordle set (green #538d4e, yellow #b59f3b,
+   gray #3a3a3c on the site's dark panels) so the game reads instantly. */
+.wr-badge {
+  font-size: 11px; letter-spacing: .08em; vertical-align: middle;
+  background: #b59f3b; color: #121213; border-radius: 999px; padding: 2px 8px;
+}
+.wr-topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
+.wr-balance { font-size: 15px; }
+.wr-msg { min-height: 20px; margin: 8px 0 0; font-weight: 600; }
+.wr-main { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.wr-game { flex: 1 1 340px; display: flex; flex-direction: column; align-items: center; }
+.wr-side { flex: 1 1 240px; max-width: 340px; }
+.wr-board { display: grid; grid-template-rows: repeat(6, 1fr); gap: 5px; margin: 6px 0 14px; }
+.wr-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+.wr-tile {
+  width: min(58px, 15vw); height: min(58px, 15vw);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-weight: 700; text-transform: uppercase;
+  border: 2px solid #3a3a3c; color: #e8ecf6; user-select: none;
+}
+.wr-tile.filled { border-color: #565f7e; }
+.wr-tile.pop { animation: wrpop .12s ease-in-out; }
+.wr-tile.wr-t-green { background: #538d4e; border-color: #538d4e; }
+.wr-tile.wr-t-yellow { background: #b59f3b; border-color: #b59f3b; }
+.wr-tile.wr-t-gray { background: #3a3a3c; border-color: #3a3a3c; }
+.wr-tile.flip { animation: wrflip .45s ease both; }
+@keyframes wrflip { 0% { transform: rotateX(0); } 50% { transform: rotateX(-90deg); } 100% { transform: rotateX(0); } }
+@keyframes wrpop { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
+.wr-row.wr-shake { animation: wrshake .4s ease; }
+@keyframes wrshake {
+  0%, 100% { transform: translateX(0); } 20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
+}
+.wr-kb { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 480px; }
+.wr-kb-row { display: flex; gap: 5px; justify-content: center; }
+.wr-key {
+  flex: 1 1 0; max-width: 42px; height: 52px; border: 0; border-radius: 6px;
+  background: #818384; color: #fff; font-size: 14px; font-weight: 700;
+  cursor: pointer; text-transform: uppercase; padding: 0;
+}
+.wr-key.wr-key-wide { flex: 1.6 1 0; max-width: 68px; font-size: 12px; }
+.wr-key.wr-t-green { background: #538d4e; }
+.wr-key.wr-t-yellow { background: #b59f3b; }
+.wr-key.wr-t-gray { background: #3a3a3c; }
+.wr-key:active { filter: brightness(1.2); }
+.wr-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; margin-bottom: 10px; }
+.wr-stat-grid b { display: block; font-size: 22px; }
+.wr-stat-grid span { font-size: 11px; color: #8e98b3; }
+.wr-dist-row { display: flex; align-items: center; gap: 7px; margin: 3px 0; font-size: 13px; }
+.wr-dist-bar { background: #565f7e; color: #fff; text-align: right; padding: 1px 6px; font-size: 12px; min-width: 22px; }
+.wr-details { margin-top: 6px; }
+.wr-details summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.wr-table { border-collapse: collapse; margin: 6px 0; }
+.wr-table td { padding: 3px 14px 3px 0; font-size: 14px; }
+.wr-tune-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+.wr-tune-row input { text-transform: uppercase; }
+@media (max-width: 560px) {
+  .wr-side { max-width: none; }
+  .wr-key { height: 48px; font-size: 13px; }
+}
