@@ -1,0 +1,20 @@
+/* Friends list inside the account dropdown (migration 190).
+   Lives in its own sheet so style.css stays untouched. No
+   backdrop-filter / fixed backgrounds (Firefox Android paint rule). */
+.acct-friends { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 4px 0; padding: 4px 0; width: 248px; max-width: 78vw; }
+.acct-friends.hidden { display: none; }
+.friends-head { padding: 6px 10px 4px; font-weight: 700; font-size: .9rem; }
+.friends-note { padding: 4px 10px 8px; }
+.friends-list { max-height: 38vh; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.friend-row { display: flex; align-items: center; gap: 2px; padding: 0 4px 0 0; border-radius: 8px; }
+.friend-row:hover { background: rgba(255,255,255,.07); }
+.friend-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; background: none; border: 0; color: var(--text); padding: 7px 6px 7px 10px; font: inherit; font-weight: 600; cursor: pointer; text-align: left; }
+.friend-main .avatar { flex-shrink: 0; }
+.friend-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.friend-act { flex-shrink: 0; background: none; border: 0; color: var(--text); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: .95rem; padding: 0; }
+.friend-act:hover { background: rgba(255,255,255,.12); }
+.friend-x { font-size: 1.15rem; color: var(--muted); }
+.friends-browse { width: 100%; color: var(--muted); font-size: .9rem; }
+
+/* Profile header friend toggle (profile.js) */
+#profFriendBtn.friended { border-color: rgba(255,178,30,.55); color: #ffd98a; }

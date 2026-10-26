@@ -50,6 +50,8 @@ async function openProfile(accountId) {
   ctx.openModal('<div class="muted" style="padding:24px">Loading…</div>');
   try {
     var p = await CPS.cloud.call('get_profile', { p_account: accountId });
+    var friended = false;
+    if (!p.is_me && CPS.friends) { try { friended = await CPS.friends.isFriendAsync(accountId); } catch (e) {} }
     var sets = p.sets || [], collection = p.collection || [];
     var totU = 0, totT = 0, totTi = 0, holos = 0;
     sets.forEach(function (s) { totU += s.unique || 0; totT += s.total || 0; totTi += s.turned || 0; });
@@ -70,7 +72,7 @@ async function openProfile(accountId) {
     var poss = ctx.esc(p.display_name) + '’s';
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
       '<div class="prof-head"><span class="avatar big">' + ctx.esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
-      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button> <button class="btn small" id="profGiftBtn">🎁 Gift</button> <button class="btn small" id="profHistBtn">📜 History</button>') + '</div></div>' +
+      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button> <button class="btn small" id="profGiftBtn">🎁 Gift</button> <button class="btn small" id="profHistBtn">📜 History</button> <button class="btn small' + (friended ? ' friended' : '') + '" id="profFriendBtn">' + (friended ? '⭐ Friend' : '☆ Add friend') + '</button>') + '</div></div>' +
       statsHtml +
       '<div class="prof-nav">' +
       '<button class="btn prof-nav-btn" id="profVaultBtn">🔒 View ' + poss + ' Vault<span class="muted">' + (p.favorites || []).length + '</span></button>' +
@@ -87,6 +89,18 @@ async function openProfile(accountId) {
       if (pgb) pgb.addEventListener('click', function () { if (CPS.giftBundle) CPS.giftBundle.open(accountId, p.display_name); });
       var phb = box.querySelector('#profHistBtn');
       if (phb) phb.addEventListener('click', function () { openExchangeHistory(accountId, p.display_name); });
+      var pfb = box.querySelector('#profFriendBtn');
+      if (pfb) pfb.addEventListener('click', async function () {
+        if (!CPS.friends) return;
+        pfb.disabled = true;
+        try {
+          var now = await CPS.friends.toggle(accountId, p.display_name);
+          pfb.textContent = now ? '⭐ Friend' : '☆ Add friend';
+          pfb.classList.toggle('friended', now);
+          ctx.toast(now ? 'Added ' + p.display_name + ' to your friends.' : 'Removed ' + p.display_name + ' from your friends.', '', 2200);
+        } catch (e) { ctx.cloudError(e); }
+        finally { pfb.disabled = false; }
+      });
       var pb = box.querySelector('.prof-best');
       if (pb && best) { pb.style.cursor = 'pointer'; pb.addEventListener('click', function () { CPS.cardBack = { text: '← Back to ' + p.display_name + '’s profile', go: function () { openProfile(accountId); } }; ctx.openCardModal(best.set.id, best.card.id); }); }
     });

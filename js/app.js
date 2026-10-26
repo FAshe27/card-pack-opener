@@ -2141,6 +2141,7 @@
     m.style.top = (r.bottom + 6) + 'px';
     m.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
     m.classList.remove('hidden');
+    if (CPS.friends) CPS.friends.renderMenu();
   }
 
   /* --- admin (online) */
