@@ -2162,6 +2162,7 @@
     $('#setsArea').classList.toggle('hidden', !unlocked);
     if (unlocked) renderAdmin();
     if (unlocked && CPS.online) CPS.online.adminTick();
+    if (unlocked && CPS.maintenance) CPS.maintenance.adminTick();
     if (unlocked) renderSets();
   }
 
