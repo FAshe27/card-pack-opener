@@ -4,7 +4,7 @@
    sent to the client while a game is playing; guesses are validated
    and scored by cps_wordle_guess, which returns tile marks only.
    This file ships NO word list. Real game tokens in (first game each
-   Chicago day free, extras 15), real packs + spin tickets out.
+   Chicago day free, extras 10), real packs + spin tickets out.
    Consumes CPS.appCtx + CPS.cloud.call like js/vaultbreaker.js. */
 (function (CPS) {
   'use strict';
@@ -25,7 +25,7 @@
 
   var S = {
     loaded: false, busy: false, loadError: false,
-    tokens: 0, spins: 0, cost: 15, freeAvailable: true,
+    tokens: 0, spins: 0, cost: 10, freeAvailable: true,
     game: null,      // the playing game (server payload), or null
     lastGame: null,  // today's latest finished game (server payload)
     table: PRIZES,
@@ -363,9 +363,11 @@
          game (Franklin, 2026-10-26). */
       '<div class="wr-main"><div class="panel wr-game">' +
       '<div class="wr-head-in"><h2>🔤 WordGuesser</h2>' +
-      '<p class="muted small">Guess the 5-letter word in 6 tries. Green = right letter, right spot · ' +
-      'yellow = in the word, wrong spot · gray = not in the word. One free game every day — ' +
-      'win real packs and spin tickets.</p>' +
+      '<p class="muted small">Guess the 5-letter word in 6 or fewer tries. Green means the right ' +
+      'letter in the right spot. Yellow means the right letter, but in the wrong spot. If it\'s ' +
+      'gray, it\'s not in the word at all. The better you do, the better your prize!</p>' +
+      '<p class="muted small">Your first game every day is free - after that, it\'s 10 tokens to ' +
+      'play again if you don\'t want to wait until reset.</p>' +
       '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + '</b> tokens</span>' +
       '<span class="muted small">' + esc(sa.statusLine) + '</span></div>' +
       (S.loadError ? '<p class="wr-msg">Could not load WordGuesser — please try again in a few minutes.</p>' : '') +
@@ -421,7 +423,7 @@
     CPS.sandbox.register({
       id: 'wordle', title: 'WordGuesser',
       blurb: 'The daily word game: guess the 5-letter word in 6 tries. One free game a day, ' +
-             'extra games 15 tokens — win real packs and spin tickets.',
+             'extra games 10 tokens — win real packs and spin tickets.',
       status: 'testing',
       render: function (el) { CPS.wordle.render(el); },
       teardown: function () { CPS.wordle.teardown(); }
