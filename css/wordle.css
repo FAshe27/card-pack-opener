@@ -33,10 +33,22 @@
 .wr-head-in h2 { text-align: center; }
 .wr-play { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
 .wr-actions { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center; margin-top: 16px; border-top: 1px solid rgba(140, 160, 220, .16); padding-top: 14px; }
+/* Pre-round cover: a dark translucent sheet over the board + keyboard
+   until a round begins (Franklin, 2026-10-26), start button centred on
+   it; the finished board stays dimly visible beneath it. It fades in on
+   the settle repaint, never over a flipping row. The toast (z-index 9)
+   floats above it so physical-key nudges still show. */
+.wr-cover {
+  position: absolute; inset: 0; z-index: 8; display: flex;
+  align-items: center; justify-content: center;
+  background: rgba(10, 13, 24, .62); animation: wrcoverin .3s ease-out;
+}
+@keyframes wrcoverin { from { opacity: 0; } }
+.wr-cover-btn { font-size: 1.05rem; padding: 12px 22px; box-shadow: 0 6px 24px rgba(0, 0, 0, .45); }
 /* Transient error toast, Wordle-style: a light pill over the board top
    that fades in, lingers ~a second, and fades out. */
 .wr-toast {
-  position: absolute; top: 10px; left: 50%; z-index: 5; pointer-events: none;
+  position: absolute; top: 10px; left: 50%; z-index: 9; pointer-events: none;
   transform: translateX(-50%) translateY(-4px); opacity: 0;
   transition: opacity .25s ease, transform .25s ease;
   background: #e8ecf6; color: #121213; font-size: 14px; font-weight: 700;
