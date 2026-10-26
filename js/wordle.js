@@ -320,11 +320,8 @@
       '<p class="muted small">(Fake prizes in the Sandbox prototype — real ones arrive at graduation.)</p>' +
       '<div class="confirm-btns" style="justify-content:center;margin-top:10px">' +
       '<button class="btn" id="wrModalCopy" type="button">Copy result</button>' +
-      '<button class="btn primary" id="wrAgainBtn" type="button">Play again</button>' +
-      '<button class="btn" data-close>Close</button></div></div>',
+      '<button class="btn primary" data-close>Close</button></div></div>',
       function (box) {
-        var ag = box.querySelector('#wrAgainBtn');
-        if (ag) ag.addEventListener('click', function () { ctx.closeModal(); msgText = ''; startGame(); });
         var cp = box.querySelector('#wrModalCopy');
         if (cp) cp.addEventListener('click', function () {
           var t = shareText(); if (!t) return;
@@ -354,8 +351,10 @@
       statusLine = g.status === 'won'
         ? '🎉 Solved in ' + g.guesses.length + (g.guesses.length === 1 ? ' guess' : ' guesses') + '! Prize: ' + prizeText(g.prize) + ' (fake, prototype).'
         : 'Out of guesses — the word was ' + g.answer + '.';
+      // Play-again lives ONLY here on the game screen (Franklin, 2026-10-26:
+      // not in the win modal), and the button itself spells out the cost.
       actionBtn = '<button type="button" class="btn primary" id="wrNewBtn">' +
-        (freeAvailable() ? 'Play free game' : 'New game — ' + CONFIG.cost + ' 🪙') + '</button>' +
+        (freeAvailable() ? 'Play again — free game' : 'Play again — ' + CONFIG.cost + ' 🪙') + '</button>' +
         ' <button type="button" class="btn" id="wrCopyBtn">Copy result</button>';
     } else {
       statusLine = freeAvailable() ? 'Your free game for today is ready.' : 'Free game used today — extra games cost ' + CONFIG.cost + ' fake tokens.';
