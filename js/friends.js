@@ -4,13 +4,22 @@
    The list renders inside the top-right account dropdown (#acctMenu)
    as a quick jump to a friend's profile, gift, or trade.
    Consumes CPS.appCtx; registers CPS.friends. Split module so app.js
-   carries only the one-line renderMenu hook in toggleAccountMenu. */
+   carries only the one-line renderMenu hook in toggleAccountMenu.
+
+   192 (2026-10-25): the dropdown section is COLLAPSIBLE and closed by
+   default (Franklin: the always-open list made the menu huge) — the
+   header is a toggle, the list only renders when expanded, and the
+   section re-collapses every time the account menu is reopened. The
+   30-friend cap itself is enforced server-side by cps_toggle_friend
+   (migration 192); FRIENDS_CAP here only drives the "list full" note. */
 (function (CPS) {
   'use strict';
   var ctx = CPS.appCtx;
   var cache = null;      // null = not loaded yet; otherwise [{id, display_name}]
   var cacheFor = null;   // account id the cache belongs to
   var loading = null;    // in-flight list_friends promise (single-flight)
+  var FRIENDS_CAP = 30;  // mirrors migration 192's server-side cap
+  var expanded = false;  // dropdown section starts CLOSED (192)
 
   function myId() { return ctx.S && ctx.S.account ? ctx.S.account.id : null; }
 
@@ -70,29 +79,43 @@
       '</div>';
   }
 
+  function headHtml() {
+    return '<button type="button" class="friends-head-btn" data-friends-toggle aria-expanded="' + (expanded ? 'true' : 'false') + '">⭐ Friends' +
+      (cache && cacheFor === myId() ? ' <span class="muted small">' + cache.length + '</span>' : '') +
+      '<span class="friends-chev">' + (expanded ? '▾' : '▸') + '</span></button>';
+  }
+
   /* Called from app.js toggleAccountMenu (one-line hook) every time
-     the account dropdown opens. Renders synchronously from cache when
-     warm; otherwise shows a loading line and re-renders on arrival. */
+     the account dropdown opens. Collapsed by default (192): renders
+     just the header row; the list appears only after the player taps
+     it open, and opening the menu again re-collapses it (see the
+     MutationObserver in init). Renders synchronously from cache when
+     warm; a cold cache still loads in the background so the count on
+     the header is live when it arrives. */
   function renderMenu() {
     var box = document.querySelector('#acctFriends');
     if (!box) return;
     if (!ctx.isCloud()) { box.innerHTML = ''; box.classList.add('hidden'); return; }
     box.classList.remove('hidden');
-    var head = '<div class="friends-head">⭐ Friends' +
-      (cache ? ' <span class="muted small">' + cache.length + '</span>' : '') + '</div>';
     var foot = '<button type="button" class="acct-menu-item friends-browse" id="friendsBrowseBtn">Browse players ›</button>';
+    if (!expanded) {
+      box.innerHTML = headHtml();
+      if (!cache || cacheFor !== myId()) ensureLoaded(false).then(function () { renderMenu(); }, function () {});
+      return;
+    }
     if (!cache || cacheFor !== myId()) {
-      box.innerHTML = head + '<div class="muted small friends-note">Loading…</div>' + foot;
+      box.innerHTML = headHtml() + '<div class="muted small friends-note">Loading…</div>' + foot;
       wireBrowse(box);
       ensureLoaded(false).then(function () { renderMenu(); }, function () {
         var b2 = document.querySelector('#acctFriends');
-        if (b2) { b2.innerHTML = head + '<div class="muted small friends-note">Couldn’t load your friends.</div>' + foot; wireBrowse(b2); }
+        if (b2 && expanded) { b2.innerHTML = headHtml() + '<div class="muted small friends-note">Couldn’t load your friends.</div>' + foot; wireBrowse(b2); }
       });
       return;
     }
-    box.innerHTML = head +
+    box.innerHTML = headHtml() +
       (cache.length
-        ? '<div class="friends-list">' + cache.map(rowHtml).join('') + '</div>'
+        ? '<div class="friends-list">' + cache.map(rowHtml).join('') + '</div>' +
+          (cache.length >= FRIENDS_CAP ? '<div class="muted small friends-note">Friends list full (30) — remove someone to add another.</div>' : '')
         : '<div class="muted small friends-note">No friends yet — open a player’s profile and tap ☆ Add friend.</div>') +
       foot;
     wireBrowse(box);
@@ -109,7 +132,21 @@
     var box = document.querySelector('#acctFriends');
     if (!box || box.dataset.wired) return;
     box.dataset.wired = '1';
+    /* Re-collapse every time the account menu is reopened (192):
+       watch #acctMenu's hidden class; on a hidden -> visible
+       transition, reset to closed and re-render. */
+    var menu = document.querySelector('#acctMenu');
+    if (menu && window.MutationObserver) {
+      var wasHidden = menu.classList.contains('hidden');
+      new MutationObserver(function () {
+        var h = menu.classList.contains('hidden');
+        if (wasHidden && !h && expanded) { expanded = false; renderMenu(); }
+        wasHidden = h;
+      }).observe(menu, { attributes: true, attributeFilter: ['class'] });
+    }
     box.addEventListener('click', async function (e) {
+      var tog = e.target.closest('[data-friends-toggle]');
+      if (tog) { expanded = !expanded; renderMenu(); return; }
       var open = e.target.closest('[data-friend-open]');
       var gift = e.target.closest('[data-friend-gift]');
       var trade = e.target.closest('[data-friend-trade]');

@@ -1,9 +1,14 @@
 /* Friends list inside the account dropdown (migration 190).
    Lives in its own sheet so style.css stays untouched. No
-   backdrop-filter / fixed backgrounds (Firefox Android paint rule). */
+   backdrop-filter / fixed backgrounds (Firefox Android paint rule).
+   192: the section header is a collapse toggle (closed by default);
+   the list keeps its own scroll box (max-height below) so even a
+   full 30-friend list can't stretch the menu. */
 .acct-friends { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 4px 0; padding: 4px 0; width: 248px; max-width: 78vw; }
 .acct-friends.hidden { display: none; }
-.friends-head { padding: 6px 10px 4px; font-weight: 700; font-size: .9rem; }
+.friends-head-btn { display: flex; align-items: center; gap: 6px; width: 100%; background: none; border: 0; border-radius: 8px; color: var(--text); padding: 6px 10px; font: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; text-align: left; }
+.friends-head-btn:hover { background: rgba(255,255,255,.05); }
+.friends-chev { margin-left: auto; color: var(--muted); font-weight: 400; font-size: .8rem; }
 .friends-note { padding: 4px 10px 8px; }
 .friends-list { max-height: 38vh; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
 .friend-row { display: flex; align-items: center; gap: 2px; padding: 0 4px 0 0; border-radius: 8px; }
