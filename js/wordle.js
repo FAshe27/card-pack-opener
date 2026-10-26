@@ -295,13 +295,13 @@
     }).join('<br>');
     ctx.openModal('<div id="wrModalRoot">' +
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
-      '<h2>🎉 WordGuesser</h2>' +
+      '<h2 style="text-align:center">🎉 WordGuesser 🎉</h2>' +
       '<p style="text-align:center;font-size:1.05rem;margin:6px 0">You got it in <b>' +
       g.guesses.length + (g.guesses.length === 1 ? ' guess' : ' guesses') + '</b>!</p>' +
       '<p style="text-align:center;letter-spacing:.35em;font-size:1.6rem;margin:10px 0">' + grid + '</p>' +
       '<p style="text-align:center">The word was <b>' + esc(g.answer || '') + '</b></p>' +
       '<p style="text-align:center">Prize: <b>' + esc(g.prize ? g.prize.text : '') + '</b></p>' +
-      '<div class="modal-actions">' +
+      '<div class="modal-actions" style="justify-content:center">' +
       '<button class="btn primary" id="wrCopyBtn2">Copy result</button>' +
       '<button class="btn" data-close>Close</button></div></div>');
     if (ctx.fx && ctx.fx.confetti) { try { ctx.fx.confetti(160); } catch (e) { /* non-fatal */ } }
