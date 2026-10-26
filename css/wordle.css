@@ -5,13 +5,18 @@
   font-size: 11px; letter-spacing: .08em; vertical-align: middle;
   background: #b59f3b; color: #121213; border-radius: 999px; padding: 2px 8px;
 }
-.wr-topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
+/* Balance centred on its own line, status centred on the line below
+   (Franklin, 2026-10-26); the spin-ticket counter was removed by request. */
+.wr-topbar { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 8px; text-align: center; }
 .wr-balance { font-size: 15px; }
 .wr-msg { min-height: 20px; margin: 8px 0 0; font-weight: 600; }
 /* One centred column: header, game and tools panels all share the same
    max-width so the page reads as a single balanced stack (Franklin,
    2026-10-26 — the game panel used to sit narrower than its neighbours). */
 .wr-main, .wr-tools { max-width: 700px; margin-inline: auto; }
+/* A slight gap between the game box and the Payouts box below it
+   (Franklin, 2026-10-26). */
+.wr-tools { margin-top: 10px; }
 .wr-main { display: flex; justify-content: center; }
 .wr-game { flex: 1 1 auto; width: 100%; position: relative; display: flex; flex-direction: column; align-items: center; }
 /* Header block INSIDE the single game panel (merged 2026-10-26), with a
