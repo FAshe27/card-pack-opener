@@ -48,6 +48,9 @@
 
   var LS_KEY = 'wordle_proto_v1';
   var WORDS_URL = 'js/wordle-words.js';
+  // The site's shared chrome (CPS.appCtx): openModal/closeModal power the
+  // congrats + stats pop-ups (Franklin, 2026-10-26), fx.confetti celebrates.
+  var ctx = CPS.appCtx || {};
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -169,7 +172,7 @@
     var pat = score(w, g.answer); // DEALER SEAM: server scores at graduation
     g.guesses.push(w); g.patterns.push(pat); g.input = '';
     animRow = g.guesses.length - 1;
-    if (patternKey(pat) === '22222') finishGame(true);
+    if (patternKey(pat) === '22222') { finishGame(true); pendingWin = true; }
     else if (g.guesses.length >= 6) finishGame(false);
     save(); paint();
   }
@@ -231,7 +234,7 @@
   }
 
   /* ---------------- rendering ---------------- */
-  var rootEl = null, animRow = -1, msgText = '', listening = false;
+  var rootEl = null, animRow = -1, msgText = '', listening = false, pendingWin = false;
   function msg(t) { msgText = t; if (rootEl) paint(); }
   function nudge(t) {
     msgText = t;
@@ -274,7 +277,7 @@
     });
     return html + '</div>';
   }
-  function statsHtml() {
+  function statsInnerHtml() {
     var st = S.stats;
     var winPct = st.played ? Math.round(100 * st.won / st.played) : 0;
     var maxD = 1; for (var k = 1; k <= 6; k++) maxD = Math.max(maxD, st.dist[k]);
@@ -283,15 +286,54 @@
       bars += '<div class="wr-dist-row"><span>' + i + '</span><div class="wr-dist-bar" style="width:' +
         Math.max(8, Math.round(100 * st.dist[i] / maxD)) + '%">' + st.dist[i] + '</div></div>';
     }
-    return '<div class="panel wr-side"><h3>Prototype stats</h3>' +
-      '<div class="wr-stat-grid">' +
+    return '<div class="wr-stat-grid">' +
       '<div><b>' + st.played + '</b><span>Played</span></div>' +
       '<div><b>' + winPct + '%</b><span>Win rate</span></div>' +
       '<div><b>' + st.streak + '</b><span>Streak</span></div>' +
       '<div><b>' + st.best + '</b><span>Best streak</span></div></div>' +
       '<h4>Guess distribution</h4>' + bars +
       '<p class="muted small">Fake prizes banked here: <b>' + st.fakePacks + ' random packs</b> + <b>' +
-      st.fakeTickets + ' spin tickets</b> · fake tokens spent: ' + st.tokensSpent + '</p></div>';
+      st.fakeTickets + ' spin tickets</b> · fake tokens spent: ' + st.tokensSpent + '</p>';
+  }
+  function openStats() {
+    if (!ctx.openModal) return;
+    ctx.openModal('<div id="wrModalRoot">' +
+      '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h2>📊 Your Word Rip stats</h2>' + statsInnerHtml() +
+      '<div class="confirm-btns" style="justify-content:center;margin-top:10px">' +
+      '<button class="btn primary" data-close>Close</button></div></div>');
+  }
+  function showWinModal() {
+    var g = S.active;
+    if (!g || g.status !== 'won' || !ctx.openModal) return;
+    var used = g.guesses.length;
+    var grid = g.patterns.map(function (p) {
+      return p.map(function (v) { return v === 2 ? '🟩' : (v === 1 ? '🟨' : '⬛'); }).join('');
+    }).join('<br>');
+    ctx.openModal('<div id="wrModalRoot" style="text-align:center">' +
+      '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<div style="font-size:52px;line-height:1">🎉</div>' +
+      '<h2>You got it in ' + used + (used === 1 ? ' guess!' : ' guesses!') + '</h2>' +
+      '<p>The word was <b>' + esc(g.answer) + '</b></p>' +
+      '<div class="wr-share-grid">' + grid + '</div>' +
+      '<p class="wr-prize-big">You won <b>' + esc(prizeText(g.prize)) + '</b>!</p>' +
+      '<p class="muted small">(Fake prizes in the Sandbox prototype — real ones arrive at graduation.)</p>' +
+      '<div class="confirm-btns" style="justify-content:center;margin-top:10px">' +
+      '<button class="btn" id="wrModalCopy" type="button">Copy result</button>' +
+      '<button class="btn primary" id="wrAgainBtn" type="button">Play again</button>' +
+      '<button class="btn" data-close>Close</button></div></div>',
+      function (box) {
+        var ag = box.querySelector('#wrAgainBtn');
+        if (ag) ag.addEventListener('click', function () { ctx.closeModal(); msgText = ''; startGame(); });
+        var cp = box.querySelector('#wrModalCopy');
+        if (cp) cp.addEventListener('click', function () {
+          var t = shareText(); if (!t) return;
+          function done() { cp.textContent = 'Copied!'; }
+          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done);
+          else done();
+        });
+      });
+    if (ctx.fx && ctx.fx.confetti) { try { ctx.fx.confetti(160); } catch (e) { /* cosmetic */ } }
   }
   function prizesHtml() {
     var rows = '';
@@ -325,11 +367,12 @@
       '<p class="muted small">Guess the 5-letter word in 6 tries. Green = right letter, right spot · ' +
       'yellow = in the word, wrong spot · gray = not in the word. Fake tokens and fake prizes — nothing here is real.</p>' +
       '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.balance + '</b> fake tokens</span>' +
-      '<span class="muted small">' + esc(statusLine) + '</span>' + actionBtn + '</div>' +
+      '<span class="muted small">' + esc(statusLine) + '</span>' + actionBtn +
+      '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
       '<p class="wr-msg">' + esc(msgText) + '</p></div>' +
       '<div class="wr-main"><div class="panel wr-game">' +
       (wordsReady() ? boardHtml() + keyboardHtml() : '<p class="muted">Loading word banks…</p>') +
-      '</div>' + statsHtml() + '</div>' +
+      '</div></div>' +
       '<div class="panel wr-tools">' + prizesHtml() +
       '<details class="wr-details"><summary>Tuning tools (prototype only — gone at graduation)</summary>' +
       '<div class="wr-tune-row"><label class="small">Force next word <input id="wrForce" type="text" maxlength="5" size="7" placeholder="e.g. PACKS"></label>' +
@@ -341,8 +384,11 @@
       'The bot plays a fixed opener then random consistent guesses — a floor for solver play, a ceiling for most humans.</p>' +
       '</details></div>';
     bindUi();
+    if (pendingWin) { pendingWin = false; showWinModal(); }
   }
   function bindUi() {
+    var sb = rootEl.querySelector('#wrStatsBtn');
+    if (sb) sb.addEventListener('click', function () { openStats(); });
     var nb = rootEl.querySelector('#wrNewBtn');
     if (nb) nb.addEventListener('click', function () { msgText = ''; startGame(); });
     var cb = rootEl.querySelector('#wrCopyBtn');
@@ -417,12 +463,15 @@
   }
   function teardown() {
     if (listening) { document.removeEventListener('keydown', onKeyDown); listening = false; }
+    // Close our pop-up if it's the one currently open (never someone else's).
+    if (ctx.closeModal && document.querySelector('#wrModalRoot')) { try { ctx.closeModal(); } catch (e) { /* ignore */ } }
     rootEl = null;
   }
 
   CPS.wordle = {
     render: render, teardown: teardown,
     _test: { CONFIG: CONFIG, score: score, prizeText: prizeText, simulate: simulate,
+             openStats: openStats, showWinModal: showWinModal,
              state: function () { return S; }, wordsReady: wordsReady,
              adoptForTest: function (a, al) { ANSWERS = a; ALLOWED = al; ANSWER_SET = new Set(a); ALLOWED_SET = new Set(al); } }
   };
