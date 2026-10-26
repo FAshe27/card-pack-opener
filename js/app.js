@@ -2138,6 +2138,7 @@
     var m = $('#acctMenu'), btn = $('#playerBtn');
     if (!m || !btn) return;
     if (!m.classList.contains('hidden')) { closeAccountMenu(); return; }
+    if (m.parentNode !== document.body) document.body.appendChild(m); // portal out of the topbar: its transform traps fixed descendants in its z-20 stacking context, letting packs paint over the menu on iOS (same fix as the set dropdown, 2026-10-12). top/right below are viewport coords, so geometry is unchanged.
     var r = btn.getBoundingClientRect();
     m.style.top = (r.bottom + 6) + 'px';
     m.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
