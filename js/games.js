@@ -83,6 +83,12 @@
       return '<div class="arc-art-vault" aria-hidden="true"><span class="arc-vault-grid">' +
         cells + '</span><span class="arc-vault-lock">🔓</span></div>';
     }
+    if (key === 'wordle') {
+      var wtiles = [['W', 'g'], ['O', 'x'], ['R', 'y'], ['D', 'g'], ['S', 'x']].map(function (p) {
+        return '<i class="' + p[1] + '">' + p[0] + '</i>';
+      }).join('');
+      return '<div class="arc-art-wordle" aria-hidden="true"><span class="arc-wtiles">' + wtiles + '</span></div>';
+    }
     // scratchoffs
     return '<div class="arc-art-scratch" aria-hidden="true"><div class="arc-ticket">' +
       '<span class="arc-foil"></span><span class="arc-foil"></span><span class="arc-foil"></span>' +
@@ -104,6 +110,8 @@
       blurb: 'Standard European roulette — place a token on any bet space on a real number table, paid at the standard odds.' }
     ,{ id: 'vaultbreaker', title: 'VAULT BREAKER', tag: '3 🪙 a run', accent: 'vault', view: 'sbx-vaultbreaker',
       blurb: 'Crack a 5×5 vault tile by tile — cash out any time, but hidden alarms end the run. Bigger vault, bigger prize.' }
+    ,{ id: 'wordle', title: 'WORDGUESSER', tag: 'Free daily game', accent: 'wordle', soon: true,
+      blurb: 'Guess the 5-letter word in 6 tries. One free game a day — win packs and spin tickets for solving it.' }
   ];
 
   function renderLobby(box) {
