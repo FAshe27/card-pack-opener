@@ -1,245 +1,204 @@
-/* WordGuesser — SANDBOX PROTOTYPE, FAKE TOKENS ONLY.
-   Franklin's design (2026-10-26): a Wordle game for the Arcade — one FREE
-   game daily, then 15 tokens a game; a unique word per player from a sizable
-   answer bank; prizes by guesses used (his table, CONFIG.prizes below).
-
-   PROTOTYPE RULES: no server, no RPCs, no real tokens, packs or tickets.
-   The fake balance (starts at 100), the daily-free marker, any in-progress
-   game and the session stats live in localStorage only (key
-   wordle_proto_v1), exactly like the Plinko / Scratchoff / Vault Breaker
-   Sandbox prototypes did before they graduated.
-
-   THE WORD IN THIS PROTOTYPE: the answer sits in this module's memory,
-   because a client-only prototype has nowhere else to put it. That is
-   acceptable here — Sandbox is admin-only and nothing real is at stake —
-   and it is NOT how the real build works. Graduation (separate build, on
-   Franklin's word) moves dealing + scoring behind RPCs
-   (wordle_start / wordle_guess / wordle_state): the answer lives only in
-   a cps table, the client receives tile colours only, and the word banks
-   below move server-side with it. The Dealer-shaped seam is marked where
-   the swap lands. The word banks themselves (js/wordle-words.js, loaded
-   lazily on first open) were screened with PackRipper's own profanity
-   lists — see that file's header for counts and provenance.
-
-   Registered into the Sandbox as status 'testing' — admin accounts only,
-   NO Arcade tile (Franklin, 2026-10-26: not even a coming-soon box), no
-   top-bar tab. All prices/prizes live in CONFIG at the top for tuning. */
+/* WordGuesser — REAL economy, server-dealt (migration 193).
+   Sandbox 'testing' phase: the RPCs are admin-gated server-side.
+   The answer lives ONLY on the server (cps.wordle_games) and is never
+   sent to the client while a game is playing; guesses are validated
+   and scored by cps_wordle_guess, which returns tile marks only.
+   This file ships NO word list. Real game tokens in (first game each
+   Chicago day free, extras 15), real packs + spin tickets out.
+   Consumes CPS.appCtx + CPS.cloud.call like js/vaultbreaker.js. */
 (function (CPS) {
   'use strict';
+  CPS.sandbox = CPS.sandbox || {};
+  var ctx = CPS.appCtx;
 
-  /* ================= CONFIG — tweak freely ================= */
-  var CONFIG = {
-    cost: 15,                // fake tokens per extra game (Franklin, 2026-10-26)
-    startBalance: 100,       // fake balance a fresh / reset prototype holds
-    // Prizes by guesses used — Franklin's table (2026-10-26), spelled out in
-    // full wherever shown. pr = random packs, tickets = spin tickets. In the
-    // prototype both are FAKE tallies on the stats panel; nothing is granted.
-    prizes: {
-      1: { pr: 10, tickets: 10 },
-      2: { pr: 10, tickets: 5 },
-      3: { pr: 5,  tickets: 5 },
-      4: { pr: 0,  tickets: 5 },
-      5: { pr: 5,  tickets: 0 },
-      6: { pr: 3,  tickets: 0 }
-    },
-    openers: ['SLATE', 'CRANE', 'TRACE', 'SLANT', 'CRATE'] // simulate-bot openers
+  /* Display fallback only — wordle_state hands down the server's own
+     table (cps.wordle_table, derived from cps.wordle_prize) and it
+     replaces this on load, so the numbers can never drift. */
+  var PRIZES = [
+    { guesses: 1, packs: 10, tickets: 10, text: '10 random packs + 10 spin tickets' },
+    { guesses: 2, packs: 10, tickets: 5, text: '10 random packs + 5 spin tickets' },
+    { guesses: 3, packs: 5, tickets: 5, text: '5 random packs + 5 spin tickets' },
+    { guesses: 4, packs: 0, tickets: 5, text: '5 spin tickets' },
+    { guesses: 5, packs: 5, tickets: 0, text: '5 random packs' },
+    { guesses: 6, packs: 3, tickets: 0, text: '3 random packs' }
+  ];
+
+  var S = {
+    loaded: false, busy: false, loadError: false,
+    tokens: 0, spins: 0, cost: 15, freeAvailable: true,
+    game: null,      // the playing game (server payload), or null
+    lastGame: null,  // today's latest finished game (server payload)
+    table: PRIZES,
+    stats: null,
+    input: ''
   };
-  /* ===================================================================== */
-
-  var LS_KEY = 'wordle_proto_v1';
-  var WORDS_URL = 'js/wordle-words.js';
-  // The site's shared chrome (CPS.appCtx): openModal/closeModal power the
-  // congrats + stats pop-ups (Franklin, 2026-10-26), fx.confetti celebrates.
-  var ctx = CPS.appCtx || {};
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
-  function todayStr() {
-    var d = new Date();
-    function p(n) { return (n < 10 ? '0' : '') + n; }
-    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
-  }
-  function prizeText(p) {
-    if (!p) return 'nothing';
+  function displayGame() { return S.game || S.lastGame; }
+  function prizeText(packs, tickets) {
     var parts = [];
-    if (p.pr) parts.push(p.pr + ' random packs');
-    if (p.tickets) parts.push(p.tickets + ' spin tickets');
-    return parts.length ? parts.join(' + ') : 'nothing';
+    if (packs > 0) parts.push(packs + ' random pack' + (packs === 1 ? '' : 's'));
+    if (tickets > 0) parts.push(tickets + ' spin ticket' + (tickets === 1 ? '' : 's'));
+    return parts.length ? parts.join(' + ') : 'Nothing';
   }
 
-  /* ---------------- word banks (lazy) ---------------- */
-  var ANSWERS = null, ALLOWED = null; // arrays + Sets, filled by loadWords()
-  var ANSWER_SET = null, ALLOWED_SET = null;
-  function wordsReady() { return !!ANSWERS; }
-  function loadWords() {
-    if (CPS.wordleWords) { adoptWords(); return Promise.resolve(true); }
-    return new Promise(function (resolve) {
-      var s = document.createElement('script');
-      s.src = WORDS_URL;
-      s.onload = function () { adoptWords(); resolve(wordsReady()); };
-      s.onerror = function () { resolve(false); };
-      document.head.appendChild(s);
-    });
-  }
-  function adoptWords() {
-    if (!CPS.wordleWords || ANSWERS) return;
-    ANSWERS = CPS.wordleWords.answers.split(' ');
-    var allowed = CPS.wordleWords.allowed.split(' ');
-    ANSWER_SET = new Set(ANSWERS);
-    ALLOWED_SET = new Set(allowed);
-    ALLOWED = allowed;
-  }
-
-  /* ---------------- scoring (the graduation RPC's algorithm) ----------------
-     Two passes, exactly like Wordle: greens first (consuming those letters),
-     then yellows left-to-right against the letters that remain. Returns an
-     array of 5: 2 = green, 1 = yellow, 0 = gray. */
-  function score(guess, answer) {
-    var res = [0, 0, 0, 0, 0], rest = {}, i, ch;
-    for (i = 0; i < 5; i++) {
-      if (guess[i] === answer[i]) res[i] = 2;
-      else rest[answer[i]] = (rest[answer[i]] || 0) + 1;
-    }
-    for (i = 0; i < 5; i++) {
-      if (res[i] === 2) continue;
-      ch = guess[i];
-      if (rest[ch] > 0) { res[i] = 1; rest[ch]--; }
-    }
-    return res;
-  }
-  function patternKey(p) { return p.join(''); }
-
-  /* ---------------- state ---------------- */
-  function freshState() {
-    return {
-      balance: CONFIG.startBalance,
-      freeDate: '',            // local date the free game was used ('' = unused today)
-      active: null,            // {answer, guesses:[], patterns:[], status, free, input}
-      nextAnswer: '',          // tuning override for the next deal
-      lastAnswer: '',
-      stats: {
-        played: 0, won: 0, streak: 0, best: 0,
-        dist: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
-        fakePacks: 0, fakeTickets: 0, tokensSpent: 0
-      }
-    };
-  }
-  var S = freshState();
-  function load() {
+  /* ---------------- server sync ------------------------------------- */
+  function syncBadges() {
     try {
-      var raw = localStorage.getItem(LS_KEY);
-      if (raw) { var p = JSON.parse(raw); if (p && typeof p.balance === 'number') S = Object.assign(freshState(), p); }
-    } catch (e) { /* fresh state is fine */ }
+      if (ctx.S) ctx.S.gameTokens = S.tokens; // freshest server value we have
+      if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(S.tokens);
+      if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
+    } catch (e) { /* non-fatal */ }
   }
-  function save() {
-    try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) { /* ignore */ }
+
+  /* Pack prizes land in S.player.sets only on a full state load —
+     pull the inventory counts the way js/vaultbreaker.js does. */
+  async function refreshPackCounts() {
+    try {
+      var st = await CPS.cloud.call('get_state');
+      var sets = ctx.S && ctx.S.player && ctx.S.player.sets;
+      var inv = st && st.inventory;
+      if (!sets || !inv) return;
+      Object.keys(sets).forEach(function (k) { if (!(k in inv)) sets[k].packs = 0; });
+      Object.keys(inv).forEach(function (k) {
+        if (sets[k]) sets[k].packs = inv[k];
+        else sets[k] = { packs: inv[k], cards: {}, recent: [],
+          stats: { opened: 0, pulled: 0, holos: 0, byRarity: {}, best: null } };
+      });
+      if (ctx.renderPacksSide) ctx.renderPacksSide();
+      else if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
+    } catch (e) { /* non-fatal: counts catch up on the next natural load */ }
   }
-  load();
 
-  function freeAvailable() { return S.freeDate !== todayStr(); }
+  function applyState(r) {
+    S.tokens = r.tokens_now; S.spins = r.spins_now;
+    if (r.cost) S.cost = r.cost;
+    S.freeAvailable = !!r.free_available;
+    if (r.table) S.table = r.table;
+    if (r.stats) S.stats = r.stats;
+    S.game = r.game || null;
+    S.lastGame = r.last_game || null;
+    if (S.game) S.input = '';
+  }
 
-  /* ---------------- game flow ----------------
-     DEALER SEAM: startGame/scoreGuess are the two places the graduation
-     build replaces with RPC calls; everything else (board, keyboard,
-     stats, prizes) is shared shape. */
-  function startGame() {
-    if (S.active && S.active.status === 'playing') { paint(); return; }
-    var free = freeAvailable();
-    if (!free && S.balance < CONFIG.cost) { msg('Not enough fake tokens — reset the prototype below, or come back tomorrow for the free game.'); return; }
-    var answer;
-    if (S.nextAnswer && ANSWER_SET && ANSWER_SET.has(S.nextAnswer)) answer = S.nextAnswer;
-    else if (S.nextAnswer && ALLOWED_SET && ALLOWED_SET.has(S.nextAnswer)) answer = S.nextAnswer;
-    else {
-      answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
-      if (ANSWERS.length > 1 && answer === S.lastAnswer) answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
+  async function loadState() {
+    try {
+      var r = await CPS.cloud.call('wordle_state', {});
+      applyState(r);
+      S.loaded = true; S.loadError = false;
+      syncBadges();
+    } catch (e) {
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      S.loaded = true; S.loadError = true;
     }
-    S.nextAnswer = '';
-    if (free) S.freeDate = todayStr();
-    else { S.balance -= CONFIG.cost; S.stats.tokensSpent += CONFIG.cost; }
-    S.active = { answer: answer, guesses: [], patterns: [], status: 'playing', free: free, input: '' };
-    S.lastAnswer = answer;
-    save(); animRow = -1; paint();
+    paint();
   }
-  function submitGuess() {
-    var g = S.active;
-    if (!g || g.status !== 'playing') return;
-    var w = (g.input || '').toUpperCase();
+
+  async function startGame() {
+    if (S.busy || S.game || !S.loaded) return;
+    if (!S.freeAvailable && S.tokens < S.cost) {
+      try { ctx.toast('Not enough tokens — packs, quests and the Prize Wheel can earn more.', 'warn'); }
+      catch (e) { /* non-fatal */ }
+      return;
+    }
+    S.busy = true; paint();
+    try {
+      var r = await CPS.cloud.call('wordle_start', {});
+      S.busy = false;
+      S.game = r.game || null;
+      S.lastGame = null;
+      S.tokens = r.tokens_now; S.spins = r.spins_now;
+      if (S.game && S.game.free) S.freeAvailable = false;
+      S.input = '';
+      syncBadges();
+      paint();
+    } catch (e) {
+      S.busy = false;
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      loadState(); // resync with the server (it may have dealt the game)
+    }
+  }
+
+  async function submitGuess() {
+    var g = S.game;
+    if (S.busy || !g || g.status !== 'playing') return;
+    var w = S.input;
     if (w.length < 5) { nudge('Not enough letters'); return; }
-    if (!ALLOWED_SET.has(w)) { nudge('Not in word list'); return; }
-    var pat = score(w, g.answer); // DEALER SEAM: server scores at graduation
-    g.guesses.push(w); g.patterns.push(pat); g.input = '';
-    animRow = g.guesses.length - 1;
-    if (patternKey(pat) === '22222') { finishGame(true); pendingWin = true; }
-    else if (g.guesses.length >= 6) finishGame(false);
-    save(); paint();
+    S.busy = true;
+    try {
+      var r = await CPS.cloud.call('wordle_guess', { p_guess: w });
+      S.busy = false;
+      S.game = (r.game && r.game.status === 'playing') ? r.game : null;
+      if (r.game && r.game.status !== 'playing') S.lastGame = r.game;
+      S.tokens = r.tokens_now; S.spins = r.spins_now;
+      if (r.stats) S.stats = r.stats;
+      S.input = '';
+      animRow = (r.game ? r.game.guesses.length : 0) - 1;
+      var won = r.game && r.game.status === 'won';
+      var over = r.game && r.game.status !== 'playing';
+      if (won) pendingWin = true;
+      if (over) { syncBadges(); refreshPackCounts(); }
+      paint();
+    } catch (e) {
+      S.busy = false;
+      var m = (e && e.message) || '';
+      if (m.indexOf('Not in word list') !== -1) { nudge('Not in word list'); return; }
+      if (m.indexOf('Not enough letters') !== -1) { nudge('Not enough letters'); return; }
+      try { ctx.cloudError(e); } catch (e2) { /* fall through */ }
+      loadState();
+    }
   }
-  function finishGame(wonGame) {
-    var g = S.active, st = S.stats;
-    g.status = wonGame ? 'won' : 'lost';
-    st.played++;
-    if (wonGame) {
-      var used = g.guesses.length, p = CONFIG.prizes[used];
-      st.won++; st.dist[used]++; st.streak++; if (st.streak > st.best) st.best = st.streak;
-      if (p) { st.fakePacks += p.pr; st.fakeTickets += p.tickets; }
-      g.prize = p || null;
-    } else { st.streak = 0; g.prize = null; }
-  }
+
+  /* ---------------- play -------------------------------------------- */
   function keyState() {
-    // best-known state per letter: green > yellow > gray
-    var best = {}, g = S.active;
+    // best-known state per letter: G > Y > X, from server marks
+    var rank = { G: 2, Y: 1, X: 0 }, best = {}, g = displayGame();
     if (!g) return best;
-    g.guesses.forEach(function (w, gi) {
+    (g.guesses || []).forEach(function (gu) {
       for (var i = 0; i < 5; i++) {
-        var ch = w[i], v = g.patterns[gi][i];
-        if (best[ch] === undefined || v > best[ch]) best[ch] = v;
+        var ch = gu.word[i], v = gu.marks[i];
+        if (best[ch] === undefined || rank[v] > rank[best[ch]]) best[ch] = v;
       }
     });
     return best;
   }
   function shareText() {
-    var g = S.active; if (!g) return '';
+    var g = displayGame(); if (!g) return '';
     var head = 'WordGuesser ' + (g.status === 'won' ? g.guesses.length + '/6' : 'X/6');
-    var rows = g.patterns.map(function (p) {
-      return p.map(function (v) { return v === 2 ? '🟩' : (v === 1 ? '🟨' : '⬛'); }).join('');
+    var rows = (g.guesses || []).map(function (gu) {
+      return gu.marks.split('').map(function (v) {
+        return v === 'G' ? '🟩' : (v === 'Y' ? '🟨' : '⬛');
+      }).join('');
     });
-    return head + '\n' + rows.join('\n');
+    return head + '\n' + rows.join('\n') + '\n\nPlay PackRipper!';
+  }
+  function handleKey(k) {
+    var g = S.game;
+    if (!g || g.status !== 'playing' || S.busy) return;
+    if (k === 'ENTER') { submitGuess(); return; }
+    if (k === 'BACK') { S.input = S.input.slice(0, -1); updateCurrentRow(); return; }
+    if (/^[A-Z]$/.test(k) && S.input.length < 5) { S.input += k; updateCurrentRow(); }
+  }
+  function onKeyDown(e) {
+    if (!rootEl || !document.body.contains(rootEl)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    var mroot = document.getElementById('wrModalRoot');
+    if (mroot && document.body.contains(mroot)) return; // a modal is up
+    var k = e.key === 'Enter' ? 'ENTER' : (e.key === 'Backspace' ? 'BACK' : String(e.key || '').toUpperCase());
+    if (k === 'ENTER' || k === 'BACK' || /^[A-Z]$/.test(k)) { e.preventDefault(); handleKey(k); }
   }
 
-  /* ---------------- simulate (tuning) ----------------
-     A simple bot: fixed opener, then guesses a random word still consistent
-     with every pattern so far. Shows the prize table's shape against
-     solver-ish play; a human plays worse, a real solver plays better. */
-  function simulate(n) {
-    var dist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }, fail = 0, packs = 0, tickets = 0, totalGuesses = 0;
-    for (var game = 0; game < n; game++) {
-      var answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
-      var cands = ANSWERS, opener = CONFIG.openers[Math.floor(Math.random() * CONFIG.openers.length)];
-      var used = 0, wonGame = false;
-      for (var turn = 0; turn < 6; turn++) {
-        var guess = turn === 0 ? opener : cands[Math.floor(Math.random() * cands.length)];
-        var pat = score(guess, answer); used++;
-        if (patternKey(pat) === '22222') { wonGame = true; break; }
-        var key = patternKey(pat);
-        cands = cands.filter(function (w) { return patternKey(score(guess, w)) === key; });
-        if (!cands.length) break;
-      }
-      if (wonGame) { dist[used]++; var p = CONFIG.prizes[used]; packs += p.pr; tickets += p.tickets; totalGuesses += used; }
-      else fail++;
-    }
-    return { n: n, dist: dist, fail: fail, packs: packs, tickets: tickets,
-             avgWin: n - fail ? (totalGuesses / (n - fail)) : 0 };
-  }
-
-  /* ---------------- rendering ---------------- */
-  var rootEl = null, animRow = -1, msgText = '', listening = false, pendingWin = false;
-  function msg(t) { msgText = t; if (rootEl) paint(); }
-  /* Wordle-style transient toast (Franklin, 2026-10-26): guess errors like
-     "Not in word list" flash in a pill over the board for ~a second and fade
-     — they do NOT park in the status line anymore. The row shake stays. */
+  /* ---------------- rendering ---------------------------------------- */
+  var rootEl = null, animRow = -1, listening = false, pendingWin = false;
   var toastTimer = null;
+  /* Wordle-style transient toast: guess errors flash in a pill over the
+     board for ~a second and fade — they never park in the status line. */
   function nudge(t) {
     if (!rootEl) return;
     var toast = rootEl.querySelector('#wrToast');
@@ -252,23 +211,44 @@
     var row = rootEl.querySelector('.wr-row.cur');
     if (row) { row.classList.remove('wr-shake'); void row.offsetWidth; row.classList.add('wr-shake'); }
   }
-  function tileCls(v) { return v === 2 ? 'wr-t-green' : (v === 1 ? 'wr-t-yellow' : 'wr-t-gray'); }
+  function tileCls(v) { return v === 'G' ? 'wr-t-green' : (v === 'Y' ? 'wr-t-yellow' : 'wr-t-gray'); }
 
   function boardHtml() {
-    var g = S.active, html = '<div class="wr-board">';
+    var g = displayGame(), html = '<div class="wr-board">';
+    var guesses = g ? (g.guesses || []) : [];
     for (var r = 0; r < 6; r++) {
-      var isCur = !!g && g.status === 'playing' && r === g.guesses.length;
-      var isAnim = g && r === animRow && r < g.guesses.length;
+      var isCur = !!S.game && r === guesses.length;
+      var isAnim = !!g && r === animRow && r < guesses.length;
       html += '<div class="wr-row' + (isCur ? ' cur' : '') + '">';
       for (var c = 0; c < 5; c++) {
         var ch = '', cls = 'wr-tile';
-        if (g && r < g.guesses.length) { ch = g.guesses[r][c]; cls += ' filled ' + tileCls(g.patterns[r][c]) + (isAnim ? ' flip' : ''); }
-        else if (isCur && g.input && c < g.input.length) { ch = g.input[c]; cls += ' filled pop'; }
+        if (r < guesses.length) {
+          ch = guesses[r].word[c];
+          cls += ' filled ' + tileCls(guesses[r].marks[c]) + (isAnim ? ' flip' : '');
+        } else if (isCur && c < S.input.length) {
+          ch = S.input[c]; cls += ' filled pop';
+        }
         html += '<div class="' + cls + '"' + (isAnim ? ' style="animation-delay:' + (c * 120) + 'ms"' : '') + '>' + esc(ch) + '</div>';
       }
       html += '</div>';
     }
     return html + '</div>';
+  }
+  /* Typing updates ONLY the current row's tiles in place — a full repaint
+     per keystroke would rebuild the submitted rows' tiles and restart
+     their flip animations (Franklin's catch, 2026-10-26). */
+  function updateCurrentRow() {
+    if (!rootEl || !S.game) return;
+    var row = rootEl.querySelector('.wr-row.cur');
+    if (!row) { paint(); return; }
+    var tiles = row.children;
+    for (var c = 0; c < 5; c++) {
+      var ch = c < S.input.length ? S.input[c] : '';
+      if (tiles[c].textContent !== ch) {
+        tiles[c].textContent = ch;
+        tiles[c].className = 'wr-tile' + (ch ? ' filled pop' : '');
+      }
+    }
   }
   function keyboardHtml() {
     var rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], best = keyState();
@@ -286,243 +266,176 @@
     return html + '</div>';
   }
   function statsInnerHtml() {
-    var st = S.stats;
-    var winPct = st.played ? Math.round(100 * st.won / st.played) : 0;
-    var maxD = 1; for (var k = 1; k <= 6; k++) maxD = Math.max(maxD, st.dist[k]);
+    var st = S.stats || { played: 0, wins: 0, win_pct: 0, streak: 0, best_streak: 0, dist: {}, packs_won: 0, tickets_won: 0 };
+    var dist = st.dist || {};
+    var maxD = 1; for (var k = 1; k <= 6; k++) maxD = Math.max(maxD, dist[String(k)] || 0);
     var bars = '';
     for (var i = 1; i <= 6; i++) {
+      var n = dist[String(i)] || 0;
       bars += '<div class="wr-dist-row"><span>' + i + '</span><div class="wr-dist-bar" style="width:' +
-        Math.max(8, Math.round(100 * st.dist[i] / maxD)) + '%">' + st.dist[i] + '</div></div>';
+        Math.max(8, Math.round(100 * n / maxD)) + '%">' + n + '</div></div>';
     }
     return '<div class="wr-stat-grid">' +
       '<div><b>' + st.played + '</b><span>Played</span></div>' +
-      '<div><b>' + winPct + '%</b><span>Win rate</span></div>' +
+      '<div><b>' + st.win_pct + '%</b><span>Win rate</span></div>' +
       '<div><b>' + st.streak + '</b><span>Streak</span></div>' +
-      '<div><b>' + st.best + '</b><span>Best streak</span></div></div>' +
+      '<div><b>' + st.best_streak + '</b><span>Best streak</span></div></div>' +
       '<h4>Guess distribution</h4>' + bars +
-      '<p class="muted small">Fake prizes banked here: <b>' + st.fakePacks + ' random packs</b> + <b>' +
-      st.fakeTickets + ' spin tickets</b> · fake tokens spent: ' + st.tokensSpent + '</p>';
+      '<p class="muted small">Prizes won here: <b>' + prizeText(st.packs_won || 0, st.tickets_won || 0) + '</b></p>';
   }
   function openStats() {
     if (!ctx.openModal) return;
     ctx.openModal('<div id="wrModalRoot">' +
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h2>📊 Your WordGuesser stats</h2>' + statsInnerHtml() +
-      '<div class="confirm-btns" style="justify-content:center;margin-top:10px">' +
-      '<button class="btn primary" data-close>Close</button></div></div>');
+      '<div class="modal-actions"><button class="btn" data-close>Close</button></div></div>');
+    wireModal();
   }
   function showWinModal() {
-    var g = S.active;
+    var g = displayGame();
     if (!g || g.status !== 'won' || !ctx.openModal) return;
-    var used = g.guesses.length;
-    var grid = g.patterns.map(function (p) {
-      return p.map(function (v) { return v === 2 ? '🟩' : (v === 1 ? '🟨' : '⬛'); }).join('');
+    var grid = (g.guesses || []).map(function (gu) {
+      return gu.marks.split('').map(function (v) {
+        return v === 'G' ? '🟩' : (v === 'Y' ? '🟨' : '⬛');
+      }).join('');
     }).join('<br>');
-    ctx.openModal('<div id="wrModalRoot" style="text-align:center">' +
+    ctx.openModal('<div id="wrModalRoot">' +
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
-      '<div style="font-size:52px;line-height:1">🎉</div>' +
-      '<h2>You got it in ' + used + (used === 1 ? ' guess!' : ' guesses!') + '</h2>' +
-      '<p>The word was <b>' + esc(g.answer) + '</b></p>' +
-      '<div class="wr-share-grid">' + grid + '</div>' +
-      '<p class="wr-prize-big">You won <b>' + esc(prizeText(g.prize)) + '</b>!</p>' +
-      '<p class="muted small">(Fake prizes in the Sandbox prototype — real ones arrive at graduation.)</p>' +
-      '<div class="confirm-btns" style="justify-content:center;margin-top:10px">' +
-      '<button class="btn" id="wrModalCopy" type="button">Copy result</button>' +
-      '<button class="btn primary" data-close>Close</button></div></div>',
-      function (box) {
-        var cp = box.querySelector('#wrModalCopy');
-        if (cp) cp.addEventListener('click', function () {
-          var t = shareText(); if (!t) return;
-          function done() { cp.textContent = 'Copied!'; }
-          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done);
-          else done();
-        });
-      });
-    if (ctx.fx && ctx.fx.confetti) { try { ctx.fx.confetti(160); } catch (e) { /* cosmetic */ } }
+      '<h2>🎉 WordGuesser</h2>' +
+      '<p style="text-align:center;font-size:1.05rem;margin:6px 0">You got it in <b>' +
+      g.guesses.length + (g.guesses.length === 1 ? ' guess' : ' guesses') + '</b>!</p>' +
+      '<p style="text-align:center;letter-spacing:.35em;font-size:1.6rem;margin:10px 0">' + grid + '</p>' +
+      '<p style="text-align:center">The word was <b>' + esc(g.answer || '') + '</b></p>' +
+      '<p style="text-align:center">Prize: <b>' + esc(g.prize ? g.prize.text : '') + '</b></p>' +
+      '<div class="modal-actions">' +
+      '<button class="btn primary" id="wrCopyBtn2">Copy result</button>' +
+      '<button class="btn" data-close>Close</button></div></div>');
+    if (ctx.fx && ctx.fx.confetti) { try { ctx.fx.confetti(160); } catch (e) { /* non-fatal */ } }
+    wireModal();
+  }
+  function wireModal() {
+    var mroot = document.getElementById('wrModalRoot');
+    if (!mroot) return;
+    mroot.querySelectorAll('[data-close]').forEach(function (b) {
+      b.addEventListener('click', function () { if (ctx.closeModal) ctx.closeModal(); });
+    });
+    var c2 = mroot.querySelector('#wrCopyBtn2');
+    if (c2) c2.addEventListener('click', copyResult);
+  }
+  function copyResult() {
+    var t = shareText();
+    if (!t) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(function () {
+        try { ctx.toast('Result copied — go brag!', 'ok'); } catch (e) { /* non-fatal */ }
+      }, function () { /* clipboard denied: silent */ });
+    }
   }
   function prizesHtml() {
-    var rows = '';
-    for (var i = 1; i <= 6; i++) rows += '<tr><td>' + i + (i === 1 ? ' guess' : ' guesses') + '</td><td>' + esc(prizeText(CONFIG.prizes[i])) + '</td></tr>';
-    return '<details class="wr-details"><summary>Payouts</summary>' +
-      '<p class="small muted">First game each day is free. Extra games cost ' + CONFIG.cost + ' tokens. ' +
-      'Solve the word in 6 guesses or fewer:</p>' +
-      '<table class="wr-table">' + rows + '</table></details>';
+    var rows = S.table.map(function (p) {
+      return '<tr><td>' + p.guesses + (p.guesses === 1 ? ' guess' : ' guesses') + '</td><td>' + esc(p.text) + '</td></tr>';
+    }).join('');
+    return '<details class="wr-details"><summary>🏆 Payouts</summary>' +
+      '<table class="wr-table"><tr><th>Solved in</th><th>Prize</th></tr>' + rows + '</table>' +
+      '<p class="small muted">First game every day is free. Extra games cost ' + S.cost +
+      ' tokens. Prizes are real packs and spin tickets, paid the moment you solve.</p></details>';
+  }
+  function statusAndActions() {
+    var g = S.game, d = displayGame(), statusLine, actionBtn = '';
+    if (!S.loaded) {
+      statusLine = 'Loading…';
+    } else if (g) {
+      statusLine = g.free ? 'Free game in progress — good luck!'
+                          : 'Game in progress (' + S.cost + ' tokens paid).';
+    } else if (d) {
+      statusLine = d.status === 'won'
+        ? '🎉 Solved in ' + d.guesses.length + (d.guesses.length === 1 ? ' guess' : ' guesses') +
+          '! Prize: ' + (d.prize ? d.prize.text : '') + '.'
+        : 'Out of guesses — the word was ' + (d.answer || '') + '.';
+      actionBtn = '<button type="button" class="btn primary" id="wrNewBtn"' + (S.busy ? ' disabled' : '') + '>' +
+        (S.freeAvailable ? 'Play again — free game' : 'Play again — ' + S.cost + ' 🪙') + '</button>' +
+        '<button type="button" class="btn" id="wrCopyBtn">Copy result</button>';
+    } else {
+      statusLine = S.freeAvailable ? 'Your free game for today is ready.'
+        : 'Free game used today — extra games cost ' + S.cost + ' tokens.';
+      actionBtn = '<button type="button" class="btn primary" id="wrNewBtn"' + (S.busy ? ' disabled' : '') + '>' +
+        (S.freeAvailable ? 'Play free game' : 'Start game — ' + S.cost + ' 🪙') + '</button>';
+    }
+    return { statusLine: statusLine, actionBtn: actionBtn };
   }
   function paint() {
     if (!rootEl) return;
-    var g = S.active;
-    var statusLine, actionBtn;
-    if (g && g.status === 'playing') {
-      statusLine = g.free ? 'Free game in progress — good luck!' : 'Game in progress (' + CONFIG.cost + ' tokens paid).';
-      actionBtn = '';
-    } else if (g && g.status !== 'playing') {
-      statusLine = g.status === 'won'
-        ? '🎉 Solved in ' + g.guesses.length + (g.guesses.length === 1 ? ' guess' : ' guesses') + '! Prize: ' + prizeText(g.prize) + ' (fake, prototype).'
-        : 'Out of guesses — the word was ' + g.answer + '.';
-      // Play-again lives ONLY here on the game screen (Franklin, 2026-10-26:
-      // not in the win modal), and the button itself spells out the cost.
-      actionBtn = '<button type="button" class="btn primary" id="wrNewBtn">' +
-        (freeAvailable() ? 'Play again — free game' : 'Play again — ' + CONFIG.cost + ' 🪙') + '</button>' +
-        ' <button type="button" class="btn" id="wrCopyBtn">Copy result</button>';
-    } else {
-      statusLine = freeAvailable() ? 'Your free game for today is ready.' : 'Free game used today — extra games cost ' + CONFIG.cost + ' fake tokens.';
-      actionBtn = '<button type="button" class="btn primary" id="wrNewBtn">' +
-        (freeAvailable() ? 'Play free game' : 'Start game — ' + CONFIG.cost + ' 🪙') + '</button>';
-    }
+    var sa = statusAndActions();
     rootEl.innerHTML =
-      /* ONE big box (Franklin, 2026-10-26): header, board, keyboard and the
-         action buttons all live in a single panel, with Play again / Copy
-         result / Stats BELOW the game instead of up in the header. */
+      /* ONE big box: header, board, keyboard and the action buttons all
+         live in a single panel; Play again / Copy / Stats sit BELOW the
+         game (Franklin, 2026-10-26). */
       '<div class="wr-main"><div class="panel wr-game">' +
-      '<div class="wr-head-in"><h2>🔤 WordGuesser <span class="wr-badge">SANDBOX PROTOTYPE</span></h2>' +
+      '<div class="wr-head-in"><h2>🔤 WordGuesser</h2>' +
       '<p class="muted small">Guess the 5-letter word in 6 tries. Green = right letter, right spot · ' +
-      'yellow = in the word, wrong spot · gray = not in the word. Fake tokens and fake prizes — nothing here is real.</p>' +
-      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.balance + '</b> fake tokens</span>' +
-      '<span class="muted small">' + esc(statusLine) + '</span></div>' +
-      '<p class="wr-msg">' + esc(msgText) + '</p></div>' +
-      '<div class="wr-play"><div class="wr-toast" id="wrToast" role="status"></div>' +
-      (wordsReady() ? boardHtml() + keyboardHtml() : '<p class="muted">Loading word banks…</p>') +
+      'yellow = in the word, wrong spot · gray = not in the word. One free game every day — ' +
+      'win real packs and spin tickets.</p>' +
+      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + '</b> tokens · 🎟️ <b>' +
+      S.spins + '</b> spin tickets</span>' +
+      '<span class="muted small">' + esc(sa.statusLine) + '</span></div>' +
+      (S.loadError ? '<p class="wr-msg">Could not load WordGuesser — please try again in a few minutes.</p>' : '') +
       '</div>' +
-      '<div class="wr-actions">' + actionBtn +
+      '<div class="wr-play"><div class="wr-toast" id="wrToast" role="status"></div>' +
+      boardHtml() + keyboardHtml() +
+      '</div>' +
+      '<div class="wr-actions">' + sa.actionBtn +
       '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
       '</div></div>' +
-      '<div class="panel wr-tools">' + prizesHtml() +
-      '<details class="wr-details"><summary>Tuning tools (prototype only — gone at graduation)</summary>' +
-      '<div class="wr-tune-row"><label class="small">Force next word <input id="wrForce" type="text" maxlength="5" size="7" placeholder="e.g. PACKS"></label>' +
-      '<button type="button" class="btn" id="wrForceBtn">Set next word</button>' +
-      '<button type="button" class="btn" id="wrPeekBtn">Peek at answer</button>' +
-      '<button type="button" class="btn" id="wrSimBtn">Simulate 1,000 bot games</button>' +
-      '<button type="button" class="btn danger" id="wrResetBtn">Reset prototype</button></div>' +
-      '<p class="small muted" id="wrTuneOut">Banks: ' + (wordsReady() ? ANSWERS.length + ' answers / ' + ALLOWED.length + ' allowed guesses. ' : 'loading… ') +
-      'The bot plays a fixed opener then random consistent guesses — a floor for solver play, a ceiling for most humans.</p>' +
-      '</details></div>';
+      '<div class="panel wr-tools">' + prizesHtml() + '</div>';
     bindUi();
-    animRow = -1; // the flip belongs to THIS paint only; later paints must not re-add it
+    animRow = -1; // the flip belongs to THIS paint only
     if (pendingWin) { pendingWin = false; showWinModal(); }
   }
   function bindUi() {
-    var sb = rootEl.querySelector('#wrStatsBtn');
-    if (sb) sb.addEventListener('click', function () { openStats(); });
+    if (!rootEl) return;
     var nb = rootEl.querySelector('#wrNewBtn');
-    if (nb) nb.addEventListener('click', function () { msgText = ''; startGame(); });
+    if (nb) nb.addEventListener('click', startGame);
     var cb = rootEl.querySelector('#wrCopyBtn');
-    if (cb) cb.addEventListener('click', function () {
-      var t = shareText(); if (!t) return;
-      function done() { msg('Result copied — no spoilers in it, just the grid.'); }
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done);
-      else done();
-    });
+    if (cb) cb.addEventListener('click', copyResult);
+    var sb = rootEl.querySelector('#wrStatsBtn');
+    if (sb) sb.addEventListener('click', openStats);
     rootEl.querySelectorAll('[data-wr-key]').forEach(function (b) {
       b.addEventListener('click', function () { handleKey(b.getAttribute('data-wr-key')); });
     });
-    var fb = rootEl.querySelector('#wrForceBtn');
-    if (fb) fb.addEventListener('click', function () {
-      var v = (rootEl.querySelector('#wrForce').value || '').toUpperCase().trim();
-      var out = rootEl.querySelector('#wrTuneOut');
-      if (v.length === 5 && ALLOWED_SET && ALLOWED_SET.has(v)) { S.nextAnswer = v; save(); if (out) out.textContent = 'Next game\'s word set to ' + v + ' (prototype cheat — testing only).'; }
-      else if (out) out.textContent = '"' + v + '" isn\'t in the word list.';
-    });
-    var pk = rootEl.querySelector('#wrPeekBtn');
-    if (pk) pk.addEventListener('click', function () {
-      var out = rootEl.querySelector('#wrTuneOut');
-      if (out) out.textContent = S.active && S.active.status === 'playing' ? 'Current answer: ' + S.active.answer + ' (prototype only — the real build never sends this to the browser).' : 'No game in progress.';
-    });
-    var sm = rootEl.querySelector('#wrSimBtn');
-    if (sm) sm.addEventListener('click', function () {
-      var out = rootEl.querySelector('#wrTuneOut');
-      if (out) out.textContent = 'Simulating…';
-      setTimeout(function () {
-        var r = simulate(1000), o2 = rootEl && rootEl.querySelector('#wrTuneOut'); if (!o2) return;
-        var line = '';
-        for (var i = 1; i <= 6; i++) line += i + ': ' + (100 * r.dist[i] / r.n).toFixed(1) + '%  ';
-        o2.textContent = 'Bot over ' + r.n + ' games — ' + line + '· fail ' + (100 * r.fail / r.n).toFixed(1) +
-          '% · avg win ' + r.avgWin.toFixed(2) + ' guesses · EV ' + (r.packs / r.n).toFixed(2) + ' packs + ' +
-          (r.tickets / r.n).toFixed(2) + ' tickets per game.';
-      }, 30);
-    });
-    var rs = rootEl.querySelector('#wrResetBtn');
-    if (rs) rs.addEventListener('click', function () {
-      try { localStorage.removeItem(LS_KEY); } catch (e) { /* ignore */ }
-      S = freshState(); msgText = ''; animRow = -1; paint();
-    });
-  }
-  /* Typing must NOT repaint the whole stage: paint() rebuilds the board's
-     DOM, and a rebuilt tile restarts its CSS animation — the submitted row
-     re-flipped on every keystroke (Franklin's bug report, 2026-10-26).
-     Instead, typing mutates the current row's existing tiles in place;
-     only the newly-typed tile gains the pop class. Full paints happen on
-     game events (start, submit, finish), never per letter. */
-  function updateCurrentRow() {
-    var g = S.active;
-    if (!rootEl || !g) { paint(); return; }
-    var row = rootEl.querySelector('.wr-row.cur');
-    if (!row) { paint(); return; }
-    var input = g.input || '';
-    row.querySelectorAll('.wr-tile').forEach(function (t, i) {
-      var ch = i < input.length ? input[i] : '';
-      t.textContent = ch;
-      t.className = 'wr-tile' + (ch ? ' filled pop' : '');
-    });
-  }
-  function handleKey(k) {
-    var g = S.active;
-    if (!g || g.status !== 'playing' || !wordsReady()) return;
-    if (k === 'ENTER') { submitGuess(); return; }
-    if (k === 'BACK') { g.input = (g.input || '').slice(0, -1); }
-    else if (/^[A-Z]$/.test(k) && (g.input || '').length < 5) g.input = (g.input || '') + k;
-    else return;
-    save(); updateCurrentRow();
-  }
-  function onKeyDown(e) {
-    if (!rootEl || !rootEl.isConnected) return;
-    var t = e.target;
-    if (t && t.closest && t.closest('input, textarea, select')) return;
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    var k = e.key === 'Enter' ? 'ENTER' : (e.key === 'Backspace' ? 'BACK' : (e.key || '').toUpperCase());
-    if (k === 'ENTER' || k === 'BACK' || /^[A-Z]$/.test(k)) { e.preventDefault(); handleKey(k); }
   }
 
+  /* ---------------- lifecycle ------------------------------------------ */
   function render(el) {
-    rootEl = el; msgText = ''; animRow = -1;
+    rootEl = el || rootEl;
     if (!listening) { document.addEventListener('keydown', onKeyDown); listening = true; }
-    if (wordsReady()) { paint(); return; }
-    el.innerHTML = '<div class="panel"><p class="muted">Loading word banks…</p></div>';
-    loadWords().then(function (ok) {
-      if (!rootEl) return;
-      if (ok) paint();
-      else rootEl.innerHTML = '<div class="panel"><p class="muted">Could not load the word banks (js/wordle-words.js). Check the file is deployed.</p></div>';
-    });
+    paint();
+    if (!S.loaded && !S.busy) loadState();
   }
   function teardown() {
     if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
     if (listening) { document.removeEventListener('keydown', onKeyDown); listening = false; }
-    // Close our pop-up if it's the one currently open (never someone else's).
-    if (ctx.closeModal && document.querySelector('#wrModalRoot')) { try { ctx.closeModal(); } catch (e) { /* ignore */ } }
     rootEl = null;
   }
 
   CPS.wordle = {
-    render: render, teardown: teardown,
-    _test: { CONFIG: CONFIG, score: score, prizeText: prizeText, simulate: simulate,
-             openStats: openStats, showWinModal: showWinModal,
-             state: function () { return S; }, wordsReady: wordsReady,
-             adoptForTest: function (a, al) { ANSWERS = a; ALLOWED = al; ANSWER_SET = new Set(a); ALLOWED_SET = new Set(al); } }
+    render: render,
+    teardown: teardown,
+    _test: {
+      state: function () { return S; },
+      paint: paint,
+      shareText: shareText,
+      handleKey: handleKey
+    }
   };
 
-  function register() {
-    if (CPS.sandbox && CPS.sandbox.register) {
-      CPS.sandbox.register({
-        id: 'wordle', title: 'WordGuesser',
-        blurb: 'Wordle for the Arcade — one free game daily, then 15 tokens; unique word per player, prizes by guesses used. Fake tokens here.',
-        status: 'testing',
-        render: function (el) { CPS.wordle.render(el); },
-        teardown: function () { CPS.wordle.teardown(); }
-      });
-      return true;
-    }
-    return false;
-  }
-  if (!register() && typeof document !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', function () { register(); });
+  if (CPS.sandbox && CPS.sandbox.register) {
+    CPS.sandbox.register({
+      id: 'wordle', title: 'WordGuesser',
+      blurb: 'The daily word game: guess the 5-letter word in 6 tries. One free game a day, ' +
+             'extra games 15 tokens — win real packs and spin tickets.',
+      status: 'testing',
+      render: function (el) { CPS.wordle.render(el); },
+      teardown: function () { CPS.wordle.teardown(); }
+    });
   }
 })(window.CPS = window.CPS || {});
