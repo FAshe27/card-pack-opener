@@ -139,6 +139,7 @@
       var won = r.game && r.game.status === 'won';
       var over = r.game && r.game.status !== 'playing';
       if (won) pendingWin = true;
+      if (over && !won) pendingLose = true;
       if (over) { syncBadges(); refreshPackCounts(); }
       paint();
     } catch (e) {
@@ -194,7 +195,7 @@
   }
 
   /* ---------------- rendering ---------------------------------------- */
-  var rootEl = null, animRow = -1, listening = false, pendingWin = false, flipTimer = null;
+  var rootEl = null, animRow = -1, listening = false, pendingWin = false, pendingLose = false, flipTimer = null;
   var toastTimer = null;
   /* Wordle-style transient toast: guess errors flash in a pill over the
      board for ~a second and fade — they never park in the status line. */
@@ -311,6 +312,28 @@
     if (ctx.fx && ctx.fx.confetti) { try { ctx.fx.confetti(160); } catch (e) { /* non-fatal */ } }
     wireModal();
   }
+  function showLoseModal() {
+    var g = displayGame();
+    if (!g || g.status !== 'lost' || !ctx.openModal) return;
+    var grid = (g.guesses || []).map(function (gu) {
+      return gu.marks.split('').map(function (v) {
+        return v === 'G' ? '🟩' : (v === 'Y' ? '🟨' : '⬛');
+      }).join('');
+    }).join('<br>');
+    ctx.openModal('<div id="wrModalRoot">' +
+      '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h2 style="text-align:center">😞 WordGuesser 😞</h2>' +
+      '<p style="text-align:center;font-size:1.05rem;margin:6px 0">Out of guesses!</p>' +
+      '<p style="text-align:center;letter-spacing:.35em;font-size:1.6rem;margin:10px 0">' + grid + '</p>' +
+      '<p style="text-align:center;margin:6px 0 2px">The word was</p>' +
+      '<p style="text-align:center;letter-spacing:.3em;font-size:1.9rem;font-weight:700;margin:0 0 8px">' +
+      esc(g.answer || '') + '</p>' +
+      '<p style="text-align:center">No prize this time — your streak resets.</p>' +
+      '<div class="modal-actions" style="display:flex;justify-content:center;gap:8px">' +
+      '<button class="btn primary" id="wrCopyBtn2">Copy result</button>' +
+      '<button class="btn" data-close>Close</button></div></div>');
+    wireModal();
+  }
   function wireModal() {
     var mroot = document.getElementById('wrModalRoot');
     if (!mroot) return;
@@ -393,6 +416,7 @@
       if (flipTimer) clearTimeout(flipTimer);
       flipTimer = setTimeout(function () { flipTimer = null; if (rootEl) paint(); }, 1000);
     } else if (pendingWin) { pendingWin = false; showWinModal(); }
+    else if (pendingLose) { pendingLose = false; showLoseModal(); }
   }
   function bindUi() {
     if (!rootEl) return;
