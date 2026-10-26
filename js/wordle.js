@@ -178,10 +178,28 @@
   }
   function handleKey(k) {
     var g = S.game;
-    if (!g || g.status !== 'playing' || S.busy) return;
+    if (!g || g.status !== 'playing') { preGameKey(k); return; }
+    if (S.busy) return;
     if (k === 'ENTER') { submitGuess(); return; }
     if (k === 'BACK') { S.input = S.input.slice(0, -1); updateCurrentRow(); return; }
     if (/^[A-Z]$/.test(k) && S.input.length < 5) { S.input += k; updateCurrentRow(); }
+  }
+  /* Before a game starts the keyboard must not be silently dead
+     (Franklin, 2026-10-26): a letter starts the FREE game and lands as
+     the first letter; when only paid games remain it nudges instead --
+     a stray tap never charges tokens. */
+  function preGameKey(k) {
+    if (S.busy || !S.loaded || S.loadError) return;
+    if (!/^[A-Z]$/.test(k)) return;
+    if (S.freeAvailable) {
+      startGame().then(function () {
+        if (S.game && S.game.status === 'playing' && !S.input) {
+          S.input = k; updateCurrentRow();
+        }
+      });
+    } else {
+      nudge('Start a game first — Play again is ' + S.cost + ' 🪙');
+    }
   }
   function onKeyDown(e) {
     if (!rootEl || !document.body.contains(rootEl)) return;
@@ -390,6 +408,7 @@
          live in a single panel; Play again / Copy / Stats sit BELOW the
          game (Franklin, 2026-10-26). */
       '<div class="wr-main"><div class="panel wr-game">' +
+      '<button type="button" class="btn ghost wr-back" id="wrBackBtn">← Back to Arcade</button>' +
       '<div class="wr-head-in"><h2>🔤 WordGuesser</h2>' +
       '<p class="muted small">Guess the 5-letter word in 6 or fewer tries. Green means the right ' +
       'letter in the right spot. Yellow means the right letter, but in the wrong spot. If it\'s ' +
@@ -420,6 +439,10 @@
   }
   function bindUi() {
     if (!rootEl) return;
+    var bk = rootEl.querySelector('#wrBackBtn');
+    if (bk) bk.addEventListener('click', function () {
+      if (typeof CPS !== 'undefined' && CPS.app) CPS.app.showView('arcade');
+    });
     var nb = rootEl.querySelector('#wrNewBtn');
     if (nb) nb.addEventListener('click', startGame);
     var cb = rootEl.querySelector('#wrCopyBtn');
