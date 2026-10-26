@@ -1,4 +1,4 @@
-/* Word Rip — SANDBOX PROTOTYPE, FAKE TOKENS ONLY.
+/* WordGuesser — SANDBOX PROTOTYPE, FAKE TOKENS ONLY.
    Franklin's design (2026-10-26): a Wordle game for the Arcade — one FREE
    game daily, then 15 tokens a game; a unique word per player from a sizable
    answer bank; prizes by guesses used (his table, CONFIG.prizes below).
@@ -201,7 +201,7 @@
   }
   function shareText() {
     var g = S.active; if (!g) return '';
-    var head = 'Word Rip ' + (g.status === 'won' ? g.guesses.length + '/6' : 'X/6');
+    var head = 'WordGuesser ' + (g.status === 'won' ? g.guesses.length + '/6' : 'X/6');
     var rows = g.patterns.map(function (p) {
       return p.map(function (v) { return v === 2 ? '🟩' : (v === 1 ? '🟨' : '⬛'); }).join('');
     });
@@ -236,13 +236,21 @@
   /* ---------------- rendering ---------------- */
   var rootEl = null, animRow = -1, msgText = '', listening = false, pendingWin = false;
   function msg(t) { msgText = t; if (rootEl) paint(); }
+  /* Wordle-style transient toast (Franklin, 2026-10-26): guess errors like
+     "Not in word list" flash in a pill over the board for ~a second and fade
+     — they do NOT park in the status line anymore. The row shake stays. */
+  var toastTimer = null;
   function nudge(t) {
-    msgText = t;
-    if (rootEl) {
-      var m = rootEl.querySelector('.wr-msg'); if (m) m.textContent = t;
-      var row = rootEl.querySelector('.wr-row.cur');
-      if (row) { row.classList.remove('wr-shake'); void row.offsetWidth; row.classList.add('wr-shake'); }
+    if (!rootEl) return;
+    var toast = rootEl.querySelector('#wrToast');
+    if (toast) {
+      toast.textContent = t;
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 1300);
     }
+    var row = rootEl.querySelector('.wr-row.cur');
+    if (row) { row.classList.remove('wr-shake'); void row.offsetWidth; row.classList.add('wr-shake'); }
   }
   function tileCls(v) { return v === 2 ? 'wr-t-green' : (v === 1 ? 'wr-t-yellow' : 'wr-t-gray'); }
 
@@ -299,7 +307,7 @@
     if (!ctx.openModal) return;
     ctx.openModal('<div id="wrModalRoot">' +
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
-      '<h2>📊 Your Word Rip stats</h2>' + statsInnerHtml() +
+      '<h2>📊 Your WordGuesser stats</h2>' + statsInnerHtml() +
       '<div class="confirm-btns" style="justify-content:center;margin-top:10px">' +
       '<button class="btn primary" data-close>Close</button></div></div>');
   }
@@ -362,7 +370,7 @@
         (freeAvailable() ? 'Play free game' : 'Start game — ' + CONFIG.cost + ' 🪙') + '</button>';
     }
     rootEl.innerHTML =
-      '<div class="panel wr-head"><h2>🔤 Word Rip <span class="wr-badge">SANDBOX PROTOTYPE</span></h2>' +
+      '<div class="panel wr-head"><h2>🔤 WordGuesser <span class="wr-badge">SANDBOX PROTOTYPE</span></h2>' +
       '<p class="muted small">Guess the 5-letter word in 6 tries. Green = right letter, right spot · ' +
       'yellow = in the word, wrong spot · gray = not in the word. Fake tokens and fake prizes — nothing here is real.</p>' +
       '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.balance + '</b> fake tokens</span>' +
@@ -370,6 +378,7 @@
       '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
       '<p class="wr-msg">' + esc(msgText) + '</p></div>' +
       '<div class="wr-main"><div class="panel wr-game">' +
+      '<div class="wr-toast" id="wrToast" role="status"></div>' +
       (wordsReady() ? boardHtml() + keyboardHtml() : '<p class="muted">Loading word banks…</p>') +
       '</div></div>' +
       '<div class="panel wr-tools">' + prizesHtml() +
@@ -480,6 +489,7 @@
     });
   }
   function teardown() {
+    if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
     if (listening) { document.removeEventListener('keydown', onKeyDown); listening = false; }
     // Close our pop-up if it's the one currently open (never someone else's).
     if (ctx.closeModal && document.querySelector('#wrModalRoot')) { try { ctx.closeModal(); } catch (e) { /* ignore */ } }
@@ -497,7 +507,7 @@
   function register() {
     if (CPS.sandbox && CPS.sandbox.register) {
       CPS.sandbox.register({
-        id: 'wordle', title: 'Word Rip',
+        id: 'wordle', title: 'WordGuesser',
         blurb: 'Wordle for the Arcade — one free game daily, then 15 tokens; unique word per player, prizes by guesses used. Fake tokens here.',
         status: 'testing',
         render: function (el) { CPS.wordle.render(el); },
