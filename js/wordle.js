@@ -322,7 +322,7 @@
     ctx.openModal('<div id="wrModalRoot">' +
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
       '<h2>📊 Your WordGuesser stats</h2>' + statsInnerHtml() +
-      '<div class="modal-actions"><button class="btn" data-close>Close</button></div></div>');
+      '<div class="modal-actions" style="margin-top:14px"><button class="btn" data-close>Close</button></div></div>');
     wireModal();
   }
   function showWinModal() {
