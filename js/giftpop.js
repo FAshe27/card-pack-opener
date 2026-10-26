@@ -90,8 +90,8 @@
       if (!card) return '';
       var v = variantOf(meta);
       var rendered = CPS.cards.render(set, card, v ? { variant: v } : { holo: !!meta.holo });
-      return '<div class="trade-card">' + rendered +
-        '<div class="trade-cap"><b>' + ctx.esc(card.name) + '</b>' +
+      return '<div class="giftpop-card">' + rendered +
+        '<div class="giftpop-cap"><b>' + ctx.esc(card.name) + '</b>' +
         '<span class="muted small">' + ctx.esc(set.name) + '</span></div></div>';
     } catch (e) { return ''; }
   }
@@ -142,7 +142,7 @@
       body = '<p>' + ctx.esc(it.text) + '</p>';
     }
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
-      '<div style="text-align:center;padding:10px 6px 4px">' +
+      '<div class="giftpop-wrap" style="text-align:center;padding:10px 6px 4px">' +
       '<div style="font-size:52px;line-height:1">' + emoji + '</div>' +
       '<h2>' + title + '</h2>' + body + art +
       '<div class="confirm-btns" style="justify-content:center;margin-top:10px">' +
