@@ -375,8 +375,7 @@
       '<p class="muted small">Guess the 5-letter word in 6 tries. Green = right letter, right spot · ' +
       'yellow = in the word, wrong spot · gray = not in the word. One free game every day — ' +
       'win real packs and spin tickets.</p>' +
-      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + '</b> tokens · 🎟️ <b>' +
-      S.spins + '</b> spin tickets</span>' +
+      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + '</b> tokens</span>' +
       '<span class="muted small">' + esc(sa.statusLine) + '</span></div>' +
       (S.loadError ? '<p class="wr-msg">Could not load WordGuesser — please try again in a few minutes.</p>' : '') +
       '</div>' +
