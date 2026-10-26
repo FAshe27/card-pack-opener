@@ -110,7 +110,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily', 'faq', 'donate'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily', 'faq', 'donate', 'trade', 'trade-history'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -381,6 +381,7 @@
 
   /* --- views */
   function showView(name, quiet) {
+    if (name === 'trade' && !TB) name = 'players'; // the builder view is a skeleton without an open build (nav audit)
     if (S.view && S.view !== name) S.prevView = S.view;
     if (name === 'daily' && !isCloud()) name = 'packs';
     if (name === 'bounties' || name === 'trading') name = 'market';
@@ -389,6 +390,11 @@
     S.view = name;
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
+    var _tabsEl = document.querySelector('.tabs'), _actTab = _tabsEl && _tabsEl.querySelector('.tab.active');
+    if (_tabsEl && _actTab) { // keep the active tab visible in the scrolling tab row (container scroll only)
+      var _tr = _actTab.getBoundingClientRect(), _cr = _tabsEl.getBoundingClientRect();
+      if (_tr.left < _cr.left || _tr.right > _cr.right) _tabsEl.scrollLeft += (_tr.left - _cr.left) - (_cr.width - _tr.width) / 2;
+    }
     if (name === 'packs' && S.opening && S.opening.torn) {
       var rg = $('#revealGrid');
       if (rg && !rg.classList.contains('hidden')) {
@@ -1473,8 +1479,8 @@
     $('#tradeSteps').innerHTML = steps.map(function (s, i) {
       var n = i + 1;
       var done = n < TB.step;
-      return '<span class="tstep' + (n === TB.step ? ' active' : done ? ' done' : '') + '"' +
-        (done ? ' data-tstep="' + n + '" title="Go back and edit" style="cursor:pointer"' : '') + '>' + n + '. ' + esc(s) + '</span>';
+      return '<button type="button" class="tstep' + (n === TB.step ? ' active' : done ? ' done' : '') + '"' +
+        (done ? ' data-tstep="' + n + '" title="Go back and edit"' : ' disabled') + '>' + n + '. ' + esc(s) + '</button>';
     }).join('');
     $('#tradeSteps').querySelectorAll('[data-tstep]').forEach(function (el) {
       el.addEventListener('click', function () { tbGotoStep(+el.getAttribute('data-tstep')); });
@@ -2299,16 +2305,26 @@
   /* --- modal */
   function openModal(html, after) {
     S.gateOpen = false;
+    document.body.classList.add('modal-open');
     var m = $('#modal'), box = $('#modalBox');
     var fresh = box.cloneNode(false); box.replaceWith(fresh); // drop old listeners
     fresh.innerHTML = html; m.classList.remove('hidden');
     if (after) after(fresh);
   }
   function closeModal(force) {
+    /* Close-guard (nav audit #1): a modal that must vet its own exit —
+       the Market composer (discard confirm + return-to-card) and the
+       gift bundle (return-to-profile) — registers CPS.modalCloseGuard.
+       Backdrop taps, Escape and [data-close] clicks ALL funnel through
+       here, so the guard sees every exit path, not just the modal's own
+       buttons. One-shot: cleared before it fires, so the guard's own
+       closeModal() calls proceed normally. */
+    if (!force && CPS.modalCloseGuard) { var g = CPS.modalCloseGuard; CPS.modalCloseGuard = null; g(); return; }
     galleryReturnKind = null; CPS.cardBack = null;
     if (S.gateOpen && !force) return; // the login screen stays until you log in
     if (confirmDismiss) confirmDismiss(); // a pending confirmDialog dismisses as abort, never hangs
     S.gateOpen = false;
+    document.body.classList.remove('modal-open');
     $('#modal').classList.add('hidden'); $('#modalBox').innerHTML = '';
   }
 
@@ -2518,7 +2534,13 @@
     $$('.tab').forEach(function (t) { t.addEventListener('click', function () { showView(t.dataset.view); }); });
     if (CPS.market) CPS.market.init();
     $('#brandHome').addEventListener('click', function (e) { e.preventDefault(); if (!isLocked()) showView('packs'); });
-    window.addEventListener('hashchange', function () { var v = location.hash.slice(1); if (v && v !== S.view && $('#view-' + v)) showView(v); });
+    window.addEventListener('hashchange', function () {
+      var v = location.hash.slice(1);
+      if (!v || v === S.view) return;
+      if (v === 'sets') { showView('admin'); return; }
+      if (v === 'bounties' || v === 'trading') { showView('market'); return; }
+      if ($('#view-' + v)) showView(v);
+    });
     var _ddBtn = $('#setDDBtn'); if (_ddBtn) _ddBtn.addEventListener('click', function (e) { e.stopPropagation(); toggleSetDD(); });
     window.addEventListener('resize', function () { closeSetDD(); });
     document.addEventListener('scroll', function (e) { var l = $('#setDDList'); if (l && !l.classList.contains('hidden') && e.target !== l) closeSetDD(); }, true);
@@ -2567,7 +2589,14 @@
       if (b) CPS.profile.openProfile(b.dataset.player);
     });
     $('#newTradeBtn').addEventListener('click', function () { openTradeBuilder(null); });
-    $('#tradeBackBtn').addEventListener('click', function () { showView('players'); });
+    $('#tradeBackBtn').addEventListener('click', async function () {
+      if (TB && (TB.offer.length || TB.want.length || TB.picks.length || TB.offerPack || TB.wantPack || TB.offerMoney || TB.wantMoney || TB.tokens > 0 || TB.tickets > 0)) {
+        var ok = await confirmDialog('Leave this trade?',
+          'Your picks for ' + esc(TB.toName || 'this partner') + ' will be cleared.', 'Leave', 'Keep building');
+        if (!ok) return;
+      }
+      showView('players');
+    });
     $('#tradeHistBtn').addEventListener('click', function () { showView('trade-history'); });
     $('#tradeHistBackBtn').addEventListener('click', function () { showView('players'); });
     $('#tradeWithSel').addEventListener('change', async function () {
@@ -2769,6 +2798,11 @@
       closeAccountMenu();
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAccountMenu(); });
+    window.addEventListener('resize', function () { closeAccountMenu(); });
+    document.addEventListener('scroll', function (e) {
+      var m2 = $('#acctMenu');
+      if (m2 && !m2.classList.contains('hidden') && e.target !== m2 && !m2.contains(e.target)) closeAccountMenu();
+    }, true);
     $('#newAcctForm').addEventListener('submit', createAccount);
     $('#naSuggest').addEventListener('click', function () { $('#naUser').value = suggestUsername($('#naName').value); });
     $('#naPinRandom').addEventListener('click', function () { $('#naPin').value = randomPin(); });

@@ -27,6 +27,7 @@ async function openExchangeHistory(accountId, name) {
   try {
     var rows = await CPS.cloud.call('exchange_history', { p_other: accountId });
     var html = '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<button class="btn small prof-back" id="xhistBackBtn">← Back</button>' +
       '<h3>📜 Exchanges with ' + ctx.esc(name) + '</h3>';
     if (!rows || !rows.length) {
       html += '<div class="empty" style="padding:16px">No exchanges with ' + ctx.esc(name) + ' yet — trades, gifts, bounties and Trading Post deals between you will show up here.</div>';
@@ -42,7 +43,10 @@ async function openExchangeHistory(accountId, name) {
           '<div class="muted small">' + ctx.esc(e.detail) + '</div></div>';
       }).join('');
     }
-    ctx.openModal(html);
+    ctx.openModal(html, function (box) {
+      var bb = box.querySelector('#xhistBackBtn');
+      if (bb) bb.addEventListener('click', function () { openProfile(accountId); });
+    });
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
 }
 
@@ -86,7 +90,10 @@ async function openProfile(accountId) {
       var ptb = box.querySelector('#profTradeBtn');
       if (ptb) ptb.addEventListener('click', function () { ctx.openTradeBuilder(accountId); });
       var pgb = box.querySelector('#profGiftBtn');
-      if (pgb) pgb.addEventListener('click', function () { if (CPS.giftBundle) CPS.giftBundle.open(accountId, p.display_name); });
+      if (pgb) pgb.addEventListener('click', function () {
+        if (CPS.giftBundle) CPS.giftBundle.open(accountId, p.display_name,
+          { returnTo: function () { openProfile(accountId); } });
+      });
       var phb = box.querySelector('#profHistBtn');
       if (phb) phb.addEventListener('click', function () { openExchangeHistory(accountId, p.display_name); });
       var pfb = box.querySelector('#profFriendBtn');

@@ -137,6 +137,11 @@
      defect). bindClose is the ONLY way composer modals bind
      [data-close]. */
   function bindClose(box, fn) {
+    /* Nav audit #1: register the form's CloseForm as the modal
+       close-guard, so backdrop taps and Escape — which app.js routes
+       through closeModal() — run the same discard-confirm /
+       return-to-card logic as the form's own close buttons. */
+    CPS.modalCloseGuard = fn;
     box.querySelectorAll('[data-close]').forEach(function (x) {
       x.addEventListener('click', function (e) { e.stopPropagation(); fn(); });
     });
@@ -381,6 +386,7 @@
   }
 
   async function pbCloseForm() {
+    CPS.modalCloseGuard = null; // self-clear: entry via the guard already consumed it; entry via bindClose must not leave it armed
     if (BS && BS.fromCard) {
       var dirty = snapBounty() !== BS.snapshot;
       /* A declined discard re-shows the form: app.js's confirmDialog
@@ -612,7 +618,11 @@
     pbRenderOfferGrid(box);
 
     box.querySelector('#pbGo').addEventListener('click', function () { pbReview(box); });
-    box.querySelector('#pbStartOver').addEventListener('click', function () {
+    box.querySelector('#pbStartOver').addEventListener('click', async function () {
+      var pbDirty = BS ? (snapBounty() !== BS.snapshot)
+        : !!(BD.wantCard || BD.offerCards.length || BD.tokens || BD.tickets || BD.packs || (BD._note && BD._note.trim()));
+      if (pbDirty && !(await ctx.confirmDialog('Start over?',
+        '<p>Clear everything you\'ve entered in this form?</p>', 'Start over', 'Keep draft'))) return;
       if (BS && BS.fromCard) {
         var keepSets = BD.sets;
         BD = freshBounty(keepSets); seedBountyRemembered(BD);
@@ -1027,6 +1037,7 @@
   }
 
   async function plCloseForm() {
+    CPS.modalCloseGuard = null; // self-clear: entry via the guard already consumed it; entry via bindClose must not leave it armed
     if (LS && LS.fromCard) {
       var dirty = snapListing() !== LS.snapshot;
       if (!(await guardDiscard(LS, dirty))) { plShowForm(); return; }
@@ -1073,7 +1084,11 @@
     noteInp.value = LD.note;
     noteInp.addEventListener('input', function (e) { LD.note = e.target.value; });
     box.querySelector('#tpGo').addEventListener('click', function () { plReview(box); });
-    box.querySelector('#tpStartOver').addEventListener('click', function () {
+    box.querySelector('#tpStartOver').addEventListener('click', async function () {
+      var tpDirty = LS ? (snapListing() !== LS.snapshot)
+        : !!(LD.card || (LD.note && LD.note.trim()));
+      if (tpDirty && !(await ctx.confirmDialog('Start over?',
+        '<p>Clear everything you\'ve entered in this form?</p>', 'Start over', 'Keep draft'))) return;
       if (LS && LS.fromCard) {
         var keepSets = LD.sets;
         LD = freshListing(keepSets); seedListingRemembered(LD);
@@ -1579,6 +1594,7 @@
   }
 
   async function ofCloseForm() {
+    CPS.modalCloseGuard = null; // self-clear: entry via the guard already consumed it; entry via bindClose must not leave it armed
     if (OS && OS.fromCard) {
       var dirty = snapOffer() !== OS.snapshot;
       if (!(await guardDiscard(OS, dirty))) { ofShowForm(); return; }

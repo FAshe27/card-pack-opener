@@ -208,11 +208,14 @@
     return html;
   }
 
-  function bindCardClicks(scope) {
+  function bindCardClicks(scope, backFn) {
     if (!scope) return;
     scope.querySelectorAll('.bounty-card-click').forEach(function (el) {
       el.addEventListener('click', function (e) {
         e.stopPropagation();
+        // Nav audit: callers inside a modal pass backFn so the card
+        // modal offers a way back to that modal; board callers don't.
+        if (backFn) { var bf = backFn(); if (bf) CPS.cardBack = bf; }
         var vt = el.getAttribute('data-variant-tier');
         var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) } : null;
         ctx.openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
@@ -343,7 +346,9 @@
         box.querySelectorAll('[data-close]').forEach(function (x) {
           x.addEventListener('click', function () { ctx.closeModal(); });
         });
-        bindCardClicks(box);
+        bindCardClicks(box, function () {
+          return { text: '← Back to bounty', go: function () { openClaimModal(id); } };
+        });
         var go = ctx.$('#bountyClaimGo', box);
         if (!go) return;
         go.addEventListener('click', async function () {

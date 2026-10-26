@@ -17,6 +17,7 @@
   var PAGE = 60;
   var MAX_CARDS = 5;
   var G = null;
+  var lastDraft = null, lastTo = null; // unsent picks survive a stray close, per recipient (nav audit)
 
   function onHand(e) { return e ? Math.max(0, e.n - (e.v || 0)) : 0; }
   function mySerials(setId, cardId) {
@@ -222,7 +223,19 @@
     return Math.min(n, max);
   }
 
+  function closeOut(sent) {
+    if (!G) { closeModal(true); return; }
+    var rt = G.returnTo;
+    if (sent) { lastDraft = null; lastTo = null; }
+    else { lastDraft = G; lastTo = G.to; }
+    G = null;
+    CPS.modalCloseGuard = null;
+    closeModal(true);
+    if (rt) rt();
+  }
+
   function showForm() {
+    CPS.modalCloseGuard = function () { closeOut(false); return true; };
     var sets = myCardSets();
     if (!G.setId || !window.CardSets.get(G.setId) || G.setId === 'jumbled') G.setId = sets.length ? sets[0].id : '';
     var psets = packSets();
@@ -297,21 +310,26 @@
           pack_set: G.packs > 0 ? G.packSet : null,
           packs: G.packs || 0, tokens: G.tokens || 0, tickets: G.tickets || 0 } });
         S.myVariants = null; refreshQuests();
-        var name = G.toName; G = null;
-        closeModal();
+        var name = G.toName;
+        closeOut(true);
         toast('🎁 Gift sent to ' + name + '!');
         refreshCloud();
       } catch (err) { cloudError(err); btn.disabled = false; }
     });
   }
 
-  async function open(toId, toName) {
+  async function open(toId, toName, opts) {
     openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="empty" style="padding:24px">Loading…</div>');
     try {
       if (window.CardSets && window.CardSets.loadAll) await window.CardSets.loadAll();
       await ensureVariants();
-      G = { to: toId, toName: toName, setId: '', q: '', rarity: '', shown: PAGE, picks: [], active: -1,
-        packSet: '', packs: 0, tokens: 0, tickets: 0 };
+      if (lastDraft && lastTo === toId) { G = lastDraft; lastDraft = null; }
+      else {
+        G = { to: toId, toName: toName, setId: '', q: '', rarity: '', shown: PAGE, picks: [], active: -1,
+          packSet: '', packs: 0, tokens: 0, tickets: 0 };
+      }
+      G.to = toId; G.toName = toName;
+      G.returnTo = (opts && opts.returnTo) || null;
       showForm();
     } catch (e) { closeModal(true); cloudError(e); }
   }

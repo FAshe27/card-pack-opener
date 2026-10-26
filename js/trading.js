@@ -239,11 +239,12 @@
     return html || '<span class="muted small">—</span>';
   }
 
-  function bindCardClicks(scope) {
+  function bindCardClicks(scope, backFn) {
     if (!scope) return;
     scope.querySelectorAll('.trade-card-click').forEach(function (el) {
       el.addEventListener('click', function (e) {
         e.stopPropagation();
+        if (backFn) { var bf = backFn(); if (bf) CPS.cardBack = bf; }
         var vt = el.getAttribute('data-variant-tier');
         var variant = vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) } : null;
         ctx.openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
@@ -305,7 +306,9 @@
         box.querySelectorAll('[data-close]').forEach(function (x) {
           x.addEventListener('click', function () { ctx.closeModal(); });
         });
-        bindCardClicks(box);
+        bindCardClicks(box, function () {
+          return { text: '← Back to listing', go: function () { openDetail(l.id); } };
+        });
         box.querySelectorAll('[data-accept]').forEach(function (btn) {
           btn.addEventListener('click', async function () {
             var o = (l.offers || []).filter(function (x) { return x.id === btn.getAttribute('data-accept'); })[0];

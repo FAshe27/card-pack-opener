@@ -63,7 +63,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
 textarea { width: 100%; resize: vertical; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .85rem; }
 input[type=color] { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 10px; background: #0e1324; padding: 3px; }
 input.bad { animation: shakeX .4s; border-color: var(--bad); }
-.icon-btn { background: var(--panel2); border: 1px solid var(--line); width: 38px; height: 38px; border-radius: 11px; cursor: pointer; font-size: 1.05rem; }
+.icon-btn { background: var(--panel2); border: 1px solid var(--line); width: 42px; height: 42px; border-radius: 11px; cursor: pointer; font-size: 1.05rem; }
 .icon-btn { position: relative; }
 body.cloud button#notifBtn { display: inline-flex !important; align-items: center; justify-content: center; }
 .notif-badge { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; line-height: 18px; padding: 0 5px; border-radius: 9px; background: #e5484d; color: #fff; font-size: 11px; font-weight: 700; text-align: center; }
@@ -173,7 +173,7 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 
 /* ===================================================== layout */
 main { max-width: 1400px; margin: 0 auto; padding: 22px; }
-.view { display: none; animation: fadeUp .35s ease; } .view.active { display: block; }
+.view { display: none; animation: fadeIn .25s ease; } .view.active { display: block; }
 .panel { background: linear-gradient(180deg, rgba(29,36,64,.75), rgba(22,28,48,.75)); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,.25); }
 /* A panel that leads with an h3 (e.g. Sell Your Dupes) shouldn't stack the global h3 top margin on the panel's padding. */
 .panel > h3:first-child { margin-top: 0; }
@@ -1104,9 +1104,10 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 .modal { position: fixed; inset: 0; z-index: 50; background: rgba(5,7,14,.75); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 20px; animation: fadeIn .2s; }
 /* The card modal (.zoom inside) gets extra room for the copies panel; every other modal keeps 760px. */
 .modal-box:has(.zoom) { max-width: 900px; }
-.modal-box { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 26px; max-width: 760px; width: 100%; max-height: 92vh; overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.6); animation: popIn .3s cubic-bezier(.2,1.3,.4,1); }
+.modal-box { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 26px; max-width: 760px; width: 100%; max-height: 92vh; max-height: 92dvh; overflow: auto; overscroll-behavior: contain; box-shadow: 0 30px 80px rgba(0,0,0,.6); animation: popIn .3s cubic-bezier(.2,1.3,.4,1); }
+body.modal-open { overflow: hidden; }
 .modal-box form.row { margin-top: 12px; } .modal-box form input { flex: 1; }
-.modal-x { position: absolute; top: 6px; right: 8px; padding: 6px; background: none; border: 0; font-size: 1.8rem; color: var(--muted); cursor: pointer; line-height: 1; }
+.modal-x { position: absolute; top: 6px; right: 8px; padding: 10px; margin: -4px -2px 0 0; background: none; border: 0; font-size: 1.8rem; color: var(--muted); cursor: pointer; line-height: 1; }
 .zoom { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 26px; align-items: start; }
 .zoom-card .card { width: 100%; }
 .zoom-card .cf-details { overflow: auto; -webkit-mask-image: none; mask-image: none; }
@@ -1115,7 +1116,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 .zoom-info dt { color: var(--muted); } .zoom-info dd { margin: 0; font-weight: 600; }
 .zoom-details { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; line-height: 1.5; font-style: italic; color: #cfd6e6; margin-bottom: 14px; white-space: pre-wrap; }
 .player-list { display: grid; gap: 8px; margin: 12px 0; }
- .toast-wrap { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 70; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+ .toast-wrap { position: fixed; bottom: calc(22px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 70; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
 .toast { background: #1f2747; border: 1px solid var(--line); padding: 11px 18px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.5); font-weight: 600; animation: toastIn .35s cubic-bezier(.2,1.3,.4,1); max-width: 90vw; }
 .toast.good { border-color: rgba(56,201,127,.5); } .toast.warn { border-color: rgba(255,178,30,.5); } .toast.error { border-color: rgba(255,84,112,.6); }
 .toast.out { opacity: 0; transform: translateY(10px); transition: .35s; }
@@ -1159,6 +1160,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
 
 /* ===================================================== responsive */
 @media (max-width: 1100px) {
+  .tab { padding: 11px 14px; }
   .topbar { flex-wrap: wrap; gap: 10px 14px; }
   .tabs { order: 5; width: 100%; margin-left: 0; }
   .top-actions { margin-left: auto; }
@@ -1171,6 +1173,7 @@ label.inline { display: flex; align-items: center; gap: 6px; font-size: .85rem; 
   .zoom { grid-template-columns: 1fr; justify-items: center; } .zoom-card { width: min(280px, 80vw); }
 }
 @media (max-width: 560px) {
+  .seg button { padding: 9px 11px; }
   .topbar { position: static; padding: 10px 12px; }
   .brand-text, #playerName { display: none; }
   .player-chip { padding: 4px; }
@@ -1452,12 +1455,12 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .trade-with { display: block; margin: 8px 0; }
 .trade-with select { width: 100%; margin-top: 4px; }
 .trade-steps { display: flex; gap: 8px; margin-top: 10px; font-size: .85rem; flex-wrap: wrap; }
-.trade-steps .tstep { padding: 4px 10px; border-radius: 20px; background: #222; color: #999; }
+.trade-steps .tstep { padding: 8px 12px; border: 0; font: inherit; border-radius: 20px; background: #222; color: #999; }
 .trade-steps .tstep.active { background: #f5b942; color: #1a1408; font-weight: 700; }
 .trade-steps .tstep.done { background: #2c4a2c; color: #bfe3bf; }
 .trade-pick { background: none; border: 2px solid transparent; border-radius: 12px; padding: 4px; cursor: pointer; text-align: left; color: inherit; }
 .trade-pick.selected { border-color: #f5b942; background: #1d1a12; }
-.trade-dock { position: sticky; bottom: 0; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 10px 14px; margin-top: 12px; background: #1c1c22; border: 1px solid #f5b942; border-radius: 12px; }
+.trade-dock { position: sticky; bottom: 0; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); margin-top: 12px; background: #1c1c22; border: 1px solid #f5b942; border-radius: 12px; }
 .trade-dock .btn { margin-left: auto; flex: none; }
 .trade-review-group { margin: 4px 0 8px; }
 .trade-review-cards { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
@@ -1649,7 +1652,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .coll-actions .btn { max-width: 100%; white-space: normal; text-align: center; }
 
 /* --- account menu (header chip dropdown) --- */
-.acct-menu { position: fixed; z-index: 300; min-width: 196px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 6px; box-shadow: 0 14px 34px rgba(0,0,0,.45); display: flex; flex-direction: column; gap: 2px; }
+.acct-menu { position: fixed; z-index: 300; min-width: 196px; max-height: calc(100vh - 76px); overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 6px; box-shadow: 0 14px 34px rgba(0,0,0,.45); display: flex; flex-direction: column; gap: 2px; }
 .acct-menu-item { text-align: left; background: none; border: 0; color: var(--text); padding: 9px 10px; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
 .acct-menu-item:hover { background: rgba(255,255,255,.07); }
 
