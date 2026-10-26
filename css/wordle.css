@@ -54,7 +54,32 @@
 .wr-tile.wr-t-yellow { background: #b59f3b; border-color: #b59f3b; }
 .wr-tile.wr-t-gray { background: #3a3a3c; border-color: #3a3a3c; }
 .wr-tile.flip { animation: wrflip .45s ease both; }
+.wr-tile.flip.wr-t-green { animation-name: wrflip-green; }
+.wr-tile.flip.wr-t-yellow { animation-name: wrflip-yellow; }
+.wr-tile.flip.wr-t-gray { animation-name: wrflip-gray; }
 @keyframes wrflip { 0% { transform: rotateX(0); } 50% { transform: rotateX(-90deg); } 100% { transform: rotateX(0); } }
+/* The colour lands at the flip's midpoint, while the tile is edge-on:
+   before that, the keyframes pin the un-scored look (transparent fill,
+   filled-tile border), so a tile's result can never show early
+   (Franklin, 2026-10-26). */
+@keyframes wrflip-green {
+  0% { transform: rotateX(0); background: transparent; border-color: #565f7e; }
+  49% { background: transparent; border-color: #565f7e; }
+  50% { transform: rotateX(-90deg); background: #538d4e; border-color: #538d4e; }
+  100% { transform: rotateX(0); background: #538d4e; border-color: #538d4e; }
+}
+@keyframes wrflip-yellow {
+  0% { transform: rotateX(0); background: transparent; border-color: #565f7e; }
+  49% { background: transparent; border-color: #565f7e; }
+  50% { transform: rotateX(-90deg); background: #b59f3b; border-color: #b59f3b; }
+  100% { transform: rotateX(0); background: #b59f3b; border-color: #b59f3b; }
+}
+@keyframes wrflip-gray {
+  0% { transform: rotateX(0); background: transparent; border-color: #565f7e; }
+  49% { background: transparent; border-color: #565f7e; }
+  50% { transform: rotateX(-90deg); background: #3a3a3c; border-color: #3a3a3c; }
+  100% { transform: rotateX(0); background: #3a3a3c; border-color: #3a3a3c; }
+}
 @keyframes wrpop { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
 .wr-row.wr-shake { animation: wrshake .4s ease; }
 @keyframes wrshake {
