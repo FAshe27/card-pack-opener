@@ -110,7 +110,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily', 'faq'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily', 'faq', 'donate'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
