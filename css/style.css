@@ -1693,3 +1693,17 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
   padding: 6px 10px; color: inherit; font-size: 13px; cursor: pointer; }
 .gb-pickrow.on { border-color: #ffd75e; }
 .gb-x { color: #ff9d9d; font-weight: 700; padding: 0 4px; }
+
+/* --- Support / donate page (js/donate.js; unlinked #donate view) --- */
+.dn-panel { padding: 20px 22px; max-width: 860px; margin: 0 auto; }
+.dn-panel h2 { margin-top: 0; }
+.dn-lede { font-size: 1.1rem; margin: 0 0 6px; }
+.dn-amounts { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 10px; }
+.dn-amt.on { background: linear-gradient(135deg, var(--accent), #5a48e8); border-color: transparent; color: #fff; box-shadow: 0 6px 20px rgba(124,108,255,.35); }
+.dn-custom { display: flex; align-items: center; gap: 10px; color: var(--muted); margin: 6px 0; }
+.dn-custom input { width: 110px; }
+.dn-summary { font-weight: 700; margin: 10px 0 8px; }
+.dn-trust { text-align: center; font-weight: 700; color: var(--good); margin: 10px 0 4px; }
+.dn-costs, .dn-perks { color: var(--muted); line-height: 1.6; margin: 8px 0; padding-left: 20px; }
+.dn-bar { margin: 12px 0 6px; }
+.dn-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
