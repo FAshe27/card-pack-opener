@@ -43,8 +43,12 @@
   /* ---------------- server sync ------------------------------------- */
   function syncBadges() {
     try {
-      if (ctx.S) ctx.S.gameTokens = S.tokens; // freshest server value we have
+      // Mirror BOTH balances into the app state and refresh the header
+      // badges, so a prize (or a paid start) shows in the top bar without
+      // a reload -- spins were the missing half (Franklin, 2026-10-26).
+      if (ctx.S) { ctx.S.gameTokens = S.tokens; ctx.S.spins = S.spins; }
       if (CPS.games && CPS.games.setTokens) CPS.games.setTokens(S.tokens);
+      if (ctx.updateWheelBadge) ctx.updateWheelBadge();
       if (CPS.packsBadge && CPS.packsBadge.update) CPS.packsBadge.update();
     } catch (e) { /* non-fatal */ }
   }
