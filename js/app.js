@@ -1219,6 +1219,7 @@
       var _pt = await Promise.all([CPS.cloud.call('list_players'), CPS.cloud.call('list_trades')]);
       var players = _pt[0], trades = _pt[1];
       renderTrades(trades);
+      if (CPS.playersDir) { CPS.playersDir.render(players); return; }
       box.innerHTML = players.map(function (p) {
         return '<button class="player-card" data-player="' + esc(p.id) + '">' +
           '<span class="avatar">' + esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +

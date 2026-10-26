@@ -1,0 +1,17 @@
+/* FarmRPG-style Players directory (migration 191): Online + Search
+   buttons replace the full player list. Own sheet; style.css untouched.
+   No backdrop-filter / fixed backgrounds (Firefox Android paint rule). */
+.pdir-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
+.pdir-actions .btn { flex: 1; min-width: 150px; margin: 0; }
+.pdir-actions .btn.active { border-color: var(--accent); color: #fff; }
+.pdir-panel { margin-top: 10px; }
+.pdir-online-head, .pdir-results-head { font-size: .8rem; font-weight: 800; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
+.online-flow { line-height: 1.9; margin: 0; }
+.online-name { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--accent2); cursor: pointer; }
+.online-name:hover { text-decoration: underline; }
+.pdir-search-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pdir-search-row input[type="search"] { flex: 1; min-width: 160px; }
+.pdir-exact { display: flex; gap: 6px; align-items: center; font-weight: 600; cursor: pointer; }
+.pdir-exact input { width: 18px; height: 18px; }
+#playerSearchGo { width: 100%; margin-top: 10px; }
+.pdir-results-head { margin-top: 14px; }

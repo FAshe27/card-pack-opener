@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="css/vaultbreaker.css">
 <link rel="stylesheet" href="css/maintenance.css">
 <link rel="stylesheet" href="css/friends.css">
+<link rel="stylesheet" href="css/playersdir.css">
 </head>
 <body>
   <header class="topbar">
@@ -149,6 +150,18 @@
       <div class="panel">
         <h2>Players</h2>
         <p class="muted small">See what everyone is collecting — tap a player to view their favorites and collection.</p>
+        <div class="pdir-actions">
+          <button class="btn" id="playersOnlineBtn">🟢 Players Online<span id="playersOnlineCount"></span></button>
+          <button class="btn" id="playersSearchBtn">🔍 Search for Players</button>
+        </div>
+        <div id="playersOnlinePanel" class="pdir-panel hidden"></div>
+        <div id="playersSearchPanel" class="pdir-panel hidden">
+          <div class="pdir-search-row">
+            <input id="playerSearchInput" type="search" placeholder="Username — search terms">
+            <label class="pdir-exact"><input type="checkbox" id="playerSearchExact"> Exact Match</label>
+          </div>
+          <button class="btn primary" id="playerSearchGo">Search for Players</button>
+        </div>
         <div id="playerList" class="player-list"></div>
       </div>
     </section>
@@ -567,6 +580,7 @@
   <script defer src="js/admintokens.js"></script>
   <script defer src="js/profile.js"></script>
   <script defer src="js/friends.js"></script>
+  <script defer src="js/playersdir.js"></script>
   <script defer src="js/trophies.js"></script>
   <script defer src="js/milestones.js"></script>
   <script defer src="js/online.js"></script>
