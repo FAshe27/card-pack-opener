@@ -39,7 +39,9 @@
   function mount(box) {
     if (!box) return;
     if (!ctx.isCloud()) {
-      box.innerHTML = '<div class="panel"><h2>🎰 Slots</h2>' +
+      box.innerHTML = '<div class="panel">' +
+        '<div class="game-backrow"><button class="btn ghost" id="arcBackBtn" type="button">← Back to Arcade</button></div>' +
+        '<h2>🎰 Slots</h2>' +
         '<p class="muted">Slots need online play — log in to spin.</p></div>';
       return;
     }
@@ -49,6 +51,7 @@
     }).join('');
     box.innerHTML =
       '<div class="panel slot-machine">' +
+        '<div class="game-backrow"><button class="btn ghost" id="arcBackBtn" type="button">← Back to Arcade</button></div>' +
         '<h2>🎰 Slots</h2>' +
         '<p class="muted small">Match three symbols to win packs — ' +
         'legendary and chase triples are announced to everyone!</p>' +

@@ -1,7 +1,6 @@
 /* Roulette (Sandbox prototype) — rlt- namespaced. Standard number table:
    absolutely-positioned cells + chip hotspots share one unit grid. */
 .rlt-wrap { max-width: 860px; margin: 18px auto 0; text-align: center; }
-.rlt-backrow { text-align: left; margin-bottom: 10px; }
 .rlt-top { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; margin: 10px 0 14px; }
 .rlt-wheelbox { position: relative; width: 240px; height: 240px; flex: 0 0 auto; }
 .rlt-pointer { position: absolute; top: -4px; left: 50%; transform: translateX(-50%); z-index: 3;
@@ -70,7 +69,6 @@
   /* Compact phone chrome: the whole game — wheel, controls, the full
      table and the outside bets — fits one screen without scrolling. */
   .rlt-wrap { padding: 12px; }
-  .rlt-backrow { margin-bottom: 4px; }
   .rlt-wrap h2 { margin: 2px 0 4px; font-size: 21px; }
   .rlt-intro { display: none; }
   .rlt-top { flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 10px; margin: 4px 0 8px; }

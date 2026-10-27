@@ -258,7 +258,7 @@
 
     root.innerHTML =
       '<div class="panel rlt-wrap">' +
-        '<div class="rlt-backrow"><button class="btn ghost" id="rltBack" type="button">← Back to Arcade</button></div>' +
+        '<div class="game-backrow"><button class="btn ghost" id="rltBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🎡 Roulette</h2>' +
         '<p class="muted small rlt-intro">Standard European roulette. Click any bet space to place a token on it ' +
         '(splits, corners and lines sit on the borders, just like a real table); click again to pick it back up. ' +
@@ -273,7 +273,7 @@
               '<div class="rlt-rotor" id="rltRotor">' + wheelSVG() + '</div>' +
               '<div class="rlt-center" id="rltCenter">' + (state.last ? state.last.n : '🎯') + '</div></div>') +
           '<div class="rlt-side">' +
-            '<div class="rlt-balance">Tokens: <strong id="rltBal">' + (state.loaded ? state.tokens : '…') + '</strong> 🪙</div>' +
+            '<div class="rlt-balance">🪙 <b><span id="rltBal">' + (state.loaded ? state.tokens : '…') + '</span> token' + (state.tokens === 1 ? '' : 's') + '</b></div>' +
             '<div class="rlt-stake">On the table: <strong id="rltStake">' + st + '</strong> token' + (st === 1 ? '' : 's') + '</div>' +
             '<div class="rlt-actions">' +
               '<button type="button" class="btn primary" id="rltSpin"' + (state.spinning || !state.loaded || st === 0 || st > state.tokens ? ' disabled' : '') + '>🎡 Spin</button>' +

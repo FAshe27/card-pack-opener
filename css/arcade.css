@@ -22,8 +22,9 @@
 .arc-head-streak b { color: var(--warn); }
 
 /* ---- back row on a game page ---- */
-.arc-backrow { margin-bottom: 12px; }
-.arc-back { padding-left: 4px; }
+/* One back-button row for every Arcade game (2026-10-26 standardization):
+   inside the game panel, top, left-aligned, same spacing everywhere. */
+.game-backrow { text-align: left; margin-bottom: 10px; }
 
 /* ---- lobby grid ---- */
 .arc-grid {

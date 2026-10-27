@@ -49,7 +49,7 @@
   }
 
   function backHTML() {
-    return '<div class="arc-backrow"><button class="btn ghost arc-back" id="arcBackBtn" type="button">← Back to Arcade</button></div>';
+    return '<div class="game-backrow"><button class="btn ghost" id="arcBackBtn" type="button">← Back to Arcade</button></div>';
   }
 
   function bindBack(box) {
@@ -166,8 +166,8 @@
       resumeRun();
     }
     var tokens = ctx.S.gameTokens || 0;
-    var html = headerHTML() + backHTML();
-    html += '<div class="panel"><h3>High / Low</h3>';
+    var html = headerHTML();
+    html += '<div class="panel">' + backHTML() + '<h2>🔢 High / Low</h2>';
     if (!G) {
       // Show the game itself before a run starts — the table laid out
       // exactly as it looks mid-run, with a face-down card and the guess
@@ -214,9 +214,9 @@
 
   /* ---------------- Slots page ---------------- */
   function renderSlots(box) {
-    box.innerHTML = headerHTML() + backHTML() + '<div id="slotsMount"></div>';
-    bindBack(box);
+    box.innerHTML = '<div id="slotsMount"></div>';
     if (CPS.slots) CPS.slots.mount(ctx.$('#slotsMount'));
+    bindBack(box);
   }
 
   function render() {

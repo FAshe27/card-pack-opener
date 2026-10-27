@@ -442,7 +442,7 @@
       'gray, it\'s not in the word at all. The better you do, the better your prize!</p>' +
       '<p class="muted small">Your first game every day is free - after that, it\'s 10 tokens to ' +
       'play again if you don\'t want to wait until reset.</p>' +
-      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + '</b> tokens</span>' +
+      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + ' token' + (S.tokens === 1 ? '' : 's') + '</b></span>' +
       '<span class="muted small">' + esc(sa.statusLine) + '</span></div>' +
       (S.loadError ? '<p class="wr-msg">Could not load WordGuesser — please try again in a few minutes.</p>' : '') +
       '</div>' +

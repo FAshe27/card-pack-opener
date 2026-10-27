@@ -105,6 +105,14 @@
       return;
     }
     tokensNow = (ctx.S && ctx.S.gameTokens) || 0;
+    var prizeTables = CONFIG.tiers.map(function (t) {
+      var rows = SYMBOLS.map(function (s) {
+        return '<div class="scr-prize-row"><span>' + LABEL[s] + '</span><span>' +
+          esc(prizeText(t.prizes[s])) + '</span></div>';
+      }).join('');
+      return '<div class="scr-prize-tier"><h4>' + esc(t.name) + ' — ' + t.cost +
+        ' token' + (t.cost === 1 ? '' : 's') + '</h4>' + rows + '</div>';
+    }).join('');
     var tierCards = CONFIG.tiers.map(function (t) {
       return '<div class="panel scr-tier">' +
         '<h3>' + esc(t.name) + '</h3>' +
@@ -114,7 +122,7 @@
     }).join('');
     el.innerHTML =
       '<div class="panel scr-wrap">' +
-        '<div class="scr-backrow"><button class="btn ghost" id="scrBack" type="button">← Back to Arcade</button></div>' +
+        '<div class="game-backrow"><button class="btn ghost" id="scrBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🎟️ Scratchoffs</h2>' +
         '<p class="muted small">Buy a ticket, scratch the 9 foil spots, match 3 of a rarity to win its prize. ' +
         'The server decides the ticket when you buy it — scratching only reveals it, and an unfinished ' +
@@ -123,6 +131,7 @@
         '<div class="scr-tiers">' + tierCards + '</div>' +
         '<div class="scr-stage" id="scrStage"></div>' +
         '<div class="scr-result" id="scrResult"><span class="muted small">Loading…</span></div>' +
+        '<details class="scr-prizes"><summary>Prize tables</summary>' + prizeTables + '</details>' +
       '</div>';
     qa('.scr-buy').forEach(function (b) {
       b.addEventListener('click', function () { buyTicket(b.getAttribute('data-tier')); });

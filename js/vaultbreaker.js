@@ -269,11 +269,11 @@
     var st = S.stats;
     root.innerHTML =
       '<div class="panel vb-wrap">' +
-        '<div class="vb-backrow"><button class="btn ghost" id="vbBack" type="button">← Back to Arcade</button></div>' +
+        '<div class="game-backrow"><button class="btn ghost" id="vbBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🔓 Vault Breaker</h2>' +
         '<p class="muted small">Crack the vault one tile at a time. Every safe tile grows the pot — ' +
         'cash out whenever you like, but trip a hidden alarm and the pot is gone.</p>' +
-        '<div class="vb-balance">🪙 <b>' + S.tokens + ' tokens</b>' +
+        '<div class="vb-balance">🪙 <b>' + S.tokens + ' token' + (S.tokens === 1 ? '' : 's') + '</b>' +
           ' &nbsp;·&nbsp; 🎁 <b>' + (st.wonRandom + st.wonJumbled) + ' packs won</b>' +
           (st.wonTokens ? ' &nbsp;·&nbsp; ↩️ ' + st.wonTokens + ' tokens won back' : '') + '</div>' +
         '<div class="vb-modes">' + modeBtns + '</div>' +

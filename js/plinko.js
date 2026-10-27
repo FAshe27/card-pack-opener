@@ -120,7 +120,7 @@
     }
     el.innerHTML =
       '<div class="panel plk-wrap">' +
-        '<div class="plk-backrow"><button class="btn ghost" id="plkBack" type="button">← Back to Arcade</button></div>' +
+        '<div class="game-backrow"><button class="btn ghost" id="plkBack" type="button">← Back to Arcade</button></div>' +
         '<h2>🪙 Plinko</h2>' +
         '<p class="muted small">Drop a chip, watch it bounce. Centre bins pay tokens, ' +
         'outer bins pay packs, the very edges are the jackpot. ' +
@@ -217,7 +217,7 @@
   function setResult(html) { var r = q('#plkResult'); if (r) r.innerHTML = html; }
   function updateHud() {
     var bal = q('#plkBalance');
-    if (bal) bal.innerHTML = '🪙 <b>' + state.tokens + ' tokens</b>' +
+    if (bal) bal.innerHTML = '🪙 <b>' + state.tokens + ' token' + (state.tokens === 1 ? '' : 's') + '</b>' +
       ' &nbsp;·&nbsp; 🎁 <b>' + (state.wonRandom + state.wonJumbled) + ' packs won</b>' +
       (state.wonTokens ? ' &nbsp;·&nbsp; ↩️ ' + state.wonTokens + ' tokens won back' : '');
     var st = q('#plkStats');

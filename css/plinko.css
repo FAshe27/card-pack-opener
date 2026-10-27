@@ -1,6 +1,6 @@
 /* Plinko — Sandbox prototype. Board, chip, bins. Rarity/prize colours are
    kept neutral gold/teal so the placeholder bins read at a glance. */
-.plk-wrap { text-align: center; margin-top: 18px; }
+.plk-wrap { text-align: center; margin-top: 18px; max-width: 860px; margin-inline: auto; }
 .plk-badge, .scr-badge {
   font-size: 11px; font-weight: 800; letter-spacing: .04em;
   color: #f0a832; border: 1px solid #f0a832; border-radius: 999px;
@@ -67,4 +67,3 @@
 }
 
 /* Back to Arcade row (2026-10-14) */
-.plk-backrow { text-align: left; margin-bottom: 10px; }
