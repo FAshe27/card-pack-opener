@@ -173,7 +173,7 @@ async function openCollectionScreen(accountId) {
   ctx.openModal('<div class="muted" style="padding:24px">Loading…</div>');
   try {
     var p = await CPS.cloud.call('get_profile', { p_account: accountId });
-    var sets = p.sets || [], collection = p.collection || [];
+    var sets = p.sets || [], turnedCards = p.turned_cards || [];
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
       '<button class="btn small prof-back" id="profBackBtn">← Back</button>' +
       '<h3 class="prof-coll-h"><span>' + ctx.esc(p.display_name) + '’s Collection</span><button class="btn small" id="profSortBtn"></button></h3>' +
@@ -183,24 +183,23 @@ async function openCollectionScreen(accountId) {
         var arr = sets.slice();
         arr.sort(function (a, b) {
           if (setSort === 'pct') {
-            var pa = a.total ? a.unique / a.total : 0, pb = b.total ? b.unique / b.total : 0;
+            var pa = a.total ? (a.turned || 0) / a.total : 0, pb = b.total ? (b.turned || 0) / b.total : 0;
             if (pb !== pa) return pb - pa;
           }
           return a.set_name < b.set_name ? -1 : (a.set_name > b.set_name ? 1 : 0);
         });
         var el = box.querySelector('.prof-sets');
         el.innerHTML = arr.map(function (s) {
-          var pc = s.total ? (s.unique / s.total * 100) : 0;
           var tp = s.total ? ((s.turned || 0) / s.total * 100) : 0;
-          return '<div class="prof-set" data-pset="' + ctx.esc(s.set_id) + '">' +
+          var complete = s.total > 0 && (s.turned || 0) >= s.total;
+          return '<div class="prof-set' + (complete ? ' complete' : '') + '" data-pset="' + ctx.esc(s.set_id) + '">' +
             '<div class="prof-set-top"><span>' + ctx.esc(s.set_name) + '</span>' +
-            '<span class="muted small">' + ctx.U.fmt(s.unique) + '/' + ctx.U.fmt(s.total) + ' · ' + pc.toFixed(1) + '% collected</span></div>' +
-            '<span class="bar"><i style="width:' + pc.toFixed(1) + '%"></i></span>' +
-            (s.turned ? '<div class="muted small turned-note">' + ctx.U.fmt(s.turned) + ' turned in · ' + tp.toFixed(1) + '%</div>' : '') + '</div>';
+            '<span class="muted small">' + ctx.U.fmt(s.turned || 0) + '/' + ctx.U.fmt(s.total) + ' · ' + tp.toFixed(1) + '% turned in</span></div>' +
+            '<span class="bar"><i style="width:' + tp.toFixed(1) + '%"></i></span></div>';
         }).join('') || '<div class="empty">—</div>';
         el.querySelectorAll('.prof-set').forEach(function (elm) {
           elm.addEventListener('click', function () {
-            openPlayerSet(accountId, p.display_name, elm.dataset.pset, collection, 'collection');
+            openPlayerSet(accountId, p.display_name, elm.dataset.pset, turnedCards, 'collection');
           });
         });
       }
@@ -413,24 +412,23 @@ function openFavManager(accountId, seedFavs, _ready) {
   });
 }
 
-function openPlayerSet(accountId, displayName, setId, collection, backTo) {
+function openPlayerSet(accountId, displayName, setId, turnedCards, backTo) {
   var set = window.CardSets.get(setId);
   if (!set) return;
-  var owned = {};
-  (collection || []).forEach(function (c) { if (c.set_id === setId) owned[c.card_id] = c; });
-  var cards = set.cards.filter(function (card) { return owned[card.id]; });
+  var turned = {};
+  (turnedCards || []).forEach(function (c) { if (c.set_id === setId) turned[c.card_id] = c; });
+  var cards = set.cards.filter(function (card) { return turned[card.id]; });
   ctx.openModal('<button class="modal-x" data-close aria-label="Close">\u00d7</button><div class="profile">' +
     '<button class="btn small" id="pcBackBtn">\u2190 Back</button>' +
     '<h2>' + ctx.esc(displayName) + '</h2>' +
-    '<div class="muted">' + ctx.esc(set.name) + ' \u00b7 ' + cards.length + ' / ' + set.cards.length + ' unique</div>' +
+    '<div class="muted">' + ctx.esc(set.name) + ' \u00b7 ' + cards.length + ' / ' + set.cards.length + ' turned in</div>' +
     (cards.length ? '<div class="prof-favs">' + cards.map(function (card) {
-      var e = owned[card.id];
-      var v=(e.variants||[])[0];
-      return '<div class="prof-fav" data-fav-set="' + ctx.esc(set.id) + '" data-fav-card="' + ctx.esc(card.id) + '" data-fav-holo="' + (e.h > 0 ? '1' : '0') + '">' + CPS.cards.render(set,card,{holo:e.h>0,variant:v&&{tier:v.tier,serial:v.serial}}) +
+      var t = turned[card.id];
+      return '<div class="prof-fav" data-fav-set="' + ctx.esc(set.id) + '" data-fav-card="' + ctx.esc(card.id) + '" data-fav-holo="' + (t.holo ? '1' : '0') + '">' + CPS.cards.render(set,card,{holo:!!t.holo}) +
         '<div class="prof-fav-cap"><b>' + ctx.esc(card.name) + '</b>' +
         '<span class="muted small">#' + ctx.U.pad(card.num, set.numWidth) + ' \u00b7 ' + ctx.rarityOf(card.rarity).label +
-        (e.h > 0 ? ' \u00b7 \u2726 holo' : '') + ' \u00b7 \u00d7' + e.n + '</span></div></div>';
-    }).join('') + '</div>' : '<div class="empty">No cards in this set yet.</div>') +
+        (t.holo ? ' \u00b7 \u2726 holo' : '') + '</span></div></div>';
+    }).join('') + '</div>' : '<div class="empty">No cards turned in for this set yet.</div>') +
     '</div>', function (box) {
       box.querySelector('#pcBackBtn').addEventListener('click', function () {
         if (backTo === 'collection') openCollectionScreen(accountId); else openProfile(accountId);
@@ -438,7 +436,7 @@ function openPlayerSet(accountId, displayName, setId, collection, backTo) {
       box.querySelectorAll('.prof-fav').forEach(function (elm) {
         elm.style.cursor = 'pointer';
         elm.addEventListener('click', function () {
-          CPS.cardBack = { text: '← Back to ' + set.name, go: function () { openPlayerSet(accountId, displayName, setId, collection, backTo); } };
+          CPS.cardBack = { text: '← Back to ' + set.name, go: function () { openPlayerSet(accountId, displayName, setId, turnedCards, backTo); } };
           ctx.openCardModal(elm.dataset.favSet, elm.dataset.favCard, elm.dataset.favHolo === '1');
         });
       });

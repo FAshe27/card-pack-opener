@@ -14,6 +14,8 @@
 .prof-sets.cols2 .prof-set-top { font-size: .8rem; margin-bottom: 6px; }
 .prof-sets.cols2 .prof-set-top span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .prof-sets.cols2 .prof-set .bar { height: 6px; }
+/* Completed collection (100% turned in): One-of-One gold bar */
+.prof-set.complete .bar i { background: linear-gradient(90deg, #ffd700, #fff3b0, #ffb700, #ffdf5e); box-shadow: 0 0 8px rgba(255,210,102,.55); }
 @media (max-width: 420px) {
   .prof-stats { gap: 6px; }
   .prof-stat b { font-size: 1.1rem; }
