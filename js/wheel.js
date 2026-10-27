@@ -296,6 +296,7 @@
       ctx.moveTo(cx + Math.cos(ha0) * hubR, cy + Math.sin(ha0) * hubR);
       ctx.arc(cx, cy, R, ha0, ha1);
       ctx.lineTo(cx + Math.cos(ha1) * hubR, cy + Math.sin(ha1) * hubR);
+      ctx.arc(cx, cy, hubR, ha1, ha0, true); /* inner edge must follow the hub circle — closePath() alone chords straight across it */
       ctx.closePath();
       ctx.shadowColor = '#ffb21e';
       ctx.shadowBlur = 14;
