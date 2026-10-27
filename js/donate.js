@@ -6,11 +6,13 @@
    The #donate view is UNLINKED: no tab, menu item, or button anywhere on
    the site points to it. It is reachable only by visiting /#donate directly.
 
-   The chip-in buttons are PLACEHOLDERS: Franklin has no Stripe account yet,
-   so there are no payment links and clicking Chip in only explains that
-   donations aren't open. To go live later, replace placeholder() with a
-   redirect to the Stripe Payment Link for the chosen amount (one link per
-   preset, plus a flexible-amount link for Custom) — nothing else changes. */
+   LIVE (staged 2026-10-27): Chip in redirects to Franklin's Stripe
+   "Customers choose what to pay" Payment Link with ?prefilled_amount=<cents>
+   appended, so the amount picked here arrives pre-filled on Stripe's page
+   (the payer can still edit it there). That link type does not support
+   recurring payments, which keeps the page's one-time-only promise.
+   A prefilled_amount outside the link's configured min/max is disregarded
+   by Stripe, which falls back to the link's own preset — safe by design. */
 (function (CPS) {
   'use strict';
 
@@ -24,10 +26,10 @@
     if (sum) sum.textContent = fmt(amount) + ', one-time.';
   }
 
-  function placeholder() {
-    var msg = "Donations aren't open yet — this button is a placeholder until the payment setup is finished. Thanks for thinking of it, though!";
-    if (C && C.toast) C.toast(msg, 'warn', 6000);
-    else window.alert(msg);
+  var STRIPE_LINK = 'https://donate.stripe.com/eVqcMX0XL4Jx34a4ha3gk01';
+
+  function goStripe() {
+    window.location.href = STRIPE_LINK + '?prefilled_amount=' + (amount * 100);
   }
 
   function bind() {
@@ -63,7 +65,7 @@
     });
 
     var go = document.getElementById('dnGo');
-    if (go) go.addEventListener('click', placeholder);
+    if (go) go.addEventListener('click', goStripe);
     render();
   }
 
