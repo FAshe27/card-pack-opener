@@ -2726,6 +2726,7 @@
             : '+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
           await refreshQuests();
           if (S.view === 'daily') renderDaily();
+          if (r.perfect_day && CPS.daily && CPS.daily.perfectDay) CPS.daily.perfectDay(r.perfect_day);
         } catch (err) { cloudError(err); b.disabled = false; }
       })();
     });
