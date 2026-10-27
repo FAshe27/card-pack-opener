@@ -432,14 +432,16 @@
         <p class="muted small">Chip in takes you to a secure Stripe page to finish — the amount you picked is already filled in there, and you can change it before paying. PackRipper never sees or stores your card details.</p>
 
         <h3 class="faq-sec">What it costs to run</h3>
-        <p class="faq-a">Running costs come to about <b>$35/month (about $412/year)</b>:</p>
+        <p class="faq-a">Running costs come to about <b>$58/month (about $696/year)</b>:</p>
         <ul class="dn-costs">
-          <li>Server &amp; database &mdash; about $30/month</li>
-          <li>Domain &mdash; about $52/year</li>
-          <li>Website hosting &mdash; $0</li>
+          <li>Server &amp; database &mdash; about $32/month</li>
+          <li>Muse &mdash; about $20/month</li>
+          <li>Domain &amp; website hosting &mdash; about $6/month</li>
         </ul>
-        <div class="bar dn-bar"><i style="width:51%"></i></div>
-        <p class="muted small">Example only: $18 of $35 toward this month's costs. If a separate public server is added later, costs may go up by about $10&ndash;15/month &mdash; this page would be updated.</p>
+        <div class="bar dn-bar" id="dnBar"><i id="dnBarFill" style="width:0%"></i></div>
+        <p class="dn-funded" id="dnFunded" hidden></p>
+        <p class="muted small" id="dnProgressText">Loading this month&rsquo;s total&hellip;</p>
+        <p class="muted small">Anything beyond the monthly goal goes toward future computing-power increases as PackRipper grows.</p>
 
         <h3 class="faq-sec">What you get for chipping in</h3>
         <ul class="dn-perks">
@@ -468,7 +470,7 @@
         </div>
         <div class="faq-item">
           <h3 class="faq-q">What does the money go toward?</h3>
-          <p class="faq-a">Domain and server/database costs first. Anything extra goes toward future running costs.</p>
+          <p class="faq-a">The running costs listed above first. Anything extra goes toward future computing-power increases and other running costs.</p>
         </div>
         <div class="faq-item">
           <h3 class="faq-q">Can I get a refund?</h3>
