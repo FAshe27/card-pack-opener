@@ -598,6 +598,13 @@
      move between tear and reveal. FIT-BEGIN */
   var FIT_SCH_EST = 76;   /* summary + Reveal All height while hidden (measured 76px in the rig); buildGrid re-fits with the real height */
   var FIT_MINW = 80;      /* phone readability floor for the strict no-scroll budget */
+  /* Phone-class viewport: narrow OR short. Landscape phones (Pro Max
+     932x430, Galaxy Ultra 915x412) are wider than the 900px desktop
+     line but only ~430px tall — the width-only test classified them as
+     desktops and 9-card packs rendered 5+4 instead of the phone 3x3
+     (player report, 2026-10-26). A real desktop/tablet landscape is
+     far taller than 500px, so the height leg costs nothing there. */
+  function fitPhone() { return window.innerWidth <= 900 || window.innerHeight <= 500; }
 
   function fitScH() {
     var sc = $('#stageControls');
@@ -617,7 +624,7 @@
     var padT = parseFloat(st.paddingTop) || 0, padB = parseFloat(st.paddingBottom) || 0;
     var gapY = parseFloat(st.rowGap); if (isNaN(gapY)) gapY = parseFloat(st.gap) || 22;
     var scH = fitScH();
-    if (window.innerWidth > 900) {
+    if (!fitPhone()) {
       var mh = parseFloat(st.minHeight) || 700;
       return { strict: mh - padT - padB - gapY - scH, scrolled: 0, padT: padT, padB: padB, gapY: gapY, scH: scH };
     }
@@ -637,8 +644,8 @@
     return { strict: strict, scrolled: scrolled, padT: padT, padB: padB, gapY: gapY, scH: scH };
   }
   function fitPick(n, gridW, ratio, gap, cap, budgetH) {
-    var maxCols = window.innerWidth <= 900 ? 5 : 6;
-    var floor = window.innerWidth <= 900 ? FIT_MINW : 0;
+    var maxCols = fitPhone() ? 5 : 6;
+    var floor = fitPhone() ? FIT_MINW : 0;
     var cands = [];
     for (var cols = 3; cols <= maxCols; cols++) {
       var rows = Math.ceil(n / cols);
@@ -652,7 +659,7 @@
     /* Desktop 9-card packs render 5+4, the pre-solver rows (Franklin's
        call, 2026-10-23); phone/tablet keeps the balanced 3x3 below. The
        100px guard hands truly squeezed budgets back to the normal path. */
-    if (window.innerWidth > 900 && n === 9) {
+    if (!fitPhone() && n === 9) {
       var c5 = null;
       for (var ci = 0; ci < cands.length; ci++) if (cands[ci].cols === 5) c5 = cands[ci];
       if (c5 && c5.w >= 100) return c5;
@@ -705,7 +712,7 @@
     var b = fitBudget();
     var pick = fitPick(n, gridW, ratio, gap, cap, b.strict);
     var mode = 'window';
-    if (window.innerWidth <= 900 && pick) {
+    if (fitPhone() && pick) {
       /* On phones the stage-top budget is always the roomier one (the
          strict budget subtracts the whole page chrome above the stage),
          so take it whenever it beats strict — the old floor gate let a
@@ -731,7 +738,7 @@
     grid.style.setProperty('--cardw', pick.w.toFixed(1) + 'px');
     grid.style.maxWidth = Math.ceil(pick.rowW) + 'px';  /* ceil: rounding down can wrap the row early */
     grid.dataset.fitCols = pick.cols; grid.dataset.fitMode = pick.mode;
-    if (window.innerWidth <= 900) stage.style.minHeight = Math.round(Math.max(pick.total, 448)) + 'px';  /* 448 = the idle reservation: small reveals keep the panel height instead of collapsing */
+    if (fitPhone()) stage.style.minHeight = Math.round(Math.max(pick.total, 448)) + 'px';  /* 448 = the idle reservation: small reveals keep the panel height instead of collapsing */
     else stage.style.minHeight = '';
   }
   function fitReveal() {
@@ -742,7 +749,7 @@
     fitApply(n, grid.clientWidth, o.set.id === 'periodic' ? 1 : 7 / 5, grid.classList.contains('playing-3x3'));
   }
   function fitStagePre(set, n) {
-    var stage = $('#stage'); if (!stage || !n || window.innerWidth > 900) return;
+    var stage = $('#stage'); if (!stage || !n || !fitPhone()) return;
     var st = getComputedStyle(stage);
     var gridW = stage.clientWidth - (parseFloat(st.paddingLeft) || 0) - (parseFloat(st.paddingRight) || 0);
     gridW = Math.min(gridW, set.id === 'playing' ? 584 : 1000);
