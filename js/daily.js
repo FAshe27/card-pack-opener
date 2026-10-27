@@ -15,7 +15,7 @@
     var btn = document.getElementById('claimAllBtn');
     if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
     var claimable = getClaimable();
-    var total = 0, totalTokens = 0, count = 0, failed = 0, lastSpins = null;
+    var total = 0, totalTokens = 0, totalCredit = 0, count = 0, failed = 0, lastSpins = null;
     var perfect = null;
     var C = window.CPS && CPS.appCtx;
     for (var i = 0; i < claimable.length; i++) {
@@ -23,6 +23,7 @@
         var r = await CPS.cloud.call('claim_quest', { p_key: claimable[i].key });
         total += r.tickets || 0;
         totalTokens += r.tokens || 0;
+        totalCredit += r.credit || 0;
         if (r.spins_now != null) lastSpins = r.spins_now;
         if (r.perfect_day) perfect = r.perfect_day;
         count++;
@@ -40,6 +41,7 @@
         var parts = [];
         if (total) parts.push(total + ' ticket' + (total === 1 ? '' : 's'));
         if (totalTokens) parts.push(totalTokens + ' token' + (totalTokens === 1 ? '' : 's'));
+        if (totalCredit) parts.push('$' + totalCredit + ' Store Credit');
         C.toast('Claimed ' + count + ' quest' + (count === 1 ? '' : 's') + (parts.length ? ' for ' + parts.join(' + ') : '') + '!', 'good');
       } else if (claimable.length) {
         C.toast("Couldn't claim any quests — please try again.", 'warn');

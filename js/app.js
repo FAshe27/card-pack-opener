@@ -2419,7 +2419,7 @@
     var pct = Math.min(100, Math.round(q.progress / q.target * 100));
     return '<div class="quest tier-' + q.tier + (q.done && !q.claimed ? ' claimable' : '') + '">' +
       '<div class="quest-top"><div><b>' + esc(q.title) + '</b>' +
-      '<span class="quest-tier">' + q.tier + ' &middot; ' + (q.currency === 'token' ? '&#x1FA99; ' + q.amount + ' token' + (q.amount === 1 ? '' : 's') : '&#x1F39F;&#xFE0F; ' + (q.amount != null ? q.amount : q.tickets) + ' ticket' + ((q.amount != null ? q.amount : q.tickets) === 1 ? '' : 's')) + '</span></div>' +
+      '<span class="quest-tier">' + q.tier + ' &middot; ' + (q.currency === 'token' ? '&#x1FA99; ' + q.amount + ' token' + (q.amount === 1 ? '' : 's') : q.currency === 'store_credit' ? '&#x1F4B5; $' + q.amount + ' Store Credit' : '&#x1F39F;&#xFE0F; ' + (q.amount != null ? q.amount : q.tickets) + ' ticket' + ((q.amount != null ? q.amount : q.tickets) === 1 ? '' : 's')) + '</span></div>' +
       (q.claimed ? '<span class="quest-done">Claimed &#x2713;</span>' :
        q.done ? '<button class="btn small primary" data-claim="' + esc(q.key) + '">Claim</button>' :
        '<span class="quest-prog">' + Math.min(q.progress, q.target) + '/' + q.target + '</span>') +
@@ -2752,6 +2752,8 @@
           fx.confetti(120);
           toast(r.currency === 'token'
             ? '+' + r.amount + ' arcade token' + (r.amount === 1 ? '' : 's') + '!'
+            : r.currency === 'store_credit'
+            ? '+$' + r.amount + ' Store Credit!'
             : '+' + r.tickets + ' spin ticket' + (r.tickets === 1 ? '' : 's') + '!', 'good');
           await refreshQuests();
           if (S.view === 'daily') renderDaily();
