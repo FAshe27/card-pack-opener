@@ -99,9 +99,19 @@
   async function startGame() {
     if (S.busy || S.game || !S.loaded) return;
     if (!S.freeAvailable && S.tokens < S.cost) {
-      try { ctx.toast('Not enough tokens — packs, quests and the Prize Wheel can earn more.', 'warn'); }
-      catch (e) { /* non-fatal */ }
-      return;
+      /* The panel's balance can be stale: it only refreshes on wordle
+         RPCs, while tokens are earned all over the site. Ask the server
+         before refusing (Franklin, 2026-10-27: a stale 8 blocked a start
+         his real 20 could afford, and the untouched solved board made
+         it look as if the old game had re-solved itself). */
+      await loadState();
+      if (S.busy || S.game || !S.loaded || S.loadError) return;
+      if (!S.freeAvailable && S.tokens < S.cost) {
+        nudge('Not enough tokens — Play again is ' + S.cost + ' 🪙');
+        try { ctx.toast('Not enough tokens — packs, quests and the Prize Wheel can earn more.', 'warn'); }
+        catch (e) { /* non-fatal */ }
+        return;
+      }
     }
     S.busy = true; paint();
     try {
@@ -442,7 +452,7 @@
       'gray, it\'s not in the word at all. The better you do, the better your prize!</p>' +
       '<p class="muted small">Your first game every day is free - after that, it\'s 10 tokens to ' +
       'play again if you don\'t want to wait until reset.</p>' +
-      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + ' token' + (S.tokens === 1 ? '' : 's') + '</b></span>' +
+      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + '</b> tokens</span>' +
       '<span class="muted small">' + esc(sa.statusLine) + '</span></div>' +
       (S.loadError ? '<p class="wr-msg">Could not load WordGuesser — please try again in a few minutes.</p>' : '') +
       '</div>' +
@@ -489,7 +499,10 @@
     rootEl = el || rootEl;
     if (!listening) { document.addEventListener('keydown', onKeyDown); listening = true; }
     paint();
-    if (!S.loaded && !S.busy) loadState();
+    /* Refresh on every entry (balances move elsewhere on the site,
+       games get played on other devices, days roll over) -- but never
+       mid-flip, where a repaint would restart the reveal. */
+    if (!S.busy && !flipTimer) loadState();
   }
   function teardown() {
     clearFlipTicks();
