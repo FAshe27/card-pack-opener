@@ -302,6 +302,7 @@
       ctx.shadowBlur = 14;
       ctx.strokeStyle = '#ffe08a';
       ctx.lineWidth = 6;
+      ctx.lineJoin = 'round'; /* mitered corners spike past the hub arc where the wedge sides meet it */
       ctx.stroke();
       ctx.shadowBlur = 0;
     }
