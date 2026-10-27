@@ -5,5 +5,5 @@
 window.CPS_CONFIG = {
   supabaseUrl: 'https://kyjzeotdtjgcxommymxw.supabase.co',
   supabaseKey: 'sb_publishable_2qvKdQ715d9W4EUjiCdJxg_Zdv_3cKr',
-  siteUrl: 'https://fashe27.github.io/card-pack-opener/'
+  siteUrl: 'https://packripper.app/'
 };
