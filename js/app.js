@@ -1219,6 +1219,22 @@
   }
 
   /* --- players */
+  function ensureTradeSets(trades) {
+    if (!window.CardSets.loadIds) return Promise.resolve();
+    var seen = {}, ids = [];
+    (trades || []).forEach(function (t) {
+      [t.offer_items, t.want_items].forEach(function (items) {
+        (items || []).forEach(function (it) {
+          if (it.set_id && !seen[it.set_id]) { seen[it.set_id] = 1; ids.push(it.set_id); }
+        });
+      });
+      [t.offer_pack_set, t.want_pack_set].forEach(function (s) {
+        if (s && !seen[s]) { seen[s] = 1; ids.push(s); }
+      });
+    });
+    return window.CardSets.loadIds(ids).catch(function () { });
+  }
+
   async function renderPlayers() {
     var box = $('#playerList');
     if (!isCloud()) {
@@ -1232,6 +1248,7 @@
     try {
       var _pt = await Promise.all([CPS.cloud.call('list_players'), CPS.cloud.call('list_trades')]);
       var players = _pt[0], trades = _pt[1];
+      await ensureTradeSets(trades);
       renderTrades(trades);
       if (CPS.playersDir) { CPS.playersDir.render(players); return; }
       box.innerHTML = players.map(function (p) {
