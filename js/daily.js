@@ -16,6 +16,7 @@
     if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
     var claimable = getClaimable();
     var total = 0, totalTokens = 0, count = 0, failed = 0, lastSpins = null;
+    var perfect = null;
     var C = window.CPS && CPS.appCtx;
     for (var i = 0; i < claimable.length; i++) {
       try {
@@ -23,6 +24,7 @@
         total += r.tickets || 0;
         totalTokens += r.tokens || 0;
         if (r.spins_now != null) lastSpins = r.spins_now;
+        if (r.perfect_day) perfect = r.perfect_day;
         count++;
       } catch (e) { failed++; }
     }
@@ -48,8 +50,36 @@
     // Re-render the current view (renderDaily isn't exposed, but renderView is).
     // renderView -> renderDaily -> refreshQuests, so no explicit refresh needed.
     if (C && C.renderView) C.renderView();
+    if (perfect) perfectDay(perfect);
     claiming = false;
     updateBtn();
+  }
+
+  /* Perfect Day celebration (migration 201): cps_claim_quest reports
+     perfect_day on the claim that leaves the whole board claimed; the
+     5-ticket bonus is already in the player's spins by then, so this
+     is purely the party. */
+  function perfectDay(pd) {
+    var C = window.CPS && CPS.appCtx;
+    if (!C || !C.openModal || !pd) return;
+    if (C.fx && C.fx.confetti) C.fx.confetti(240);
+    if (C.audio && C.audio.coin) C.audio.coin();
+    var total = pd.total_days || 1;
+    var line = total > 1
+      ? 'That makes ' + total + ' Perfect Days in your Trophy Case.'
+      : 'A Perfect Day trophy just landed in your Trophy Case.';
+    C.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h2 style="text-align:center">🎉 Perfect Day! 🎉</h2>' +
+      '<p style="text-align:center">You completed <b>all ' + (pd.quests || 30) + ' daily quests</b> today!</p>' +
+      '<p style="text-align:center">Bonus: <b>5 spin tickets</b></p>' +
+      '<p style="text-align:center">' + line + '</p>' +
+      '<div class="modal-actions" style="display:flex;justify-content:center"><button class="btn primary" data-close>Awesome!</button></div>');
+    var box = document.getElementById('modalBox');
+    if (box && C.closeModal) {
+      box.querySelectorAll('[data-close]').forEach(function (b) {
+        b.addEventListener('click', function () { C.closeModal(); });
+      });
+    }
   }
 
   function updateBtn() {
@@ -83,5 +113,5 @@
     init();
   }
 
-  CPS.daily = { claimAll: claimAll, updateBtn: updateBtn };
+  CPS.daily = { claimAll: claimAll, updateBtn: updateBtn, perfectDay: perfectDay };
 })(window.CPS = window.CPS || {});
