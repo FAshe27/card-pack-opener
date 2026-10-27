@@ -12,7 +12,7 @@
   var ART = {
     turned_1000: '', turned_2500: '', turned_5000: '', turned_10000: '',
     packs_10: '', packs_100: '', packs_1000: '', packs_2500: '', packs_5000: '', packs_10000: '',
-    oneofone: '', cotd: ''
+    oneofone: '', cotd: '', perfect: ''
   };
 
   var TURNED_TIERS = [
@@ -145,8 +145,16 @@
     } else {
       specialHtml += tile(medal('cotd', '⭐', '#ffb21e'), 'Card of the Day', 'Pull the Card of the Day', null, true);
     }
+    var perfectDays = t.perfect_days || 0;
+    if (perfectDays > 0) {
+      specialEarned++;
+      specialHtml += tile(medal('perfect', '🌟', '#ffb21e'), 'Perfect Day',
+        'Completed all daily quests on ' + fmt(perfectDays) + (perfectDays === 1 ? ' day' : ' days'), t.perfect_first, false);
+    } else {
+      specialHtml += tile(medal('perfect', '🌟', '#ffb21e'), 'Perfect Day', 'Complete every daily quest in one day', null, true);
+    }
 
-    var totalTiles = setRows.length + TURNED_TIERS.length + PACK_TIERS.length + 2;
+    var totalTiles = setRows.length + TURNED_TIERS.length + PACK_TIERS.length + 3;
     var earnedTotal = earnedSets + turned.earned + packs.earned + specialEarned;
 
     return '<div class="trophy-count">' + earnedTotal + ' earned · ' + (totalTiles - earnedTotal) + ' to go</div>' +
