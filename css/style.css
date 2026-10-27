@@ -1487,6 +1487,7 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
    and pack art overflowing its 84px column. In direct-trade containers
    the tile is a plain stacked block: visual on top, caption below. */
 .trade-items .trade-card, .trade-review-cards .trade-card, .gift-modal .trade-card { display: block; }
+.trade-items .trade-card[data-card] { cursor: pointer; }
 /* Packs are fixed at --pw:200px for the opening view; in trade tiles
    they take the tile's width (their inner type scales off --pw). */
 .trade-items .pack { --pw: 92px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.45)); }

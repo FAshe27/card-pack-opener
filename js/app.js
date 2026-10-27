@@ -1344,7 +1344,17 @@
   function tradeMiniCard(setId, cardId, holo, qty, variant) {
     var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
     if (!set || !card) return '<span class="muted">?</span>';
-    return '<div class="trade-card">' + CPS.cards.render(set, card, { holo: !!holo, count: qty > 1 ? qty : 0, variant: variant || null }) + '</div>';
+    var vt = variant && variant.tier ? ' data-variant-tier="' + esc(variant.tier) + '" data-variant-serial="' + (variant.serial || 0) + '"' : '';
+    return '<div class="trade-card" data-set="' + esc(setId) + '" data-card="' + esc(cardId) + '" data-holo="' + (holo ? '1' : '0') + '"' + vt + '>' + CPS.cards.render(set, card, { holo: !!holo, count: qty > 1 ? qty : 0, variant: variant || null }) + '</div>';
+  }
+
+  function tradeCardTap(e) {
+    var el = e.target.closest('.trade-items .trade-card[data-card]');
+    if (!el) return;
+    var vt = el.getAttribute('data-variant-tier');
+    openCardModal(el.getAttribute('data-set'), el.getAttribute('data-card'),
+      el.getAttribute('data-holo') === '1',
+      vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) || 0 } : null);
   }
   function tradeItemsHtml(items, packSet, packQty, tokens, tickets) {
     var h = '<div class="trade-items">' + (items || []).map(function (it) {
@@ -2720,7 +2730,9 @@
       if (d) { d.disabled = true; respondTrade(d.dataset.tradeDecline, false); return; }
       var c = e.target.closest('[data-trade-cancel]');
       if (c) cancelTrade(c.dataset.tradeCancel);
+      tradeCardTap(e);
     });
+    $('#tradeHistList').addEventListener('click', tradeCardTap);
     $('#collOwn').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       S.coll.own = b.dataset.own;
