@@ -6,10 +6,11 @@
    The #donate view is UNLINKED: no tab, menu item, or button anywhere on
    the site points to it. It is reachable only by visiting /#donate directly.
 
-   LIVE (staged 2026-10-27): Chip in redirects to Franklin's Stripe
-   "Customers choose what to pay" Payment Link with ?prefilled_amount=<cents>
-   appended, so the amount picked here arrives pre-filled on Stripe's page
-   (the payer can still edit it there). That link type does not support
+   LIVE (staged 2026-10-27): Chip in opens Franklin's Stripe
+   "Customers choose what to pay" Payment Link in a new tab, with
+   ?prefilled_amount=<cents> appended, so the amount picked here arrives
+   pre-filled on Stripe's page (the payer can still edit it there) and the
+   PackRipper tab stays open. That link type does not support
    recurring payments, which keeps the page's one-time-only promise.
    A prefilled_amount outside the link's configured min/max is disregarded
    by Stripe, which falls back to the link's own preset — safe by design. */
@@ -29,7 +30,10 @@
   var STRIPE_LINK = 'https://donate.stripe.com/eVqcMX0XL4Jx34a4ha3gk01';
 
   function goStripe() {
-    window.location.href = STRIPE_LINK + '?prefilled_amount=' + (amount * 100);
+    var url = STRIPE_LINK + '?prefilled_amount=' + (amount * 100);
+    var opened = window.open(url, '_blank');
+    if (opened) opened.opener = null;
+    else window.location.href = url; // popup blocked: preserve the old behaviour
   }
 
   function bind() {
