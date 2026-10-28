@@ -555,7 +555,13 @@
     client().then(function (c) { return c.auth.getSession(); }).then(function (res) {
       var s = res && res.data && res.data.session;
       if (s) { openLinkConfirm(s); return; }
-      toast('Google sign-in did not complete. Please try again.', 'warn', 4500);
+      /* No live Google session: that is the ordinary case for a plain
+         PIN login (doLogin calls resumeLink unconditionally), so stay
+         silent unless a link flow was actually in flight — every PIN
+         login used to get a spurious failure toast. */
+      if (ssGet(SS_INTENT) === 'link' || ssGet(SS_LINKPENDING)) {
+        toast('Google sign-in did not complete. Please try again.', 'warn', 4500);
+      }
     });
   }
 
