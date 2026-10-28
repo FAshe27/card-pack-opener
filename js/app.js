@@ -1619,7 +1619,7 @@
     tok.value = TB.tokens || 0; tic.value = TB.tickets || 0;
     if (TB.step === 1) {
       tok.max = S.gameTokens || 0; tic.max = S.spins || 0;
-      $('#tradeMoneyHave').textContent = 'you have 🪙 ' + (S.gameTokens || 0) + ' · 🎟️ ' + (S.spins || 0) + ' — yours escrow when you send';
+      $('#tradeMoneyHave').textContent = 'you have 🪙 ' + (S.gameTokens || 0) + ' · 🎟️ ' + (S.spins || 0) + ' — held in escrow when you send';
     } else {
       tok.removeAttribute('max'); tic.removeAttribute('max');
       $('#tradeMoneyHave').textContent = 'they pay this if they accept';
@@ -2128,7 +2128,7 @@
     }
     var rows = window.CardSets.oddsTable(set);
     $('#oddsSetName').textContent = '· ' + set.name;
-    $('#oddsIntro').textContent = set.cards.length + ' cards in this set. Each ' + set.pack.name.toLowerCase() + ' has ' + set.pack.size + ' cards, including at least one Rare or better.' +
+    $('#oddsIntro').textContent = set.cards.length + ' cards in this set. Each ' + (set.pack.name === set.name ? 'pack' : set.pack.name.toLowerCase()) + ' has ' + set.pack.size + ' cards, including at least one Rare or better.' +
       (set.description ? ' ' + set.description : '');
     $('#oddsTable').innerHTML = '<thead><tr><th>Rarity</th><th>Cards in set</th><th>At least one per pack</th><th>Avg per pack</th><th>Specific card</th><th>Holo chance</th></tr></thead><tbody>' +
       rows.map(function (r) {

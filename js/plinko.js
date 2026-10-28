@@ -227,6 +227,13 @@
     var d1 = q('#plkDrop1'), d10 = q('#plkDrop10');
     if (d1) d1.disabled = dropping || !state.loaded || state.tokens < CONFIG.cost;
     if (d10) d10.disabled = dropping || !state.loaded || state.tokens < CONFIG.cost * 10;
+    /* Both buttons dead at a low balance used to leave the panel
+       saying only "Pick a drop to play." — say what's needed and
+       where it comes from. Only before the first drop, so a result
+       message is never overwritten. */
+    if (state.loaded && !dropping && state.drops === 0 && state.tokens < CONFIG.cost) {
+      setResult('<span class="muted small">Drops cost ' + CONFIG.cost + ' 🪙 each — earn tokens from opening packs, daily quests and the Prize Wheel.</span>');
+    }
   }
 
   async function playDrops(n, fast) {

@@ -34,14 +34,20 @@ async function openNotifications() {
       '<h2>Notifications</h2>' +
       (pins.length ? '<p class="muted small" style="margin:2px 0 0">📌 Announcements stay pinned to the top until you read them.</p>' : '') +
       (items.length ? '<div class="notif-list">' + items.map(function (it) {
+        var nIcon = (CPS.notifIcon && CPS.notifIcon(it)) || NOTIF_KIND_ICON[it.kind] || '🔔';
+        var nText = it.text || '';
+        /* Many stored texts already begin with the kind's emoji — the
+           icon span would show it twice (🎯 🎯). Strip the duplicate
+           when the text opens with the very icon being displayed. */
+        if (nIcon && nText.indexOf(nIcon) === 0) nText = nText.slice(nIcon.length).replace(/^\s+/, '');
         return '<button class="notif' + (it.read ? '' : ' unread') + (isAnn(it) ? ' pinned' : '') + '" data-notif="' + it.id + '"' +
           (it.view ? ' data-view="' + ctx.esc(it.view) + '"' : '') +
           (it.meta && it.meta.ticket_id ? ' data-ticket="' + ctx.esc(it.meta.ticket_id) + '"' : '') +
           (it.meta && it.meta.set_id ? ' data-nset="' + ctx.esc(it.meta.set_id) + '" data-ncard="' + ctx.esc(it.meta.card_id) + '"' +
             ' data-nholo="' + (it.meta.holo ? '1' : '0') + '"' +
             (it.meta.tier ? ' data-ntier="' + ctx.esc(it.meta.tier) + '" data-nserial="' + it.meta.serial + '"' : '') : '') + '>' +
-          '<span class="notif-icon">' + ((CPS.notifIcon && CPS.notifIcon(it)) || NOTIF_KIND_ICON[it.kind] || '🔔') + '</span>' +
-          '<span class="notif-text">' + ctx.esc(it.text) +
+          '<span class="notif-icon">' + nIcon + '</span>' +
+          '<span class="notif-text">' + ctx.esc(nText) +
           '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
       }).join('') + '</div><div class="notif-actions"><button class="btn small" id="notifReadAll">Mark all read</button>' +
       (items.some(function (it) { return it.read; }) ? '<button class="btn small" id="notifClearRead">Clear read</button>' : '') + '<button class="btn small" id="notifSettingsBtn">⚙ Settings</button></div>'
