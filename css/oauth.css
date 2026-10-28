@@ -21,15 +21,6 @@
 }
 .oauth-mark svg { display: block; }
 
-/* Gate-only warning for existing PIN players (Franklin's dictated
-   wording, added during the 2026-10-27 ship): log in with your PIN
-   first, then link from the account dropdown — otherwise Continue
-   with Google creates a duplicate new account. */
-.oauth-link-hint {
-  margin: 0; text-align: center;
-  color: var(--muted, #8e98b3); font-size: 12px; line-height: 1.45;
-}
-
 .oauth-divider {
   display: flex; align-items: center; gap: 10px;
   color: var(--muted, #8e98b3); font-size: 12px; margin: 2px 0;
