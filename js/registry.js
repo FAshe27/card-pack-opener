@@ -90,6 +90,24 @@
     };
   }
 
+  /* Slot odds are computed at register time, but split sets append cards
+     afterwards (an additions file mutates pools/cards/byId directly). If a
+     rarity pool was empty at register time, effectiveOdds has already moved
+     its slot weight to a neighbouring rarity, and those stale odds survive
+     the append — e.g. a set whose Commons all live in its additions file
+     shows Common at 0.000/pack. Recompute the slots from the raw pack
+     definition against the final pools once the set's files have loaded. */
+  function refreshSlots(set) {
+    if (!set || set.stub) return set;
+    var p = (set.raw && set.raw.pack) || {};
+    var slots = (p.slots || DEFAULT_PACK.slots).map(function (sl) {
+      return { count: Math.max(1, sl.count | 0 || 1), label: sl.label || '', odds: effectiveOdds(sl.odds, set.pools) };
+    }).filter(function (sl) { return Object.keys(sl.odds).length; });
+    set.pack.slots = slots;
+    set.pack.size = slots.reduce(function (acc, sl) { return acc + sl.count; }, 0);
+    return set;
+  }
+
   /* Per-rarity odds for the info panel. */
   function oddsTable(set) {
     return R.RARITIES.map(function (r) {
@@ -193,7 +211,7 @@
     inflight[id] = p.then(function () {
       delete inflight[id];
       var s = sets.get(id);
-      return (s && !s.stub) ? s : null;
+      return (s && !s.stub) ? refreshSlots(s) : null;
     });
     return inflight[id];
   }
@@ -240,6 +258,7 @@
     pending: pendingStubs,
     all: function () { return order.map(function (id) { return sets.get(id); }); },
     ids: function () { return order.slice(); },
-    oddsTable: oddsTable
+    oddsTable: oddsTable,
+    refreshSlots: refreshSlots
   };
 })(window.CPS);
