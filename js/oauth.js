@@ -40,6 +40,7 @@
   var SS_PROVIDER = 'cps:oauth:provider'; // first ship: 'google' only
   var SS_CODE = 'cps:oauth:claimCode';
   var SS_RETURN = 'cps:oauth:return';     // captured return tokens (see captureReturn)
+  var SS_LINKPENDING = 'cps:oauth:linkPending'; // 'link it' chosen, PIN login still owed (see maybeResumeLink)
 
   var sbPromise = null;   // lazy supabase-js load
   var sb = null;          // supabase client, once loaded
@@ -57,6 +58,18 @@
   var SESSION_WAIT_MS = 6000;  // bounded wait for the return session
   var SESSION_POLL_MS = 250;   // getSession() poll interval while waiting
   var returnInFlight = null;   // once-guard: concurrent handleReturn() calls share one run
+
+  /* Pending-link auto-resume (LINKPATH-AUDIT option (c)): the
+     choice modal's 'link it' sets SS_LINKPENDING; a settle check
+     (maybeResumeLink) opens the link confirmation once the player
+     is PIN-logged-in with that Google session still alive — even
+     after a stored-token boot, which the app.js doLogin hook
+     misses. An 'episode' is keyed to the cps token value: a fresh
+     login (new token) re-arms the once-guard; the guard also
+     latches whenever the confirmation is opened by any path. */
+  var linkResumeBusy = false;  // a settle check's async hop is in flight
+  var linkResumeShown = false; // the confirmation already opened this episode
+  var linkEpisodeKey = null;   // cps token the current episode is keyed to
 
   function cfg() { return (CPS.cloud && CPS.cloud.config) || window.CPS_CONFIG || {}; }
   function esc(s) {
@@ -83,6 +96,16 @@
   function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
   function ssDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
   function clearIntent() { ssDel(SS_INTENT); ssDel(SS_PROVIDER); ssDel(SS_CODE); ssDel(SS_RETURN); }
+  /* The pending-link flag lives OUTSIDE clearIntent() on purpose:
+     'Later' on the link instruction modal (a data-oauth-close,
+     hence clearIntent) must NOT wipe it — surviving that dismissal
+     is the flag's whole job. It stores only the provider name —
+     nothing sensitive — and maybeResumeLink owns its lifecycle. */
+  function setLinkPending() {
+    ssSet(SS_LINKPENDING, ssGet(SS_PROVIDER) || 'google');
+    linkResumeShown = false; // a fresh choice-modal selection re-arms the resume
+  }
+  function clearLinkPending() { ssDel(SS_LINKPENDING); }
 
   /* ---------- return-token capture (RETURN-AUDIT-2) ----------
      app.js is a hash-routed SPA: its boot ends in showView(), which
@@ -420,23 +443,35 @@
       function (box) {
         box.querySelector('#oauthChoiceLink').addEventListener('click', function () {
           ssSet(SS_INTENT, 'link');
+          setLinkPending();
           if (CPS.cloud && CPS.cloud.hasToken()) { resumeLink(session); return; }
+          /* Not logged in yet: the old modal told the player to log
+             in and then tap a button that could not survive the
+             login (LINKPATH-AUDIT — a dead end). Now the pending
+             flag above survives dismissal (it lives outside
+             clearIntent), and maybeResumeLink re-opens the
+             confirmation by itself the moment the PIN login lands —
+             so this modal's only job is to say so and get out of
+             the way of the gate behind it. */
           openOAuthModal(
             '<h2>Link your account</h2>' +
             '<p class="muted small">First, log in the way you do now — with your username and PIN. ' +
-            'Then use the button below and we will link this Google account to it. Nothing about your account changes except how you log in.</p>' +
-            '<div class="row"><button class="btn primary" type="button" id="oauthLinkAfterPin">I\'ve logged in with my PIN — continue linking</button>' +
+            'Right after you log in, we will bring back the linking confirmation automatically, so you can finish linking this Google account to it. ' +
+            'Nothing about your account changes except how you log in.</p>' +
+            '<div class="row"><button class="btn primary" type="button" id="oauthLinkPinFirst">Log in with my PIN first</button>' +
             '<button class="btn ghost" type="button" data-oauth-close>Later</button></div>',
             function (b2) {
               wireClose(b2);
-              b2.querySelector('#oauthLinkAfterPin').addEventListener('click', function () {
-                if (CPS.cloud && CPS.cloud.hasToken()) resumeLink(session);
-                else toast('Log in with your username and PIN first, then tap continue.', 'warn', 4500);
+              b2.querySelector('#oauthLinkPinFirst').addEventListener('click', function () {
+                /* Close WITHOUT clearing the pending flag (or the
+                   'link' intent): the gate takes over from here,
+                   and the settle check finishes the job after the
+                   PIN login. Mirrors wireClose's close mechanics. */
+                if (C && C.closeModal) C.closeModal(true);
+                var ov = b2.classList && b2.classList.contains('oauth-overlay') ? b2 : (b2.closest && b2.closest('.oauth-overlay'));
+                if (ov) ov.remove();
               });
             });
-          if (C && C.closeModal) { /* gate is behind us: reopen it so they can PIN-login */
-            setTimeout(function () { /* player closes this modal via Later, gate shows */ }, 0);
-          }
         });
         box.querySelector('#oauthChoiceNew').addEventListener('click', function () {
           openNameModal(session);
@@ -529,12 +564,13 @@
     if (session) { openLinkConfirm(session); return; }
     client().then(function (c) { return c.auth.getSession(); }).then(function (res) {
       var s = res && res.data && res.data.session;
-      if (s) openLinkConfirm(s);
+      if (s) { openLinkConfirm(s); return; }
       toast('Google sign-in did not complete. Please try again.', 'warn', 4500);
     });
   }
 
   function openLinkConfirm(session) {
+    linkResumeShown = true; // any confirm opening latches this episode's resume guard
     var provider = (session.user && session.user.app_metadata && session.user.app_metadata.provider) || ssGet(SS_PROVIDER) || 'google';
     var label = providerLabel(provider);
     var email = session.user && session.user.email;
@@ -552,6 +588,13 @@
       '<div id="oauthLinkMsg" class="login-msg"></div>',
       function (box) {
         wireClose(box);
+        /* 'Not yet' is an explicit cancel of a (possibly resumed)
+           link: retire the pending flag for good — the auto-resume
+           must not re-offer it until the player chooses 'link it'
+           again. wireClose's clearIntent does not know the flag. */
+        Array.prototype.forEach.call(box.querySelectorAll('[data-oauth-close]'), function (b) {
+          b.addEventListener('click', function () { clearLinkPending(); });
+        });
         box.querySelector('#oauthLinkGo').addEventListener('click', function () {
           var btn = this, msg = box.querySelector('#oauthLinkMsg');
           btn.disabled = true; btn.textContent = 'Linking…';
@@ -561,6 +604,7 @@
           ).then(function (r) {
             if (r && r.ok) {
               clearIntent();
+              clearLinkPending();
               if (C && C.S && C.S.account) C.S.account.oauth_linked = true;
               refreshLinkMenuItem();
               openOAuthModal(
@@ -685,6 +729,7 @@
       var box = document.querySelector('.login-box.gate');
       if (box) enhanceGate(box);
       refreshLinkMenuItem();
+      maybeResumeLink();
     });
     mo.observe(document.body, { childList: true, subtree: true });
   }
@@ -728,6 +773,52 @@
     mo.observe(menu, { attributes: true, attributeFilter: ['class'] });
   }
 
+  /* ---------- pending-link auto-resume settle check ----------
+     Rides the watchGate observer above: app rendering settles →
+     this runs. It fires ONLY when everything coincides:
+       - the pending flag is set (the player chose 'link it'),
+       - a cps token is present (they PIN-logged in — any style:
+         fresh form login OR a stored-token boot, which is the case
+         the app.js doLogin → resumeLink hook cannot see),
+       - the account is loaded and NOT oauth_linked,
+       - a live Supabase session still exists.
+     Then the link confirmation opens, exactly once per episode.
+     Flag lifecycle: set by the choice modal; cleared on link
+     success (openLinkConfirm), on explicit cancel in the
+     confirmation (openLinkConfirm wires that), when the account is
+     observed linked, and when the Google session is gone at a
+     check where a token IS present (stale — it could never
+     resume). While merely logged out the flag is KEPT untouched:
+     surviving 'Later' → gate → PIN login is its entire purpose. */
+  function maybeResumeLink() {
+    var token = null;
+    try { token = (CPS.cloud && CPS.cloud.getToken && CPS.cloud.getToken()) || null; } catch (e) { token = null; }
+    if (token !== linkEpisodeKey) { linkEpisodeKey = token; linkResumeShown = false; }
+    if (!ssGet(SS_LINKPENDING)) return;
+    if (!(CPS.cloud && CPS.cloud.hasToken())) return; // logged out: keep waiting
+    var acct = (C && C.S && C.S.account) || null;
+    if (!acct || !acct.id) return;                    // state not settled yet; a later settle retries
+    if (acct.oauth_linked) { clearLinkPending(); return; }
+    if (linkResumeShown || linkResumeBusy) return;
+    linkResumeBusy = true;
+    client().then(function (c) { return c.auth.getSession(); }).then(function (res) {
+      linkResumeBusy = false;
+      var s = res && res.data && res.data.session;
+      if (!s) {
+        clearLinkPending();
+        if (ssGet(SS_INTENT) === 'link') ssDel(SS_INTENT);
+        return;
+      }
+      /* Re-verify at open time: state may have moved during the hop. */
+      if (!ssGet(SS_LINKPENDING) || linkResumeShown) return;
+      var a2 = (C && C.S && C.S.account) || null;
+      if (!a2 || !a2.id) return;
+      if (a2.oauth_linked) { clearLinkPending(); return; }
+      linkResumeShown = true;
+      openLinkConfirm(s);
+    }, function () { linkResumeBusy = false; });
+  }
+
   function bind() {
     captureReturn();
     watchGate();
@@ -750,6 +841,9 @@
       waitForSession: waitForSession,
       captureReturn: captureReturn,
       refreshLinkMenuItem: refreshLinkMenuItem,
+      openChoiceModal: openChoiceModal,
+      checkLinkResume: maybeResumeLink,
+      linkPending: function () { return ssGet(SS_LINKPENDING); },
       bind: bind,
       setSessionWait: function (waitMs, pollMs) { SESSION_WAIT_MS = waitMs; SESSION_POLL_MS = pollMs; }
     }
