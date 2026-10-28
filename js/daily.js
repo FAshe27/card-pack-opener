@@ -105,8 +105,6 @@
     if (list) {
       new MutationObserver(updateBtn).observe(list, { childList: true, subtree: true });
     }
-    // Also check periodically (quests load async)
-    setInterval(updateBtn, 2000);
   }
 
   if (document.readyState === 'loading') {

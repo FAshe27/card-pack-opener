@@ -18,6 +18,10 @@
 
   async function openGiftModal(setId, cardId) {
     var set = window.CardSets.get(setId), card = set && set.byId.get(cardId);
+    if (set && !card && set.stub && window.CardSets.load) {
+      try { await window.CardSets.load(setId); } catch (e) { /* fall through */ }
+      set = window.CardSets.get(setId); card = set && set.byId.get(cardId);
+    }
     if (!set || !card) return;
     if (setId === 'jumbled') {
       openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="empty" style="padding:24px">Jumbled Mess cards can’t be gifted.</div>');
@@ -36,7 +40,10 @@
       await ensureVariants();
       var serials = mySerials(setId, cardId);
       var hand = onHand(e);
-      var regulars = Math.max(0, hand - serials.length);
+      /* Numbered copies — vaulted or not — are never regular copies
+         (same rule as the composers): reserve against ALL of them. */
+      var allSerials = (S.myVariants || []).filter(function (v) { return v.set_id === setId && v.card_id === cardId; }).length;
+      var regulars = Math.max(0, hand - allSerials);
       if (!regulars && !serials.length) {
         openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="empty" style="padding:24px">Every copy of this card is in your Vault 🔒 — release one before gifting it.</div>');
         return;

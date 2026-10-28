@@ -16,12 +16,17 @@
     var C = ctx();
     var vmap = C.variantCountMap();
     var sweep = { eligible: 0, holoOnly: 0, onlyCopy: 0, locked: 0 };
-    window.CardSets.all().forEach(function (sd) {
-      var st = C.S.player.sets[sd.id]; if (!st) return;
-      sd.cards.forEach(function (c) {
-        if (C.isTurned(sd.id, c.id)) return;
-        var e = st.cards[c.id]; if (!e || !e.n) return;
-        var vn = vmap[sd.id + ':' + c.id] || 0;
+    /* State-only: eligibility needs the player's own entries (n/h/v/vh),
+       the turned-in map and the variant counts — all already in state.
+       Iterating the set FILES instead made the count depend on which
+       sets happened to be loaded: the button opened at (90) and later
+       jumped to the true (1175) once more sets had loaded. */
+    Object.keys(C.S.player.sets || {}).forEach(function (sid) {
+      var st = C.S.player.sets[sid]; if (!st || !st.cards) return;
+      Object.keys(st.cards).forEach(function (cid) {
+        if (C.isTurned(sid, cid)) return;
+        var e = st.cards[cid]; if (!e || !e.n) return;
+        var vn = vmap[sid + ':' + cid] || 0;
         var fung = e.n - (e.v || 0) - vn;
         var plain = (e.n - e.h) - ((e.v || 0) - (e.vh || 0));
         if (fung < 1) { sweep.locked++; return; }
@@ -38,23 +43,15 @@
     var bA = document.getElementById('turnInAllSetsBtn');
     if (!bA) return;
     if (!C.isCloud()) { bA.classList.add('hidden'); return; }
-    /* Lazy sets: counts need the owned sets' card lists — load any that
-       are still stubs, then repaint with the full picture. */
-    /* The stub scan must cover exactly the sets ensureOwnedSets() will
-       load — app.js's ownedSetIds rule: state holding cards or pulls.
-       Scanning every state key also caught 'jumbled', whose state never
-       holds cards (its pulls land in home sets), so its stub could never
-       clear and the .then below re-invoked refresh() forever — a promise
-       loop that hard-froze the tab on ANY Collection open (2026-10-21,
-       once the Jumbled exclusives put 'jumbled' in the registry). The
-       retried flag is a hard stop on top: at most one reload round per
-       render, even if a set file ever fails to load. */
-    var stubOwned = Object.keys(C.S.player.sets || {}).some(function (id) {
-      var st = C.S.player.sets[id];
-      if (!st || !((st.cards && Object.keys(st.cards).length) || (st.stats && st.stats.pulled > 0))) return false;
-      var s = window.CardSets.get(id); return s && s.stub;
-    });
-    if (stubOwned && !retried && C.ensureOwnedSets) C.ensureOwnedSets().then(function () { refresh(true); });
+    /* Counts are state-only now (see previews), so no set files are
+       loaded here at all — the 2026-10-21 stub-scan freeze class and
+       the stale partial count both lived in that loading step. The
+       one remaining input is the variant list (a single small RPC):
+       if it has not loaded yet, fetch it and repaint once. The
+       retried flag is the same hard one-shot stop as before. */
+    if (!retried && C.isCloud() && !C.S.myVariants && C.ensureVariants) {
+      C.ensureVariants().then(function () { refresh(true); });
+    }
     var p = previews();
     bA.classList.toggle('hidden', !p.sweep.eligible);
     bA.textContent = 'Turn in cards from all sets (' + p.sweep.eligible + ')';

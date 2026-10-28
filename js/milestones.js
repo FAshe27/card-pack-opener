@@ -41,7 +41,7 @@
         '<div style="text-align:center;padding:10px 6px 4px">' +
         '<div style="font-size:52px;line-height:1">🏆</div>' +
         '<h2>Collection Complete!</h2>' +
-        '<p>You have turned in <b>every single card</b> in <b>' + ctx.esc(set.name) + '</b> — all ' + set.cards.length + ' of them.</p>' +
+        '<p>You have turned in <b>every single card</b> in <b>' + ctx.esc(set.name) + '</b> — all ' + (set.total || set.cards.length) + ' of them.</p>' +
         '<p class="muted">That is a true completion. The other players have been notified!</p>' +
         '<div class="confirm-btns" style="justify-content:center"><button class="btn primary" data-close>Incredible!</button></div></div>');
       CPS.cloud.call('announce_set_completion', { p_set: set.id }).catch(function () { /* server dedupes; offline-safe */ });
