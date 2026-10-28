@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="About PackRipper, a free online card-pack-opening game: open virtual packs, collect cards from dozens of themed sets, trade with other players, and play arcade mini-games. Everything is play money.">
+  <title>About PackRipper</title>
+  <style>
+    :root {
+      --bg: #0b0e17;
+      --bg2: #121729;
+      --panel: #161c30;
+      --panel2: #1d2440;
+      --line: rgba(255, 255, 255, .08);
+      --text: #e8ecf6;
+      --muted: #8e98b3;
+      --accent: #7c6cff;
+      --accent2: #12c2e9;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--bg); }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      background:
+        radial-gradient(900px 500px at -10% -10%, #25306b 0%, transparent 55%),
+        radial-gradient(900px 500px at 110% 10%, #0f3a52 0%, transparent 55%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    main {
+      width: min(100% - 32px, 820px);
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--text);
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 4px 16px rgba(124, 108, 255, .45);
+      font-size: 1.3rem;
+    }
+    .brand b {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    article {
+      margin-top: 28px;
+      padding: clamp(24px, 5vw, 48px);
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .35);
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 3.2rem); line-height: 1.08; }
+    h2 { margin: 34px 0 10px; font-size: 1.25rem; line-height: 1.3; }
+    p, li { font-size: 1rem; }
+    p { margin: 10px 0; }
+    ul { margin: 10px 0 10px 1.25rem; padding: 0; }
+    li { margin: 6px 0; }
+    a { color: var(--accent2); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .lede { color: var(--muted); font-size: 1.08rem; }
+    .callout {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel2);
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+      margin-top: 26px;
+      font-weight: 700;
+    }
+    footer { margin-top: 24px; color: var(--muted); font-size: .92rem; }
+    @media (max-width: 560px) {
+      main { width: min(100% - 20px, 820px); padding-top: 24px; }
+      article { border-radius: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="brand" href="/" aria-label="Back to PackRipper">
+      <span class="logo" aria-hidden="true">✦</span>
+      <span>Pack<b>Ripper</b></span>
+    </a>
+
+    <article>
+      <h1>About PackRipper</h1>
+      <p class="lede">PackRipper is a free online card-pack-opening game. Rip open virtual packs, chase the rare pulls, and build your collection — all for fun, and all play money.</p>
+
+      <h2>What PackRipper is</h2>
+      <p>In PackRipper, players open virtual card packs and collect cards from dozens of themed sets. You can trade cards with other players, send gifts, post and claim listings and bounties in the Trading Post, complete daily quests, spin the prize wheel, and play arcade mini-games between openings. New themed sets arrive regularly, some cards are gloriously silly, and a few are genuinely rare — every card you pull is saved to your collection.</p>
+      <p>Everything in PackRipper is play money. Packs, cards, tokens, and tickets exist only inside the game and have no real-world value — they cannot be cashed out or sold. PackRipper is free to play, with no ads. If you enjoy the game, you can chip in voluntarily to help cover hosting costs; donating is purely a way to support the game — it buys nothing and unlocks nothing.</p>
+
+      <h2>How you sign in</h2>
+      <p>PackRipper uses Google Sign-In, provided through Supabase Auth, so players can create a new account in a few taps or link Google to an account they already have. Either way, your collection and progress stay right where they are.</p>
+      <p>When you sign in with Google, PackRipper accesses only your basic Google profile information — your name, email address, and profile picture — and uses it only to identify you and to set up or link your account. Our <a href="/privacy.html">Privacy Policy</a> explains exactly what is stored, how it is used, and how to ask for it to be deleted.</p>
+
+      <h2>Our commitments</h2>
+      <div class="callout">
+        <p>PackRipper does not use Google APIs to generate, facilitate, or distribute AI-generated non-consensual intimate imagery (AI NCII), or any other prohibited content.</p>
+        <p>PackRipper has no advertising, and player information is never sold.</p>
+      </div>
+
+      <h2>Who runs PackRipper</h2>
+      <p>PackRipper is an unofficial fan-made hobby project, created and operated by Franklin Ashe. All trademarks, names, and images in the game belong to their respective owners. Questions or support requests can be sent to <a href="mailto:packripperapp@gmail.com">packripperapp@gmail.com</a>.</p>
+
+      <nav class="links" aria-label="PackRipper links">
+        <a href="/">Play PackRipper</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+      </nav>
+    </article>
+
+    <footer>PackRipper is an unofficial fan-made hobby project.</footer>
+  </main>
+</body>
+</html>
