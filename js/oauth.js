@@ -39,6 +39,7 @@
   var SS_INTENT = 'cps:oauth:intent';     // 'login' | 'link' | 'claim'
   var SS_PROVIDER = 'cps:oauth:provider'; // first ship: 'google' only
   var SS_CODE = 'cps:oauth:claimCode';
+  var SS_RETURN = 'cps:oauth:return';     // captured return tokens (see captureReturn)
 
   var sbPromise = null;   // lazy supabase-js load
   var sb = null;          // supabase client, once loaded
@@ -81,7 +82,49 @@
   function ssGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
   function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
   function ssDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
-  function clearIntent() { ssDel(SS_INTENT); ssDel(SS_PROVIDER); ssDel(SS_CODE); }
+  function clearIntent() { ssDel(SS_INTENT); ssDel(SS_PROVIDER); ssDel(SS_CODE); ssDel(SS_RETURN); }
+
+  /* ---------- return-token capture (RETURN-AUDIT-2) ----------
+     app.js is a hash-routed SPA: its boot ends in showView(), which
+     replaceStates location.hash to the view name ('#packs'). On a
+     provider return, the implicit-flow tokens exist ONLY in that
+     fragment, and the logged-out boot reaches the rewrite while this
+     module is still lazily downloading supabase-js — by the time
+     createClient initializes, detectSessionInUrl finds '#packs' and
+     establishes nothing: no session, no SIGNED_IN, ever (found live
+     2026-10-27; validation/RETURN-AUDIT-2.md). So bind() — which
+     evaluates strictly before boot() can reach the rewrite — copies
+     the tokens into sessionStorage first, and handleReturn()
+     establishes the session from the copy via auth.setSession. The
+     URL is never rewritten here: if supabase-js wins its own race
+     and consumes the fragment, the stash simply defers (see
+     establishFromStash). */
+  function captureReturn() {
+    try {
+      var parts = [location.hash.replace(/^#/, ''), location.search.replace(/^\?/, '')];
+      for (var i = 0; i < parts.length; i++) {
+        if (!parts[i]) continue;
+        var p = new URLSearchParams(parts[i]);
+        if (p.get('access_token') || p.get('refresh_token') || p.get('error')) {
+          ssSet(SS_RETURN, JSON.stringify({
+            access_token: p.get('access_token') || '',
+            refresh_token: p.get('refresh_token') || '',
+            error: p.get('error') || '',
+            error_description: p.get('error_description') || ''
+          }));
+          return;
+        }
+      }
+    } catch (e) { /* best effort — the fragment path may still win */ }
+  }
+  function readReturnStash() {
+    var raw = ssGet(SS_RETURN);
+    if (!raw) return null;
+    try {
+      var o = JSON.parse(raw);
+      return (o && (o.access_token || o.refresh_token || o.error)) ? o : null;
+    } catch (e) { return null; }
+  }
 
   /* ---------- lazy supabase-js ---------- */
   function loadSupabase() {
@@ -214,6 +257,7 @@
 
   /* ---------- step 1: send the player to Google ---------- */
   function startProvider(provider, intent, claimCode) {
+    ssDel(SS_RETURN); // an outbound flow never inherits a stale capture
     ssSet(SS_INTENT, intent || 'login');
     ssSet(SS_PROVIDER, provider);
     if (claimCode) ssSet(SS_CODE, claimCode); else ssDel(SS_CODE);
@@ -233,6 +277,7 @@
 
   /* ---------- step 2: we are back from the provider ---------- */
   function looksLikeReturn() {
+    if (readReturnStash()) return true;
     if (/[#&?](access_token|error|provider_token)=/.test(location.hash + location.search)) return true;
     if (ssGet(SS_INTENT)) {
       try { return Object.keys(localStorage).some(function (k) { return k.indexOf('sb-') === 0 && k.indexOf('auth-token') > -1; }); }
@@ -283,12 +328,48 @@
     });
   }
 
+  /* Establish the session explicitly from the captured return
+     tokens when supabase-js has NOT already done so from the
+     fragment (its own race, occasionally won). One getSession()
+     sample decides: a live session means the library consumed the
+     return itself and the stash defers — setSession is not called.
+     Otherwise setSession validates the access token with the auth
+     server, persists the session under the standard sb-… key and
+     fires SIGNED_IN, so the waitForSession below resolves at once.
+     A failure here is not final: waitForSession still gets its
+     bounded chance (the fragment may yet be processed). */
+  function establishFromStash(client_, stash) {
+    if (!stash || !stash.access_token) return Promise.resolve();
+    return client_.auth.getSession().then(function (res) {
+      if (res && res.data && res.data.session) return null; // library's copy — stash defers
+      return client_.auth.setSession({
+        access_token: stash.access_token,
+        refresh_token: stash.refresh_token || ''
+      }).then(function () { return null; }, function () { return null; });
+    }, function () { return null; });
+  }
+
   function handleReturn() {
     if (returnInFlight) return returnInFlight;
     if (!looksLikeReturn()) return Promise.resolve(false);
+    var stashFailed = false;
     var p = client().then(function (client_) {
-      return waitForSession(client_);
+      var stash = readReturnStash();
+      if (stash && stash.error) {
+        /* The provider returned an error, not tokens: no session
+           will ever arrive, so fail visibly NOW instead of running
+           the bounded wait to expiry. */
+        stashFailed = true;
+        clearIntent();
+        failToModal('Sign-in problem',
+          stash.error_description || ('Google sign-in failed (' + stash.error + '). Please try again.'));
+        return null;
+      }
+      return establishFromStash(client_, stash).then(function () {
+        return waitForSession(client_);
+      });
     }).then(function (session) {
+      if (stashFailed) return true;
       if (!session) {
         clearIntent();
         failToModal('Sign-in problem',
@@ -625,6 +706,7 @@
   }
 
   function bind() {
+    captureReturn();
     watchGate();
     injectLinkMenuItem();
     handleReturn();
@@ -643,6 +725,8 @@
     _test: {
       providerLabel: providerLabel, openNameModal: openNameModal, openWelcomeModal: openWelcomeModal,
       waitForSession: waitForSession,
+      captureReturn: captureReturn,
+      bind: bind,
       setSessionWait: function (waitMs, pollMs) { SESSION_WAIT_MS = waitMs; SESSION_POLL_MS = pollMs; }
     }
   };
