@@ -967,6 +967,13 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .badge-variant { top: -8px; right: -6px; background: linear-gradient(90deg,#ff5f5f,#ffb21e,#38c97f,#3f8cff,#b35cff); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); }
 .card.vt-prism .badge-variant { background: linear-gradient(135deg, #7fd4ff, #a0e7ff); color: #0a2a3a; text-shadow: none; }
 .card.vt-obsidian .badge-variant { background: linear-gradient(135deg, #6b3a9e, #a86ad4); color: #fff; }
+/* In grids the overhanging badges (-8px) read as clipped / floating in
+   the row gap and can touch the neighbouring card; inset them inside
+   the card, the same treatment .stat-gallery-item already had. */
+.reveal-grid .badge-new, .coll-grid .badge-new { top: 4px; left: 4px; }
+.reveal-grid .badge-count, .coll-grid .badge-count,
+.reveal-grid .badge-variant, .coll-grid .badge-variant { top: 4px; right: 4px; }
+.reveal-grid .badge-holo, .coll-grid .badge-holo { bottom: 4px; right: 4px; }
 /* Misprint mark: a low-opacity VOID-style diagonal stamped across the
    whole face, bottom-left to top-right (Franklin's design). Sits above the
    art (z 2) but under the corner badges (z 3); sized in cqw so it scales
@@ -1118,6 +1125,13 @@ body.modal-open { overflow: hidden; }
 .giftpop-cap b, .giftpop-cap span { display: block; }
 .modal-x { position: absolute; top: 6px; right: 8px; padding: 10px; margin: -4px -2px 0 0; background: none; border: 0; font-size: 1.8rem; color: var(--muted); cursor: pointer; line-height: 1; }
 .zoom { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 26px; align-items: start; }
+/* Short viewports: shrink the card column so the modal's info column
+   (and its List / Vault / Gift / Bounty actions) fits with little or
+   no scrolling — at full card size the actions fell below the fold. */
+@media (max-height: 780px) {
+  .zoom { grid-template-columns: minmax(170px, 225px) 1fr; gap: 20px; }
+  .modal-box:has(.zoom) { padding: 20px 22px; }
+}
 .zoom-card .card { width: 100%; }
 .zoom-card .cf-details { overflow: auto; -webkit-mask-image: none; mask-image: none; }
 .zoom-info h3 { margin: 10px 0 4px; font-size: 1.4rem; color: var(--text); text-transform: none; letter-spacing: 0; }
