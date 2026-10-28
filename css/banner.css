@@ -1,0 +1,69 @@
+/* Banner system (migration 209) — js/banner.js announcement bar +
+   the Admin-view panel. Scoped .banner- classes; palette is the live
+   site's (style.css :root): bg #0b0e17, panel #161c30 / #1d2440,
+   text #e8ecf6, muted #8e98b3, violet #7c6cff -> cyan #12c2e9.
+   NOTE (Firefox paint rule): the bar is always-visible chrome while
+   shown, so NO backdrop-filter, NO background-attachment: fixed and
+   NO animations/transitions anywhere here — solid colours and one
+   static gradient per style, painted once. */
+
+.banner-bar {
+  /* In normal page flow at the very top — deliberately NOT sticky
+     (Franklin, 2026-10-27: no sticky headers; the bar scrolls away
+     with the page exactly like the phone top bar does). */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 44px 8px 14px; /* right pad leaves room for the dismiss button */
+  font-size: .92rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  color: #fff;
+}
+
+.banner-info {
+  background: linear-gradient(90deg, #7c6cff, #12c2e9);
+  color: #fff;
+}
+
+.banner-warning {
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+  color: #26160a;
+}
+
+.banner-urgent {
+  background: linear-gradient(90deg, #dc2626, #991b1b);
+  color: #fff;
+  font-weight: 700;
+}
+
+.banner-ico { flex: none; }
+.banner-text { overflow-wrap: anywhere; }
+
+.banner-x {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: rgba(0, 0, 0, .18);
+  border: 0;
+  border-radius: 8px;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.banner-x:hover { background: rgba(0, 0, 0, .32); }
+
+/* Admin-view panel fields (mirrors #maintPanel) */
+#bannerPanel .field { display: block; margin-bottom: 10px; }
+#bannerPanel input[type="text"],
+#bannerPanel select { width: 100%; margin-top: 4px; }

@@ -2208,6 +2208,7 @@
     if (unlocked) renderAdmin();
     if (unlocked && CPS.online) CPS.online.adminTick();
     if (unlocked && CPS.maintenance) CPS.maintenance.adminTick();
+    if (unlocked && CPS.banner) CPS.banner.adminTick();
     if (unlocked) renderSets();
   }
 
