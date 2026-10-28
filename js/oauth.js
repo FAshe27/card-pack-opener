@@ -40,7 +40,7 @@
   var SS_PROVIDER = 'cps:oauth:provider'; // first ship: 'google' only
   var SS_CODE = 'cps:oauth:claimCode';
   var SS_RETURN = 'cps:oauth:return';     // captured return tokens (see captureReturn)
-  var SS_LINKPENDING = 'cps:oauth:linkPending'; // 'link it' chosen, PIN login still owed (see maybeResumeLink)
+  var SS_LINKPENDING = 'cps:oauth:linkPending'; // pending-link flag (see maybeResumeLink; unarmed since §6.16)
 
   var sbPromise = null;   // lazy supabase-js load
   var sb = null;          // supabase client, once loaded
@@ -59,14 +59,17 @@
   var SESSION_POLL_MS = 250;   // getSession() poll interval while waiting
   var returnInFlight = null;   // once-guard: concurrent handleReturn() calls share one run
 
-  /* Pending-link auto-resume (LINKPATH-AUDIT option (c)): the
-     choice modal's 'link it' sets SS_LINKPENDING; a settle check
-     (maybeResumeLink) opens the link confirmation once the player
-     is PIN-logged-in with that Google session still alive — even
-     after a stored-token boot, which the app.js doLogin hook
-     misses. An 'episode' is keyed to the cps token value: a fresh
-     login (new token) re-arms the once-guard; the guard also
-     latches whenever the confirmation is opened by any path. */
+  /* Pending-link auto-resume (LINKPATH-AUDIT option (c), §6.15):
+     a settle check (maybeResumeLink) opens the link confirmation
+     when SS_LINKPENDING is set and the player is PIN-logged-in
+     with that Google session still alive — even after a
+     stored-token boot, which the app.js doLogin hook misses. An
+     'episode' is keyed to the cps token value: a fresh login (new
+     token) re-arms the once-guard; the guard also latches
+     whenever the confirmation is opened by any path. DORMANT
+     since §6.16: no UI path arms the flag anymore (the choice
+     modal's 'link it' shows a plain instruction instead), so the
+     machinery below simply never fires. */
   var linkResumeBusy = false;  // a settle check's async hop is in flight
   var linkResumeShown = false; // the confirmation already opened this episode
   var linkEpisodeKey = null;   // cps token the current episode is keyed to
@@ -97,10 +100,12 @@
   function ssDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
   function clearIntent() { ssDel(SS_INTENT); ssDel(SS_PROVIDER); ssDel(SS_CODE); ssDel(SS_RETURN); }
   /* The pending-link flag lives OUTSIDE clearIntent() on purpose:
-     'Later' on the link instruction modal (a data-oauth-close,
-     hence clearIntent) must NOT wipe it — surviving that dismissal
-     is the flag's whole job. It stores only the provider name —
-     nothing sensitive — and maybeResumeLink owns its lifecycle. */
+     a dismissal (data-oauth-close, hence clearIntent) must NOT
+     wipe it — surviving dismissal is the flag's whole job. It
+     stores only the provider name — nothing sensitive — and
+     maybeResumeLink owns its lifecycle. Since §6.16 nothing arms
+     it (setLinkPending has no callers); it stays only as part of
+     the dormant auto-resume machinery. */
   function setLinkPending() {
     ssSet(SS_LINKPENDING, ssGet(SS_PROVIDER) || 'google');
     linkResumeShown = false; // a fresh choice-modal selection re-arms the resume
@@ -443,35 +448,20 @@
       function (box) {
         box.querySelector('#oauthChoiceLink').addEventListener('click', function () {
           ssSet(SS_INTENT, 'link');
-          setLinkPending();
           if (CPS.cloud && CPS.cloud.hasToken()) { resumeLink(session); return; }
-          /* Not logged in yet: the old modal told the player to log
-             in and then tap a button that could not survive the
-             login (LINKPATH-AUDIT — a dead end). Now the pending
-             flag above survives dismissal (it lives outside
-             clearIntent), and maybeResumeLink re-opens the
-             confirmation by itself the moment the PIN login lands —
-             so this modal's only job is to say so and get out of
-             the way of the gate behind it. */
+          /* Not logged in: one unambiguous instruction — Franklin's
+             wording verbatim — and a single Okay back to the gate.
+             The dropdown's Link Google is the one canonical linking
+             route, so this screen deliberately does NOT arm the
+             pending-link flag (§6.16; it supersedes the §6.15
+             auto-resume promise this modal used to make). The
+             paragraph is a double-quoted JS string so the sentence
+             sits verbatim in the served bytes. */
           openOAuthModal(
             '<h2>Link your account</h2>' +
-            '<p class="muted small">First, log in the way you do now — with your username and PIN. ' +
-            'Right after you log in, we will bring back the linking confirmation automatically, so you can finish linking this Google account to it. ' +
-            'Nothing about your account changes except how you log in.</p>' +
-            '<div class="row"><button class="btn primary" type="button" id="oauthLinkPinFirst">Log in with my PIN first</button>' +
-            '<button class="btn ghost" type="button" data-oauth-close>Later</button></div>',
-            function (b2) {
-              wireClose(b2);
-              b2.querySelector('#oauthLinkPinFirst').addEventListener('click', function () {
-                /* Close WITHOUT clearing the pending flag (or the
-                   'link' intent): the gate takes over from here,
-                   and the settle check finishes the job after the
-                   PIN login. Mirrors wireClose's close mechanics. */
-                if (C && C.closeModal) C.closeModal(true);
-                var ov = b2.classList && b2.classList.contains('oauth-overlay') ? b2 : (b2.closest && b2.closest('.oauth-overlay'));
-                if (ov) ov.remove();
-              });
-            });
+            "<p class=\"muted small\">To link an existing account, please log in using your username and PIN and select 'Link Google' in the top right profile dropdown</p>" +
+            '<div class="row"><button class="btn primary" type="button" data-oauth-close>Okay</button></div>',
+            function (b2) { wireClose(b2); });
         });
         box.querySelector('#oauthChoiceNew').addEventListener('click', function () {
           openNameModal(session);
@@ -776,20 +766,22 @@
   /* ---------- pending-link auto-resume settle check ----------
      Rides the watchGate observer above: app rendering settles →
      this runs. It fires ONLY when everything coincides:
-       - the pending flag is set (the player chose 'link it'),
+       - the pending flag is set (armed by the choice modal's
+         'link it' until §6.16; no path arms it now — dormant),
        - a cps token is present (they PIN-logged in — any style:
          fresh form login OR a stored-token boot, which is the case
          the app.js doLogin → resumeLink hook cannot see),
        - the account is loaded and NOT oauth_linked,
        - a live Supabase session still exists.
      Then the link confirmation opens, exactly once per episode.
-     Flag lifecycle: set by the choice modal; cleared on link
-     success (openLinkConfirm), on explicit cancel in the
-     confirmation (openLinkConfirm wires that), when the account is
-     observed linked, and when the Google session is gone at a
-     check where a token IS present (stale — it could never
-     resume). While merely logged out the flag is KEPT untouched:
-     surviving 'Later' → gate → PIN login is its entire purpose. */
+     Flag lifecycle: set by the choice modal until §6.16 (no
+     longer); cleared on link success (openLinkConfirm), on
+     explicit cancel in the confirmation (openLinkConfirm wires
+     that), when the account is observed linked, and when the
+     Google session is gone at a check where a token IS present
+     (stale — it could never resume). While merely logged out the
+     flag is KEPT untouched: surviving dismissal → gate → PIN
+     login was its entire purpose (§6.15 design; dormant now). */
   function maybeResumeLink() {
     var token = null;
     try { token = (CPS.cloud && CPS.cloud.getToken && CPS.cloud.getToken()) || null; } catch (e) { token = null; }
