@@ -67,5 +67,5 @@
   }
 
   CPS.cloud = { enabled: enabled, config: cfg, rpc: rpc, call: call, login: login, logout: logout,
-                getToken: getToken, clearToken: clearToken, hasToken: function () { return !!getToken(); } };
+                getToken: getToken, clearToken: clearToken, setToken: setToken, hasToken: function () { return !!getToken(); } };
 })(window.CPS);

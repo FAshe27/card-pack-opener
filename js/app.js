@@ -250,6 +250,7 @@
     enterCloud(await CPS.cloud.call('get_state'));
     if (setsReadyP) await setsReadyP;
     afterEnter();
+    if (CPS.oauth) CPS.oauth.resumeLink();
     toast('Welcome, ' + S.account.display_name + '!', 'good');
     return r;
   }
@@ -2140,6 +2141,7 @@
       '<p class="muted small">No username yet? Ask the site owner to make you an account.</p></div>';
     openModal(html, function (box) {
       S.gateOpen = true;
+      if (CPS.oauth) CPS.oauth.enhanceGate(box);
       var u = $('#loginUser', box), pin = $('#loginPin', box), msg = $('#loginMsg', box);
       var lastUser = Store.getPref('lastUser', '');
       if (lastUser) u.value = lastUser;
@@ -2208,7 +2210,6 @@
     if (unlocked) renderAdmin();
     if (unlocked && CPS.online) CPS.online.adminTick();
     if (unlocked && CPS.maintenance) CPS.maintenance.adminTick();
-    if (unlocked && CPS.banner) CPS.banner.adminTick();
     if (unlocked) renderSets();
   }
 

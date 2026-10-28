@@ -1,0 +1,43 @@
+/* OAuth login (migration 189, staged) — styles for js/oauth.js only.
+   Push-day: link this AFTER css/style.css (see client/INTEGRATION.md).
+   The first ship is Google-only: the Google button uses Google's
+   standard white treatment and its official multi-colour “G” SVG so
+   players recognise it instantly; everything else inherits the site's
+   own .btn / .login-box styling. */
+
+.oauth-gate { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+
+.oauth-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  font-weight: 600; cursor: pointer; border: 1px solid transparent;
+}
+.oauth-btn.google { background: #fff; color: #1f1f1f; border-color: #dadce0; }
+.oauth-btn:disabled { opacity: .6; cursor: default; }
+
+.oauth-mark {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; line-height: 1; flex: 0 0 20px;
+}
+.oauth-mark svg { display: block; }
+
+.oauth-divider {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--muted, #8e98b3); font-size: 12px; margin: 2px 0;
+}
+.oauth-divider::before, .oauth-divider::after {
+  content: ""; flex: 1; height: 1px; background: currentColor; opacity: .35;
+}
+.oauth-divider span { white-space: nowrap; }
+
+.oauth-choice { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+
+.oauth-earn { margin: 6px 0 12px; padding-left: 20px; }
+.oauth-earn li { margin: 4px 0; }
+
+.oauth-overlay {
+  position: fixed; inset: 0; z-index: 999; display: flex;
+  align-items: center; justify-content: center;
+  background: rgba(4, 6, 12, .72); padding: 16px;
+}
+.oauth-sheet { max-width: 420px; width: 100%; }
