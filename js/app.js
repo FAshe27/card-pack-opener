@@ -481,11 +481,11 @@
               if (id !== set.id && s2 && s2.packs > 0) others++;
             });
             var nxt = others ? nextPackSet() : null;
-            if (nxt) return ' You have packs in ' + others + ' other set' + (others === 1 ? '' : 's') + '.' +
+            if (nxt) return '<br>You have packs in ' + others + ' other set' + (others === 1 ? '' : 's') + '.' +
               '<br><button type="button" class="btn primary idle-next-btn" data-next-set="' + esc(nxt.id) + '" title="Go to ' + esc(nxt.name) + '">Take me to my next pack \u2192</button>';
             return others
-              ? ' You have packs in ' + others + ' other set' + (others === 1 ? '' : 's') + ' — pick one from the set menu above.'
-              : ' Win or earn more packs!';
+              ? '<br>You have packs in ' + others + ' other set' + (others === 1 ? '' : 's') + ' — pick one from the set menu above.'
+              : '<br>Win or earn more packs!';
           })()) + '</div>';
     $('#stageIdle').classList.remove('hidden');
     $('#stagePack').classList.add('hidden'); $('#stagePack').innerHTML = '';
