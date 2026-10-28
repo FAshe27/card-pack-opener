@@ -1152,7 +1152,10 @@
         out.push({ key: v.tier + ':' + v.serial, label: variantLabel(v.tier, v.serial), tier: v.tier, serial: v.serial });
       }
     });
-    var vcount = Object.keys(vmap).length;
+    var vcount = 0;
+    (ctx.S.myVariants || []).forEach(function (v) {
+      if (v.set_id === d.card.set && v.card_id === d.card.id) vcount++;
+    });
     if (e.n - (e.v || 0) - vcount > 0) out.unshift({ key: 'regular', label: 'Regular copy (×' + (e.n - (e.v || 0) - vcount) + ')', tier: null, serial: null });
     return out;
   }
@@ -1403,10 +1406,13 @@
     // pickable rows: one per non-variant availability + one per owned serial
     var s = setObj(OD.set); if (!s) return [];
     var q = OD.q.trim().toLowerCase(), st = ctx.ps({ id: s.id }), rows = [];
-    var vmap = {};
-    myVariants().forEach(function (v) {
+    var vmap = {}, vcount = {};
+    (ctx.S.myVariants || []).forEach(function (v) {
       if (v.set_id !== s.id) return;
-      (vmap[v.card_id] = vmap[v.card_id] || []).push(v);
+      /* Every numbered copy (vaulted or not) is spoken for — only
+         unvaulted ones get their own offerable row below. */
+      vcount[v.card_id] = (vcount[v.card_id] || 0) + 1;
+      if (!v.vaulted) (vmap[v.card_id] = vmap[v.card_id] || []).push(v);
     });
     s.cards.forEach(function (c) {
       var e = st.cards[c.id];
@@ -1416,7 +1422,7 @@
         if (hay.indexOf(q) < 0) return;
       }
       var vs = vmap[c.id] || [];
-      var plainLeft = e.n - (e.v || 0) - vs.length;
+      var plainLeft = e.n - (e.v || 0) - (vcount[c.id] || 0);
       var usedPlain = OD.cards.filter(function (o) { return o.set === s.id && o.card === c.id && !o.tier; }).length;
       var holoLeft = holoOn(e) - OD.cards.filter(function (o) { return o.set === s.id && o.card === c.id && o.holo; }).length;
       if (plainLeft - usedPlain > 0) {

@@ -20,6 +20,12 @@
   var lastDraft = null, lastTo = null; // unsent picks survive a stray close, per recipient (nav audit)
 
   function onHand(e) { return e ? Math.max(0, e.n - (e.v || 0)) : 0; }
+  function allSerialCount(setId, cardId) {
+    /* ALL numbered copies, vaulted or not — a vaulted numbered copy
+       still isn't a regular copy (cps_vault_variant never touches
+       collection.vaulted_count). */
+    return (S.myVariants || []).filter(function (v) { return v.set_id === setId && v.card_id === cardId; }).length;
+  }
   function mySerials(setId, cardId) {
     return (S.myVariants || []).filter(function (v) { return v.set_id === setId && v.card_id === cardId && !v.vaulted; })
       .sort(function (a, b) { return a.serial - b.serial; });
@@ -38,6 +44,8 @@
     return set.cards.filter(function (card) {
       var e = cards[card.id];
       if (!e || onHand(e) <= 0) return false;
+      /* Nothing giftable when every copy is a vaulted numbered one. */
+      if (onHand(e) - allSerialCount(set.id, card.id) <= 0 && mySerials(set.id, card.id).length === 0) return false;
       if (G.rarity && card.rarity !== G.rarity) return false;
       if (G.q) {
         var hay = ('#' + card.num + ' ' + card.num + ' ' + card.name + ' ' + (card.subtitle || '')).toLowerCase();
@@ -66,7 +74,7 @@
     });
     var hand = onHand(e);
     var serials = serialsAll.filter(function (v) { return !claimedSerials[v.id]; });
-    var regulars = Math.max(0, hand - serialsAll.length - claimedRegular);
+    var regulars = Math.max(0, hand - allSerialCount(setId, cardId) - claimedRegular);
     var holoRemain = Math.max(0, (e ? Math.max(0, e.h - (e.vh || 0)) : 0) - claimedHolo);
     var plainRemain = Math.max(0, (e ? Math.max(0, (e.n - e.h) - ((e.v || 0) - (e.vh || 0))) : 0) - (claimedRegular - claimedHolo));
     return { e: e, hand: hand, serials: serials, regulars: regulars, holoRemain: holoRemain, plainRemain: plainRemain };

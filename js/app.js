@@ -1157,9 +1157,13 @@
   
   
   function variantCountMap() {
+    /* Counts EVERY numbered copy, vaulted or not: a numbered copy is
+       never a standard copy. Vaulting a variant (cps_vault_variant)
+       does not touch collection.vaulted_count, so skipping vaulted
+       variants here leaked them into standard availability — a card
+       whose only copy was a vaulted One-of-One showed as offerable. */
     var m = {};
     (S.myVariants || []).forEach(function (v) {
-      if (v.vaulted) return;
       var k = v.set_id + ':' + v.card_id;
       m[k] = (m[k] || 0) + 1;
     });
