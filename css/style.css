@@ -695,6 +695,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .stage.shake { animation: shakeHard .5s; }
 .stage-idle { display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center; }
 .idle-msg { color: var(--muted); max-width: 420px; line-height: 1.6; } .idle-msg b { color: var(--text); }
+.idle-next-btn { margin-top: 12px; }
 .stage-pack { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .pack-wrap { display: flex; justify-content: center; width: 100%; }
 .tear-hint { color: var(--muted); animation: pulse 1.6s ease-in-out infinite; font-weight: 600; }

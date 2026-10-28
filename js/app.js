@@ -300,6 +300,19 @@
     return 0;
   }
 
+  function nextPackSet() {
+    var sets = window.CardSets.all().slice();
+    if (typeof CPS !== 'undefined' && CPS.jumbled && !window.CardSets.get('jumbled')) sets.push(CPS.jumbled.pseudoSet()); /* same list the set menu shows */
+    sets.sort(function (a, b) { return a.name < b.name ? -1 : a.name > b.name ? 1 : 0; });
+    var start = 0;
+    for (var i = 0; i < sets.length; i++) if (sets[i].id === S.set.id) { start = i; break; }
+    for (var k = 1; k <= sets.length; k++) {
+      var cand = sets[(start + k) % sets.length];
+      if (cand.id !== S.set.id && packCount(cand) > 0) return cand;
+    }
+    return null;
+  }
+
   function fillSetSelect() {
     var sets = window.CardSets.all().slice();
     if (typeof CPS !== 'undefined' && CPS.jumbled && !window.CardSets.get('jumbled')) sets.push(CPS.jumbled.pseudoSet()); /* Jumbled Mess is always listed, packs or not (Franklin) */
@@ -467,6 +480,9 @@
               var s2 = S.player.sets[id];
               if (id !== set.id && s2 && s2.packs > 0) others++;
             });
+            var nxt = others ? nextPackSet() : null;
+            if (nxt) return ' You have packs in ' + others + ' other set' + (others === 1 ? '' : 's') + '.' +
+              '<br><button type="button" class="btn primary idle-next-btn" data-next-set="' + esc(nxt.id) + '" title="Go to ' + esc(nxt.name) + '">Take me to my next pack \u2192</button>';
             return others
               ? ' You have packs in ' + others + ' other set' + (others === 1 ? '' : 's') + ' — pick one from the set menu above.'
               : ' Win or earn more packs!';
@@ -2647,6 +2663,7 @@
     $('#revealAllBtn').addEventListener('click', revealAll);
     $('#stagePack').addEventListener('pointerdown', function (e) { if (e.button == null || e.button === 0) tear(); });
     $('#stageIdle').addEventListener('click', function (e) { if (e.target.closest('.idle-pack')) openFromPack(); });
+    $('#stageIdle').addEventListener('click', function (e) { var nb = e.target.closest('.idle-next-btn'); if (nb) selectSet(nb.getAttribute('data-next-set')); });
     $('#stageIdle').addEventListener('keydown', function (e) {
       if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.idle-pack')) { e.preventDefault(); e.stopPropagation(); openFromPack(); }
     });
