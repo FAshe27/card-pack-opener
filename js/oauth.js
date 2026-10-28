@@ -561,6 +561,8 @@
           ).then(function (r) {
             if (r && r.ok) {
               clearIntent();
+              if (C && C.S && C.S.account) C.S.account.oauth_linked = true;
+              refreshLinkMenuItem();
               openOAuthModal(
                 '<h2>' + esc(label) + ' linked</h2>' +
                 '<p class="muted small">From now on, “Continue with ' + esc(label) + '” logs you straight in. Your PIN has been turned off.</p>' +
@@ -683,6 +685,7 @@
     var mo = new MutationObserver(function () {
       var box = document.querySelector('.login-box.gate');
       if (box) enhanceGate(box);
+      refreshLinkMenuItem();
     });
     mo.observe(document.body, { childList: true, subtree: true });
   }
@@ -703,6 +706,27 @@
       menu.classList.add('hidden');
       openLink();
     });
+    watchLinkMenu(menu);
+    refreshLinkMenuItem();
+  }
+
+  /* Hide the Link item once the account is linked (migration 210 puts
+     oauth_linked on S.account via cps.state_json). The flag is read
+     fresh on every evaluation, so a state refresh that flips it (link,
+     admin unlink) is honored the next time the menu opens. */
+  function refreshLinkMenuItem() {
+    var b = document.getElementById('acctLinkBtn');
+    if (!b) return;
+    var acct = (C && C.S && C.S.account) || null;
+    b.style.display = (acct && acct.oauth_linked) ? 'none' : '';
+  }
+
+  /* app.js's toggleAccountMenu is IIFE-internal (no hook); it opens the
+     menu by removing the 'hidden' class, so observe that instead. */
+  function watchLinkMenu(menu) {
+    if (!window.MutationObserver || !menu) return;
+    var mo = new MutationObserver(function () { refreshLinkMenuItem(); });
+    mo.observe(menu, { attributes: true, attributeFilter: ['class'] });
   }
 
   function bind() {
@@ -726,6 +750,7 @@
       providerLabel: providerLabel, openNameModal: openNameModal, openWelcomeModal: openWelcomeModal,
       waitForSession: waitForSession,
       captureReturn: captureReturn,
+      refreshLinkMenuItem: refreshLinkMenuItem,
       bind: bind,
       setSessionWait: function (waitMs, pollMs) { SESSION_WAIT_MS = waitMs; SESSION_POLL_MS = pollMs; }
     }
