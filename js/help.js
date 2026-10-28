@@ -229,5 +229,5 @@
     render();
   }
 
-  CPS.help = { enter: enter, render: render };
+  CPS.help = { enter: enter, render: render, openTicket: openThread };
 })(window.CPS = window.CPS || {});

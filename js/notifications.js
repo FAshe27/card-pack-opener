@@ -6,7 +6,7 @@
   var esc = ctx.esc;
 
 var NOTIF_KIND_ICON = { gift_card: '🎁', gift: '🎁', gift_thanks: '🙏', gift_pack: '📦', gift_spin: '🎟️',
-  trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌', variant_pull: '🌈', chase_pull: '🎯' };
+  trade_offer: '⇄', trade_accepted: '✅', trade_declined: '❌', variant_pull: '🌈', chase_pull: '🎯', support: '🎫' };
 
 function notifTime(iso) {
   var ms = Date.now() - new Date(iso).getTime();
@@ -36,6 +36,7 @@ async function openNotifications() {
       (items.length ? '<div class="notif-list">' + items.map(function (it) {
         return '<button class="notif' + (it.read ? '' : ' unread') + (isAnn(it) ? ' pinned' : '') + '" data-notif="' + it.id + '"' +
           (it.view ? ' data-view="' + ctx.esc(it.view) + '"' : '') +
+          (it.meta && it.meta.ticket_id ? ' data-ticket="' + ctx.esc(it.meta.ticket_id) + '"' : '') +
           (it.meta && it.meta.set_id ? ' data-nset="' + ctx.esc(it.meta.set_id) + '" data-ncard="' + ctx.esc(it.meta.card_id) + '"' +
             ' data-nholo="' + (it.meta.holo ? '1' : '0') + '"' +
             (it.meta.tier ? ' data-ntier="' + ctx.esc(it.meta.tier) + '" data-nserial="' + it.meta.serial + '"' : '') : '') + '>' +
@@ -57,6 +58,10 @@ async function openNotifications() {
               ctx.closeModal();
               ctx.openCardModal(el.dataset.nset, el.dataset.ncard, el.dataset.nholo === '1',
                 vt ? { tier: vt, serial: parseInt(el.dataset.nserial, 10) } : null);
+            } else if (el.dataset.ticket && CPS.help) {
+              ctx.closeModal();
+              ctx.showView('help');
+              CPS.help.openTicket(el.dataset.ticket);
             } else if (view) { ctx.closeModal(); ctx.showView(view); }
           });
         });
