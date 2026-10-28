@@ -67,3 +67,4 @@
 #bannerPanel .field { display: block; margin-bottom: 10px; }
 #bannerPanel input[type="text"],
 #bannerPanel select { width: 100%; margin-top: 4px; }
+#bannerPanel input[type="number"] { margin-top: 4px; }
