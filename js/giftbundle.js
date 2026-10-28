@@ -329,7 +329,9 @@
   async function open(toId, toName, opts) {
     openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="empty" style="padding:24px">Loading…</div>');
     try {
-      if (window.CardSets && window.CardSets.loadAll) await window.CardSets.loadAll();
+      /* Only the giver's owned sets can be picked from — load just
+         those (this used to download every set file, ~8.5 MB). */
+      if (C.ensureOwnedSets) await C.ensureOwnedSets();
       await ensureVariants();
       if (lastDraft && lastTo === toId) { G = lastDraft; lastDraft = null; }
       else {

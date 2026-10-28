@@ -1473,7 +1473,7 @@
   async function openTradeBuilder(prefillTo) {
     if (!isCloud()) return;
     openModal('<div class="muted" style="padding:24px">Loading…</div>');
-    if (window.CardSets.loadAll) await window.CardSets.loadAll();
+    await ensureOwnedSets();
     try {
       var players = await CPS.cloud.call('list_players');
       var others = players.filter(function (p) { return !p.is_me; });
@@ -1503,6 +1503,12 @@
     try {
       var p = await CPS.cloud.call('get_profile', { p_account: TB.to });
       TB.their = p.collection || [];
+      /* Card names/faces for the partner's side: load just the sets
+         their collection touches (the builder used to loadAll). */
+      if (window.CardSets.loadIds) {
+        var theirIds = Array.from(new Set(TB.their.map(function (c) { return c.set_id; })));
+        await window.CardSets.loadIds(theirIds);
+      }
       TB.theirPacks = p.pack_inventory || [];
       TB.toName = p.display_name;
     } catch (e) { TB.their = []; TB.toName = ''; cloudError(e); }
