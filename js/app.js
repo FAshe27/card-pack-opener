@@ -793,6 +793,7 @@
     grid.classList.remove('hidden');
     $('#stageControls').classList.remove('hidden');
     $('#revealAllBtn').classList.remove('hidden');
+    $('#doneBtn').classList.add('hidden');
     updateSummary();
     fitReveal();
   }
@@ -891,6 +892,7 @@
     updateSummary();
     CPS.slips.applyPackGrants(o.pulls);
     $('#revealAllBtn').classList.add('hidden');
+    $('#doneBtn').classList.remove('hidden');
     renderPacksSide();
   }
 
@@ -2661,6 +2663,7 @@
     var _m5b = $('#multiSpin5Btn'); if (_m5b) _m5b.addEventListener('click', function () { if (CPS.wheelMulti) CPS.wheelMulti.start(5); });
     var _mab = $('#multiSpinAllBtn'); if (_mab) _mab.addEventListener('click', function () { if (CPS.wheelMulti && CPS.wheelMulti.startAll) CPS.wheelMulti.startAll(); });
     $('#revealAllBtn').addEventListener('click', revealAll);
+    $('#doneBtn').addEventListener('click', function () { resetStage(); });
     $('#stagePack').addEventListener('pointerdown', function (e) { if (e.button == null || e.button === 0) tear(); });
     $('#stageIdle').addEventListener('click', function (e) { if (e.target.closest('.idle-pack')) openFromPack(); });
     $('#stageIdle').addEventListener('click', function (e) { var nb = e.target.closest('.idle-next-btn'); if (nb) selectSet(nb.getAttribute('data-next-set')); });
