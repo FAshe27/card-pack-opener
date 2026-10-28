@@ -1,0 +1,48 @@
+/* MLB — baked-in pack art (Franklin's own artwork, 2026-10-27).
+   Lives in its own file because css/style.css is at its push-size ceiling
+   (and no .pack-skin-mlb rules existed on the site before this — the old
+   CSS skin was never wired in, so the pack used the default wrapper).
+   The pack art is sliced into THREE bands (assets/sets/mlb/pack-art-1..3.svg,
+   rows 0-800 / 800-1300 / 1300-1600) with the seams placed clear of every
+   piece of baked lettering (logo + wordmark rows 273-708, count 1390-1436,
+   the bottom lockup ~1452-1499) so no seam can shear text. Band heights
+   carry a hair of overlap (+.006) so no gap can open at a join. Everything
+   is baked into the art, so the site-printed emblem/name/count and the
+   card-back dressing are off. Back art sits inside the site frame (the
+   standing default). */
+.pack-skin-mlb .pack-top,
+.pack-skin-mlb .pack-body {
+  background-image:
+    url('../assets/sets/mlb/pack-art-1.svg'),
+    url('../assets/sets/mlb/pack-art-2.svg'),
+    url('../assets/sets/mlb/pack-art-3.svg');
+  background-repeat: no-repeat;
+  background-color: #14261c;
+  background-size:
+    calc(var(--pw) * 1) calc(var(--pw) * .806),
+    calc(var(--pw) * 1) calc(var(--pw) * .506),
+    calc(var(--pw) * 1) calc(var(--pw) * .306);
+}
+.pack-skin-mlb .pack-top {
+  background-position:
+    0 0,
+    0 calc(var(--pw) * .8),
+    0 calc(var(--pw) * 1.3);
+}
+.pack-skin-mlb .pack-body {
+  background-position:
+    0 calc(var(--pw) * -.176),
+    0 calc(var(--pw) * .624),
+    0 calc(var(--pw) * 1.124);
+}
+.pack-skin-mlb .pack-emblem,
+.pack-skin-mlb .pack-name,
+.pack-skin-mlb .pack-sub { display: none; }
+.card[data-set="mlb"] .cb {
+  background-image: url('../assets/sets/mlb/card-back-art.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.card[data-set="mlb"] .cb-emblem,
+.card[data-set="mlb"] .cb-name { display: none; }
