@@ -154,7 +154,7 @@ window.CardSets.bootIndex = {
    "emblem": "⚾",
    "packName": "MLB Pack",
    "skin": "mlb",
-   "css": "",
+   "css": "mlb",
    "primary": "#4D8064",
    "secondary": "#4b5a51",
    "total": 381
