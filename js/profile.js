@@ -56,6 +56,7 @@ async function openProfile(accountId) {
     var p = await CPS.cloud.call('get_profile', { p_account: accountId });
     var friended = false;
     if (!p.is_me && CPS.friends) { try { friended = await CPS.friends.isFriendAsync(accountId); } catch (e) {} }
+    await ensureSetsLoaded((p.favorites || []).map(function (f) { return f.set_id; }));
     var sets = p.sets || [], collection = p.collection || [];
     var totU = 0, totT = 0, totTi = 0, holos = 0;
     sets.forEach(function (s) { totU += s.unique || 0; totT += s.total || 0; totTi += s.turned || 0; });
@@ -114,6 +115,24 @@ async function openProfile(accountId) {
   } catch (e) { ctx.closeModal(true); ctx.cloudError(e); }
 }
 
+/* Profile payloads reference sets whose files may not be loaded yet
+   this session — a registry stub has cards: [] and an empty byId, so
+   renders against it silently come up empty (the per-set turn-in
+   modal showed '0 / 0 turned in' for a set the player had completed
+   cards in). Load exactly the referenced sets before rendering. */
+async function ensureSetsLoaded(ids) {
+  var seen = {}, need = [];
+  (ids || []).forEach(function (id) {
+    if (!id || seen[id]) return;
+    seen[id] = 1;
+    var s = window.CardSets.get(id);
+    if (s && (!s.cards || !s.cards.length)) need.push(id);
+  });
+  if (need.length && window.CardSets.loadIds) {
+    try { await window.CardSets.loadIds(need); } catch (e) { /* render with what we have */ }
+  }
+}
+
 var VRANK = { oneofone: 0, obsidian: 1, prism: 2, rainbow: 3 };
 function bestVaultedVariant(variants) {
   var vs = (variants || []).filter(function (v) { return v.vaulted; }).sort(function (x, y) {
@@ -152,6 +171,7 @@ async function openVaultScreen(accountId) {
   ctx.openModal('<div class="muted" style="padding:24px">Loading…</div>');
   try {
     var p = await CPS.cloud.call('get_profile', { p_account: accountId });
+    await ensureSetsLoaded((p.favorites || []).map(function (f) { return f.set_id; }));
     var favs = favsHtml(p);
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
       '<button class="btn small prof-back" id="profBackBtn">← Back</button>' +
@@ -412,9 +432,15 @@ function openFavManager(accountId, seedFavs, _ready) {
   });
 }
 
-function openPlayerSet(accountId, displayName, setId, turnedCards, backTo) {
+async function openPlayerSet(accountId, displayName, setId, turnedCards, backTo) {
   var set = window.CardSets.get(setId);
   if (!set) return;
+  if (!set.cards || !set.cards.length) {
+    ctx.openModal('<div class="muted" style="padding:24px">Loading\u2026</div>');
+    try { await window.CardSets.load(setId); } catch (e) { /* fall through with what we have */ }
+    set = window.CardSets.get(setId);
+    if (!set) return;
+  }
   var turned = {};
   (turnedCards || []).forEach(function (c) { if (c.set_id === setId) turned[c.card_id] = c; });
   var cards = set.cards.filter(function (card) { return turned[card.id]; });
