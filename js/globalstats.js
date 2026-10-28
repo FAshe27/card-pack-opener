@@ -5,6 +5,7 @@
   var C = CPS.appCtx;
   var S = C.S, $ = C.$, esc = C.esc, U = C.U, R = C.R;
   var isCloud = C.isCloud, rarityOf = C.rarityOf;
+  var bigPullTried = {};
 
   function hide() {
     var gp = $('#globalStatsPanel'); if (gp) gp.style.display = 'none';
@@ -32,6 +33,14 @@
       if (lb && bp) {
         bp.style.display = '';
         var bset = window.CardSets.get(lb.set_id), bcard = bset && bset.byId.get(lb.card_id);
+        if (!bcard && bset && bset.stub && window.CardSets.load && !bigPullTried[lb.set_id]) {
+          /* The face needs the set file (the caption is built from
+             server fields and renders either way). Load just this set
+             and repaint — this used to be masked by the Stats view's
+             loadAll. One attempt per set per session. */
+          bigPullTried[lb.set_id] = 1;
+          window.CardSets.load(lb.set_id).then(function () { if (S.view === 'stats') render(); });
+        }
         var bvar = lb.variant_tier ? { tier: lb.variant_tier, serial: lb.variant_serial } : null;
         $('#bigPull').innerHTML = bcard ? CPS.cards.render(bset, bcard, { variant: bvar }) : '';
         $('#bigPull').onclick = (bcard && C.openCardModal) ? function () { C.openCardModal(lb.set_id, lb.card_id); } : null;

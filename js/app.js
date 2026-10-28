@@ -1937,16 +1937,28 @@
 
   /* --- stats */
   var galleryReturnKind = null, galleryScrollTop = 0;
+  var statsUpgradeKicked = false;
+  /* Sets that can contribute gallery items: the player owns cards or
+     pulls there (ownedSetIds), plus any set with a turned-in card.
+     Rarity galleries only ever list owned/turned cards, so loading
+     exactly these — instead of every set — is equivalent. */
+  function ownedGalleryIds() {
+    var ids = ownedSetIds(), seen = {};
+    ids.forEach(function (id) { seen[id] = 1; });
+    Object.keys(S.turnedIn || {}).forEach(function (k) {
+      var sid = k.slice(0, k.indexOf(':'));
+      if (sid && !seen[sid]) { seen[sid] = 1; ids.push(sid); }
+    });
+    return ids;
+  }
   function showStatGallery(kind, restoreScroll) {
     if (window.CardSets.load) {
       var needIds = kind === 'numbered'
         ? Array.from(new Set((S.myVariants || []).map(function (v) { return v.set_id; })))
-        : null;
-      var gateReady = needIds
-        ? needIds.every(function (id) { var s = window.CardSets.get(id); return s && !s.stub; })
-        : !(window.CardSets.pending && window.CardSets.pending());
+        : ownedGalleryIds();
+      var gateReady = needIds.every(function (id) { var s = window.CardSets.get(id); return s && !s.stub; });
       if (!gateReady) {
-        (needIds ? window.CardSets.loadIds(needIds) : window.CardSets.loadAll())
+        window.CardSets.loadIds(needIds)
           .then(function () { showStatGallery(kind, restoreScroll); });
         return;
       }
@@ -2018,25 +2030,35 @@
     }
   }
   function renderStatsLazy() {
-    if (window.CardSets.pending && window.CardSets.pending()) {
-      $('#statTiles').innerHTML = '<div class="muted">Loading set data…</div>';
-      window.CardSets.loadAll().then(function () { if (S.view === 'stats') renderStats(); });
-      return;
-    }
+    /* No loadAll gate: the aggregates below are computed from player
+       state and stub metadata (set.total), and the card-file sections
+       (owned-by-rarity tiles, Best Pull, Recent Pulls) upgrade via a
+       targeted load of just the player's sets inside renderStats. */
     renderStats();
   }
   function renderStats() {
     var set = S.set, st = ps();
     var agg = { opened: 0, pulled: 0, holos: 0, byRarity: {}, unique: 0, total: 0, packs: 0, ownedByRarity: {} };
+    var turnedBySet = {};
+    Object.keys(S.turnedIn || {}).forEach(function (k) {
+      var i = k.indexOf(':'); if (i < 0) return;
+      (turnedBySet[k.slice(0, i)] = turnedBySet[k.slice(0, i)] || {})[k.slice(i + 1)] = 1;
+    });
     window.CardSets.all().forEach(function (sd) {
       var pst = S.player.sets[sd.id], psd = pst ? pst.stats : null;
       agg.opened += psd ? psd.opened || 0 : 0;
       agg.pulled += psd ? psd.pulled || 0 : 0;
       agg.holos += psd ? psd.holos || 0 : 0;
-      agg.unique += pst ? sd.cards.filter(function (c) { return (pst.cards[c.id] && pst.cards[c.id].n > 0) || isTurned(sd.id, c.id); }).length : 0;
-      agg.total += sd.cards.length; agg.packs += pst ? pst.packs || 0 : 0;
+      if (pst) {
+        var useen = {};
+        Object.keys(pst.cards || {}).forEach(function (cid) { if (pst.cards[cid] && pst.cards[cid].n > 0) useen[cid] = 1; });
+        var tbs = turnedBySet[sd.id];
+        if (tbs) Object.keys(tbs).forEach(function (cid) { useen[cid] = 1; });
+        agg.unique += Object.keys(useen).length;
+      }
+      agg.total += sd.total || sd.cards.length; agg.packs += pst ? pst.packs || 0 : 0;
       R.RARITIES.forEach(function (r) { agg.byRarity[r.key] = (agg.byRarity[r.key] || 0) + (psd && psd.byRarity[r.key] || 0); });
-      if (pst) sd.cards.forEach(function (c) {
+      if (pst && !sd.stub) sd.cards.forEach(function (c) {
         var e = pst.cards[c.id];
         if ((e && e.n > 0) || isTurned(sd.id, c.id)) agg.ownedByRarity[c.rarity] = (agg.ownedByRarity[c.rarity] || 0) + 1;
       });
@@ -2058,6 +2080,18 @@
       return '<div class="barrow r-' + r.key + '"><span class="bl">' + r.label + '</span><span class="bar"><i style="width:' + (n / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + U.fmt(n) + (agg.pulled ? ' <em>' + U.pct(n / agg.pulled) + '</em>' : '') + '</span></div>';
     }).join('') + '<div class="barrow r-numbered"><span class="bl">Numbered</span><span class="bar"><i style="width:' + (numbered / max * 100).toFixed(1) + '%"></i></span><span class="bn">' + U.fmt(numbered) + '</span></div>';
     if (isCloud() && !S.myVariants) ensureVariants().then(function () { if (S.view === 'stats') renderStats(); });
+    /* One-shot targeted upgrade: load the player's own sets (never
+       loadAll) and repaint so the card-file sections fill in. The
+       latch keeps a permanently failing set file from re-arming the
+       load on every repaint. */
+    if (window.CardSets.loadIds && !statsUpgradeKicked) {
+      var needStats = ownedGalleryIds();
+      var stubbed = needStats.some(function (id) { var s2 = window.CardSets.get(id); return s2 && s2.stub; });
+      if (stubbed) {
+        statsUpgradeKicked = true;
+        window.CardSets.loadIds(needStats).then(function () { if (S.view === 'stats') renderStats(); });
+      }
+    }
 
     var bestO = null, bestSd = null, bestSc = -1;
     window.CardSets.all().forEach(function (sd) {
