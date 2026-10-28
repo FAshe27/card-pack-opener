@@ -54,6 +54,9 @@
           eta: r.eta || '',
           is_admin: !!r.is_admin
         };
+        /* One fetch feeds both consumers: the banner module maps the
+           same response (it no longer polls on its own timer). */
+        if (CPS.banner && CPS.banner.applyStatus) CPS.banner.applyStatus(r);
       }
     } catch (e) { /* pre-187 / offline: fail open, keep current state */ }
     checking = false;
@@ -220,7 +223,7 @@
   function start() {
     if (timer) return;
     check();
-    timer = setInterval(check, POLL_MS);
+    timer = setInterval(function () { if (!document.hidden) check(); }, POLL_MS);
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') check();
     });

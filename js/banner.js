@@ -59,25 +59,33 @@
     return c.esc ? c.esc(s) : String(s == null ? '' : s);
   }
 
+  /* Map one cps_site_status response onto the banner state. The
+     maintenance module owns the 60s poll and pushes every response
+     here, so the site-status RPC is fetched once a minute total,
+     not once per module. */
+  function applyStatus(r) {
+    if (r && r.banner) {
+      state = {
+        enabled: !!r.banner.enabled,
+        text: r.banner.text || '',
+        style: STYLES[r.banner.style] ? r.banner.style : 'info',
+        dismissible: r.banner.dismissible !== false,
+        version: r.banner.version | 0,
+        redisplay: Math.max(0, r.banner.redisplay_minutes | 0) // absent pre-211 => 0
+      };
+    }
+    render();
+  }
+
   async function check() {
     if (checking) return state;
     if (!CPS.cloud || !CPS.cloud.enabled || !CPS.cloud.rpc) return state;
     checking = true;
     try {
       var r = await CPS.cloud.rpc('cps_site_status', { p_token: token() });
-      if (r && r.banner) {
-        state = {
-          enabled: !!r.banner.enabled,
-          text: r.banner.text || '',
-          style: STYLES[r.banner.style] ? r.banner.style : 'info',
-          dismissible: r.banner.dismissible !== false,
-          version: r.banner.version | 0,
-          redisplay: Math.max(0, r.banner.redisplay_minutes | 0) // absent pre-211 => 0
-        };
-      }
+      applyStatus(r);
     } catch (e) { /* pre-209 / offline: fail open, keep current state */ }
     checking = false;
-    render();
     return state;
   }
 
@@ -258,8 +266,19 @@
   /* ------------------------------------------------ boot */
   function start() {
     if (timer) return;
+    if (CPS.maintenance && CPS.maintenance.check) {
+      /* Ride the maintenance module's poll (it pushes each response
+         into applyStatus). No second timer, no duplicate RPC. */
+      CPS.maintenance.check();
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') CPS.maintenance.check();
+      });
+      timer = -1; // started, on the shared poll
+      return;
+    }
+    /* Fallback if the maintenance module ever fails to load. */
     check();
-    timer = setInterval(check, POLL_MS);
+    timer = setInterval(function () { if (!document.hidden) check(); }, POLL_MS);
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') check();
     });
@@ -268,5 +287,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
 
-  CPS.banner = { check: check, adminTick: adminTick, state: function () { return state; } };
+  CPS.banner = { check: check, applyStatus: applyStatus, adminTick: adminTick, state: function () { return state; } };
 })(window.CPS = window.CPS || {});
