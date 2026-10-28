@@ -43,6 +43,20 @@
   var sbPromise = null;   // lazy supabase-js load
   var sb = null;          // supabase client, once loaded
 
+  /* Return-handling race (found live, 2026-10-27 ship night): after
+     the Google round-trip, supabase-js may still be exchanging the
+     return URL (PKCE) when handleReturn() first samples
+     auth.getSession() — a single sample can find no session yet and
+     the old code silently abandoned the login (the Admin account
+     failed 4 times, then succeeded on the 5th: a pure race).
+     handleReturn() therefore WAITS for the session (auth-state event
+     + polling, bounded) before concluding there is none. The harness
+     shrinks these bounds via _test.setSessionWait so the suite stays
+     fast and deterministic. */
+  var SESSION_WAIT_MS = 6000;  // bounded wait for the return session
+  var SESSION_POLL_MS = 250;   // getSession() poll interval while waiting
+  var returnInFlight = null;   // once-guard: concurrent handleReturn() calls share one run
+
   function cfg() { return (CPS.cloud && CPS.cloud.config) || window.CPS_CONFIG || {}; }
   function esc(s) {
     if (C && C.esc) return C.esc(s);
@@ -142,8 +156,32 @@
     if (sb) sb.auth.signOut().then(done, done);
     else done();
   }
+  /* Friendly error text that keeps the server's error code visible —
+     on the ship night a bare code (e.g. no_oauth_session) was the one
+     clue that mattered, and it never reached the screen. */
+  function errText(src, fallback) {
+    var msg = (src && (src.error || src.message)) || fallback;
+    var code = src && src.code;
+    if (code && String(msg).indexOf(String(code)) === -1) msg += ' (Error code: ' + code + ')';
+    return msg;
+  }
+
+  /* Return-path failures render through our OWN overlay (.oauth-overlay,
+     z-index 999) — never solely through app.js's modal (z-50). During
+     the 2026-10-27 ship the maintenance overlay (z-200) sat on top of
+     the app modal and every sign-in error was invisible; the player
+     just saw the maintenance screen again. An OK-only terminal error
+     needs no app-modal machinery, so it always takes this surface. */
+  function showOAuthOverlay(html) {
+    var wrap = document.createElement('div');
+    wrap.className = 'oauth-overlay';
+    wrap.innerHTML = '<div class="oauth-sheet login-box">' + html + '</div>';
+    document.body.appendChild(wrap);
+    wireClose(wrap);
+    return wrap;
+  }
   function failToModal(title, text) {
-    openOAuthModal(
+    showOAuthOverlay(
       '<h2>' + esc(title) + '</h2>' +
       '<p class="muted small">' + esc(text) + '</p>' +
       '<div class="row"><button class="btn primary" type="button" data-oauth-close>OK</button></div>');
@@ -158,12 +196,8 @@
       });
       return;
     }
-    /* Pre-boot fallback (gate not yet wired): a bare overlay. */
-    var wrap = document.createElement('div');
-    wrap.className = 'oauth-overlay';
-    wrap.innerHTML = '<div class="oauth-sheet login-box">' + html + '</div>';
-    document.body.appendChild(wrap);
-    wireClose(wrap);
+    /* Pre-boot fallback (gate not yet wired): our own overlay. */
+    var wrap = showOAuthOverlay(html);
     if (after) after(wrap);
   }
   function wireClose(root) {
@@ -207,22 +241,73 @@
     return false;
   }
 
+  /* Wait for supabase-js to finish establishing the session from the
+     return URL. Resolves with the first real session from whichever
+     source fires first — the immediate getSession() sample, the
+     onAuthStateChange event (SIGNED_IN lands when the URL exchange
+     completes), or a short-interval getSession() poll — or with null
+     once SESSION_WAIT_MS expires (with one final sample at the bound).
+     The settled flag is a once-guard: event + poll + final sample can
+     never resolve twice, so the exchange below fires exactly once. */
+  function waitForSession(client_) {
+    return new Promise(function (resolve) {
+      var settled = false;
+      var timer = null, poll = null, sub = null;
+      function done(session) {
+        if (settled) return;
+        settled = true;
+        if (timer) clearTimeout(timer);
+        if (poll) clearInterval(poll);
+        if (sub) { try { sub.unsubscribe(); } catch (e) {} }
+        resolve(session || null);
+      }
+      function sample() {
+        client_.auth.getSession().then(function (res) {
+          var s = res && res.data && res.data.session;
+          if (s) done(s);
+        }, function () { /* a failed sample is not final — keep waiting */ });
+      }
+      try {
+        var r = client_.auth.onAuthStateChange(function (_event, session) {
+          if (session) done(session);
+        });
+        sub = r && r.data && r.data.subscription;
+      } catch (e) { /* no event source — polling still covers it */ }
+      sample();
+      poll = setInterval(sample, SESSION_POLL_MS);
+      timer = setTimeout(function () {
+        client_.auth.getSession().then(function (res) {
+          done(res && res.data && res.data.session);
+        }, function () { done(null); });
+      }, SESSION_WAIT_MS);
+    });
+  }
+
   function handleReturn() {
+    if (returnInFlight) return returnInFlight;
     if (!looksLikeReturn()) return Promise.resolve(false);
-    return client().then(function (client_) {
-      return client_.auth.getSession();
-    }).then(function (res) {
-      var session = res && res.data && res.data.session;
-      if (!session) { clearIntent(); return false; }
+    var p = client().then(function (client_) {
+      return waitForSession(client_);
+    }).then(function (session) {
+      if (!session) {
+        clearIntent();
+        failToModal('Sign-in problem',
+          'We didn\'t get your Google sign-in back — it may have been interrupted. Please try "Continue with Google" again.');
+        return true;
+      }
       var intent = ssGet(SS_INTENT) || 'login';
       if (intent === 'link') { resumeLink(session); return true; }
-      if (intent === 'claim') { doClaim(session); return true; }
+      if (intent === 'claim') { return doClaim(session); }
       return doOAuthLogin(session);
     }).catch(function (e) {
       clearIntent();
-      failToModal('Sign-in problem', (e && e.message) || 'Something went wrong signing you in. Please try again.');
+      failToModal('Sign-in problem', errText(e, 'Something went wrong signing you in. Please try again.'));
       return true;
     });
+    returnInFlight = p;
+    var clearGuard = function () { if (returnInFlight === p) returnInFlight = null; };
+    p.then(clearGuard, clearGuard);
+    return p;
   }
 
   function doOAuthLogin(session) {
@@ -232,7 +317,7 @@
     ).then(function (r) {
       if (r && r.ok) { finish(r.token); return true; }
       if (r && r.code === 'not_linked') { openChoiceModal(session); return true; }
-      failToModal('Sign-in problem', (r && r.error) || 'Sign-in failed. Please try again.');
+      failToModal('Sign-in problem', errText(r, 'Sign-in failed. Please try again.'));
       return true;
     });
   }
@@ -465,7 +550,7 @@
       session.access_token
     ).then(function (r) {
       if (r && r.ok) { toast('Account claimed — welcome back!', 'good'); finish(r.token); return true; }
-      failToModal('Claim problem', (r && r.error) || 'That claim code did not work.');
+      failToModal('Claim problem', errText(r, 'That claim code did not work.'));
       return true;
     });
   }
@@ -555,6 +640,10 @@
     openClaim: openClaim,
     adminUnlink: adminUnlink,
     handleReturn: handleReturn,
-    _test: { providerLabel: providerLabel, openNameModal: openNameModal, openWelcomeModal: openWelcomeModal }
+    _test: {
+      providerLabel: providerLabel, openNameModal: openNameModal, openWelcomeModal: openWelcomeModal,
+      waitForSession: waitForSession,
+      setSessionWait: function (waitMs, pollMs) { SESSION_WAIT_MS = waitMs; SESSION_POLL_MS = pollMs; }
+    }
   };
 })(window.CPS);
