@@ -110,7 +110,7 @@
     fillSetSelect();
     applyPrefsUI();
     var v = (location.hash || '').replace('#', '');
-    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily', 'faq', 'donate', 'trade', 'trade-history'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
+    showView(['packs', 'wheel', 'collection', 'players', 'stats', 'odds', 'arcade', 'market', 'sets', 'admin', 'daily', 'faq', 'donate', 'trade', 'trade-history', 'help'].indexOf(v) >= 0 || (CPS.sandbox && CPS.sandbox.PUBLIC[v]) ? v : 'packs', true);
     renderPacksSide(); resetStage();
     S.loadWarnings.concat(window.CardSets.errors).forEach(function (w) { toast(w, 'warn', 6000); });
     document.body.classList.add('ready');
@@ -435,6 +435,7 @@
     else if (S.view === 'arcade') { if (typeof CPS !== 'undefined' && CPS.games) CPS.games.render(); }
     else if (S.view === 'market' && CPS.market) CPS.market.render();
     else if (CPS.sandbox && CPS.sandbox.PUBLIC[S.view]) { CPS.sandbox.render(S.view); }
+    else if (S.view === 'help') { if (CPS.help) CPS.help.enter(); }
     else if (S.view === 'wheel') renderWheel();
     else renderPacksSide();
   }

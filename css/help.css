@@ -1,0 +1,47 @@
+/* Help & Support tickets (migration 212) — js/help.js.
+   All classes are help-* namespaced (no cross-module collisions).
+   No backdrop-filter, no animations on always-visible chrome
+   (Firefox Android paint rule). */
+
+.help-sec { margin: 18px 0 8px; }
+
+.help-new { display: grid; gap: 10px; margin-bottom: 6px; }
+.help-new label { display: grid; gap: 4px; font-weight: 600; }
+.help-new input, .help-new textarea, .help-reply textarea {
+  width: 100%; box-sizing: border-box;
+}
+.help-new textarea, .help-reply textarea { resize: vertical; }
+
+.help-group { border: 1px solid rgba(255,255,255,.12); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.help-group-head {
+  width: 100%; text-align: left; background: rgba(255,255,255,.05);
+  border: 0; padding: 10px 12px; font: inherit; font-weight: 700; cursor: pointer; color: inherit;
+}
+.help-group-body { display: grid; }
+.help-empty { padding: 10px 12px; margin: 0; }
+
+.help-ticket-row {
+  display: flex; gap: 10px; align-items: flex-start; width: 100%;
+  text-align: left; background: transparent; border: 0; border-top: 1px solid rgba(255,255,255,.08);
+  padding: 10px 12px; font: inherit; color: inherit; cursor: pointer;
+}
+.help-ticket-row:hover { background: rgba(255,255,255,.04); }
+.help-ticket-main { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.help-ticket-subject { font-weight: 700; }
+.help-ticket-meta { font-size: .85em; opacity: .75; }
+.help-ticket-preview { font-size: .9em; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.help-pill { flex: none; font-size: .78em; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+.help-pill-open { background: #1d5c33; color: #b9f4cd; }
+.help-pill-closed { background: rgba(255,255,255,.14); color: inherit; opacity: .8; }
+
+.help-thread { display: grid; gap: 10px; margin: 12px 0; }
+.help-msg { border: 1px solid rgba(255,255,255,.12); border-radius: 10px; padding: 10px 12px; }
+.help-msg-admin { border-color: rgba(255, 210, 90, .45); background: rgba(255, 210, 90, .06); }
+.help-msg-body { white-space: pre-wrap; word-break: break-word; margin-top: 4px; }
+.help-admin-tag { font-size: .75em; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: rgba(255,210,90,.25); }
+
+.help-reply { display: grid; gap: 8px; }
+.help-admin-actions { margin-top: 12px; }
+.help-admin-actions .btn.danger { margin-top: 0; } /* .btn.danger carries a global margin-top (style.css) */
+.help-thread-subject { margin-top: 10px; }
