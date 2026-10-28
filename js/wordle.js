@@ -121,6 +121,7 @@
       S.lastGame = null;
       S.tokens = r.tokens_now; S.spins = r.spins_now;
       if (S.game && S.game.free) S.freeAvailable = false;
+      if (typeof r.free_available === 'boolean') S.freeAvailable = r.free_available;
       S.input = '';
       syncBadges();
       paint();
@@ -404,13 +405,16 @@
     // end-of-game buttons wait for the reveal (Franklin, 2026-10-26).
     if (animRow >= 0 && !g && !!d && animRow === d.guesses.length - 1) {
       return { statusLine: d.free ? 'Free game in progress — good luck!'
-                                  : 'Game in progress (' + S.cost + ' tokens paid).', actionBtn: '' };
+                                  : 'Game in progress — good luck!', actionBtn: '' };
     }
     if (!S.loaded) {
       statusLine = 'Loading…';
     } else if (g) {
+      /* No "(N tokens paid)" claim: for a restored in-progress game
+         the client cannot verify what was paid (a game left over from
+         a previous day showed exactly that false claim). */
       statusLine = g.free ? 'Free game in progress — good luck!'
-                          : 'Game in progress (' + S.cost + ' tokens paid).';
+                          : 'Game in progress — good luck!';
     } else if (d) {
       statusLine = d.status === 'won'
         ? '🎉 Solved in ' + d.guesses.length + (d.guesses.length === 1 ? ' guess' : ' guesses') +
@@ -436,7 +440,7 @@
        a flipping row (animRow) or a game in progress, and it settles
        in only on the post-flip repaint like the end-of-game modal. */
     var coverHtml = '';
-    if (S.loaded && !S.loadError && !S.busy && !S.game && animRow < 0) {
+    if (S.loaded && !S.loadError && !S.busy && !S.game && !S.lastGame && animRow < 0) {
       coverHtml = '<div class="wr-cover"><button type="button" class="btn primary wr-cover-btn" id="wrCoverBtn">' +
         (S.freeAvailable ? 'Play free game' : 'Play again — ' + S.cost + ' 🪙') + '</button></div>';
     }
