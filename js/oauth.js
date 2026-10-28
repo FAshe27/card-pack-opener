@@ -497,6 +497,7 @@
     mount.className = 'oauth-gate';
     mount.innerHTML =
       '<button class="btn oauth-btn google" type="button" id="oauthGoogle">' + googleMark() + ' Continue with Google</button>' +
+      '<p class="oauth-link-hint">If you log in using Username and PIN, you MUST log in with that before linking your Google Login in the top right dropdown.</p>' +
       '<div class="oauth-divider"><span>or use your username + PIN</span></div>';
     form.parentNode.insertBefore(mount, form);
     var foot = document.createElement('p');
