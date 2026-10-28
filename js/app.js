@@ -2831,6 +2831,11 @@
       closeAccountMenu();
       showView('faq');
     });
+    var _acctHelp = $('#acctHelpBtn');
+    if (_acctHelp) _acctHelp.addEventListener('click', function () {
+      closeAccountMenu();
+      showView('help');
+    });
     var _acctDonate = $('#acctDonateBtn');
     if (_acctDonate) _acctDonate.addEventListener('click', function () {
       closeAccountMenu();
