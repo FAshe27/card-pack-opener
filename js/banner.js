@@ -27,6 +27,20 @@
        dismissal lasts until the banner is edited or turned off.
      * Admins see the banner too (it is information, not a block) —
        which doubles as the admin panel's live preview.
+     * AUDIENCE (216): Franklin can aim a banner at 'everyone' (the
+       209/211 behaviour) or at 'unlinked' — only logged-in players
+       who have not linked a Google account yet, for the Google-
+       login migration campaign. An 'unlinked' banner renders ONLY
+       when the state payload in CPS.appCtx.S names an account with
+       oauth_linked === false: default-deny, so linked players
+       never see it (not even a flash before state settles) and
+       logged-out visitors don't either. A MutationObserver on
+       <body> (the oauth.js watchGate precedent) re-evaluates the
+       gate when app rendering settles, so the bar appears as an
+       unlinked player lands, vanishes the moment they link
+       (oauth.js flips the flag synchronously) or log out — the
+       60s poll stays as backstop. Campaign tool: retire the
+       'unlinked' choice once the Google migration completes.
      * Everything fails open: before 209 runs, or offline, the RPC
        errors / returns no banner key and the site behaves exactly
        as it does today.
@@ -46,8 +60,8 @@
     urgent: { icon: '🚨', label: 'Urgent' }
   };
 
-  var state = { enabled: false, text: '', style: 'info', dismissible: true, version: 0, redisplay: 0 };
-  var bar = null, timer = null, checking = false;
+  var state = { enabled: false, text: '', style: 'info', dismissible: true, version: 0, redisplay: 0, audience: 'everyone' };
+  var bar = null, timer = null, checking = false, watching = false, lastGate = null;
 
   function ctx() { return CPS.appCtx || {}; }
   function token() {
@@ -71,7 +85,8 @@
         style: STYLES[r.banner.style] ? r.banner.style : 'info',
         dismissible: r.banner.dismissible !== false,
         version: r.banner.version | 0,
-        redisplay: Math.max(0, r.banner.redisplay_minutes | 0) // absent pre-211 => 0
+        redisplay: Math.max(0, r.banner.redisplay_minutes | 0), // absent pre-211 => 0
+        audience: r.banner.audience === 'unlinked' ? 'unlinked' : 'everyone' // absent pre-216 => everyone (fail-open)
       };
     }
     render();
@@ -105,8 +120,27 @@
     return (Date.now() - d.t) < state.redisplay * 60000;
   }
 
+  /* 216 gate: for an 'unlinked'-audience banner, true ONLY for a
+     known unlinked player — a landed state payload naming an
+     account whose oauth_linked is strictly false. Logged-out and
+     not-yet-settled are the same value (S.account === null) and
+     both deny, so a linked player can never flash the bar. */
+  function accountGate() {
+    var S = ctx().S;
+    var acct = S && S.account;
+    return !!(acct && acct.id && acct.oauth_linked === false);
+  }
+
+  function gateSignature() {
+    var S = ctx().S;
+    var acct = S && S.account;
+    if (!acct || !acct.id) return 'out';
+    return acct.id + '|' + (acct.oauth_linked === false ? 'unlinked' : acct.oauth_linked === true ? 'linked' : 'unknown');
+  }
+
   function shouldShow() {
     if (!state.enabled || !state.text) return false;
+    if (state.audience === 'unlinked' && !accountGate()) return false;
     if (state.dismissible && dismissedNow()) return false;
     return true;
   }
@@ -158,7 +192,7 @@
       '<h2>📣 Announcement banner</h2>' +
       '<p class="small muted" id="bannerStatus" style="margin-top:0">Loading&hellip;</p>' +
       '<label class="inline" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">' +
-        '<input type="checkbox" id="bannerEnabled"> <b>Banner on</b> &mdash; a line across the top of every page, for every player</label>' +
+        '<input type="checkbox" id="bannerEnabled"> <b>Banner on</b> &mdash; a line across the top of the page (the Audience choice below decides who sees it)</label>' +
       '<label class="field">Banner text ' +
         '<input id="bannerText" type="text" maxlength="200" placeholder="Heads up — PackRipper goes down for a tune-up tonight around 9 PM Central"></label>' +
       '<label class="field">Style ' +
@@ -167,6 +201,12 @@
           '<option value="warning">⚠️ Warning (amber)</option>' +
           '<option value="urgent">🚨 Urgent (red)</option>' +
         '</select></label>' +
+      '<label class="field">Audience ' +
+        '<select id="bannerAudience">' +
+          '<option value="everyone">Everyone — every visitor</option>' +
+          '<option value="unlinked">Only players who haven&rsquo;t linked Google</option>' +
+        '</select>' +
+        '<span class="small muted" style="display:block;margin-top:4px">“Unlinked only” is the Google-migration campaign tool: the banner shows solely to logged-in players who haven&rsquo;t linked a Google account yet — linked players and logged-out visitors never see it. We can retire this choice once the migration is complete.</span></label>' +
       '<label class="inline" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">' +
         '<input type="checkbox" id="bannerDismissible" checked> Players can dismiss it (editing or re-saving shows it to them again)</label>' +
       '<label class="field">Redisplay every ' +
@@ -188,7 +228,9 @@
     var statusEl = $('#bannerStatus');
     if (statusEl) {
       statusEl.textContent = state.enabled && state.text
-        ? 'ON — players are seeing: “' + state.text + '”'
+        ? (state.audience === 'unlinked'
+            ? 'ON — showing ONLY to players who haven’t linked Google: “' + state.text + '”'
+            : 'ON — players are seeing: “' + state.text + '”')
         : 'Off — no banner is showing.';
     }
     var active = document.activeElement;
@@ -197,6 +239,7 @@
       var en = $('#bannerEnabled'); if (en) en.checked = !!state.enabled;
       var tx = $('#bannerText'); if (tx && (force || !tx.dataset.touched)) tx.value = state.text || '';
       var st = $('#bannerStyle'); if (st) st.value = state.style || 'info';
+      var au = $('#bannerAudience'); if (au) au.value = state.audience === 'unlinked' ? 'unlinked' : 'everyone'; // missing/pre-216 => Everyone
       var di = $('#bannerDismissible'); if (di) di.checked = state.dismissible !== false;
       var rd = $('#bannerRedisplay'); if (rd && (force || !rd.dataset.touched)) rd.value = state.redisplay ? String(state.redisplay) : '';
     }
@@ -210,6 +253,7 @@
     var text = (($('#bannerText') && $('#bannerText').value) || '').trim();
     var style = ($('#bannerStyle') && $('#bannerStyle').value) || 'info';
     var dismissible = !!($('#bannerDismissible') && $('#bannerDismissible').checked);
+    var audience = ($('#bannerAudience') && $('#bannerAudience').value) === 'unlinked' ? 'unlinked' : 'everyone';
     var redisplay = parseInt(($('#bannerRedisplay') && $('#bannerRedisplay').value) || '0', 10);
     if (isNaN(redisplay) || redisplay < 0) redisplay = 0;
     if (redisplay > 10080) redisplay = 10080;
@@ -221,7 +265,7 @@
     try {
       var r = await CPS.cloud.call('admin_set_banner', {
         p_enabled: enabled, p_text: text, p_style: style, p_dismissible: dismissible,
-        p_redisplay_minutes: redisplay
+        p_redisplay_minutes: redisplay, p_audience: audience
       });
       if (r) {
         state = {
@@ -230,7 +274,8 @@
           style: STYLES[r.style] ? r.style : 'info',
           dismissible: r.dismissible !== false,
           version: r.version | 0,
-          redisplay: Math.max(0, r.redisplay_minutes | 0)
+          redisplay: Math.max(0, r.redisplay_minutes | 0),
+          audience: r.audience === 'unlinked' ? 'unlinked' : 'everyone'
         };
       }
       if (c.toast) c.toast(enabled ? 'Banner is ON. Players will see it within about a minute.' : 'Banner is OFF.', enabled ? 'good' : 'warn');
@@ -263,9 +308,31 @@
     fillPanel(panel, false);
   }
 
+  /* ------------------------------------------------ account watcher (216) */
+  /* Re-evaluate the render gate when app rendering settles (the
+     oauth.js watchGate precedent): login landing, a completed link
+     and logout all change S.account and re-render the page, so the
+     bar appears/vanishes with the session instead of waiting for
+     the next 60s poll. The callback early-returns unless the gate
+     inputs (account id + linked flag) actually changed — which
+     also makes the bar's own insertion a one-pass no-op. */
+  function watchAccount() {
+    if (watching || !window.MutationObserver || !document.body) return;
+    watching = true;
+    lastGate = gateSignature();
+    var mo = new MutationObserver(function () {
+      var sig = gateSignature();
+      if (sig === lastGate) return;
+      lastGate = sig;
+      render();
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+  }
+
   /* ------------------------------------------------ boot */
   function start() {
     if (timer) return;
+    watchAccount();
     if (CPS.maintenance && CPS.maintenance.check) {
       /* Ride the maintenance module's poll (it pushes each response
          into applyStatus). No second timer, no duplicate RPC. */
