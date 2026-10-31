@@ -8,7 +8,11 @@
      jumbled flow) calls CPS.slips.applyPackGrants, so we wrap that function —
      no app.js changes needed.
    - Claim state comes from the cps_cotd_status RPC (server is source of truth);
-     the pop-up shows once per cotd_date per login session.
+     the pop-up fires only when the pack that just finished actually contained
+     today's card (the server claim alone stays "claimed" all day, so keying
+     off it re-popped the celebration on any device/browser whose localStorage
+     guard was still empty). The localStorage guard below remains as a second
+     layer, so a second copy of the card in a later pack doesn't re-pop either.
 */
 (function (CPS) {
   'use strict';
@@ -122,13 +126,39 @@
     try { C.fx.confetti(220); C.fx.banner('CARD OF THE DAY!', 'legendary'); } catch (e) {}
   }
 
-  async function onPackFinish() {
+  /* Identity of every real card in a finished pack, as 'set_id|card_id'
+     keys — the same identity the server claims on (it scans each dealt
+     card's set_id + card_id). Jumbled pulls carry their home set on the
+     pull; normal pulls belong to the opening's set. Slips have no card
+     and are skipped. Extracted synchronously in the hook wrapper, while
+     S.opening is still the pack that just finished. */
+  function packCardKeys(pulls) {
+    var keys = [];
+    var openSet = (C && C.S && C.S.opening && C.S.opening.set && C.S.opening.set.id) || null;
+    (pulls || []).forEach(function (p) {
+      if (!p || !p.card || !p.card.id) return;
+      var sid = (p.homeSet && p.homeSet.id) || openSet;
+      if (sid) keys.push(sid + '|' + p.card.id);
+    });
+    return keys;
+  }
+
+  async function onPackFinish(keys) {
     var st = await fetchStatus(); // force refresh: the server is source of truth
     if (!st || !st.ok) return;
-    if (st.claimed && !alreadyPopped(st.cotd_date)) {
-      markPopped(st.cotd_date);
-      claimPopup(st);
-    }
+    /* Pop only when THIS pack contained today's card. st.claimed stays
+       true all day once claimed, so the claim alone can't gate the
+       pop-up — it re-popped on a second device whose localStorage guard
+       was empty, after a pack that didn't even hold the card. The server
+       claim itself is once-per-day in the DB regardless; this is
+       display-only. st.card_id is present whenever anyone has claimed
+       (a claim implies the card was found), so a missing card_id fails
+       closed: no pop. */
+    if (!st.claimed || !st.card_id) return;
+    if (!keys || keys.indexOf(st.set_id + '|' + st.card_id) < 0) return;
+    if (alreadyPopped(st.cotd_date)) return;
+    markPopped(st.cotd_date);
+    claimPopup(st);
   }
 
   function hookFinish() {
@@ -137,7 +167,7 @@
     var orig = CPS.slips.applyPackGrants;
     var wrapped = function () {
       var r = orig.apply(this, arguments);
-      try { onPackFinish(); } catch (e) { if (window.console) console.error(e); }
+      try { onPackFinish(packCardKeys(arguments[0])); } catch (e) { if (window.console) console.error(e); }
       return r;
     };
     wrapped.__cotdHooked = true;
