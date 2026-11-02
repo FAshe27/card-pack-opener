@@ -3009,6 +3009,16 @@
       if (lg) { lg.classList.add('broken'); return; } // missing logo file: just hide it
       if (!img.closest('.cf-art')) return;
       if (img.dataset && img.dataset.o) return; /* grid thumb failed: the img's own onerror swaps in the full art — don't stomp it with placeholder art */
+      /* Transient CDN failures (TCGdex served intermittent 503s on 2026-11-02 —
+         whole Pokémon packs rendered as placeholder art) get up to 3 retries with
+         backoff before the placeholder fallback below gives up on the image. */
+      var tries = +(img.dataset.r || 0);
+      if (tries < 3) {
+        img.dataset.r = tries + 1;
+        var s0 = img.dataset.s0 || img.src; img.dataset.s0 = s0;
+        setTimeout(function () { if (img.isConnected) img.src = s0 + (s0.indexOf('?') < 0 ? '?' : '&') + 'r' + (tries + 1); }, 500 * (tries + 1) + Math.floor(Math.random() * 250));
+        return;
+      }
       var el = img.closest('.card'), set = window.CardSets.get(el.dataset.set), c = set && set.byId.get(el.dataset.card);
       if (c) img.outerHTML = CPS.cards.art(set, c);
     }, true);
