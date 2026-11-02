@@ -642,6 +642,27 @@
     return Promise.resolve(true);
   }
 
+  /* [222] Legacy funnel: after a PIN login, an unlinked account gets the
+     Link Google prompt ONCE per login episode — the moment a dormant
+     legacy player returns is the moment to migrate them, while they're
+     here. Mirrors maybeResumeLink's episode guard (keyed to the cps
+     token value); app.js calls this from the gate's PIN-submit success. */
+  var funnelEpisodeKey = null, funnelShown = false;
+  function afterPinLogin() {
+    var tries = 0;
+    (function check() {
+      var token = null;
+      try { token = (CPS.cloud && CPS.cloud.getToken && CPS.cloud.getToken()) || null; } catch (e) { token = null; }
+      if (token !== funnelEpisodeKey) { funnelEpisodeKey = token; funnelShown = false; }
+      if (!token || funnelShown) return;
+      var acct = (C && C.S && C.S.account) || null;
+      if (!acct || !acct.id) { if (++tries <= 6) setTimeout(check, 250); return; }
+      if (acct.oauth_linked !== false) return;
+      funnelShown = true;
+      setTimeout(function () { openLink(); }, 350);
+    })();
+  }
+
   /* ---------- claim-code recovery ---------- */
   function openClaim() {
     openOAuthModal(
@@ -704,8 +725,7 @@
     mount.id = 'oauthGate';
     mount.className = 'oauth-gate';
     mount.innerHTML =
-      '<button class="btn oauth-btn google" type="button" id="oauthGoogle">' + googleMark() + ' Continue with Google</button>' +
-      '<div class="oauth-divider"><span>or use your username + PIN</span></div>';
+      '<button class="btn oauth-btn google" type="button" id="oauthGoogle">' + googleMark() + ' Continue with Google</button>';
     form.parentNode.insertBefore(mount, form);
     var foot = document.createElement('p');
     foot.className = 'muted small';
@@ -715,6 +735,22 @@
     (msg ? msg.parentNode.insertBefore(foot, msg.nextSibling) : form.parentNode.appendChild(foot));
     mount.querySelector('#oauthGoogle').addEventListener('click', function () { startProvider('google', 'login'); });
     foot.querySelector('#oauthClaimLink').addEventListener('click', function (e) { e.preventDefault(); openClaim(); });
+    /* [222] The legacy PIN door: the username+PIN form starts hidden, and
+       this quiet button at the bottom of the prompt opens it. Legacy
+       accounts only — the server refuses PIN sign-in for everyone else
+       (migration 222), so for a modern account the form just explains. */
+    form.style.display = 'none';
+    var legacy = document.createElement('button');
+    legacy.className = 'btn ghost small oauth-legacy';
+    legacy.type = 'button';
+    legacy.id = 'oauthLegacyToggle';
+    legacy.textContent = 'Log in by PIN (Legacy accounts only)';
+    foot.parentNode.insertBefore(legacy, foot.nextSibling);
+    legacy.addEventListener('click', function () {
+      var open = form.style.display !== 'none';
+      form.style.display = open ? 'none' : '';
+      if (!open) { var u = box.querySelector('#loginUser'); if (u) u.focus(); }
+    });
   }
 
   /* Observer fallback: enhance the gate whenever app.js shows it, so
@@ -828,6 +864,7 @@
 
   CPS.oauth = {
     enhanceGate: enhanceGate,
+    afterPinLogin: afterPinLogin,
     startProvider: startProvider,
     openLink: openLink,
     resumeLink: resumeLink,

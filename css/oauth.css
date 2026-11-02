@@ -32,6 +32,9 @@
 
 .oauth-choice { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
 
+/* [222] The legacy PIN door at the bottom of the login prompt. */
+.oauth-legacy { display: block; margin: 10px auto 0; }
+
 .oauth-earn { margin: 6px 0 12px; padding-left: 20px; }
 .oauth-earn li { margin: 4px 0; }
 

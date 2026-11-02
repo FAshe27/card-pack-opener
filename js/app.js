@@ -2192,7 +2192,7 @@
     opts = opts || {};
     var html = '<div class="login-box gate">' +
       '<h2>Log in</h2>' +
-      '<p class="muted small">Use the username and 4-digit PIN the site owner gave you.</p>' +
+      '<p class="muted small">Sign in with Google. Legacy accounts can still use their username + PIN.</p>' +
       '<form id="loginForm" class="login-form" autocomplete="on">' +
       '<label class="field">Username <input id="loginUser" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Username" maxlength="32"></label>' +
       '<label class="field">PIN <input id="loginPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="current-password" placeholder="••••"></label>' +
@@ -2228,7 +2228,7 @@
         btn.disabled = true; btn.textContent = 'Logging in…'; msg.textContent = ''; msg.className = 'login-msg';
         try {
           var r = await doLogin(name, code, $('#loginRemember', box).checked);
-          if (r && r.ok) { Store.setPref('lastUser', name); closeModal(true); return; }
+          if (r && r.ok) { Store.setPref('lastUser', name); closeModal(true); if (CPS.oauth && CPS.oauth.afterPinLogin) CPS.oauth.afterPinLogin(); return; }
           var t = (r && r.error) || 'Login failed.';
           if (r && !r.locked && r.remaining != null && r.remaining <= 3) t += ' ' + r.remaining + (r.remaining === 1 ? ' try' : ' tries') + ' left before a lockout.';
           fail(t); pin.value = ''; pin.focus();
