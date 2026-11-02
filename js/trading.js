@@ -196,6 +196,14 @@
   }
 
   /* ------------------------------------------------------------ detail */
+  /* An offer's pack lines (221): the server's normalized pack_lines when
+     present, else the legacy single pack_set/packs pair. */
+  function packLinesOf(o) {
+    if (o && Array.isArray(o.pack_lines) && o.pack_lines.length) return o.pack_lines;
+    if (o && o.packs > 0 && o.pack_set) return [{ set: o.pack_set, n: o.packs, name: o.pack_name }];
+    return [];
+  }
+
   function offerCardLines(c) {
     var sid = c.set_id || c.set, cid = c.card_id || c.card;
     var s = setObj(sid), card = s && s.byId.get(cid);
@@ -228,7 +236,7 @@
     var lines = [], faces = [];
     if (o.tokens > 0) lines.push('<span class="trade-offer-line">🪙 <b>' + o.tokens + '</b> game token' + (o.tokens === 1 ? '' : 's') + '</span>');
     if (o.tickets > 0) lines.push('<span class="trade-offer-line">🎟️ <b>' + o.tickets + '</b> spin ticket' + (o.tickets === 1 ? '' : 's') + '</span>');
-    if (o.packs > 0) lines.push('<span class="trade-offer-line">🎁 <b>' + o.packs + '</b> ' + esc(o.pack_name || o.pack_set) + ' pack' + (o.packs === 1 ? '' : 's') + '</span>');
+    packLinesOf(o).forEach(function (ln) { lines.push('<span class="trade-offer-line">🎁 <b>' + ln.n + '</b> ' + esc(ln.name || ln.set) + ' pack' + (ln.n === 1 ? '' : 's') + '</span>'); });
     (o.cards || []).forEach(function (c) {
       var f = offerCardFace(c);
       if (f) faces.push('<div class="trade-face">' + f + '</div>');
@@ -257,7 +265,7 @@
     var out = [];
     if (o.tokens > 0) out.push('<span class="trade-offer-line">🪙 <b>' + o.tokens + '</b> game token' + (o.tokens === 1 ? '' : 's') + '</span>');
     if (o.tickets > 0) out.push('<span class="trade-offer-line">🎟️ <b>' + o.tickets + '</b> spin ticket' + (o.tickets === 1 ? '' : 's') + '</span>');
-    if (o.packs > 0) out.push('<span class="trade-offer-line">🎁 <b>' + o.packs + '</b> ' + esc(o.pack_name || o.pack_set) + ' pack' + (o.packs === 1 ? '' : 's') + '</span>');
+    packLinesOf(o).forEach(function (ln) { out.push('<span class="trade-offer-line">🎁 <b>' + ln.n + '</b> ' + esc(ln.name || ln.set) + ' pack' + (ln.n === 1 ? '' : 's') + '</span>'); });
     (o.cards || []).forEach(function (c) { out.push(offerCardLines(c)); });
     return out.join('') || '<span class="muted small">—</span>';
   }

@@ -160,3 +160,7 @@ button.copies-tile:hover { border-color: #f5b942; }
 @media (max-width: 400px) {
   .tp-pick .cmp-rowacts, .bounty-pick .cmp-rowacts { flex-wrap: wrap; }
 }
+
+/* Multi-set pack offer rows (221) */
+.cmp-packrow { align-items: center; }
+.cmp-packrow + .cmp-packrow { margin-top: 6px; }

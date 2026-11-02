@@ -1251,7 +1251,7 @@
     var sets = HT.ownedSets();
     OD = {
       listing: listing, sets: sets, set: sets[0] ? sets[0].id : '', q: '',
-      tokens: 0, tickets: 0, packSet: '', packs: 0,
+      tokens: 0, tickets: 0, packSet: '', packs: 0, packLines: [],   // [{set, n}] multi-set packs (221); packSet/packs mirror line 1
       cards: []   // {set, card, holo, tier, serial, label}
     };
     var ro = lsGet('cps.composerSet.offer');
@@ -1267,6 +1267,12 @@
     if (p.tickets != null) OD.tickets = Math.max(0, parseInt(p.tickets, 10) || 0);
     if (p.packSet) OD.packSet = p.packSet;
     if (p.packs != null) OD.packs = Math.max(0, parseInt(p.packs, 10) || 0);
+    if (Array.isArray(p.packLines) && p.packLines.length) {
+      OD.packLines = p.packLines.filter(function (x) { return x && x.set; })
+        .map(function (x) { return { set: x.set, n: Math.max(0, parseInt(x.n, 10) || 0) }; });
+    }
+    if (!OD.packLines.length && OD.packSet) OD.packLines = [{ set: OD.packSet, n: OD.packs }];
+    syncPackMirror();
     (p.cards || []).forEach(function (c) {
       var card = cardObj(c.set, c.card);
       if (!card) return;
@@ -1284,8 +1290,18 @@
       }
     }
   }
+  /* packSet/packs mirror the first live pack line for legacy readers;
+     packLines is the truth. */
+  function syncPackMirror() {
+    var first = OD.packLines.filter(function (x) { return x.set && x.n > 0; })[0];
+    OD.packSet = first ? first.set : '';
+    OD.packs = first ? first.n : 0;
+  }
+  function totalPacks() {
+    return OD.packLines.reduce(function (a, x) { return a + (x.set ? Math.max(0, x.n || 0) : 0); }, 0);
+  }
   function snapOffer() {
-    return JSON.stringify({ tk: OD.tokens, ti: OD.tickets, ps: OD.packSet, pk: OD.packs, c: OD.cards });
+    return JSON.stringify({ tk: OD.tokens, ti: OD.tickets, pl: OD.packLines, c: OD.cards });
   }
 
   function ofShowForm() {
@@ -1302,8 +1318,9 @@
         '" value="0" style="width:80px"></label><span class="muted small" id="ofTokensHave"></span>' +
       '<label>🎟️ Tickets <input id="ofTickets" type="number" min="0" max="' + (ctx.S.spins || 0) +
         '" value="0" style="width:80px"></label><span class="muted small" id="ofTicketsHave"></span></div>' +
-      '<div class="row wrap"><label>🎁 Packs <select id="ofPackSet"></select></label>' +
-      '<input id="ofPacks" type="number" min="0" value="0" style="width:70px"><span class="muted small" id="ofPacksHave"></span></div>' +
+      '<div id="ofPackRows"></div>' +
+      '<div class="row wrap"><button type="button" class="btn small" id="ofPackAdd">+ Add packs</button>' +
+      '<span class="muted small">offer packs from as many sets as you like</span></div>' +
       '<div class="row wrap"><label>🃏 Card <select id="ofCardSet"></select></label>' +
       '<label>Search <input id="ofCardSearch" placeholder="card name or #" size="18"></label></div>' +
       '<div id="ofCardCount" class="muted small picker-count"></div>' +
@@ -1322,10 +1339,11 @@
     var bits = [];
     if (OD.tokens > 0) bits.push('🪙 ' + OD.tokens + ' token' + (OD.tokens === 1 ? '' : 's'));
     if (OD.tickets > 0) bits.push('🎟️ ' + OD.tickets + ' ticket' + (OD.tickets === 1 ? '' : 's'));
-    if (OD.packSet && OD.packs > 0) {
-      var ps = setObj(OD.packSet);
-      bits.push('🎁 ' + OD.packs + ' ' + (ps ? ps.name : OD.packSet) + ' pack' + (OD.packs === 1 ? '' : 's'));
-    }
+    OD.packLines.forEach(function (x) {
+      if (!x.set || !(x.n > 0)) return;
+      var ps = setObj(x.set);
+      bits.push('🎁 ' + x.n + ' ' + (ps ? ps.name : x.set) + ' pack' + (x.n === 1 ? '' : 's'));
+    });
     OD.cards.forEach(function (o) { bits.push('🃏 ' + o.label + (o.holo ? ' ✦' : '')); });
     var l = OD.listing;
     t.textContent = 'For ' + (l.card_name || l.card_id) + ' · Offering ' + (bits.length ? bits.join(' + ') : 'nothing yet');
@@ -1333,29 +1351,60 @@
 
   function bindOfferForm(box) {
     bindClose(box, ofCloseForm);
-    // pack picker
-    var packSet = box.querySelector('#ofPackSet'), packsHave = box.querySelector('#ofPacksHave');
-    var invSets = OD.sets.filter(function (s) { return (ctx.ps({ id: s.id }).packs || 0) > 0; });
-    packSet.innerHTML = '<option value="">—</option>' + invSets.map(function (s) {
-      return '<option value="' + esc(s.id) + '">' + esc(s.name) + ' (' + ctx.ps({ id: s.id }).packs + ')</option>';
-    }).join('');
-    packSet.value = OD.packSet;
-    var packsInp = box.querySelector('#ofPacks');
-    function syncPacks() {
-      OD.packSet = packSet.value;
-      var n = OD.packSet ? (ctx.ps({ id: OD.packSet }).packs || 0) : 0;
-      packsHave.textContent = OD.packSet ? 'you have ' + n : '';
-      packsInp.disabled = !OD.packSet;
-      packsInp.max = n;
-      OD.packs = Math.max(0, Math.min(n, parseInt(packsInp.value, 10) || 0));
-      packsInp.value = OD.packs;
-      ofRecap(box);
+    // pack lines (221): one row per set — set select + count + you-have.
+    // [+ Add packs] adds a row; a set can't repeat across rows.
+    if (!OD.packLines.length) OD.packLines = [{ set: '', n: 0 }];
+    var packRowsHost = box.querySelector('#ofPackRows');
+    function renderPackRows() {
+      packRowsHost.innerHTML = OD.packLines.map(function (x, i) {
+        var used = {};
+        OD.packLines.forEach(function (y, j) { if (j !== i && y.set) used[y.set] = 1; });
+        var opts = OD.sets.filter(function (st) { return (ctx.ps({ id: st.id }).packs || 0) > 0 && !used[st.id]; });
+        if (x.set && !opts.some(function (st) { return st.id === x.set; })) {
+          var cur = setObj(x.set); if (cur) opts = opts.concat([cur]);
+        }
+        var have = x.set ? (ctx.ps({ id: x.set }).packs || 0) : 0;
+        return '<div class="row wrap cmp-packrow"><label>🎁 Packs <select class="of-pack-set" data-i="' + i + '">' +
+          '<option value="">—</option>' + opts.map(function (st) {
+            return '<option value="' + esc(st.id) + '"' + (st.id === x.set ? ' selected' : '') + '>' +
+              esc(st.name) + ' (' + (ctx.ps({ id: st.id }).packs || 0) + ')</option>';
+          }).join('') + '</select></label>' +
+          '<input class="of-pack-n" data-i="' + i + '" type="number" min="0" max="' + have + '" value="' + (x.n || 0) +
+          '" style="width:70px"' + (x.set ? '' : ' disabled') + '>' +
+          '<span class="muted small">' + (x.set ? 'you have ' + have : '') + '</span>' +
+          (OD.packLines.length > 1 ? '<button type="button" class="btn small" data-packrm="' + i + '">Remove</button>' : '') +
+          '</div>';
+      }).join('');
+      packRowsHost.querySelectorAll('.of-pack-set').forEach(function (sel) {
+        sel.addEventListener('change', function () {
+          var i = +sel.getAttribute('data-i');
+          OD.packLines[i].set = sel.value;
+          var have = sel.value ? (ctx.ps({ id: sel.value }).packs || 0) : 0;
+          OD.packLines[i].n = Math.min(have, OD.packLines[i].n || 0);
+          syncPackMirror(); renderPackRows(); ofRecap(box);
+        });
+      });
+      packRowsHost.querySelectorAll('.of-pack-n').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+          var i = +inp.getAttribute('data-i');
+          OD.packLines[i].n = Math.max(0, parseInt(inp.value, 10) || 0);
+          syncPackMirror(); ofRecap(box);
+        });
+        inp.addEventListener('change', function () { renderPackRows(); });
+      });
+      packRowsHost.querySelectorAll('[data-packrm]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          OD.packLines.splice(+btn.getAttribute('data-packrm'), 1);
+          syncPackMirror(); renderPackRows(); ofRecap(box);
+        });
+      });
     }
-    packSet.addEventListener('change', syncPacks);
-    packsInp.addEventListener('input', function () { OD.packs = Math.max(0, parseInt(packsInp.value, 10) || 0); ofRecap(box); });
-    packsInp.addEventListener('change', syncPacks);
-    packsInp.value = OD.packs;
-    syncPacks();
+    renderPackRows();
+    box.querySelector('#ofPackAdd').addEventListener('click', function () {
+      if (OD.packLines.length >= 10) { showErrors(box, 'ofErrors', ['At most 10 pack lines in an offer.']); return; }
+      OD.packLines.push({ set: '', n: 0 });
+      renderPackRows();
+    });
     // currency: keep OD in sync as you type; clamp to balance on change
     function ofMoney(inputSel, hintSel, key, balance) {
       var inp = box.querySelector(inputSel), hint = box.querySelector(hintSel);
@@ -1527,14 +1576,19 @@
   function ofCollect(box) {
     OD.tokens = Math.max(0, parseInt(box.querySelector('#ofTokens').value, 10) || 0);
     OD.tickets = Math.max(0, parseInt(box.querySelector('#ofTickets').value, 10) || 0);
-    OD.packSet = box.querySelector('#ofPackSet').value || '';
-    OD.packs = Math.max(0, parseInt(box.querySelector('#ofPacks').value, 10) || 0);
+    OD.packLines = OD.packLines.map(function (x, i) {
+      var sel = box.querySelector('.of-pack-set[data-i="' + i + '"]');
+      var inp = box.querySelector('.of-pack-n[data-i="' + i + '"]');
+      return { set: sel ? (sel.value || '') : x.set, n: inp ? Math.max(0, parseInt(inp.value, 10) || 0) : x.n };
+    });
+    syncPackMirror();
   }
 
   function ofValidateOffer() {
     var msgs = [];
-    if (OD.packSet && !OD.packs) msgs.push('Set the pack count for your pack offer.');
-    var packs = OD.packSet ? OD.packs : 0;
+    if (OD.packLines.some(function (x) { return x.set && !x.n; })) msgs.push('Set the pack count for each set in your pack offer.');
+    if (OD.packLines.some(function (x) { return !x.set && x.n > 0; })) msgs.push('Pick a set for each pack line in your offer.');
+    var packs = totalPacks();
     if (!OD.tokens && !OD.tickets && !packs && !OD.cards.length) {
       msgs.push('Your offer needs tokens, tickets, packs, or cards.');
     }
@@ -1550,10 +1604,11 @@
     var bits = [];
     if (OD.tokens > 0) bits.push('🪙 ' + OD.tokens + ' token' + (OD.tokens === 1 ? '' : 's'));
     if (OD.tickets > 0) bits.push('🎟️ ' + OD.tickets + ' ticket' + (OD.tickets === 1 ? '' : 's'));
-    if (OD.packSet && OD.packs > 0) {
-      var ps = setObj(OD.packSet);
-      bits.push('🎁 ' + OD.packs + ' ' + (ps ? ps.name : OD.packSet) + ' pack' + (OD.packs === 1 ? '' : 's'));
-    }
+    OD.packLines.forEach(function (x) {
+      if (!x.set || !(x.n > 0)) return;
+      var ps = setObj(x.set);
+      bits.push('🎁 ' + x.n + ' ' + (ps ? ps.name : x.set) + ' pack' + (x.n === 1 ? '' : 's'));
+    });
     OD.cards.forEach(function (o) { bits.push('🃏 ' + o.label + (o.holo ? ' ✦ holo' : '')); });
     ctx.openModal(
       '<button class="modal-x" data-close aria-label="Close">×</button>' +
@@ -1574,12 +1629,15 @@
   }
 
   async function ofDoSubmit(box, btn) {
-    var packs = OD.packSet ? OD.packs : 0;
+    var lines = OD.packLines.filter(function (x) { return x.set && x.n > 0; })
+      .map(function (x) { return { set: x.set, n: x.n }; });
+    var packs = lines.length ? lines[0].n : 0;
     btn.disabled = true;
     try {
       await CPS.cloud.call('trade_offer', {
         p_listing: OD.listing.id,
-        p_offer: { tokens: OD.tokens, tickets: OD.tickets, pack_set: OD.packSet || null, packs: packs,
+        p_offer: { tokens: OD.tokens, tickets: OD.tickets, pack_set: lines.length ? lines[0].set : null, packs: packs,
+                   pack_lines: lines,
                    cards: OD.cards.map(function (o) { return { set: o.set, card: o.card, holo: o.holo, tier: o.tier, serial: o.serial }; }) }
       });
     } catch (e) {
