@@ -788,9 +788,11 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .card.flippable .back { transform: rotateY(0deg); }
 .card.flippable.flipped .card-inner { transform: rotateY(180deg); }
 /* Belt and braces for browsers where backface-visibility leaks: swap which face is
-   visible exactly at the mid-point of the 0.7s flip, when the card is edge-on. */
-.card.flippable .front { visibility: hidden; transition: visibility 0s linear .3s; }
-.card.flippable .back { visibility: visible; transition: visibility 0s linear .3s; }
+   visible when the card is edge-on. The flip's spring easing crosses edge-on at
+   ~0.1s, NOT at the 0.7s midpoint — at the old .3s delay both faces were hidden
+   for ~190ms mid-flip (slips vanished, variants flooded rainbow; fixed 2026-11-01). */
+.card.flippable .front { visibility: hidden; transition: visibility 0s linear .1s; }
+.card.flippable .back { visibility: visible; transition: visibility 0s linear .1s; }
 .card.flippable.flipped .front { visibility: visible; }
 .card.flippable.flipped .back { visibility: hidden; }
 .card.deal { animation: deal .55s cubic-bezier(.2,1.3,.4,1) both; }
