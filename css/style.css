@@ -6,6 +6,11 @@
   --c-common: #a3adbb; --c-uncommon: #38c97f; --c-rare: #3f8cff; --c-epic: #b35cff; --c-legendary: #ffb21e; --c-chase: #ff4fa3;
 }
 * { box-sizing: border-box; }
+/* No double-tap zoom anywhere (Franklin, 2026-11-02): rapid taps — WordGuesser's
+   keyboard and backspace, Reveal all — used to zoom the page on iOS. 'manipulation'
+   keeps scrolling and pinch-zoom but drops the double-tap gesture; elements that
+   need raw touch (the favorites drag-reorder sets touch-action: none) still win. */
+* { touch-action: manipulation; }
 html, body { margin: 0; }
 html { background: var(--bg); } /* dark canvas: no white strip under the iOS keyboard / overscroll (the backdrop itself lives on body::before) */
 body {
