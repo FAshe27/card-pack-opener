@@ -2201,7 +2201,7 @@
       '<button class="btn primary" id="loginBtn" type="submit">Log in</button></div></form>' +
       '<div id="loginMsg" class="login-msg' + (opts.msg ? ' bad' : '') + '">' + esc(opts.msg || '') + '</div>' +
       (opts.retry ? '<button class="btn small" id="gateRetry" type="button">Try again</button>' : '') +
-      '<p class="muted small">No username yet? Ask the site owner to make you an account.</p></div>';
+      '</div>';
     openModal(html, function (box) {
       S.gateOpen = true;
       if (CPS.oauth) CPS.oauth.enhanceGate(box);
