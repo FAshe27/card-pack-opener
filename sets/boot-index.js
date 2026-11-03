@@ -73,7 +73,8 @@ window.CardSets.bootIndex = {
   "chairs",
   "cheese",
   "cats",
-  "bread"
+  "bread",
+  "castles-fortresses"
  ],
  "sets": {
   "birdwatching": {
@@ -1094,6 +1095,21 @@ window.CardSets.bootIndex = {
    "primary": "#7d5227",
    "secondary": "#e8b04b",
    "total": 349
+  },
+  "castles-fortresses": {
+   "files": [
+    "castles-fortresses.js",
+    "castles-fortresses-additions.js"
+   ],
+   "name": "Castles & Fortresses",
+   "code": "CASTLE",
+   "emblem": "🏰",
+   "packName": "Castle Pack",
+   "skin": "castles",
+   "css": "castles",
+   "primary": "#3d4457",
+   "secondary": "#b08d3c",
+   "total": 390
   }
  }
 };
