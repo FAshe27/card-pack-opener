@@ -71,7 +71,8 @@ window.CardSets.bootIndex = {
   "numbers",
   "potatoes",
   "chairs",
-  "cheese"
+  "cheese",
+  "cats"
  ],
  "sets": {
   "birdwatching": {
@@ -1064,6 +1065,20 @@ window.CardSets.bootIndex = {
    "primary": "#8a5f14",
    "secondary": "#f2b63d",
    "total": 360
+  },
+  "cats": {
+   "files": [
+    "cats.js"
+   ],
+   "name": "Cats",
+   "code": "CAT",
+   "emblem": "🐱",
+   "packName": "Cats Pack",
+   "skin": "cats",
+   "css": "cats",
+   "primary": "#e07a3f",
+   "secondary": "#43302e",
+   "total": 383
   }
  }
 };
