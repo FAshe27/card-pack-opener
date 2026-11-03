@@ -35,8 +35,14 @@
 /* [222] The legacy PIN door at the bottom of the login prompt. */
 .oauth-legacy { display: block; margin: 10px auto 0; }
 
+.oauth-welcome-title { text-align: center; }
+.oauth-welcome-actions { justify-content: center; margin-top: 6px; }
+.oauth-grant li { margin: 4px 0; }
+.oauth-ready, .oauth-earn-lead { color: var(--ink); }
+.oauth-earn-lead { margin-top: 42px; }
+
 .oauth-earn { margin: 6px 0 12px; padding-left: 20px; }
-.oauth-earn li { margin: 4px 0; }
+.oauth-earn li { margin: 9px 0; }
 
 .oauth-overlay {
   position: fixed; inset: 0; z-index: 999; display: flex;

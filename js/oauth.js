@@ -526,18 +526,25 @@
      the packs screen, like every other finish(). */
   function openWelcomeModal(r) {
     openOAuthModal(
-      '<h2>🎉 Welcome!</h2>' +
-      '<p><b>Thanks for joining PackRipper! You\'ve been granted a box set containing 30 random packs.</b></p>' +
-      '<p class="muted small">They\'re already in your account, ready to rip. You can earn more by:</p>' +
-      '<ul class="oauth-earn">' +
-      '<li><b>Opening packs</b> — packs can contain spin tickets, store credit and arcade tokens</li>' +
-      '<li><b>Completing Daily Quests</b> — for spin tickets, packs and tokens</li>' +
-      '<li><b>Spinning the Prize Wheel</b> — win packs and more</li>' +
-      '<li><b>Playing Arcade games</b> — win packs, tickets and tokens</li>' +
-      '<li><b>Buying packs in the Shop</b> — with the store credit you earn</li>' +
-      '<li><b>Trading with other players and completing sets</b> — turning in a whole set earns big turn-in rewards</li>' +
+      '<h2 class="oauth-welcome-title">Welcome to PackRipper!</h2>' +
+      '<p><b>You\'ve been granted a starter kit containing:</b></p>' +
+      '<ul class="oauth-earn oauth-grant">' +
+      '<li><b>30 random packs</b></li>' +
+      '<li><b>$20 store credit</b></li>' +
+      '<li><b>15 arcade tokens</b></li>' +
       '</ul>' +
-      '<div class="row"><button class="btn primary" type="button" id="oauthWelcomeGo">Start ripping!</button></div>',
+      '<p class="oauth-ready small">They\'re already in your account, ready to rip.</p>' +
+      '<p class="oauth-earn-lead small">You can earn more by:</p>' +
+      '<ul class="oauth-earn">' +
+      '<li><b>Opening packs</b></li>' +
+      '<li><b>Completing Daily Quests</b></li>' +
+      '<li><b>Spinning the Prize Wheel</b></li>' +
+      '<li><b>Playing Arcade games</b></li>' +
+      '<li><b>Buying packs in the Shop</b></li>' +
+      '<li><b>Completing sets</b></li>' +
+      '<li><b>Trading with other players</b></li>' +
+      '</ul>' +
+      '<div class="row oauth-welcome-actions"><button class="btn primary" type="button" id="oauthWelcomeGo">Start ripping!</button></div>',
       function (box) {
         var go = box.querySelector('#oauthWelcomeGo');
         if (go) go.addEventListener('click', function () { finish(r.token); });
