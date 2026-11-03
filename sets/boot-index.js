@@ -69,7 +69,8 @@ window.CardSets.bootIndex = {
   "runescape-3",
   "rct",
   "numbers",
-  "potatoes"
+  "potatoes",
+  "chairs"
  ],
  "sets": {
   "birdwatching": {
@@ -1034,6 +1035,20 @@ window.CardSets.bootIndex = {
    "primary": "#6b4a2b",
    "secondary": "#d9a441",
    "total": 350
+  },
+  "chairs": {
+   "files": [
+    "chairs.js"
+   ],
+   "name": "Chairs",
+   "code": "CHAIR",
+   "emblem": "🪑",
+   "packName": "Chairs Pack",
+   "skin": "chairs",
+   "css": "chairs",
+   "primary": "#5a3d26",
+   "secondary": "#c9963c",
+   "total": 351
   }
  }
 };
