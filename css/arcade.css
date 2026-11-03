@@ -25,6 +25,11 @@
 /* One back-button row for every Arcade game (2026-10-26 standardization):
    inside the game panel, top, left-aligned, same spacing everywhere. */
 .game-backrow { text-align: left; margin-bottom: 10px; }
+/* Every game title centred (Franklin, 2026-11-03): the title that follows
+   the shared back row centres in all seven games — the wrap games already
+   centred theirs; this brings High / Low (the one left-aligned title) in
+   line structurally instead of by per-game accident. */
+.panel > .game-backrow + h2 { text-align: center; }
 
 /* ---- lobby grid ---- */
 .arc-grid {
