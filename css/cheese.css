@@ -1,0 +1,67 @@
+/* pack skin "cheese": PLACEHOLDER pure-CSS skin — Cheese.
+   A cheesecloth-and-rind wrapper: deep golden rind browns under a
+   warm cheddar glow, with a faint Swiss-hole speckle drifting across
+   the pack (class pack-skin-cheese). A stand-in until Franklin's own
+   baked pack art replaces it; it touches nothing shared — this file
+   is scoped to the cheese set. Cards use the standard chrome with
+   real photography (artFit cover, panel #2a1d08); section 2 adds a
+   slim rind-brown frame line around the art. Section 3 is a CSS-only
+   placeholder card back inside the site frame (the standing in-frame
+   default) — no baked art file. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-cheese .pack-top {
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255,240,190,.18) 46%, transparent 72%),
+    radial-gradient(circle 9px at 22% 30%, rgba(90,55,8,.35) 98%, transparent),
+    radial-gradient(circle 6px at 68% 18%, rgba(90,55,8,.30) 98%, transparent),
+    radial-gradient(circle 12px at 84% 46%, rgba(90,55,8,.28) 98%, transparent),
+    linear-gradient(180deg, #c98f2d 0%, #a8741c 60%, #7d5310 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-cheese .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(242,182,61,.45), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.10), transparent 70%),
+    radial-gradient(circle 10px at 30% 34%, rgba(70,42,4,.32) 98%, transparent),
+    radial-gradient(circle 6px at 58% 58%, rgba(70,42,4,.30) 98%, transparent),
+    radial-gradient(circle 14px at 76% 26%, rgba(70,42,4,.26) 98%, transparent),
+    radial-gradient(circle 5px at 44% 76%, rgba(70,42,4,.30) 98%, transparent),
+    linear-gradient(180deg, #b57f22 0%, #8a5f14 55%, #5f400a 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+}
+.pack-skin-cheese .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,246,205,.14), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-cheese .crimp { background: repeating-linear-gradient(100deg, rgba(80,52,8,.6) 0 4px, rgba(230,180,80,.6) 4px 6px, rgba(255,244,200,.3) 6px 9px); }
+.pack-skin-cheese .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(56,36,4,.7) 0 4px, rgba(196,148,60,.55) 4px 6px, rgba(255,244,200,.16) 6px 9px); }
+.pack-skin-cheese .pack-top::after { border-bottom-color: rgba(242,182,61,.8); }
+.pack-skin-cheese .pack-code { color: #fff6da; opacity: .95; text-shadow: 0 1px 0 rgba(62,38,2,.7), 0 0 12px rgba(242,182,61,.55); }
+.pack-skin-cheese .pack-emblem {
+  background: radial-gradient(circle at 50% 38%, #e9b954 0%, #bd8622 58%, #8a5f14 100%);
+  box-shadow: inset 0 0 0 2px rgba(255,246,218,.35), inset 0 -8px 14px rgba(52,32,2,.55), 0 2px 8px rgba(30,18,0,.45);
+}
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ---------- */
+.card[data-set="cheese"] .cf-art {
+  border-color: rgba(138,95,20,.6);
+  box-shadow: inset 0 0 18px rgba(70,46,6,.22);
+}
+.card[data-set="cheese"].ticket-card .cf-art,
+.card[data-set="cheese"].token-card .cf-art,
+.card[data-set="cheese"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder, CSS-only, in-frame) ---------- */
+.card[data-set="cheese"] .cb {
+  background:
+    radial-gradient(circle 12px at 28% 30%, rgba(70,42,4,.4) 98%, transparent),
+    radial-gradient(circle 7px at 64% 58%, rgba(70,42,4,.38) 98%, transparent),
+    radial-gradient(circle 16px at 80% 24%, rgba(70,42,4,.32) 98%, transparent),
+    linear-gradient(160deg, #c98f2d 0%, #96690f 55%, #66450a 100%);
+  background-size: 100% 100%;
+}
