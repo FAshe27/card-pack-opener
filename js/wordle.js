@@ -449,14 +449,14 @@
          live in a single panel; Play again / Copy / Stats sit BELOW the
          game (Franklin, 2026-10-26). */
       '<div class="wr-main"><div class="panel wr-game">' +
-      '<button type="button" class="btn ghost wr-back" id="wrBackBtn">← Back to Arcade</button>' +
+      '<div class="game-backrow"><button type="button" class="btn ghost" id="wrBackBtn">← Back to Arcade</button></div>' +
       '<div class="wr-head-in"><h2>🔤 WordGuesser</h2>' +
       '<p class="muted small">Guess the 5-letter word in 6 or fewer tries. Green means the right ' +
       'letter in the right spot. Yellow means the right letter, but in the wrong spot. If it\'s ' +
       'gray, it\'s not in the word at all. The better you do, the better your prize!</p>' +
       '<p class="muted small">Your first game every day is free - after that, it\'s 10 tokens to ' +
       'play again if you don\'t want to wait until reset.</p>' +
-      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + '</b> tokens</span>' +
+      '<div class="wr-topbar"><span class="wr-balance">🪙 <b>' + S.tokens + ' token' + (S.tokens === 1 ? '' : 's') + '</b></span>' +
       '<span class="muted small">' + esc(sa.statusLine) + '</span></div>' +
       (S.loadError ? '<p class="wr-msg">Could not load WordGuesser — please try again in a few minutes.</p>' : '') +
       '</div>' +
