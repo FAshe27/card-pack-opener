@@ -70,7 +70,8 @@ window.CardSets.bootIndex = {
   "rct",
   "numbers",
   "potatoes",
-  "chairs"
+  "chairs",
+  "cheese"
  ],
  "sets": {
   "birdwatching": {
@@ -1049,6 +1050,20 @@ window.CardSets.bootIndex = {
    "primary": "#5a3d26",
    "secondary": "#c9963c",
    "total": 351
+  },
+  "cheese": {
+   "files": [
+    "cheese.js"
+   ],
+   "name": "Cheese",
+   "code": "CHEZ",
+   "emblem": "🧀",
+   "packName": "Cheese Pack",
+   "skin": "cheese",
+   "css": "cheese",
+   "primary": "#8a5f14",
+   "secondary": "#f2b63d",
+   "total": 360
   }
  }
 };
