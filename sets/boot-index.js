@@ -72,7 +72,8 @@ window.CardSets.bootIndex = {
   "potatoes",
   "chairs",
   "cheese",
-  "cats"
+  "cats",
+  "bread"
  ],
  "sets": {
   "birdwatching": {
@@ -1079,6 +1080,20 @@ window.CardSets.bootIndex = {
    "primary": "#e07a3f",
    "secondary": "#43302e",
    "total": 383
+  },
+  "bread": {
+   "files": [
+    "bread.js"
+   ],
+   "name": "Bread & Baking",
+   "code": "BREAD",
+   "emblem": "🍞",
+   "packName": "Bread & Baking Pack",
+   "skin": "bread",
+   "css": "bread",
+   "primary": "#7d5227",
+   "secondary": "#e8b04b",
+   "total": 349
   }
  }
 };

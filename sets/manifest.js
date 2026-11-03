@@ -110,5 +110,6 @@ CardSets.manifest = [
   'potatoes.js',
   'chairs.js',
   'cheese.js',
-  'cats.js'
+  'cats.js',
+  'bread.js'
 ];

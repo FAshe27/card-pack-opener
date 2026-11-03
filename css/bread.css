@@ -1,0 +1,67 @@
+/* pack skin "bread": PLACEHOLDER pure-CSS skin — Bread & Baking.
+   A warm bakery-paper wrapper: toasted crust browns with a fine
+   flour-dust speckle, a golden oven glow at the foot of the pack,
+   scored-loaf crimps (class pack-skin-bread). A stand-in until
+   Franklin's own baked pack art replaces it; it touches nothing
+   shared — this file is scoped to the bread set. Cards use the
+   standard chrome with real photography (artFit cover, panel
+   #2a1a0e); section 2 adds a slim crust-brown frame line around
+   the art. Section 3 is a CSS-only placeholder card back inside
+   the site frame (the standing in-frame default) — no baked art
+   file. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-bread .pack-top {
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255,240,205,.18) 46%, transparent 72%),
+    radial-gradient(rgba(74,44,16,.5) 1px, transparent 1.6px),
+    radial-gradient(rgba(255,232,170,.38) 1px, transparent 1.6px),
+    linear-gradient(180deg, #a5713a 0%, #7d5227 60%, #57371a 100%);
+  background-size: 100% 100%, 7px 7px, 11px 11px, 100% 100%;
+  background-position: 0 0, 1px 2px, 5px 4px, 0 0;
+}
+.pack-skin-bread .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(232,176,75,.45), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.1), transparent 70%),
+    radial-gradient(rgba(74,44,16,.45) 1px, transparent 1.6px),
+    radial-gradient(rgba(255,232,170,.3) 1px, transparent 1.6px),
+    linear-gradient(180deg, #8a5c2c 0%, #5f3c1a 55%, #40260f 100%);
+  background-size: 100% 100%, 100% 100%, 7px 7px, 11px 11px, 100% 100%;
+  background-position: 0 0, 0 0, 3px 1px, 7px 6px, 0 0;
+  background-repeat: no-repeat, no-repeat, repeat, repeat, no-repeat;
+}
+.pack-skin-bread .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,244,214,.13), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-bread .crimp { background: repeating-linear-gradient(100deg, rgba(56,34,13,.6) 0 4px, rgba(214,172,102,.6) 4px 6px, rgba(255,242,205,.32) 6px 9px); }
+.pack-skin-bread .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(42,25,9,.7) 0 4px, rgba(178,138,82,.55) 4px 6px, rgba(255,242,205,.18) 6px 9px); }
+.pack-skin-bread .pack-top::after { border-bottom-color: rgba(232,176,75,.8); }
+.pack-skin-bread .pack-code { color: #fdf3da; opacity: .95; text-shadow: 0 1px 0 rgba(46,27,7,.7), 0 0 12px rgba(232,176,75,.55); }
+.pack-skin-bread .pack-emblem {
+  background: radial-gradient(circle at 50% 38%, #bd8a4c 0%, #8a5c2c 58%, #5f3a12 100%);
+  box-shadow: inset 0 0 0 2px rgba(253,243,218,.35), inset 0 -8px 14px rgba(34,20,5,.55), 0 2px 8px rgba(20,10,0,.45);
+}
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ---------- */
+.card[data-set="bread"] .cf-art {
+  border-color: rgba(125,82,39,.6);
+  box-shadow: inset 0 0 18px rgba(64,38,15,.22);
+}
+.card[data-set="bread"].ticket-card .cf-art,
+.card[data-set="bread"].token-card .cf-art,
+.card[data-set="bread"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder, CSS-only, in-frame) ---------- */
+.card[data-set="bread"] .cb {
+  background:
+    radial-gradient(rgba(74,44,16,.5) 1px, transparent 1.6px),
+    radial-gradient(rgba(255,232,170,.32) 1px, transparent 1.6px),
+    linear-gradient(160deg, #a5713a 0%, #6e4520 55%, #422810 100%);
+  background-size: 7px 7px, 11px 11px, 100% 100%;
+  background-position: 1px 2px, 5px 4px, 0 0;
+}
