@@ -17,6 +17,7 @@ window.CardSets.bootIndex = {
   "nfl-collection",
   "plants",
   "sea",
+  "ships",
   "space",
   "technology-collection",
   "periodic",
@@ -262,6 +263,21 @@ window.CardSets.bootIndex = {
    "primary": "#0f6fb5",
    "secondary": "#0a1f52",
    "total": 330
+  },
+  "ships": {
+   "files": [
+    "ships.js",
+    "ships-additions.js"
+   ],
+   "name": "Ships & Boats",
+   "code": "SHIP",
+   "emblem": "🚢",
+   "packName": "Ships & Boats Pack",
+   "skin": "ships",
+   "css": "ships",
+   "primary": "#175d7a",
+   "secondary": "#0d2f42",
+   "total": 384
   },
   "space": {
    "files": [

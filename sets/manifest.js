@@ -19,6 +19,8 @@ CardSets.manifest = [
   'nfl-collection.js',
   'plants.js',
   'sea.js',
+  'ships.js',
+  'ships-additions.js',
   'space.js',
   'technology-collection.js',
   'technology-additions.js',
