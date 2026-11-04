@@ -17,6 +17,13 @@
 }
 .bounty-want .card { width: 100%; border-radius: 8px; } /* keep rarity ring concentric on small faces */
 .bounty-want .cf { border-radius: 4px; }
+/* Pokémon bounty faces: the scan IS the card, so the outline must follow
+   the scan — outer radius = rarity ring + inner panel (2.2 + 2.4)%,
+   scaling with the slot instead of the flat 8px above, whose corners
+   bulged far rounder than the scan's own (Franklin, 2026-11-03). The
+   chase ring is thicker (3.3cqw), so its outer radius grows with it. */
+.bounty-want .card[data-set="pokemon"] { border-radius: 4.6% / 3.29%; }
+.bounty-want .card[data-set="pokemon"].r-chase { border-radius: 5.7% / 4.07%; }
 .bounty-want-missing {
   width: 100%; aspect-ratio: 5/7; border: 1px dashed var(--line); border-radius: 12px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
