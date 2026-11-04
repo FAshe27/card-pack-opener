@@ -31,7 +31,7 @@ function profMetaHtml(p) {
     var d = p.last_active_days;
     bits.push('Last active: ' + (d <= 0 ? 'Today' : d === 1 ? '1 day ago' : d + ' days ago'));
   }
-  return bits.length ? '<div class="prof-meta muted small">' + bits.join(' · ') + '</div>' : '';
+  return bits.map(function (b) { return '<div class="prof-meta muted small">' + b + '</div>'; }).join('');
 }
 
 var XHIST_ICONS = { trade: '🔁', gift: '🎁', bounty: '🎯', market: '🏪' };
