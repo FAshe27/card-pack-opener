@@ -1,0 +1,159 @@
+name: Build Android (TWA)
+
+# Manual-only: builds the PackRipper Android app (Trusted Web Activity
+# wrapping https://packripper.app) with Bubblewrap and uploads the signed
+# APK/AAB + signing keystore as a run artifact. Nothing is deployed and
+# nothing is committed back to the repo by this workflow.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
+
+      - name: Point Bubblewrap at the runner JDK and Android SDK
+        run: |
+          mkdir -p ~/.bubblewrap android
+          SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android-sdk}}"
+          echo "Using JAVA_HOME=$JAVA_HOME"
+          echo "Using Android SDK=$SDK"
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}' "$JAVA_HOME" "$SDK" > ~/.bubblewrap/config.json
+          cat ~/.bubblewrap/config.json
+
+      - name: Generate twa-manifest.json from the live web manifest
+        run: |
+          cat > gen-manifest.js <<'EOF'
+          const path = require('path');
+          const {execSync} = require('child_process');
+          const groot = execSync('npm root -g').toString().trim();
+          let core = null;
+          for (const p of [
+            path.join(groot, '@bubblewrap', 'core'),
+            path.join(groot, '@bubblewrap', 'cli', 'node_modules', '@bubblewrap', 'core'),
+          ]) {
+            try { core = require(p); break; } catch (e) { /* try next */ }
+          }
+          if (!core) { console.error('could not load @bubblewrap/core'); process.exit(1); }
+          (async () => {
+            const m = await core.TwaManifest.fromWebManifest('https://packripper.app/manifest.json');
+            m.packageId = 'app.packripper.twa';
+            m.name = 'PackRipper';
+            m.launcherName = 'PackRipper';
+            await m.saveToFile('android/twa-manifest.json');
+            console.log('twa-manifest.json written; packageId =', m.packageId);
+          })().catch((e) => { console.error(e); process.exit(1); });
+          EOF
+          node gen-manifest.js || true
+          if [ ! -f android/twa-manifest.json ]; then
+            echo "Node generation failed; writing fallback twa-manifest.json"
+            cat > android/twa-manifest.json <<'EOF'
+          {
+            "packageId": "app.packripper.twa",
+            "host": "packripper.app",
+            "name": "PackRipper",
+            "launcherName": "PackRipper",
+            "display": "standalone",
+            "displayOverride": [],
+            "themeColor": "#0b0e17",
+            "themeColorDark": "#000000",
+            "navigationColor": "#000000",
+            "navigationColorDark": "#000000",
+            "navigationDividerColor": "#000000",
+            "navigationDividerColorDark": "#000000",
+            "backgroundColor": "#0b0e17",
+            "enableNotifications": true,
+            "startUrl": "/",
+            "iconUrl": "https://packripper.app/icons/icon-512.png",
+            "maskableIconUrl": "https://packripper.app/icons/maskable-512.png",
+            "splashScreenFadeOutDuration": 300,
+            "signingKey": { "path": "./android.keystore", "alias": "android" },
+            "appVersionCode": 1,
+            "appVersion": "1",
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli",
+            "webManifestUrl": "https://packripper.app/manifest.json",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": { "enabled": false },
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "https://packripper.app/",
+            "minSdkVersion": 23,
+            "orientation": "portrait",
+            "fingerprints": [],
+            "additionalTrustedOrigins": [],
+            "retainedBundles": []
+          }
+          EOF
+          fi
+          cat android/twa-manifest.json
+
+      - name: Create signing keystore
+        run: |
+          PW="$(openssl rand -base64 24 | tr -d '\n')"
+          echo "KEYSTORE_PW=$PW" >> "$GITHUB_ENV"
+          keytool -genkeypair -v \
+            -keystore android/android.keystore \
+            -alias android \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "$PW" -keypass "$PW" \
+            -dname "CN=PackRipper, OU=PackRipper, O=PackRipper, L=Munford, ST=Tennessee, C=US"
+          FP="$(keytool -list -v -keystore android/android.keystore -alias android -storepass "$PW" | grep 'SHA256:' | head -1 | sed 's/.*SHA256: *//')"
+          echo "Cert SHA-256 fingerprint: $FP"
+          {
+            echo "PackRipper Android signing key"
+            echo "Package ID: app.packripper.twa"
+            echo "Keystore file: android.keystore"
+            echo "Key alias: android"
+            echo "Keystore password: $PW"
+            echo "Key password: $PW"
+            echo "SHA-256 fingerprint: $FP"
+          } > signing-key-info.txt
+          cat signing-key-info.txt | grep -v password
+
+      - name: Generate Android project
+        run: |
+          cd android
+          bubblewrap update --skipVersionUpgrade
+          ls -la
+
+      - name: Build signed APK and AAB
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ env.KEYSTORE_PW }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ env.KEYSTORE_PW }}
+        run: |
+          cd android
+          bubblewrap build
+          ls -la
+
+      - name: Collect outputs
+        run: |
+          mkdir -p out
+          cp android/*.apk out/ 2>/dev/null || true
+          cp android/*.aab out/ 2>/dev/null || true
+          cp android/android.keystore out/
+          cp android/twa-manifest.json out/
+          cp signing-key-info.txt out/
+          ls -la out
+          sha256sum out/*
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: packripper-android
+          path: out/
+          if-no-files-found: error
