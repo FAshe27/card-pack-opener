@@ -76,7 +76,8 @@ window.CardSets.bootIndex = {
   "cats",
   "bread",
   "castles-fortresses",
-  "inventions"
+  "inventions",
+  "houseplants"
  ],
  "sets": {
   "birdwatching": {
@@ -1141,6 +1142,20 @@ window.CardSets.bootIndex = {
    "primary": "#e8a33d",
    "secondary": "#1d3557",
    "total": 380
+  },
+  "houseplants": {
+   "files": [
+    "houseplants.js"
+   ],
+   "name": "Houseplants",
+   "code": "POTTED",
+   "emblem": "\ud83e\udeb4",
+   "packName": "Houseplants Pack",
+   "skin": "houseplants",
+   "css": "houseplants",
+   "primary": "#4e7a3a",
+   "secondary": "#2e4a2f",
+   "total": 372
   }
  }
 };

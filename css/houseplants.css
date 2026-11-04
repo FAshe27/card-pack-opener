@@ -1,0 +1,69 @@
+/* pack skin "houseplants": PLACEHOLDER pure-CSS skin — Houseplants.
+   A greenhouse wrapper: sunlit spring green on the top over a deep
+   greenhouse-green body with soft water-droplet dots and a warm glow at
+   the foot (class pack-skin-houseplants). A stand-in until Franklin's own
+   baked pack art replaces it; it touches nothing shared — this file is
+   scoped to the houseplants set. Cards use the standard chrome with real
+   photography (artFit cover, panel #eef3e4); section 2 adds a slim leafy
+   frame line around the art. Section 3 is a CSS-only placeholder card
+   back inside the site frame (the standing in-frame default) — no baked
+   art file. */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-houseplants .pack-top {
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 46%, transparent 72%),
+    repeating-linear-gradient(96deg, transparent 0 26px, rgba(46,74,47,.10) 26px 30px, transparent 30px 58px),
+    linear-gradient(180deg, #f7fae6 0%, #b9d68f 45%, #4e7a3a 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-houseplants .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(185,214,143,.38), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,255,255,.08), transparent 70%),
+    radial-gradient(circle 5px at 22% 30%, rgba(238,243,228,.20), transparent 70%),
+    radial-gradient(circle 4px at 30% 21%, rgba(238,243,228,.17), transparent 70%),
+    radial-gradient(circle 4px at 15% 20%, rgba(238,243,228,.17), transparent 70%),
+    radial-gradient(circle 4px at 36% 30%, rgba(238,243,228,.15), transparent 70%),
+    radial-gradient(circle 5px at 76% 62%, rgba(238,243,228,.18), transparent 70%),
+    radial-gradient(circle 4px at 84% 53%, rgba(238,243,228,.15), transparent 70%),
+    radial-gradient(circle 4px at 69% 51%, rgba(238,243,228,.15), transparent 70%),
+    radial-gradient(circle 5px at 80% 70%, rgba(238,243,228,.13), transparent 70%),
+    linear-gradient(180deg, #3d5c31 0%, #2e4a2f 55%, #1c2f1c 100%);
+}
+.pack-skin-houseplants .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(240,248,220,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-houseplants .crimp { background: repeating-linear-gradient(100deg, rgba(28,47,28,.6) 0 4px, rgba(78,122,58,.6) 4px 6px, rgba(240,248,220,.3) 6px 9px); }
+.pack-skin-houseplants .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(20,34,20,.7) 0 4px, rgba(58,94,46,.55) 4px 6px, rgba(240,248,220,.16) 6px 9px); }
+.pack-skin-houseplants .pack-top::after { border-bottom-color: rgba(78,122,58,.75); }
+.pack-skin-houseplants .pack-code { color: #2e4a2f; opacity: .95; text-shadow: 0 1px 0 rgba(248,252,238,.6); }
+.pack-skin-houseplants .pack-emblem {
+  background: radial-gradient(circle at 50% 38%, #b9d68f 0%, #4e7a3a 58%, #2e4a2f 100%);
+  box-shadow: inset 0 0 0 2px rgba(238,243,228,.4), inset 0 -8px 14px rgba(20,34,10,.5), 0 2px 8px rgba(10,20,0,.4);
+}
+.pack-skin-houseplants .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(78,122,58,.8), 0 2px 8px rgba(0,0,0,.6); }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ---------- */
+.card[data-set="houseplants"] .cf-art {
+  border-color: rgba(78,122,58,.55);
+  box-shadow: inset 0 0 18px rgba(46,74,47,.20);
+}
+.card[data-set="houseplants"].ticket-card .cf-art,
+.card[data-set="houseplants"].token-card .cf-art,
+.card[data-set="houseplants"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder, CSS-only, in-frame) ---------- */
+.card[data-set="houseplants"] .cb {
+  background:
+    radial-gradient(circle 5px at 30% 36%, rgba(238,243,228,.35), transparent 70%),
+    radial-gradient(circle 4px at 38% 27%, rgba(238,243,228,.3), transparent 70%),
+    radial-gradient(circle 4px at 22% 26%, rgba(238,243,228,.3), transparent 70%),
+    radial-gradient(circle 4px at 44% 36%, rgba(238,243,228,.28), transparent 70%),
+    repeating-linear-gradient(96deg, transparent 0 26px, rgba(0,0,0,.12) 26px 30px, transparent 30px 58px),
+    linear-gradient(160deg, #4e7a3a 0%, #35572a 55%, #1c2f1c 100%);
+}
