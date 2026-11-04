@@ -67,6 +67,7 @@ jobs:
             m.packageId = 'app.packripper.twa';
             m.name = 'PackRipper';
             m.launcherName = 'PackRipper';
+            m.minSdkVersion = 24;
             await m.saveToFile('android/twa-manifest.json');
             console.log('twa-manifest.json written; packageId =', m.packageId);
           })().catch((e) => { console.error(e); process.exit(1); });
@@ -107,7 +108,7 @@ jobs:
             "isChromeOSOnly": false,
             "isMetaQuest": false,
             "fullScopeUrl": "https://packripper.app/",
-            "minSdkVersion": 23,
+            "minSdkVersion": 24,
             "orientation": "portrait",
             "fingerprints": [],
             "additionalTrustedOrigins": [],
