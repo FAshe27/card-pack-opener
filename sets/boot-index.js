@@ -74,7 +74,8 @@ window.CardSets.bootIndex = {
   "cheese",
   "cats",
   "bread",
-  "castles-fortresses"
+  "castles-fortresses",
+  "inventions"
  ],
  "sets": {
   "birdwatching": {
@@ -1110,6 +1111,20 @@ window.CardSets.bootIndex = {
    "primary": "#3d4457",
    "secondary": "#b08d3c",
    "total": 390
+  },
+  "inventions": {
+   "files": [
+    "inventions.js"
+   ],
+   "name": "Inventions",
+   "code": "INVENT",
+   "emblem": "💡",
+   "packName": "Inventions Pack",
+   "skin": "inventions",
+   "css": "inventions",
+   "primary": "#e8a33d",
+   "secondary": "#1d3557",
+   "total": 380
   }
  }
 };
