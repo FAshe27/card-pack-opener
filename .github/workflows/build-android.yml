@@ -44,6 +44,7 @@ jobs:
           yes | "$FLAT/bin/sdkmanager" --sdk_root="$FLAT" --licenses > /dev/null 2>&1 || true
           "$FLAT/bin/sdkmanager" --sdk_root="$FLAT" "platforms;android-36" "build-tools;36.1.0"
           ls "$FLAT" "$FLAT/build-tools"
+          echo "FLAT_PATH=$FLAT" >> "$GITHUB_ENV"
           printf '{"jdkPath":"%s","androidSdkPath":"%s"}' "$JAVA_HOME" "$FLAT" > ~/.bubblewrap/config.json
           cat ~/.bubblewrap/config.json
 
@@ -149,6 +150,10 @@ jobs:
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ env.KEYSTORE_PW }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ env.KEYSTORE_PW }}
+          # Bubblewrap points ANDROID_HOME at the flat SDK; the runner's
+          # preset ANDROID_SDK_ROOT names the system SDK, and AGP aborts
+          # when the two disagree. Align them.
+          ANDROID_SDK_ROOT: ${{ env.FLAT_PATH }}
         run: |
           cd android
           bubblewrap build
