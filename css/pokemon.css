@@ -87,3 +87,28 @@
   border: none; border-radius: 12px;
 }
 .card[data-set="pokemon"] .cb-emblem, .card[data-set="pokemon"] .cb-name { display: none; }
+
+/* ---------- 4. Scan outline on every surface ----------
+   The outer corner radius must equal ring + inner panel at ANY size:
+   (2.2 + 2.4)% of the card's width, the vertical radius scaled by the
+   5/7 aspect; Chase's thicker ring (3.3cqw) makes it (3.3 + 2.4)%.
+   The context rules tuned for standard cards — the flat 12px base,
+   the reveal grid's 6.5%, trade faces at 8px / 6.8%, the composer's
+   pinned face at 8px — bulged or pinched the scan's corners (worst in
+   the Bounty slots, where it was reported and fixed first). These
+   selectors outrank each of those context rules; the values mirror
+   the bounty fix in bounties.css. */
+.card[data-set="pokemon"],
+.reveal-grid .card[data-set="pokemon"],
+.trade-face .card[data-set="pokemon"],
+.trade-card .card[data-set="pokemon"],
+.pb-pin .bounty-want .card[data-set="pokemon"] { border-radius: 4.6% / 3.29%; }
+.card[data-set="pokemon"].r-chase,
+.reveal-grid .card[data-set="pokemon"].r-chase,
+.trade-face .card[data-set="pokemon"].r-chase,
+.trade-card .card[data-set="pokemon"].r-chase,
+.pb-pin .bounty-want .card[data-set="pokemon"].r-chase { border-radius: 5.7% / 4.07%; }
+/* The composer's pinned face also flattens the inner panel to 4px
+   (composer.css, same specificity, later sheet) — restore the set's
+   own panel radius there so the ring stays concentric. */
+.pb-pin .bounty-want .card[data-set="pokemon"] .cf { border-radius: 2.4cqw; }
