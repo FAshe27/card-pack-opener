@@ -1,0 +1,68 @@
+/* pack skin "mushrooms": PLACEHOLDER pure-CSS skin — Mushrooms & Fungi.
+   A forest-floor wrapper: fly-agaric red cap band on top with cream spots,
+   deep moss-brown body with a soft spore-print glow at the foot
+   (class pack-skin-mushrooms). A stand-in until Franklin's own baked
+   pack art replaces it; scoped only to this set. Cards use standard
+   chrome with real photography (artFit cover, panel #f3ead8);
+   section 2 adds a slim forest frame line. Section 3 is a CSS-only
+   placeholder card back inside the site frame (standing in-frame default). */
+
+/* ---------- 1. Pack skin ---------- */
+.pack-skin-mushrooms .pack-top {
+  background:
+    radial-gradient(circle 10px at 22% 42%, rgba(255,246,220,.92) 0 62%, transparent 72%),
+    radial-gradient(circle 7px at 58% 30%, rgba(255,246,220,.85) 0 62%, transparent 72%),
+    radial-gradient(circle 12px at 78% 52%, rgba(255,246,220,.9) 0 62%, transparent 72%),
+    radial-gradient(circle 6px at 40% 58%, rgba(255,246,220,.75) 0 62%, transparent 72%),
+    linear-gradient(115deg, transparent 30%, rgba(255,255,255,.28) 46%, transparent 72%),
+    linear-gradient(180deg, #d84a33 0%, #b33a2b 55%, #8f2b20 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-mushrooms .pack-body {
+  background:
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(168,198,120,.38), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(255,246,220,.10), transparent 70%),
+    radial-gradient(circle 4px at 18% 34%, rgba(243,234,216,.16), transparent 70%),
+    radial-gradient(circle 3px at 82% 44%, rgba(243,234,216,.14), transparent 70%),
+    radial-gradient(circle 3px at 68% 72%, rgba(243,234,216,.12), transparent 70%),
+    radial-gradient(circle 4px at 30% 78%, rgba(243,234,216,.12), transparent 70%),
+    repeating-linear-gradient(96deg, transparent 0 30px, rgba(0,0,0,.10) 30px 33px, transparent 33px 64px),
+    linear-gradient(180deg, #4a3b28 0%, #38291c 55%, #241a12 100%);
+}
+.pack-skin-mushrooms .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(255,240,200,.12), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-mushrooms .crimp { background: repeating-linear-gradient(100deg, rgba(36,26,18,.65) 0 4px, rgba(179,58,43,.6) 4px 6px, rgba(255,240,200,.3) 6px 9px); }
+.pack-skin-mushrooms .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(24,17,12,.7) 0 4px, rgba(120,44,32,.55) 4px 6px, rgba(255,240,200,.16) 6px 9px); }
+.pack-skin-mushrooms .pack-top::after { border-bottom-color: rgba(255,246,220,.8); }
+.pack-skin-mushrooms .pack-code { color: #fff6dc; opacity: .95; text-shadow: 0 1px 0 rgba(60,20,10,.65); }
+.pack-skin-mushrooms .pack-emblem {
+  background: radial-gradient(circle at 50% 38%, #e2604a 0%, #b33a2b 58%, #7e271c 100%);
+  box-shadow: inset 0 0 0 2px rgba(253,243,218,.4), inset 0 -8px 14px rgba(46,16,10,.5), 0 2px 8px rgba(20,10,0,.4);
+}
+.pack-skin-mushrooms .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(179,58,43,.8), 0 2px 8px rgba(0,0,0,.6); }
+.pack-skin-mushrooms .pack-sub { color: #e8d9ae; }
+
+/* ---------- 2. Card art frame (scoped to this set's cards) ---------- */
+.card[data-set="mushrooms"] .cf-art {
+  border-color: rgba(110,84,48,.55);
+  box-shadow: inset 0 0 18px rgba(56,42,24,.20);
+}
+.card[data-set="mushrooms"].ticket-card .cf-art,
+.card[data-set="mushrooms"].token-card .cf-art,
+.card[data-set="mushrooms"].credit-card .cf-art {
+  border-color: rgba(255,255,255,.16);
+  box-shadow: none;
+}
+
+/* ---------- 3. Card back (placeholder, CSS-only, in-frame) ---------- */
+.card[data-set="mushrooms"] .cb {
+  background:
+    radial-gradient(circle 9px at 30% 32%, rgba(255,246,220,.5) 0 62%, transparent 72%),
+    radial-gradient(circle 6px at 62% 24%, rgba(255,246,220,.42) 0 62%, transparent 72%),
+    radial-gradient(circle 11px at 74% 48%, rgba(255,246,220,.45) 0 62%, transparent 72%),
+    radial-gradient(circle 5px at 44% 56%, rgba(255,246,220,.35) 0 62%, transparent 72%),
+    repeating-linear-gradient(96deg, transparent 0 30px, rgba(0,0,0,.12) 30px 33px, transparent 33px 64px),
+    linear-gradient(160deg, #c74330 0%, #8f2b20 45%, #4a3b28 100%);
+}

@@ -77,7 +77,8 @@ window.CardSets.bootIndex = {
   "bread",
   "castles-fortresses",
   "inventions",
-  "houseplants"
+  "houseplants",
+  "mushrooms"
  ],
  "sets": {
   "birdwatching": {
@@ -1156,6 +1157,20 @@ window.CardSets.bootIndex = {
    "primary": "#4e7a3a",
    "secondary": "#2e4a2f",
    "total": 372
+  },
+  "mushrooms": {
+   "files": [
+    "mushrooms.js"
+   ],
+   "name": "Mushrooms & Fungi",
+   "code": "SHROOM",
+   "emblem": "🍄",
+   "packName": "Mushrooms Pack",
+   "skin": "mushrooms",
+   "css": "mushrooms",
+   "primary": "#b33a2b",
+   "secondary": "#4a3b28",
+   "total": 380
   }
  }
 };

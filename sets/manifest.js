@@ -117,5 +117,6 @@ CardSets.manifest = [
   'castles-fortresses.js',
   'castles-fortresses-additions.js',
   'inventions.js',
-  'houseplants.js'
+  'houseplants.js',
+  'mushrooms.js'
 ];

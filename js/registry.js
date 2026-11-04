@@ -162,7 +162,7 @@
   /* Fallback-only list (eager boot without a boot-index): mirrors the
      generator's css scan. The lazy path never uses it — boot-index's
      per-set css field is authoritative there. */
-  var KNOWN_CSS = ['acrs', 'aquariums', 'art', 'beverages', 'calendar', 'candy', 'cars', 'castles', 'cats', 'cereals', 'chairs', 'cheese', 'civ', 'coasters', 'countries', 'cryptids', 'disney', 'dogs', 'gas', 'gems', 'hero', 'hwy', 'houseplants', 'iconic-dishes', 'indy', 'insects', 'inventions', 'minecraft', 'mlb', 'motorcycles', 'natural-wonders', 'nps', 'numbers', 'pixar', 'playing', 'pokemon', 'potatoes', 'reptiles', 'rct', 'runescape', 'ships', 'skyrim', 'spongebob', 'stage', 'stardew', 'states', 'tech', 'theme-parks', 'us-navy', 'water', 'wild-mammals', 'world-landmarks', 'world-cities', 'zelda', 'bread'];
+  var KNOWN_CSS = ['acrs', 'aquariums', 'art', 'beverages', 'calendar', 'candy', 'cars', 'castles', 'cats', 'cereals', 'chairs', 'cheese', 'civ', 'coasters', 'countries', 'cryptids', 'disney', 'dogs', 'gas', 'gems', 'hero', 'hwy', 'houseplants', 'iconic-dishes', 'indy', 'insects', 'inventions', 'minecraft', 'mlb', 'motorcycles', 'mushrooms', 'natural-wonders', 'nps', 'numbers', 'pixar', 'playing', 'pokemon', 'potatoes', 'reptiles', 'rct', 'runescape', 'ships', 'skyrim', 'spongebob', 'stage', 'stardew', 'states', 'tech', 'theme-parks', 'us-navy', 'water', 'wild-mammals', 'world-landmarks', 'world-cities', 'zelda', 'bread'];
 
   function loadSetFile(src) {
     return new Promise(function (res) {
