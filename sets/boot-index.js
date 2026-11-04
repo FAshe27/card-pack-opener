@@ -238,7 +238,7 @@ window.CardSets.bootIndex = {
    "files": [
     "plants.js"
    ],
-   "name": "Plants",
+   "name": "North American Plants",
    "code": "NAT",
    "emblem": "🌿",
    "packName": "Plant Pack",

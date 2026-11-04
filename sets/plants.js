@@ -1,7 +1,7 @@
-/* Card set: Plants (generated from CSV). Add this file to sets/manifest.js. */
+/* Card set: North American Plants (generated from CSV). Add this file to sets/manifest.js. */
 CardSets.register({
   "id": "plants",
-  "name": "Plants",
+  "name": "North American Plants",
   "code": "NAT",
   "description": "These things grow everywhere!",
   "theme": {
