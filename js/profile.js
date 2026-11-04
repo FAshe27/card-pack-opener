@@ -20,6 +20,20 @@ function bestPull(collection) {
   return best;
 }
 
+var PROF_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function profMetaHtml(p) {
+  var bits = [];
+  if (p.joined) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(p.joined);
+    if (m) bits.push('Playing since ' + PROF_MONTHS[(+m[2]) - 1] + ' ' + (+m[3]) + ', ' + m[1]);
+  }
+  if (p.last_active_days != null) {
+    var d = p.last_active_days;
+    bits.push('Last active: ' + (d <= 0 ? 'Today' : d === 1 ? '1 day ago' : d + ' days ago'));
+  }
+  return bits.length ? '<div class="prof-meta muted small">' + bits.join(' · ') + '</div>' : '';
+}
+
 var XHIST_ICONS = { trade: '🔁', gift: '🎁', bounty: '🎯', market: '🏪' };
 async function openExchangeHistory(accountId, name) {
   ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button>' +
@@ -77,7 +91,7 @@ async function openProfile(accountId) {
     var poss = ctx.esc(p.display_name) + '’s';
     ctx.openModal('<button class="modal-x" data-close aria-label="Close">×</button><div class="profile">' +
       '<div class="prof-head"><span class="avatar big">' + ctx.esc((p.display_name[0] || 'P').toUpperCase()) + '</span>' +
-      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button> <button class="btn small" id="profGiftBtn">🎁 Gift</button> <button class="btn small" id="profHistBtn">📜 History</button> <button class="btn small' + (friended ? ' friended' : '') + '" id="profFriendBtn">' + (friended ? '⭐ Friend' : '☆ Add friend') + '</button>') + '</div></div>' +
+      '<div><h2>' + ctx.esc(p.display_name) + '</h2>' + profMetaHtml(p) + (p.is_me ? '<span class="pill pill-you">You</span>' : '<button class="btn small" id="profTradeBtn">Propose trade</button> <button class="btn small" id="profGiftBtn">🎁 Gift</button> <button class="btn small" id="profHistBtn">📜 History</button> <button class="btn small' + (friended ? ' friended' : '') + '" id="profFriendBtn">' + (friended ? '⭐ Friend' : '☆ Add friend') + '</button>') + '</div></div>' +
       statsHtml +
       '<div class="prof-nav">' +
       '<button class="btn prof-nav-btn" id="profVaultBtn">🔒 View ' + poss + ' Vault<span class="muted">' + (p.favorites || []).length + '</span></button>' +
