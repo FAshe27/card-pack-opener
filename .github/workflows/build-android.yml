@@ -29,8 +29,22 @@ jobs:
           mkdir -p ~/.bubblewrap android
           SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android-sdk}}"
           echo "Using JAVA_HOME=$JAVA_HOME"
-          echo "Using Android SDK=$SDK"
-          printf '{"jdkPath":"%s","androidSdkPath":"%s"}' "$JAVA_HOME" "$SDK" > ~/.bubblewrap/config.json
+          echo "Runner Android SDK=$SDK"
+          # Bubblewrap validates an old-style flat SDK layout (it wants
+          # <sdk>/bin/sdkmanager and <sdk>/build-tools/<ver>), which the
+          # modern cmdline-tools layout does not have at its root. Build a
+          # flat view of the runner SDK that matches what Bubblewrap checks.
+          FLAT="$HOME/android-sdk-flat"
+          mkdir -p "$FLAT/bin" "$FLAT/build-tools"
+          cp -r "$SDK/cmdline-tools/latest/bin/." "$FLAT/bin/"
+          cp -r "$SDK/cmdline-tools/latest/lib" "$FLAT/lib"
+          ln -s "$SDK/platforms" "$FLAT/platforms"
+          ln -s "$SDK/platform-tools" "$FLAT/platform-tools"
+          ln -s "$SDK/licenses" "$FLAT/licenses" 2>/dev/null || true
+          yes | "$FLAT/bin/sdkmanager" --sdk_root="$FLAT" --licenses > /dev/null 2>&1 || true
+          "$FLAT/bin/sdkmanager" --sdk_root="$FLAT" "platforms;android-36" "build-tools;36.1.0"
+          ls "$FLAT" "$FLAT/build-tools"
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}' "$JAVA_HOME" "$FLAT" > ~/.bubblewrap/config.json
           cat ~/.bubblewrap/config.json
 
       - name: Generate twa-manifest.json from the live web manifest
