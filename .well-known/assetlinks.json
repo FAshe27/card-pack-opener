@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.packripper.twa",
+      "sha256_cert_fingerprints": [
+        "5D:8B:4C:A2:E8:B2:8D:63:F4:08:DE:71:5B:D8:27:0B:87:DD:27:2B:4B:DD:99:D5:83:31:D6:7B:03:C1:E6:BD"
+      ]
+    }
+  }
+]
