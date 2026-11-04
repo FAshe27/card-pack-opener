@@ -143,7 +143,15 @@ jobs:
       - name: Generate Android project
         run: |
           cd android
-          bubblewrap update --skipVersionUpgrade
+          # Icon downloads from GitHub Pages can flake (a 503 killed run #3);
+          # retry the project generation a few times before giving up.
+          ok=0
+          for i in 1 2 3; do
+            if bubblewrap update --skipVersionUpgrade; then ok=1; break; fi
+            echo "update attempt $i failed; retrying in 20s"
+            sleep 20
+          done
+          [ "$ok" = 1 ] || { echo "bubblewrap update failed after 3 attempts"; exit 1; }
           ls -la
 
       - name: Build signed APK and AAB
