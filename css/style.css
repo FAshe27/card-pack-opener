@@ -1721,6 +1721,12 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .gb-picked { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
 .gb-picked .btn { margin-left: auto; }
 .gb-grid { max-height: 46vh; overflow-y: auto; }
+/* Corner fix (2026-11-05): bundle-picker cells run ~100-150px, where
+   the base .card's fixed 12px radius over-rounds the corners against
+   the scaled frame/inner radius (same defect class as .trade-card).
+   6.8% / 4.86% keeps the arcs concentric at any cell width. Scoped to
+   the picker grid only — the Collection grid keeps the base radius. */
+.gb-grid .card:not([data-set="periodic"]) { border-radius: 6.8% / 4.86%; }
 .gb-grid .trade-pick { position: relative; }
 .gb-n { position: absolute; top: 4px; right: 4px; background: rgba(20,16,40,.85); color: #ffd75e;
   font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 999px; pointer-events: none; }

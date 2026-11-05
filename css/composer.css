@@ -132,6 +132,13 @@ button.copies-tile:hover { border-color: #f5b942; }
 .copies-tile.sel { border-color: #f5b942; background: #1d1a12; box-shadow: 0 0 0 1px #f5b942; }
 .copies-tile .copies-face { display: block; width: 64px; margin: 0 auto; }
 .copies-tile .copies-face .card { width: 100%; }
+/* Corner fix (2026-11-05): at 64px wide the base .card's fixed 12px
+   radius balloons (~2.7x the concentric size) while the frame and the
+   inner .cf radius scale with the card — the rarity ring went lumpy
+   and the corners over-rounded. Same %-radius pattern as .trade-card:
+   6.8% / 4.86% = inner 3.4% + frame 3.4%, concentric at any width.
+   Periodic tiles keep their tuned 13.7%. */
+.copies-tile .copies-face .card:not([data-set="periodic"]) { border-radius: 6.8% / 4.86%; }
 .copies-tile.vaulted .copies-face { opacity: .62; }
 .copies-tile.ghost { cursor: default; opacity: .55; filter: grayscale(.7); }
 .copies-tile.collapse { display: flex; align-items: center; justify-content: center; min-height: 92px; }
