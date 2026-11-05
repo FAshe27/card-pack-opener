@@ -1136,7 +1136,10 @@ body.modal-open { overflow: hidden; }
   .modal-box:has(.zoom) { padding: 20px 22px; }
 }
 .zoom-card .card { width: 100%; }
-.zoom-card .cf-details { overflow: auto; -webkit-mask-image: none; mask-image: none; }
+/* Modal card: the details box still scrolls, but keeps a soft bottom
+   fade (2026-11-05) so overflowing text fades out — signalling "more
+   below" — instead of slicing a line of text in half with no cue. */
+.zoom-card .cf-details { overflow: auto; -webkit-mask-image: linear-gradient(180deg, #000 85%, transparent); mask-image: linear-gradient(180deg, #000 85%, transparent); }
 .zoom-info h3 { margin: 10px 0 4px; font-size: 1.4rem; color: var(--text); text-transform: none; letter-spacing: 0; }
 .zoom-info dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 16px 0; font-size: .92rem; }
 .zoom-info dt { color: var(--muted); } .zoom-info dd { margin: 0; font-weight: 600; }
@@ -1603,7 +1606,10 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .shop-info .shop-left { flex: 1; }
 .shop-deal-tag { position: absolute; top: -10px; right: 12px; background: linear-gradient(135deg, #ffd700, #ffb700); color: #1a1a1a; font-weight: 800; font-size: .75rem; padding: 4px 12px; border-radius: 999px; letter-spacing: .05em; }
 /* pack visuals use CPS.cards.pack with .shop-pack-size */
-.shop-info .shop-packname { font-size: 1rem; margin: 0 0 4px; }
+/* Pack name reserves exactly two lines in every booth (2026-11-05): a
+   name that wraps (e.g. a long set name) no longer pushes its price —
+   and the whole row's prices — lower than the single-line booths. */
+.shop-info .shop-packname { font-size: 1rem; margin: 0 0 4px; line-height: 1.25; min-height: 2.5em; display: flex; align-items: center; justify-content: center; }
 .shop-price { font-size: 1.3rem; font-weight: 800; margin: 8px 0; }
 .shop-info .btn { width: 100%; margin-top: 8px; }
 .shop-pack-wrap { display: flex; justify-content: center; align-items: center; height: 224px; margin-bottom: 12px; }

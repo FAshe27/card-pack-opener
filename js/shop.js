@@ -103,7 +103,11 @@
       var remaining = sl.limit == null ? null : Math.max(0, sl.limit - sl.bought);
       var canBuy = data.store_credit >= sl.price && (remaining == null || remaining > 0);
       var canBuyAll = remaining != null && remaining > 0 && data.store_credit >= remaining * sl.price;
-      var buyAllBtn = sl.limit == null ? '' :
+      /* Unlimited booths render an invisible Buy-all placeholder
+         (2026-11-05): it reserves the same row height the limited
+         booths' real Buy-all button occupies, so every booth's Buy
+         button sits on one common baseline across the row. */
+      var buyAllBtn = sl.limit == null ? '<button class="btn shop-buyall" aria-hidden="true" tabindex="-1" style="visibility:hidden">Buy all</button>' :
         '<button class="btn shop-buyall" data-buyall="' + sl.slot + '"' + (canBuyAll ? '' : ' disabled') + '>Buy all ×' + remaining + ' · $' + (remaining * sl.price) + '</button>';
       var isTicket = sl.kind === 'ticket';
       var isToken = sl.kind === 'token';

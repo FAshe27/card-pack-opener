@@ -21,6 +21,10 @@
 .arc-head-streak { margin-left: auto; color: var(--muted); font-size: .92rem; }
 .arc-head-streak b { color: var(--warn); }
 
+/* ---- lobby title ---- */
+/* The hub carries a page title like the other views (2026-11-05). */
+.arc-view-title { margin: 2px 0 14px; }
+
 /* ---- back row on a game page ---- */
 /* One back-button row for every Arcade game (2026-10-26 standardization):
    inside the game panel, top, left-aligned, same spacing everywhere. */

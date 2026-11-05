@@ -444,6 +444,10 @@
       coverHtml = '<div class="wr-cover"><button type="button" class="btn primary wr-cover-btn" id="wrCoverBtn">' +
         (S.freeAvailable ? 'Play free game' : 'Play again — ' + S.cost + ' 🪙') + '</button></div>';
     }
+    /* While the cover is up it carries the start button, so the footer
+       action row below suppresses its duplicate start button (same
+       label, same action — 2026-11-05). The end-of-game "Play again"
+       state has no cover, so its footer button is unaffected. */
     rootEl.innerHTML =
       /* ONE big box: header, board, keyboard and the action buttons all
          live in a single panel; Play again / Copy / Stats sit BELOW the
@@ -463,7 +467,7 @@
       '<div class="wr-play"><div class="wr-toast" id="wrToast" role="status"></div>' +
       boardHtml() + keyboardHtml() + coverHtml +
       '</div>' +
-      '<div class="wr-actions">' + sa.actionBtn +
+      '<div class="wr-actions">' + (coverHtml ? '' : sa.actionBtn) +
       '<button type="button" class="btn" id="wrStatsBtn">📊 Stats</button></div>' +
       '</div></div>';
     bindUi();

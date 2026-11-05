@@ -136,7 +136,7 @@
         '<span class="arc-tile-foot"><span class="arc-tile-blurb">' + t.blurb + '</span>' + foot + '</span>' +
         '</button>';
     }).join('');
-    box.innerHTML = headerHTML() +
+    box.innerHTML = '<h2 class="arc-view-title">🎮 Arcade</h2>' + headerHTML() +
       '<div class="arc-grid">' + tiles + '</div>';
     box.querySelectorAll('[data-arc-open]').forEach(function (b) {
       b.addEventListener('click', function () {
