@@ -1020,6 +1020,13 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .seg button.active { background: var(--panel2); color: var(--text); }
 .filter-count { color: var(--muted); font-size: .85rem; margin-left: auto; }
 .coll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 22px 18px; padding: 14px 12px 0 0; }
+/* Corner consistency (2026-11-05, Franklin's call): the Collection
+   grid joins the other card contexts on the concentric %-radius —
+   the base fixed 12px only matches the design at ~176px wide, and
+   phone cells (~100-110px) over-rounded just like the modal pickers
+   did. 6.8% / 4.86% scales with the card at any cell width; at
+   desktop cell sizes it lands within a pixel of the old 12px. */
+.coll-grid .card:not([data-set="periodic"]) { border-radius: 6.8% / 4.86%; }
 .coll-grid .card, .recent .card { cursor: pointer; }
 .recent .card { content-visibility: auto; contain-intrinsic-size: 150px 210px; }
 /* collection cell: content-visibility clips to the cell box, so the cell gets room (padding, cancelled by the negative
