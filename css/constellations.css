@@ -8,15 +8,28 @@
    5.4%-of-width corner radius; the card's own edge radius is 6.8% / 4.86%
    (1.4% inset + 5.4% frame radius horizontally, same px radius vertically at
    the 5/7 aspect), so card edge and art frame are concentric — the site's
-   standard for 5/7 full-bleed faces (see numbers.css). There is NO second CSS
-   border to clash with the art's frame; rarity reads from a soft outer glow
-   in the rarity colour (Periodic / Numbers pattern). */
+   standard for 5/7 full-bleed faces (see numbers.css). Rarity reads from the
+   standard rarity frame — the .front's 3.4cqw padding painted with the
+   rarity gradient, exactly as on every other set — plus a soft outer glow
+   in the rarity colour. (Added 2026-11-05 at Franklin's word: the glow
+   alone did not read at a glance.) */
 
 /* ---------- 1. Full-bleed face, chrome hidden, concentric corners ---------- */
 .card[data-set="constellations"] { aspect-ratio: 5/7; border-radius: 6.8% / 4.86%;
   box-shadow: 0 0 26px 3px color-mix(in srgb, var(--rc) 55%, transparent); }
-.card[data-set="constellations"] .front { padding: 0; background: #04060f; }
-.card[data-set="constellations"] .cf { padding: 0; gap: 0; background: #04060f; border-radius: inherit; overflow: hidden; }
+/* The rarity frame: .front padding painted with the rarity gradient
+   (var(--rc) -> var(--rc2)), the standard card-face treatment. Chase and
+   legendary repeat style.css's special .front gradients because this
+   sheet's specificity would otherwise override them. The .cf radius is
+   3.4cqw — concentric with the card edge at this frame width (6.8cqw
+   outer - 3.4cqw frame, the standard pairing). The frame lives on .front,
+   which is backface-hidden while face-down, so there is still NO pre-flip
+   rarity tell; the glow suppression below is unchanged. */
+.card[data-set="constellations"] .front { padding: 3.4cqw; background-color: #12172a;
+  background-image: linear-gradient(155deg, var(--rc), var(--rc2)); }
+.card.r-chase[data-set="constellations"] .front { background-image: conic-gradient(from 200deg, #ff4fa3, #ffb21e, #f5f56a, #38c97f, #12c2e9, #3f8cff, #b35cff, #ff4fa3); }
+.card.r-legendary[data-set="constellations"] .front { background-image: linear-gradient(155deg, #ffe08a, #ffb21e 35%, #b25c00 70%, #ffd166); }
+.card[data-set="constellations"] .cf { padding: 0; gap: 0; background: #04060f; border-radius: 3.4cqw; overflow: hidden; }
 .card[data-set="constellations"] .cf-top,
 .card[data-set="constellations"] .cf-type,
 .card[data-set="constellations"] .cf-details,
