@@ -21,7 +21,14 @@
        which pops for the giver through this same module.
    Failure is silent by design: offline, logged out, or the RPC not
    live yet just means no pop this pass; nothing is marked read and
-   nothing is lost. */
+   nothing is lost.
+   Combined thanks paths (2026-11-05): "View Card" no longer ends the
+   story. It arms a one-shot watcher — the card modal gains its own
+   "Say Thanks" button (injected by this module; app.js untouched),
+   and if the card is closed still unthanked, this pop returns exactly
+   once. The bell entry also keeps an inline Say Thanks
+   (notifications.js) until the gift is thanked, and every surface
+   records successes in CPS.giftThanked so the paths never race. */
 (function (CPS) {
   'use strict';
   var ctx = CPS.appCtx;
@@ -38,6 +45,10 @@
   var running = false;
   var showing = false;
   var retryTimer = null;
+  /* Notification ids thanked from ANY surface (this pop, the card
+     modal button, the bell's inline button) — shared so the return
+     watcher below never re-pops a gift that was already thanked. */
+  CPS.giftThanked = CPS.giftThanked || {};
 
   function seenKey() {
     var pid = (ctx.S && ctx.S.account && ctx.S.account.id) || 'anon';
@@ -98,6 +109,84 @@
 
   var current = null; /* the pop on screen, if any */
 
+  function sendThanks(it, giverName) {
+    return CPS.cloud.call('say_thanks', { p_notification_id: it.id }).then(function (r) {
+      CPS.giftThanked[it.id] = true;
+      if (it.meta) it.meta.thanked = true;
+      if (pendingView && pendingView.it.id === it.id) pendingView = null;
+      if (r && r.already) ctx.toast('You already thanked ' + giverName + ' for this one.', '', 3000);
+      else ctx.toast('🙏 Thanks sent to ' + giverName + '!', 'good', 3000);
+      return r;
+    });
+  }
+
+  /* --- View Card detour: card-modal thanks button + one return pop */
+  var pendingView = null; /* { it, started, seenCard, noRepop } */
+  var viewTimer = null;
+
+  function cardModalOpenFor(meta) {
+    var m = document.getElementById('modal');
+    if (!m || m.classList.contains('hidden')) return false;
+    var box = document.getElementById('modalBox');
+    if (!box) return false;
+    var h = box.querySelector('.zoom-info h3');
+    if (!h) return false;
+    return !meta.card_name || h.textContent === meta.card_name;
+  }
+
+  function injectCardThanks() {
+    if (!pendingView) return;
+    var it = pendingView.it, meta = it.meta || {};
+    if (CPS.giftThanked[it.id] || meta.thanked) return;
+    if (!cardModalOpenFor(meta)) return;
+    var box = document.getElementById('modalBox');
+    var info = box && box.querySelector('.zoom-info');
+    if (!info || box.querySelector('#giftCardThanksBtn')) return;
+    var giverName = meta.from_name || 'Someone';
+    var wrap = document.createElement('div');
+    wrap.style.marginTop = '10px';
+    var btn = document.createElement('button');
+    btn.className = 'btn primary';
+    btn.id = 'giftCardThanksBtn';
+    btn.style.width = '100%';
+    btn.textContent = '🙏 Say Thanks to ' + giverName;
+    btn.addEventListener('click', async function () {
+      btn.disabled = true;
+      try {
+        await sendThanks(it, giverName);
+        btn.textContent = '🙏 Thanks sent ✓';
+      } catch (e) { ctx.cloudError(e); btn.disabled = false; }
+    });
+    wrap.appendChild(btn);
+    info.appendChild(wrap);
+  }
+
+  function armViewReturn(it, noRepop) {
+    pendingView = { it: it, started: Date.now(), seenCard: false, noRepop: !!noRepop };
+    if (!viewTimer) viewTimer = setInterval(viewTick, 700);
+  }
+
+  function viewTick() {
+    if (!pendingView) { clearInterval(viewTimer); viewTimer = null; return; }
+    var it = pendingView.it, meta = it.meta || {};
+    var elapsed = Date.now() - pendingView.started;
+    if (CPS.giftThanked[it.id] || meta.thanked || elapsed > 30 * 60000) {
+      pendingView = null; clearInterval(viewTimer); viewTimer = null; return;
+    }
+    if (cardModalOpenFor(meta)) pendingView.seenCard = true;
+    injectCardThanks();
+    if (showing) return;
+    if (ctx.S && ctx.S.opening) return; /* pack reveal in progress — wait */
+    if (modalBusy()) return; /* the card (or another modal) is still open */
+    /* Modal fully closed. Only re-pop once the card was actually seen
+       (a stub set loads async and the modal opens late) — or after a
+       grace period, in case the card never opened at all. */
+    if (!pendingView.seenCard && elapsed < 6000) return;
+    var noRepop = pendingView.noRepop;
+    pendingView = null; clearInterval(viewTimer); viewTimer = null;
+    if (!noRepop) showPop(it, true);
+  }
+
   function deliver(toasted) {
     if (showing && !modalBusy()) {
       /* The pop was closed without its buttons (backdrop tap — the
@@ -122,6 +211,10 @@
   async function showNext() {
     var it = queue.shift();
     if (!it) { showing = false; return; }
+    showPop(it, false);
+  }
+
+  async function showPop(it, isReturn) {
     showing = true;
     current = it;
     var meta = it.meta || {};
@@ -159,6 +252,7 @@
       ctx.closeModal();
       showing = false;
       if (openCard) {
+        if (canThank) armViewReturn(it, isReturn);
         ctx.openCardModal(meta.set_id, meta.card_id, !!meta.holo, variantOf(meta));
       } else if (queue.length) {
         setTimeout(function () { deliver(); }, 250);
@@ -172,14 +266,10 @@
     var tb = box && box.querySelector('#giftThanksBtn');
     if (tb) tb.addEventListener('click', async function () {
       tb.disabled = true;
-      try {
-        var r = await CPS.cloud.call('say_thanks', { p_notification_id: it.id });
-        if (r && r.already) ctx.toast('You already thanked ' + giverName + ' for this one.', '', 3000);
-        else ctx.toast('🙏 Thanks sent to ' + giverName + '!', 'good', 3000);
-      } catch (e) { ctx.cloudError(e); }
+      try { await sendThanks(it, giverName); } catch (e) { ctx.cloudError(e); }
       dismiss(false);
     });
-    if (!isThanks && ctx.fx && ctx.fx.confetti) ctx.fx.confetti(180);
+    if (!isThanks && !isReturn && ctx.fx && ctx.fx.confetti) ctx.fx.confetti(180);
   }
 
   async function check() {

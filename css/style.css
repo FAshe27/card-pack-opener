@@ -80,6 +80,8 @@ body.cloud button#notifBtn { display: inline-flex !important; align-items: cente
 .notif-icon { font-size: 1.3rem; flex: none; }
 .notif-text { flex: 1; min-width: 0; }
 .notif-time { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
+.notif-thanks { display: inline-block; margin-top: 6px; padding: 3px 12px; border: 1px solid var(--accent); border-radius: 999px; background: rgba(124,108,255,.12); font-size: .85rem; font-weight: 600; cursor: pointer; }
+.notif-thanks.done { border-color: var(--line); background: var(--panel2); color: var(--muted); cursor: default; font-weight: 400; }
 .notif-actions { display: flex; gap: 10px; margin-top: 4px; }
 .quest-list { display: grid; gap: 10px; margin-top: 12px; }
 .quest { border: 1px solid var(--line); border-left-width: 3px; border-radius: 12px; padding: 12px 14px; background: var(--panel2); }

@@ -40,6 +40,7 @@ async function openNotifications() {
            icon span would show it twice (🎯 🎯). Strip the duplicate
            when the text opens with the very icon being displayed. */
         if (nIcon && nText.indexOf(nIcon) === 0) nText = nText.slice(nIcon.length).replace(/^\s+/, '');
+        var canThank = (it.kind === 'gift_card' || it.kind === 'gift') && it.meta && it.meta.from && !it.meta.thanked;
         return '<button class="notif' + (it.read ? '' : ' unread') + (isAnn(it) ? ' pinned' : '') + '" data-notif="' + it.id + '"' +
           (it.view ? ' data-view="' + ctx.esc(it.view) + '"' : '') +
           (it.meta && it.meta.ticket_id ? ' data-ticket="' + ctx.esc(it.meta.ticket_id) + '"' : '') +
@@ -48,11 +49,29 @@ async function openNotifications() {
             (it.meta.tier ? ' data-ntier="' + ctx.esc(it.meta.tier) + '" data-nserial="' + it.meta.serial + '"' : '') : '') + '>' +
           '<span class="notif-icon">' + nIcon + '</span>' +
           '<span class="notif-text">' + ctx.esc(nText) +
-          '<span class="notif-time">' + notifTime(it.created_at) + '</span></span></button>';
+          '<span class="notif-time">' + notifTime(it.created_at) + '</span>' +
+          (canThank ? '<span class="notif-thanks" data-thanks="' + it.id + '" role="button" tabindex="0">🙏 Say Thanks</span>' : '') +
+          '</span></button>';
       }).join('') + '</div><div class="notif-actions"><button class="btn small" id="notifReadAll">Mark all read</button>' +
       (items.some(function (it) { return it.read; }) ? '<button class="btn small" id="notifClearRead">Clear read</button>' : '') + '<button class="btn small" id="notifSettingsBtn">⚙ Settings</button></div>'
       : '<div class="empty">No notifications yet.</div><div class="notif-actions"><button class="btn small" id="notifSettingsBtn">⚙ Notification Settings</button></div>') +
       '</div>', function (box) {
+        box.querySelectorAll('[data-thanks]').forEach(function (el) {
+          var fireThanks = async function (e) {
+            e.stopPropagation(); e.preventDefault();
+            if (el.classList.contains('done')) return;
+            el.classList.add('done'); el.style.opacity = '.6';
+            try {
+              var r = await CPS.cloud.call('say_thanks', { p_notification_id: el.dataset.thanks });
+              CPS.giftThanked = CPS.giftThanked || {};
+              CPS.giftThanked[el.dataset.thanks] = true;
+              el.textContent = '🙏 Thanks sent ✓'; el.style.opacity = '';
+              ctx.toast(r && r.already ? 'You already thanked them for this one.' : '🙏 Thanks sent!', 'good', 3000);
+            } catch (err) { el.classList.remove('done'); el.style.opacity = ''; ctx.cloudError(err); }
+          };
+          el.addEventListener('click', fireThanks);
+          el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') fireThanks(e); });
+        });
         box.querySelectorAll('.notif').forEach(function (el) {
           el.addEventListener('click', async function () {
             var id = el.dataset.notif, view = el.dataset.view;
