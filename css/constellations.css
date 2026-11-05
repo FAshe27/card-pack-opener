@@ -1,0 +1,87 @@
+/* Constellations set: all 88 IAU constellations (class pack-skin-constellations,
+   data-set="constellations"). The art IS the card face (Numbers / Periodic /
+   Calendar precedent): each image in assets/sets/constellations/images/ is a
+   full-bleed night-sky photograph of the whole constellation with its name in
+   script baked in at bottom right, so the site's text chrome (name row,
+   subtitle/rarity row, details box, footer) is hidden here and lives only in
+   the card modal. The art draws one slim frame inset 1.4% of width with a
+   5.4%-of-width corner radius; the card's own edge radius is 6.8% / 4.86%
+   (1.4% inset + 5.4% frame radius horizontally, same px radius vertically at
+   the 5/7 aspect), so card edge and art frame are concentric — the site's
+   standard for 5/7 full-bleed faces (see numbers.css). There is NO second CSS
+   border to clash with the art's frame; rarity reads from a soft outer glow
+   in the rarity colour (Periodic / Numbers pattern). */
+
+/* ---------- 1. Full-bleed face, chrome hidden, concentric corners ---------- */
+.card[data-set="constellations"] { aspect-ratio: 5/7; border-radius: 6.8% / 4.86%;
+  box-shadow: 0 0 26px 3px color-mix(in srgb, var(--rc) 55%, transparent); }
+.card[data-set="constellations"] .front { padding: 0; background: #04060f; }
+.card[data-set="constellations"] .cf { padding: 0; gap: 0; background: #04060f; border-radius: inherit; overflow: hidden; }
+.card[data-set="constellations"] .cf-top,
+.card[data-set="constellations"] .cf-type,
+.card[data-set="constellations"] .cf-details,
+.card[data-set="constellations"] .cf-foot { display: none; }
+.card[data-set="constellations"] .cf-art { flex: 1 1 auto; aspect-ratio: auto; border: 0; border-radius: 0; background: #04060f; }
+/* Face-down, the back's inner frame (.cb) must curve with the card edge:
+   concentric radius = card radius 6.8cqw - the back's 4cqw padding = 2.8cqw. */
+.card[data-set="constellations"] .cb { border-radius: 2.8cqw; }
+/* NO PRE-FLIP TELLS: while a Constellations card sits face-down in the pack
+   reveal, nothing may hint at its rarity — the glow above is forced fully off
+   until the flip (box-shadow only, so deal/flip animations are untouched —
+   killing `animation` on .card would break the flip transition on iOS). The
+   glow appears only once the card is flipped; collection/modal renders are
+   not flippable and keep it. Same pattern as Numbers / Periodic. */
+.card.flippable:not(.flipped)[data-set="constellations"] { box-shadow: none !important; }
+
+/* ---------- 2. Pack skin "constellations": PLACEHOLDER pure-CSS skin ----------
+   Deep-space wrapper: indigo night with a violet nebula glow, a field of
+   tiny star speckles, and silver-violet crimps. A stand-in until Franklin's
+   own baked pack art replaces it; scoped only to this set. */
+.pack-skin-constellations .pack-top {
+  background:
+    radial-gradient(circle 1.5px at 22% 34%, rgba(255,255,255,.95) 0 60%, transparent 70%),
+    radial-gradient(circle 1px at 58% 22%, rgba(255,255,255,.8) 0 60%, transparent 70%),
+    radial-gradient(circle 1.2px at 76% 48%, rgba(210,200,255,.85) 0 60%, transparent 70%),
+    radial-gradient(circle 1px at 40% 58%, rgba(255,255,255,.6) 0 60%, transparent 70%),
+    linear-gradient(115deg, transparent 30%, rgba(190,180,255,.22) 46%, transparent 72%),
+    linear-gradient(180deg, #4a3f9e 0%, #2c2568 55%, #1c1747 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-constellations .pack-body {
+  background:
+    radial-gradient(circle 1.5px at 14% 20%, rgba(255,255,255,.9) 0 60%, transparent 70%),
+    radial-gradient(circle 1px at 32% 64%, rgba(255,255,255,.65) 0 60%, transparent 70%),
+    radial-gradient(circle 1.3px at 52% 30%, rgba(220,210,255,.85) 0 60%, transparent 70%),
+    radial-gradient(circle 1px at 68% 76%, rgba(255,255,255,.7) 0 60%, transparent 70%),
+    radial-gradient(circle 1.6px at 84% 42%, rgba(255,255,255,.9) 0 60%, transparent 70%),
+    radial-gradient(circle 1px at 90% 86%, rgba(200,190,255,.6) 0 60%, transparent 70%),
+    radial-gradient(ellipse 80% 26% at 50% 112%, rgba(122,92,255,.32), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% -10%, rgba(150,130,255,.16), transparent 70%),
+    linear-gradient(180deg, #171238 0%, #0b1035 55%, #05081a 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+.pack-skin-constellations .pack-body::before {
+  background: radial-gradient(ellipse 85% 36% at 50% -8%, rgba(190,180,255,.13), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, transparent 62%);
+}
+.pack-skin-constellations .crimp { background: repeating-linear-gradient(100deg, rgba(7,6,26,.68) 0 4px, rgba(150,130,255,.55) 4px 6px, rgba(240,238,255,.30) 6px 9px); }
+.pack-skin-constellations .crimp.bottom { background: repeating-linear-gradient(100deg, rgba(5,4,20,.72) 0 4px, rgba(110,95,220,.5) 4px 6px, rgba(240,238,255,.16) 6px 9px); }
+.pack-skin-constellations .pack-top::after { border-bottom-color: rgba(220,212,255,.8); }
+.pack-skin-constellations .pack-code { color: #efeaff; opacity: .95; text-shadow: 0 1px 0 rgba(10,6,40,.65), 0 0 12px rgba(150,130,255,.8); }
+.pack-skin-constellations .pack-emblem {
+  background: radial-gradient(circle at 50% 38%, #6a5acd 0%, #3b2f7a 58%, #1c1747 100%);
+  box-shadow: inset 0 0 0 2px rgba(230,224,255,.45), inset 0 -8px 14px rgba(5,3,26,.55), 0 2px 8px rgba(2,0,16,.5), 0 0 22px rgba(122,92,255,.35);
+}
+.pack-skin-constellations .pack-name { color: #ffffff; text-shadow: 0 0 14px rgba(122,92,255,.85), 0 2px 8px rgba(0,0,0,.65); }
+.pack-skin-constellations .pack-sub { color: #c9c2f2; }
+
+/* ---------- 3. Card back (placeholder, CSS-only, in-frame) ---------- */
+.card[data-set="constellations"] .cb {
+  background:
+    radial-gradient(circle 1.6px at 30% 26%, rgba(255,255,255,.9) 0 60%, transparent 70%),
+    radial-gradient(circle 1.2px at 66% 18%, rgba(255,255,255,.7) 0 60%, transparent 70%),
+    radial-gradient(circle 1.4px at 78% 58%, rgba(220,210,255,.8) 0 60%, transparent 70%),
+    radial-gradient(circle 1.1px at 22% 72%, rgba(255,255,255,.65) 0 60%, transparent 70%),
+    radial-gradient(circle 60px at 50% 42%, rgba(150,130,255,.16) 0 58%, transparent 72%),
+    linear-gradient(160deg, #3b2f7a 0%, #171238 48%, #05081a 100%);
+}

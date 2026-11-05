@@ -79,7 +79,8 @@ window.CardSets.bootIndex = {
   "inventions",
   "houseplants",
   "mushrooms",
-  "instruments"
+  "instruments",
+  "constellations"
  ],
  "sets": {
   "birdwatching": {
@@ -1186,6 +1187,20 @@ window.CardSets.bootIndex = {
    "primary": "#8a5a1e",
    "secondary": "#2b1d12",
    "total": 380
+  },
+  "constellations": {
+   "files": [
+    "constellations.js"
+   ],
+   "name": "Constellations",
+   "code": "CONST",
+   "emblem": "🌌",
+   "packName": "Constellation Pack",
+   "skin": "constellations",
+   "css": "constellations",
+   "primary": "#4a3f9e",
+   "secondary": "#0b1035",
+   "total": 88
   }
  }
 };
