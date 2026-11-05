@@ -78,7 +78,8 @@ window.CardSets.bootIndex = {
   "castles-fortresses",
   "inventions",
   "houseplants",
-  "mushrooms"
+  "mushrooms",
+  "instruments"
  ],
  "sets": {
   "birdwatching": {
@@ -1170,6 +1171,20 @@ window.CardSets.bootIndex = {
    "css": "mushrooms",
    "primary": "#b33a2b",
    "secondary": "#4a3b28",
+   "total": 380
+  },
+  "instruments": {
+   "files": [
+    "instruments.js"
+   ],
+   "name": "Musical Instruments",
+   "code": "INSTR",
+   "emblem": "🎸",
+   "packName": "Musical Instruments Pack",
+   "skin": "instruments",
+   "css": "instruments",
+   "primary": "#8a5a1e",
+   "secondary": "#2b1d12",
    "total": 380
   }
  }
