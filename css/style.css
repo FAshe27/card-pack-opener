@@ -1086,6 +1086,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 /* ===================================================== odds */
 .table-wrap { overflow-x: auto; }
 
+.odds-picker { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }
+.odds-picker select { max-width: 320px; flex: 1; }
 .odds-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
 .odds-table th { text-align: left; color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .odds-table td { padding: 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }

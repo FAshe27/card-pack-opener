@@ -86,7 +86,6 @@
           <div class="packs-controls-row">
             <button id="openBtn" class="btn primary big">Open a pack</button>
             <button id="quickOpenBtn" class="btn" title="Skip the tear and flip every card at once">⚡ Quick Open</button>
-            <div class="odds-row"><button class="btn small ghost" onclick="CPS.app.showView('odds')">Odds &amp; pack contents</button></div>
           </div>
           <div class="dev-only dev-box">
             <div class="dev-title">Dev tools</div>
@@ -238,6 +237,7 @@
       <div class="panel">
         <button class="btn small ghost" style="margin-bottom:10px" onclick="CPS.app.goBack('packs')">← Back</button>
         <h2>Odds &amp; pack contents <small id="oddsSetName"></small></h2>
+        <div class="odds-picker"><label for="oddsSetSelect">Set</label> <select id="oddsSetSelect" onchange="CPS.app.onOddsSetChange(this.value)"></select></div>
         <p class="muted" id="oddsIntro"></p>
         <div class="table-wrap"><table class="odds-table" id="oddsTable"></table></div>
         <h3>Pack slots</h3>
@@ -312,7 +312,12 @@
         </div>
         <div class="faq-item">
           <h3 class="faq-q">What do the rarities mean?</h3>
-          <p class="faq-a">From most to least common: Common, Uncommon, Rare, Epic, Legendary, and Chase — the rarest of all. The Odds button on Open Packs shows exactly what's in a set and your chances for each rarity.</p>
+          <p class="faq-a">From most to least common: Common, Uncommon, Rare, Epic, Legendary, and Chase — the rarest of all. The Odds &amp; pack contents page shows exactly what's in a set and your chances for each rarity — see the next question.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">Where can I see a set's odds and pack contents?</h3>
+          <p class="faq-a">On the Odds &amp; pack contents page: pick any set from the dropdown to see its rarity odds, holo chances, and exactly how its packs are put together.</p>
+          <p class="faq-a"><button class="btn small" onclick="CPS.app.showView('odds')">🎲 Odds &amp; pack contents</button></p>
         </div>
         <h3 class="faq-sec">Cards &amp; your collection</h3>
         <div class="faq-item">

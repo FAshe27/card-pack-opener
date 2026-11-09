@@ -2142,12 +2142,29 @@
   }
 
   /* --- odds */
+  var oddsSetId = null;
+  function onOddsSetChange(id) { oddsSetId = id; renderOdds(); }
   function renderOdds() {
-    var set = S.set;
-    if (set.id === 'jumbled') {
+    var oid = oddsSetId || S.set.id;
+    var osel = $('#oddsSetSelect');
+    if (osel) {
+      var osets = window.CardSets.all().slice();
+      if (typeof CPS !== 'undefined' && CPS.jumbled && !window.CardSets.get('jumbled')) osets.push(CPS.jumbled.pseudoSet()); /* Jumbled Mess is always listed, like the set menu */
+      osets.sort(function (a, b) { return a.name < b.name ? -1 : a.name > b.name ? 1 : 0; });
+      osel.innerHTML = osets.map(function (s) { return '<option value="' + esc(s.id) + '"' + (s.id === oid ? ' selected' : '') + '>' + esc(s.name) + '</option>'; }).join('');
+    }
+    if (oid === 'jumbled') {
       $('#oddsSetName').textContent = '\u00b7 Jumbled Mess';
       $('#oddsIntro').textContent = '5 cards, each from a random set. First four: Uncommon 62% \u00b7 Rare 26% \u00b7 Epic 10% \u00b7 Legendary 2%. Fifth: Rare 80% \u00b7 Epic 14% \u00b7 Legendary 5% \u00b7 Chase 1% \u2014 and 1 in 10 of those Chases is the Jumbled Mess Chase, found nowhere else. A few cards live only in these packs: see the Jumbled Mess collection.';
       $('#oddsTable').innerHTML = ''; $('#slotList').innerHTML = '';
+      return;
+    }
+    var set = window.CardSets.get(oid) || S.set;
+    if (set.stub) {
+      $('#oddsSetName').textContent = '\u00b7 ' + set.name;
+      $('#oddsIntro').textContent = 'Loading that set\u2026';
+      $('#oddsTable').innerHTML = ''; $('#slotList').innerHTML = '';
+      window.CardSets.load(oid).then(function () { if (S.view === 'odds' && (oddsSetId || S.set.id) === oid) renderOdds(); });
       return;
     }
     var rows = window.CardSets.oddsTable(set);
@@ -3024,7 +3041,7 @@
     }, true);
   }
 
-  CPS.app = { state: S, config: CONFIG, openPack: startOpen, tear: tear, revealAll: revealAll, showView: showView, selectSet: selectSet, goBack: goBack };
+  CPS.app = { state: S, config: CONFIG, openPack: startOpen, tear: tear, revealAll: revealAll, showView: showView, selectSet: selectSet, goBack: goBack, onOddsSetChange: onOddsSetChange };
   /* Shared context for split-out modules (js/tickets.js). */
   CPS.appCtx = { S: S, U: U, R: R, audio: audio, fx: fx,
     $: $, $$: $$, esc: esc, save: save, isCloud: isCloud, isLocked: isLocked, isAdmin: isAdmin,
