@@ -80,7 +80,8 @@ window.CardSets.bootIndex = {
   "houseplants",
   "mushrooms",
   "instruments",
-  "constellations"
+  "constellations",
+  "mtg"
  ],
  "sets": {
   "birdwatching": {
@@ -1152,7 +1153,7 @@ window.CardSets.bootIndex = {
    ],
    "name": "Houseplants",
    "code": "POTTED",
-   "emblem": "\ud83e\udeb4",
+   "emblem": "🪴",
    "packName": "Houseplants Pack",
    "skin": "houseplants",
    "css": "houseplants",
@@ -1201,6 +1202,21 @@ window.CardSets.bootIndex = {
    "primary": "#4a3f9e",
    "secondary": "#0b1035",
    "total": 88
+  },
+  "mtg": {
+   "files": [
+    "mtg.js",
+    "mtg-additions.js"
+   ],
+   "name": "Magic: The Gathering Pack",
+   "code": "MTG",
+   "emblem": "🔮",
+   "packName": "Magic: The Gathering Pack",
+   "skin": "mtg",
+   "css": "mtg",
+   "primary": "#d8b25a",
+   "secondary": "#8a6a2a",
+   "total": 420
   }
  }
 };
