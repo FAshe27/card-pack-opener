@@ -164,6 +164,7 @@
     S.onlineSets = state.online_sets || [];
     S.spins = state.spins || 0;
     S.gameTokens = state.game_tokens || 0;
+    S.storeCredit = state.store_credit || 0;
     S.wheelCfg = state.wheel || null;
     S.favorites = {};
     (state.favorites || []).forEach(function (f) { S.favorites[f[0] + ':' + f[1]] = true; });
@@ -1380,7 +1381,7 @@
       el.getAttribute('data-holo') === '1',
       vt ? { tier: vt, serial: parseInt(el.getAttribute('data-variant-serial'), 10) || 0 } : null);
   }
-  function tradeItemsHtml(items, packSet, packQty, tokens, tickets) {
+  function tradeItemsHtml(items, packSet, packQty, tokens, tickets, credit) {
     var h = '<div class="trade-items">' + (items || []).map(function (it) {
       return tradeMiniCard(it.set_id, it.card_id, it.holo, it.qty, it.tier ? { tier: it.tier, serial: it.serial } : null);
     }).join('');
@@ -1391,6 +1392,7 @@
     }
     if (tokens > 0) h += '<div class="trade-card"><div class="trade-cap"><b>🪙 ' + tokens + ' token' + (tokens === 1 ? '' : 's') + '</b></div></div>';
     if (tickets > 0) h += '<div class="trade-card"><div class="trade-cap"><b>🎟️ ' + tickets + ' ticket' + (tickets === 1 ? '' : 's') + '</b></div></div>';
+    if (credit > 0) h += '<div class="trade-card"><div class="trade-cap"><b>💵 $' + credit + ' store credit</b></div></div>';
     return h + '</div>';
   }
 
@@ -1408,10 +1410,10 @@
     var rightCap = t.direction === 'incoming' ? 'You give' : 'You get';
     var nGive = (t.direction === 'incoming' ? t.want_items : t.offer_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0) +
       (t.direction === 'incoming' ? (t.want_packs || 0) : (t.offer_packs || 0)) +
-      ((t.direction === 'incoming' ? t.want_tokens : t.offer_tokens) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.want_tickets : t.offer_tickets) > 0 ? 1 : 0);
+      ((t.direction === 'incoming' ? t.want_tokens : t.offer_tokens) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.want_tickets : t.offer_tickets) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.want_credit : t.offer_credit) > 0 ? 1 : 0);
     var nGet = (t.direction === 'incoming' ? t.offer_items : t.want_items || []).reduce(function (s, it) { return s + (it.qty || 1); }, 0) +
       (t.direction === 'incoming' ? (t.offer_packs || 0) : (t.want_packs || 0)) +
-      ((t.direction === 'incoming' ? t.offer_tokens : t.want_tokens) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.offer_tickets : t.want_tickets) > 0 ? 1 : 0);
+      ((t.direction === 'incoming' ? t.offer_tokens : t.want_tokens) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.offer_tickets : t.want_tickets) > 0 ? 1 : 0) + ((t.direction === 'incoming' ? t.offer_credit : t.want_credit) > 0 ? 1 : 0);
     var head = t.direction === 'incoming'
       ? '<b>' + esc(t.other_name) + '</b> offers you a trade'
       : 'You offered <b>' + esc(t.other_name) + '</b> a trade';
@@ -1430,9 +1432,9 @@
     }
     return '<div class="trade-row"><div class="trade-head">' + head + '</div>' +
       '<div class="trade-cards"><div class="trade-side"><span class="trade-cap-top">' + leftCap + '</span>' +
-      tradeItemsHtml(t.offer_items, t.offer_pack_set, t.offer_packs, t.offer_tokens, t.offer_tickets) + '</div>' +
+      tradeItemsHtml(t.offer_items, t.offer_pack_set, t.offer_packs, t.offer_tokens, t.offer_tickets, t.offer_credit) + '</div>' +
       '<span class="trade-swap">\u21c4</span><div class="trade-side"><span class="trade-cap-top">' + rightCap + '</span>' +
-      tradeItemsHtml(t.want_items, t.want_pack_set, t.want_packs, t.want_tokens, t.want_tickets) + '</div></div>' +
+      tradeItemsHtml(t.want_items, t.want_pack_set, t.want_packs, t.want_tokens, t.want_tickets, t.want_credit) + '</div></div>' +
       '<div class="trade-actions">' + actions + '</div></div>';
   }
 
@@ -1502,8 +1504,9 @@
       var to = prefillTo && others.some(function (p) { return p.id === prefillTo; }) ? prefillTo : others[0].id;
       TB = { to: to, step: 1, their: [], theirPacks: [], toName: '', setId: '', q: '', rarity: '',
              picks: [], offer: [], want: [], offerPack: null, wantPack: null, packSet: '', packs: 0,
-             offerMoney: null, wantMoney: null, tokens: 0, tickets: 0, myColl: tbMyCollection() };
+             offerMoney: null, wantMoney: null, tokens: 0, tickets: 0, credit: 0, myColl: tbMyCollection() };
       await ensureVariants();
+      await ensureCredit();
       $('#tradeWithSel').innerHTML = others.map(function (p) {
         return '<option value="' + esc(p.id) + '"' + (p.id === to ? ' selected' : '') + '>' + esc(p.display_name) + '</option>';
       }).join('');
@@ -1532,7 +1535,7 @@
     } catch (e) { TB.their = []; TB.toName = ''; cloudError(e); }
     TB.step = 1; TB.picks = []; TB.offer = []; TB.want = [];
     TB.offerPack = null; TB.wantPack = null; TB.packSet = ''; TB.packs = 0;
-    TB.offerMoney = null; TB.wantMoney = null; TB.tokens = 0; TB.tickets = 0;
+    TB.offerMoney = null; TB.wantMoney = null; TB.tokens = 0; TB.tickets = 0; TB.credit = 0;
     TB.setId = ''; TB.q = ''; TB.rarity = '';
     $('#tradeSearch').value = '';
     renderTradeBuilder();
@@ -1628,10 +1631,11 @@
     var bits = [];
     if (m.tokens > 0) bits.push('🪙 ' + m.tokens + ' token' + (m.tokens === 1 ? '' : 's'));
     if (m.tickets > 0) bits.push('🎟️ ' + m.tickets + ' ticket' + (m.tickets === 1 ? '' : 's'));
+    if (m.credit > 0) bits.push('💵 $' + m.credit + ' store credit');
     return bits.join(' + ');
   }
   function tbSyncMoneyScratch() {
-    var m = (TB.tokens > 0 || TB.tickets > 0) ? { tokens: TB.tokens || 0, tickets: TB.tickets || 0 } : null;
+    var m = (TB.tokens > 0 || TB.tickets > 0 || TB.credit > 0) ? { tokens: TB.tokens || 0, tickets: TB.tickets || 0, credit: TB.credit || 0 } : null;
     if (TB.step === 1) TB.offerMoney = m; else if (TB.step === 2) TB.wantMoney = m;
   }
   function tbRenderMoneyBar() {
@@ -1639,13 +1643,14 @@
     var saved = tbCurrentMoney();
     TB.tokens = saved ? saved.tokens : 0;
     TB.tickets = saved ? saved.tickets : 0;
-    var tok = $('#tradeTokens'), tic = $('#tradeTickets');
-    tok.value = TB.tokens || 0; tic.value = TB.tickets || 0;
+    TB.credit = saved ? (saved.credit || 0) : 0;
+    var tok = $('#tradeTokens'), tic = $('#tradeTickets'), cre = $('#tradeCredit');
+    tok.value = TB.tokens || 0; tic.value = TB.tickets || 0; if (cre) cre.value = TB.credit || 0;
     if (TB.step === 1) {
-      tok.max = S.gameTokens || 0; tic.max = S.spins || 0;
-      $('#tradeMoneyHave').textContent = 'you have 🪙 ' + (S.gameTokens || 0) + ' · 🎟️ ' + (S.spins || 0) + ' — held in escrow when you send';
+      tok.max = S.gameTokens || 0; tic.max = S.spins || 0; if (cre) cre.max = S.storeCredit || 0;
+      $('#tradeMoneyHave').textContent = 'you have 🪙 ' + (S.gameTokens || 0) + ' · 🎟️ ' + (S.spins || 0) + ' · 💵 $' + (S.storeCredit || 0) + ' — held in escrow when you send';
     } else {
-      tok.removeAttribute('max'); tic.removeAttribute('max');
+      tok.removeAttribute('max'); tic.removeAttribute('max'); if (cre) cre.removeAttribute('max');
       $('#tradeMoneyHave').textContent = 'they pay this if they accept';
     }
   }
@@ -1816,7 +1821,7 @@
       (TB.wantMoney ? '<div class="muted small" style="margin-top:6px">' + tbMoneyText(TB.wantMoney) + '</div>' : '') +
       '<button class="btn small" id="tradeEditWant" style="margin-top:8px">Edit what you get</button></div>' +
       ((TB.offerPack || TB.offerMoney) ? '<p class="muted small" style="grid-column:1/-1">🔒 Held in escrow when you send this offer: your ' +
-        [TB.offerPack ? 'packs' : '', TB.offerMoney ? 'tokens/tickets' : ''].filter(Boolean).join(' and ') +
+        [TB.offerPack ? 'packs' : '', TB.offerMoney ? 'tokens/tickets/credit' : ''].filter(Boolean).join(' and ') +
         ' — delivered if ' + esc(TB.toName) + ' accepts, and returned if they decline, or if the offer is cancelled or expires.</p>' : '') +
       '<div class="trade-review-actions"><button class="btn" id="tradeStartOver">Start over</button>' +
       '<button class="btn primary" id="tradeSendBtn">Send offer to ' + esc(TB.toName) + '</button></div>';
@@ -1825,7 +1830,7 @@
     $('#tradeStartOver').addEventListener('click', function () {
       TB.step = 1; TB.offer = []; TB.want = []; TB.picks = [];
       TB.offerPack = null; TB.wantPack = null; TB.packSet = ''; TB.packs = 0;
-      TB.offerMoney = null; TB.wantMoney = null; TB.tokens = 0; TB.tickets = 0;
+      TB.offerMoney = null; TB.wantMoney = null; TB.tokens = 0; TB.tickets = 0; TB.credit = 0;
       renderTradeBuilder(); window.scrollTo(0, 0);
     });
     $('#tradeSendBtn').addEventListener('click', async function () {
@@ -1835,10 +1840,10 @@
           p_to: TB.to,
           p_offer: { cards: TB.offer.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo, tier: p.tier, serial: p.serial }; }),
                      pack_set: TB.offerPack ? TB.offerPack.set : null, packs: TB.offerPack ? TB.offerPack.qty : 0,
-                     tokens: TB.offerMoney ? TB.offerMoney.tokens : 0, tickets: TB.offerMoney ? TB.offerMoney.tickets : 0 },
+                     tokens: TB.offerMoney ? TB.offerMoney.tokens : 0, tickets: TB.offerMoney ? TB.offerMoney.tickets : 0, credit: TB.offerMoney ? (TB.offerMoney.credit || 0) : 0 },
           p_want: { cards: TB.want.map(function (p) { return { set: p.setId, card: p.cardId, holo: p.holo, tier: p.tier, serial: p.serial }; }),
                     pack_set: TB.wantPack ? TB.wantPack.set : null, packs: TB.wantPack ? TB.wantPack.qty : 0,
-                    tokens: TB.wantMoney ? TB.wantMoney.tokens : 0, tickets: TB.wantMoney ? TB.wantMoney.tickets : 0 }
+                    tokens: TB.wantMoney ? TB.wantMoney.tokens : 0, tickets: TB.wantMoney ? TB.wantMoney.tickets : 0, credit: TB.wantMoney ? (TB.wantMoney.credit || 0) : 0 }
         });
         toast('Trade offer sent to ' + TB.toName + '!');
         showView('players');
@@ -2768,6 +2773,16 @@
       if (TB.step === 1 && TB.tickets > (S.spins || 0)) TB.tickets = S.spins || 0;
       tbSyncMoneyScratch(); tbRenderMoneyBar(); tbRenderDock();
     });
+    $('#tradeCredit').addEventListener('input', function () {
+      if (!TB) return;
+      TB.credit = Math.max(0, parseInt(this.value, 10) || 0);
+      tbSyncMoneyScratch(); tbRenderDock();
+    });
+    $('#tradeCredit').addEventListener('change', function () {
+      if (!TB) return;
+      if (TB.step === 1 && TB.credit > (S.storeCredit || 0)) TB.credit = S.storeCredit || 0;
+      tbSyncMoneyScratch(); tbRenderMoneyBar(); tbRenderDock();
+    });
     $('#tradeSearch').addEventListener('input', function () { if (TB) { TB.q = this.value; tbRenderGrid(); } });
     $('#tradeSetSel').addEventListener('change', function () { if (TB) { TB.setId = this.value; tbRenderGrid(); } });
     $('#tradeRarity').addEventListener('change', function () { if (TB) { TB.rarity = this.value; tbRenderGrid(); } });
@@ -2792,7 +2807,7 @@
     $('#tradeChips').addEventListener('click', function (e) {
       if (!TB) return;
       if (e.target.closest('[data-money-x]')) {
-        TB.tokens = 0; TB.tickets = 0; tbSyncMoneyScratch(); tbRenderMoneyBar(); tbRenderDock();
+        TB.tokens = 0; TB.tickets = 0; TB.credit = 0; tbSyncMoneyScratch(); tbRenderMoneyBar(); tbRenderDock();
         return;
       }
       if (e.target.closest('[data-pack-x]')) {
@@ -3041,6 +3056,21 @@
     }, true);
   }
 
+  /* 229: store credit is not in the state payload — it lives in
+     cps_get_balances. Fetch it lazily (20s cache, best-effort) so the
+     money forms that accept credit can show and clamp to the balance. */
+  var creditAt = 0, creditBusy = false;
+  async function ensureCredit() {
+    if (!isCloud() || creditBusy || Date.now() - creditAt < 20000) return;
+    creditBusy = true;
+    try {
+      var r = await CPS.cloud.call('get_balances', {});
+      if (r && typeof r.store_credit === 'number') S.storeCredit = r.store_credit;
+      creditAt = Date.now();
+    } catch (e) { /* best-effort */ }
+    creditBusy = false;
+  }
+
   CPS.app = { state: S, config: CONFIG, openPack: startOpen, tear: tear, revealAll: revealAll, showView: showView, selectSet: selectSet, goBack: goBack, onOddsSetChange: onOddsSetChange };
   /* Shared context for split-out modules (js/tickets.js). */
   CPS.appCtx = { S: S, U: U, R: R, audio: audio, fx: fx,
@@ -3050,7 +3080,7 @@
     updateWheelBadge: updateWheelBadge, spinCount: spinCount, refreshQuests: refreshQuests, renderWheel: renderWheel, wheelConfig: wheelConfig,
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
-    ensureVariants: ensureVariants, rarityOf: rarityOf, ps: ps,
+    ensureVariants: ensureVariants, ensureCredit: ensureCredit, rarityOf: rarityOf, ps: ps,
     openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog, quickFinish: quickFinish,
     showView: showView, refreshNotifBadge: refreshNotifBadge, ensureOwnedSets: ensureOwnedSets,
     fetchNotifications: fetchNotifications, goBack: goBack };

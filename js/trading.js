@@ -236,6 +236,7 @@
     var lines = [], faces = [];
     if (o.tokens > 0) lines.push('<span class="trade-offer-line">🪙 <b>' + o.tokens + '</b> game token' + (o.tokens === 1 ? '' : 's') + '</span>');
     if (o.tickets > 0) lines.push('<span class="trade-offer-line">🎟️ <b>' + o.tickets + '</b> spin ticket' + (o.tickets === 1 ? '' : 's') + '</span>');
+    if (o.credit > 0) lines.push('<span class="trade-offer-line">💵 <b>$' + o.credit + '</b> store credit</span>');
     packLinesOf(o).forEach(function (ln) { lines.push('<span class="trade-offer-line">🎁 <b>' + ln.n + '</b> ' + esc(ln.name || ln.set) + ' pack' + (ln.n === 1 ? '' : 's') + '</span>'); });
     (o.cards || []).forEach(function (c) {
       var f = offerCardFace(c);
@@ -265,6 +266,7 @@
     var out = [];
     if (o.tokens > 0) out.push('<span class="trade-offer-line">🪙 <b>' + o.tokens + '</b> game token' + (o.tokens === 1 ? '' : 's') + '</span>');
     if (o.tickets > 0) out.push('<span class="trade-offer-line">🎟️ <b>' + o.tickets + '</b> spin ticket' + (o.tickets === 1 ? '' : 's') + '</span>');
+    if (o.credit > 0) out.push('<span class="trade-offer-line">💵 <b>$' + o.credit + '</b> store credit</span>');
     packLinesOf(o).forEach(function (ln) { out.push('<span class="trade-offer-line">🎁 <b>' + ln.n + '</b> ' + esc(ln.name || ln.set) + ' pack' + (ln.n === 1 ? '' : 's') + '</span>'); });
     (o.cards || []).forEach(function (c) { out.push(offerCardLines(c)); });
     return out.join('') || '<span class="muted small">—</span>';
@@ -356,6 +358,7 @@
       ctx.audio.reveal('legendary');
       if (typeof r.game_tokens === 'number') ctx.S.gameTokens = r.game_tokens;
       if (typeof r.spins === 'number') ctx.S.spins = r.spins;
+      if (typeof r.store_credit === 'number') ctx.S.storeCredit = r.store_credit;
       await ctx.refreshCloud();
     } catch (e) { btn.disabled = false; ctx.cloudError(e); }
   }
@@ -431,6 +434,7 @@
   async function openOfferModal(listingId, prefill) {
     var l = findListing(listingId); if (!l || l.mine) return;
     try { await ctx.ensureVariants(); } catch (e) { /* variants optional */ }
+    try { if (ctx.ensureCredit) await ctx.ensureCredit(); } catch (e) { /* credit balance is best-effort */ }
     CPS.composer.openOffer(COMPOSER_HOST, l, prefill);
   }
 

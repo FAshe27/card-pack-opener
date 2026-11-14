@@ -40,7 +40,7 @@
     }
     box.innerHTML =
       '<div class="panel bounty-head"><h2>Bounty Board</h2>' +
-      '<p class="muted small">Want a card? Post a bounty with an offer of tokens, spin tickets, packs, or cards. ' +
+      '<p class="muted small">Want a card? Post a bounty with an offer of tokens, spin tickets, store credit, packs, or cards. ' +
       'Your offer is held in escrow until someone claims it — cancel anytime for a full refund. Bounties expire after 7 days.</p>' +
       '<div class="row wrap"><button class="btn primary" id="bountyPostBtn">Post a bounty</button>' +
       '<span class="muted small" id="bountyMyOpen"></span></div></div>' +
@@ -153,6 +153,7 @@
     var out = [];
     if (b.offer_tokens > 0) out.push('<span class="bounty-offer-line">🪙 <b>' + b.offer_tokens + '</b> game token' + (b.offer_tokens === 1 ? '' : 's') + '</span>');
     if (b.offer_tickets > 0) out.push('<span class="bounty-offer-line">🎟️ <b>' + b.offer_tickets + '</b> spin ticket' + (b.offer_tickets === 1 ? '' : 's') + '</span>');
+    if (b.offer_credit > 0) out.push('<span class="bounty-offer-line">💵 <b>$' + b.offer_credit + '</b> store credit</span>');
     if (b.offer_packs > 0) {
       var s = setObj(b.offer_pack_set);
       out.push('<span class="bounty-offer-line">🎁 <b>' + b.offer_packs + '</b> ' + esc(s ? s.name : b.offer_pack_set) + ' pack' + (b.offer_packs === 1 ? '' : 's') + '</span>');
@@ -188,6 +189,7 @@
     var lines = [], faces = [];
     if (b.offer_tokens > 0) lines.push('<span class="bounty-offer-line">🪙 <b>' + b.offer_tokens + '</b> game token' + (b.offer_tokens === 1 ? '' : 's') + '</span>');
     if (b.offer_tickets > 0) lines.push('<span class="bounty-offer-line">🎟️ <b>' + b.offer_tickets + '</b> spin ticket' + (b.offer_tickets === 1 ? '' : 's') + '</span>');
+    if (b.offer_credit > 0) lines.push('<span class="bounty-offer-line">💵 <b>$' + b.offer_credit + '</b> store credit</span>');
     if (b.offer_packs > 0) {
       var ps = setObj(b.offer_pack_set);
       lines.push('<span class="bounty-offer-line">🎁 <b>' + b.offer_packs + '</b> ' + esc(ps ? ps.name : b.offer_pack_set) + ' pack' + (b.offer_packs === 1 ? '' : 's') + '</span>');
@@ -454,6 +456,7 @@
      Board buttons pass the click event — the composer ignores it. */
   async function openPostModal(prefill) {
     try { await ctx.ensureVariants(); } catch (e) { /* variants optional for posting */ }
+    try { if (ctx.ensureCredit) await ctx.ensureCredit(); } catch (e) { /* credit balance is best-effort */ }
     CPS.composer.openBounty(COMPOSER_HOST, prefill);
   }
 

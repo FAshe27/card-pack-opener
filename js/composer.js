@@ -166,7 +166,7 @@
       sets: sets, wantSet: sets[0] ? sets[0].id : '', wantCard: null, q: '',
       offerSet: '', offerQ: '',
       holo: 'any', tier: '', serial: '', anyMode: false, numOpen: false,
-      tokens: 0, tickets: 0, packSet: '', packs: 0,
+      tokens: 0, tickets: 0, credit: 0, packSet: '', packs: 0,
       offerCards: [], _note: ''
     };
   }
@@ -193,7 +193,7 @@
   function snapBounty() {
     return JSON.stringify({
       w: BD.wantCard, h: BD.holo, t: BD.tier, s: BD.serial, a: BD.anyMode,
-      tk: BD.tokens, ti: BD.tickets, ps: BD.packSet, pk: BD.packs, oc: BD.offerCards
+      tk: BD.tokens, ti: BD.tickets, cr: BD.credit, ps: BD.packSet, pk: BD.packs, oc: BD.offerCards
     });
   }
 
@@ -267,7 +267,9 @@
       '<div class="row wrap"><label>🪙 Tokens <input id="pbTokens" type="number" min="0" max="' + (ctx.S.gameTokens || 0) +
         '" value="0" style="width:80px"></label><span class="muted small" id="pbTokensHave"></span>' +
       '<label>🎟️ Tickets <input id="pbTickets" type="number" min="0" max="' + (ctx.S.spins || 0) +
-        '" value="0" style="width:80px"></label><span class="muted small" id="pbTicketsHave"></span></div>' +
+        '" value="0" style="width:80px"></label><span class="muted small" id="pbTicketsHave"></span>' +
+      '<label>💵 Store credit $<input id="pbCredit" type="number" min="0" max="' + (ctx.S.storeCredit || 0) +
+        '" value="0" style="width:80px"></label><span class="muted small" id="pbCreditHave"></span></div>' +
       '<div class="row wrap"><label>🎁 Packs <select id="pbPackSet"></select></label>' +
       '<input id="pbPacks" type="number" min="0" value="0" style="width:70px"><span class="muted small" id="pbPacksHave"></span></div>' +
       '<div class="row wrap"><label>🃏 Card <select id="pbCardSet"></select></label>' +
@@ -292,6 +294,7 @@
   function pbCollect(box) {
     BD.tokens = Math.max(0, parseInt(box.querySelector('#pbTokens').value, 10) || 0);
     BD.tickets = Math.max(0, parseInt(box.querySelector('#pbTickets').value, 10) || 0);
+    BD.credit = Math.max(0, parseInt(box.querySelector('#pbCredit').value, 10) || 0);
     BD.packSet = box.querySelector('#pbPackSet').value || '';
     BD.packs = Math.max(0, parseInt(box.querySelector('#pbPacks').value, 10) || 0);
     BD.serial = box.querySelector('#pbSerial').value || '';
@@ -305,8 +308,8 @@
     if (!BD.wantCard) msgs.push('Pick the card you want first.');
     if (BD.packSet && !BD.packs) msgs.push('Set the pack count for your pack offer.');
     var packs = BD.packSet ? BD.packs : 0;
-    if (!BD.tokens && !BD.tickets && !packs && !BD.offerCards.length) {
-      msgs.push('Your bounty needs an offer — tokens, tickets, packs, or cards.');
+    if (!BD.tokens && !BD.tickets && !BD.credit && !packs && !BD.offerCards.length) {
+      msgs.push('Your bounty needs an offer — tokens, tickets, store credit, packs, or cards.');
     }
     var serial = (BD.serial || '').trim();
     // Any number (migration 141) satisfies a tier on its own; a serial
@@ -323,7 +326,7 @@
     if (msgs.length) { showErrors(box, 'pbErrors', msgs); return; }
     var serial = (BD.serial || '').trim();
     var offer = {
-      offer_tokens: BD.tokens, offer_tickets: BD.tickets,
+      offer_tokens: BD.tokens, offer_tickets: BD.tickets, offer_credit: BD.credit,
       offer_packs: BD.packSet ? BD.packs : 0, offer_pack_set: BD.packSet || null,
       offer_cards: BD.offerCards.map(function (o) { var c = { set_id: o.set, card_id: o.card, holo: o.holo }; if (o.tier) { c.tier = o.tier; c.serial = o.serial; } return c; })
     };
@@ -360,7 +363,7 @@
       await CPS.cloud.call('post_bounty', {
         p_want: { set: BD.wantCard.set, card: BD.wantCard.id, holo: BD.holo,
                   tier: BD.tier || null, serial: BD.anyMode ? null : (serial || null) },
-        p_offer: { tokens: BD.tokens, tickets: BD.tickets, pack_set: BD.packSet || null,
+        p_offer: { tokens: BD.tokens, tickets: BD.tickets, credit: BD.credit, pack_set: BD.packSet || null,
                    packs: BD.packSet ? BD.packs : 0,
                    cards: BD.offerCards.map(function (o) { var c = { set: o.set, card: o.card, holo: o.holo }; if (o.tier) { c.tier = o.tier; c.serial = o.serial; } return c; }) }
       });
@@ -411,6 +414,7 @@
     var bits = [];
     if (BD.tokens > 0) bits.push('🪙 ' + BD.tokens + ' token' + (BD.tokens === 1 ? '' : 's'));
     if (BD.tickets > 0) bits.push('🎟️ ' + BD.tickets + ' ticket' + (BD.tickets === 1 ? '' : 's'));
+    if (BD.credit > 0) bits.push('💵 $' + BD.credit + ' store credit');
     if (BD.packSet && BD.packs > 0) {
       var ps = setObj(BD.packSet);
       bits.push('🎁 ' + BD.packs + ' ' + (ps ? ps.name : BD.packSet) + ' pack' + (BD.packs === 1 ? '' : 's'));
@@ -423,9 +427,10 @@
   }
 
   function pbRenderMoneyHints(box) {
-    var th = box.querySelector('#pbTokensHave'), kh = box.querySelector('#pbTicketsHave');
+    var th = box.querySelector('#pbTokensHave'), kh = box.querySelector('#pbTicketsHave'), ch = box.querySelector('#pbCreditHave');
     if (th) th.textContent = 'You have ' + (ctx.S.gameTokens || 0) + ' · ' + Math.max(0, (ctx.S.gameTokens || 0) - BD.tokens) + ' left after';
     if (kh) kh.textContent = 'You have ' + (ctx.S.spins || 0) + ' · ' + Math.max(0, (ctx.S.spins || 0) - BD.tickets) + ' left after';
+    if (ch) ch.textContent = 'You have $' + (ctx.S.storeCredit || 0) + ' · $' + Math.max(0, (ctx.S.storeCredit || 0) - BD.credit) + ' left after';
   }
 
   function pbWantCard() { return BD.wantCard ? cardObj(BD.wantCard.set, BD.wantCard.id) : null; }
@@ -569,6 +574,7 @@
     }
     bindMoney('#pbTokens', 'tokens', ctx.S.gameTokens || 0);
     bindMoney('#pbTickets', 'tickets', ctx.S.spins || 0);
+    bindMoney('#pbCredit', 'credit', ctx.S.storeCredit || 0);
 
     // pack offer: count disabled until a set is chosen, clamped to holdings
     var packSet = box.querySelector('#pbPackSet'), packsHave = box.querySelector('#pbPacksHave');
@@ -620,7 +626,7 @@
     box.querySelector('#pbGo').addEventListener('click', function () { pbReview(box); });
     box.querySelector('#pbStartOver').addEventListener('click', async function () {
       var pbDirty = BS ? (snapBounty() !== BS.snapshot)
-        : !!(BD.wantCard || BD.offerCards.length || BD.tokens || BD.tickets || BD.packs || (BD._note && BD._note.trim()));
+        : !!(BD.wantCard || BD.offerCards.length || BD.tokens || BD.tickets || BD.credit || BD.packs || (BD._note && BD._note.trim()));
       if (pbDirty && !(await ctx.confirmDialog('Start over?',
         '<p>Clear everything you\'ve entered in this form?</p>', 'Start over', 'Keep draft'))) return;
       if (BS && BS.fromCard) {
@@ -1251,7 +1257,7 @@
     var sets = HT.ownedSets();
     OD = {
       listing: listing, sets: sets, set: sets[0] ? sets[0].id : '', q: '',
-      tokens: 0, tickets: 0, packSet: '', packs: 0, packLines: [],   // [{set, n}] multi-set packs (221); packSet/packs mirror line 1
+      tokens: 0, tickets: 0, credit: 0, packSet: '', packs: 0, packLines: [],   // [{set, n}] multi-set packs (221); packSet/packs mirror line 1
       cards: []   // {set, card, holo, tier, serial, label}
     };
     var ro = lsGet('cps.composerSet.offer');
@@ -1265,6 +1271,7 @@
   function applyOfferPrefill(p) {
     if (p.tokens != null) OD.tokens = Math.max(0, parseInt(p.tokens, 10) || 0);
     if (p.tickets != null) OD.tickets = Math.max(0, parseInt(p.tickets, 10) || 0);
+    if (p.credit != null) OD.credit = Math.max(0, parseInt(p.credit, 10) || 0);
     if (p.packSet) OD.packSet = p.packSet;
     if (p.packs != null) OD.packs = Math.max(0, parseInt(p.packs, 10) || 0);
     if (Array.isArray(p.packLines) && p.packLines.length) {
@@ -1301,7 +1308,7 @@
     return OD.packLines.reduce(function (a, x) { return a + (x.set ? Math.max(0, x.n || 0) : 0); }, 0);
   }
   function snapOffer() {
-    return JSON.stringify({ tk: OD.tokens, ti: OD.tickets, pl: OD.packLines, c: OD.cards });
+    return JSON.stringify({ tk: OD.tokens, ti: OD.tickets, cr: OD.credit, pl: OD.packLines, c: OD.cards });
   }
 
   function ofShowForm() {
@@ -1317,7 +1324,9 @@
       '<div class="row wrap"><label>🪙 Tokens <input id="ofTokens" type="number" min="0" max="' + (ctx.S.gameTokens || 0) +
         '" value="0" style="width:80px"></label><span class="muted small" id="ofTokensHave"></span>' +
       '<label>🎟️ Tickets <input id="ofTickets" type="number" min="0" max="' + (ctx.S.spins || 0) +
-        '" value="0" style="width:80px"></label><span class="muted small" id="ofTicketsHave"></span></div>' +
+        '" value="0" style="width:80px"></label><span class="muted small" id="ofTicketsHave"></span>' +
+      '<label>💵 Store credit $<input id="ofCredit" type="number" min="0" max="' + (ctx.S.storeCredit || 0) +
+        '" value="0" style="width:80px"></label><span class="muted small" id="ofCreditHave"></span></div>' +
       '<div id="ofPackRows"></div>' +
       '<div class="row wrap"><button type="button" class="btn small" id="ofPackAdd">+ Add packs</button>' +
       '<span class="muted small">offer packs from as many sets as you like</span></div>' +
@@ -1339,6 +1348,7 @@
     var bits = [];
     if (OD.tokens > 0) bits.push('🪙 ' + OD.tokens + ' token' + (OD.tokens === 1 ? '' : 's'));
     if (OD.tickets > 0) bits.push('🎟️ ' + OD.tickets + ' ticket' + (OD.tickets === 1 ? '' : 's'));
+    if (OD.credit > 0) bits.push('💵 $' + OD.credit + ' store credit');
     OD.packLines.forEach(function (x) {
       if (!x.set || !(x.n > 0)) return;
       var ps = setObj(x.set);
@@ -1424,6 +1434,7 @@
     }
     ofMoney('#ofTokens', '#ofTokensHave', 'tokens', ctx.S.gameTokens || 0);
     ofMoney('#ofTickets', '#ofTicketsHave', 'tickets', ctx.S.spins || 0);
+    ofMoney('#ofCredit', '#ofCreditHave', 'credit', ctx.S.storeCredit || 0);
 
     // card picker
     var oSetSel = box.querySelector('#ofCardSet');
@@ -1576,6 +1587,7 @@
   function ofCollect(box) {
     OD.tokens = Math.max(0, parseInt(box.querySelector('#ofTokens').value, 10) || 0);
     OD.tickets = Math.max(0, parseInt(box.querySelector('#ofTickets').value, 10) || 0);
+    OD.credit = Math.max(0, parseInt(box.querySelector('#ofCredit').value, 10) || 0);
     OD.packLines = OD.packLines.map(function (x, i) {
       var sel = box.querySelector('.of-pack-set[data-i="' + i + '"]');
       var inp = box.querySelector('.of-pack-n[data-i="' + i + '"]');
@@ -1589,8 +1601,8 @@
     if (OD.packLines.some(function (x) { return x.set && !x.n; })) msgs.push('Set the pack count for each set in your pack offer.');
     if (OD.packLines.some(function (x) { return !x.set && x.n > 0; })) msgs.push('Pick a set for each pack line in your offer.');
     var packs = totalPacks();
-    if (!OD.tokens && !OD.tickets && !packs && !OD.cards.length) {
-      msgs.push('Your offer needs tokens, tickets, packs, or cards.');
+    if (!OD.tokens && !OD.tickets && !OD.credit && !packs && !OD.cards.length) {
+      msgs.push('Your offer needs tokens, tickets, store credit, packs, or cards.');
     }
     return msgs;
   }
@@ -1604,6 +1616,7 @@
     var bits = [];
     if (OD.tokens > 0) bits.push('🪙 ' + OD.tokens + ' token' + (OD.tokens === 1 ? '' : 's'));
     if (OD.tickets > 0) bits.push('🎟️ ' + OD.tickets + ' ticket' + (OD.tickets === 1 ? '' : 's'));
+    if (OD.credit > 0) bits.push('💵 $' + OD.credit + ' store credit');
     OD.packLines.forEach(function (x) {
       if (!x.set || !(x.n > 0)) return;
       var ps = setObj(x.set);
@@ -1636,7 +1649,7 @@
     try {
       await CPS.cloud.call('trade_offer', {
         p_listing: OD.listing.id,
-        p_offer: { tokens: OD.tokens, tickets: OD.tickets, pack_set: lines.length ? lines[0].set : null, packs: packs,
+        p_offer: { tokens: OD.tokens, tickets: OD.tickets, credit: OD.credit, pack_set: lines.length ? lines[0].set : null, packs: packs,
                    pack_lines: lines,
                    cards: OD.cards.map(function (o) { return { set: o.set, card: o.card, holo: o.holo, tier: o.tier, serial: o.serial }; }) }
       });
