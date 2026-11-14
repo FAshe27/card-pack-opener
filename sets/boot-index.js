@@ -1208,10 +1208,10 @@ window.CardSets.bootIndex = {
     "mtg.js",
     "mtg-additions.js"
    ],
-   "name": "Magic: The Gathering Pack",
+   "name": "Magic: The Gathering",
    "code": "MTG",
    "emblem": "🔮",
-   "packName": "Magic: The Gathering Pack",
+   "packName": "Magic: The Gathering",
    "skin": "mtg",
    "css": "mtg",
    "primary": "#d8b25a",
