@@ -120,5 +120,7 @@ CardSets.manifest = [
   'houseplants.js',
   'mushrooms.js',
   'instruments.js',
-  'constellations.js'
+  'constellations.js',
+  'mtg.js',
+  'mtg-additions.js'
 ];
