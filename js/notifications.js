@@ -41,8 +41,12 @@ async function openNotifications() {
            when the text opens with the very icon being displayed. */
         if (nIcon && nText.indexOf(nIcon) === 0) nText = nText.slice(nIcon.length).replace(/^\s+/, '');
         var canThank = (it.kind === 'gift_card' || it.kind === 'gift') && it.meta && it.meta.from && !it.meta.thanked;
+        var nTrade = (it.meta && it.meta.trade_id && (it.kind === 'trade_offer' || it.kind === 'trade_accepted' || it.kind === 'trade_declined')) ? it.meta.trade_id : null;
+        var nView = it.view;
+        if (it.kind === 'trade_offer' && !nTrade) nView = 'players'; // pre-231 rows point at Market; the trade lives on Players
         return '<button class="notif' + (it.read ? '' : ' unread') + (isAnn(it) ? ' pinned' : '') + '" data-notif="' + it.id + '"' +
-          (it.view ? ' data-view="' + ctx.esc(it.view) + '"' : '') +
+          (nView ? ' data-view="' + ctx.esc(nView) + '"' : '') +
+          (nTrade ? ' data-ntrade="' + ctx.esc(nTrade) + '"' : '') +
           (it.meta && it.meta.ticket_id ? ' data-ticket="' + ctx.esc(it.meta.ticket_id) + '"' : '') +
           (it.meta && it.meta.set_id ? ' data-nset="' + ctx.esc(it.meta.set_id) + '" data-ncard="' + ctx.esc(it.meta.card_id) + '"' +
             ' data-nholo="' + (it.meta.holo ? '1' : '0') + '"' +
@@ -83,6 +87,9 @@ async function openNotifications() {
               ctx.closeModal();
               ctx.openCardModal(el.dataset.nset, el.dataset.ncard, el.dataset.nholo === '1',
                 vt ? { tier: vt, serial: parseInt(el.dataset.nserial, 10) } : null);
+            } else if (el.dataset.ntrade && ctx.openTradeOffer) {
+              ctx.closeModal();
+              ctx.openTradeOffer(el.dataset.ntrade);
             } else if (el.dataset.ticket && CPS.help) {
               ctx.closeModal();
               ctx.showView('help');

@@ -1489,6 +1489,37 @@
     } catch (e) { cloudError(e); }
   }
 
+  /* 231: open one direct trade in a modal (notification clicks). The
+     row's buttons are renamed so the #tradeList delegation ignores
+     them; they are wired locally to the same respond/cancel calls. */
+  async function openTradeOffer(id) {
+    openModal('<div class="muted" style="padding:24px">Loading\u2026</div>');
+    try {
+      var trades = await CPS.cloud.call('list_trades');
+      var t = (trades || []).filter(function (x) { return x.id === id; })[0];
+      if (!t) {
+        openModal('<button class="modal-x" data-close aria-label="Close">\u00d7</button><div class="profile"><h2>Trade</h2>' +
+          '<div class="empty">This trade is no longer on your list.</div>' +
+          '<button class="btn" id="tgoPlayers">Go to Players</button></div>', function (box) {
+            box.querySelector('#tgoPlayers').addEventListener('click', function () { closeModal(); showView('players'); });
+          });
+        return;
+      }
+      await ensureTradeSets([t]);
+      var html = tradeRowHtml(t, t.status !== 'pending')
+        .replace(/data-trade-accept=/g, 'data-mtrade=')
+        .replace(/data-trade-decline=/g, 'data-mtrade-d=')
+        .replace(/data-trade-cancel=/g, 'data-mtrade-c=');
+      openModal('<button class="modal-x" data-close aria-label="Close">\u00d7</button><div class="profile"><h2>Trade</h2>' + html + '</div>', function (box) {
+        box.addEventListener('click', function (e) { tradeCardTap(e); });
+        var ba = box.querySelector('[data-mtrade]'), bd = box.querySelector('[data-mtrade-d]'), bc = box.querySelector('[data-mtrade-c]');
+        if (ba) ba.addEventListener('click', function () { ba.disabled = true; closeModal(); respondTrade(t.id, true); });
+        if (bd) bd.addEventListener('click', function () { bd.disabled = true; closeModal(); respondTrade(t.id, false); });
+        if (bc) bc.addEventListener('click', function () { cancelTrade(t.id).then(function () { closeModal(); }); });
+      });
+    } catch (e) { closeModal(true); cloudError(e); }
+  }
+
   /* --- trade builder view */
   async function openTradeBuilder(prefillTo) {
     if (!isCloud()) return;
@@ -3081,7 +3112,7 @@
     renderAdmin: renderAdmin,
     dupeCounts: dupeCounts, DUPE_RARS: DUPE_RARS, variantCountMap: variantCountMap, isTurned: isTurned,
     ensureVariants: ensureVariants, ensureCredit: ensureCredit, rarityOf: rarityOf, ps: ps,
-    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, confirmDialog: confirmDialog, quickFinish: quickFinish,
+    openModal: openModal, closeModal: closeModal, openCardModal: openCardModal, openTradeBuilder: openTradeBuilder, openTradeOffer: openTradeOffer, confirmDialog: confirmDialog, quickFinish: quickFinish,
     showView: showView, refreshNotifBadge: refreshNotifBadge, ensureOwnedSets: ensureOwnedSets,
     fetchNotifications: fetchNotifications, goBack: goBack };
   boot().catch(function (e) { console.error(e); toast('Something went wrong starting the app: ' + e.message, 'error', 10000); });
