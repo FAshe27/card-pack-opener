@@ -2953,6 +2953,21 @@
       closeAccountMenu();
       if (S.account && CPS.profile) CPS.profile.openProfile(S.account.id);
     });
+    var _acctVault = $('#acctVaultBtn');
+    if (_acctVault) _acctVault.addEventListener('click', function () {
+      closeAccountMenu();
+      if (S.account && CPS.profile) CPS.profile.openVault(S.account.id);
+    });
+    var _acctProgress = $('#acctProgressBtn');
+    if (_acctProgress) _acctProgress.addEventListener('click', function () {
+      closeAccountMenu();
+      if (S.account && CPS.profile) CPS.profile.openCollection(S.account.id);
+    });
+    var _acctTrophy = $('#acctTrophyBtn');
+    if (_acctTrophy) _acctTrophy.addEventListener('click', function () {
+      closeAccountMenu();
+      if (S.account && CPS.profile) CPS.profile.openTrophy(S.account.id, S.account.display_name);
+    });
     var _acctFaq = $('#acctFaqBtn');
     if (_acctFaq) _acctFaq.addEventListener('click', function () {
       closeAccountMenu();

@@ -483,5 +483,5 @@ async function openPlayerSet(accountId, displayName, setId, turnedCards, backTo)
     });
 }
 
-  CPS.profile = { openProfile: openProfile, openPlayerSet: openPlayerSet };
+  CPS.profile = { openProfile: openProfile, openPlayerSet: openPlayerSet, openVault: openVaultScreen, openCollection: openCollectionScreen, openTrophy: openTrophyScreen };
 })(window.CPS = window.CPS || {});
