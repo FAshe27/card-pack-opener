@@ -1463,7 +1463,8 @@ label.inline input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex: 
 .prof-head h2 { margin: 0 0 4px; }
 .prof-favs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
 .prof-fav { position: relative; }
-.prof-fav .badge-turned { position: absolute; top: 4px; left: 4px; z-index: 3; }
+.prof-fav .badge-turned { position: absolute; top: 4px; right: 4px; z-index: 3; }
+.prof-fav.has-vtag .badge-turned { top: 15px; right: -6px; }
 .prof-fav-cap { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; font-size: .85rem; }
 .prof-fav-cap b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .prof-sets { display: grid; gap: 8px; }
