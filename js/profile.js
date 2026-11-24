@@ -166,11 +166,13 @@ function favsHtml(p) {
     var b = bestVaultedVariant(e.variants);
     if (b) vaultedVariant[e.set_id + ':' + e.card_id] = b;
   });
+  var turned = {};
+  (p.turned_cards || []).forEach(function (c) { turned[c.set_id + ':' + c.card_id] = true; });
   return (p.favorites || []).map(function (f) {
     var set = window.CardSets.get(f.set_id), card = set && set.byId.get(f.card_id);
     if (!set || !card) return '';
     var v = vaultedVariant[f.set_id + ':' + f.card_id];
-    return '<div class="prof-fav" data-fav-set="' + ctx.esc(f.set_id) + '" data-fav-card="' + ctx.esc(f.card_id) + '" data-fav-holo="' + (f.holo ? '1' : '0') + '">' + CPS.cards.render(set, card, { holo: !!f.holo, variant: v ? { tier: v.tier, serial: v.serial } : undefined }) + '</div>';
+    return '<div class="prof-fav" data-fav-set="' + ctx.esc(f.set_id) + '" data-fav-card="' + ctx.esc(f.card_id) + '" data-fav-holo="' + (f.holo ? '1' : '0') + '">' + CPS.cards.render(set, card, { holo: !!f.holo, variant: v ? { tier: v.tier, serial: v.serial } : undefined }) + (turned[f.set_id + ':' + f.card_id] ? '<span class="badge-turned" title="Turned in — permanently collected">✓</span>' : '') + '</div>';
   }).join('');
 }
 
