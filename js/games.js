@@ -168,7 +168,8 @@
     var mine = records.mine || 0;
     if (G && G.streak > mine) mine = G.streak; // a run in progress can already be your best
     bits.push('⭐ Your best: <b>' + mine + '</b>');
-    return '<p class="muted small" style="text-align:center;margin:2px 0 0">' + bits.join(' &nbsp;·&nbsp; ') + '</p>';
+    return '<div class="muted small" style="text-align:center;margin:2px 0 0;line-height:1.55">' +
+      bits.map(function (b) { return '<div>' + b + '</div>'; }).join('') + '</div>';
   }
 
   async function loadRecords() {
