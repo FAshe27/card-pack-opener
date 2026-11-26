@@ -16,6 +16,8 @@
   var ctx = CPS.appCtx;
   var G = null; // {run, card, streak, bank}
   var resumeTried = false; // one game_state probe per page visit until a run starts/ends
+  var records = null; // High/Low streak records from game_state (migration 234)
+  var recordsTried = false;
   var acting = false; // in-flight guard: double-taps can't double-spend or double-claim
   var page = 'lobby'; // 'lobby' | 'highlow' | 'slots'
 
@@ -158,6 +160,24 @@
   }
 
   /* ---------------- High / Low page ---------------- */
+  function recordsHTML() {
+    if (!records) return '';
+    var bits = [];
+    if (records.ever) bits.push('🏆 Best ever: <b>' + records.ever.streak + '</b> (' + ctx.esc(records.ever.name) + ')');
+    if (records.today) bits.push('📅 Today: <b>' + records.today.streak + '</b> (' + ctx.esc(records.today.name) + ')');
+    var mine = records.mine || 0;
+    if (G && G.streak > mine) mine = G.streak; // a run in progress can already be your best
+    bits.push('⭐ Your best: <b>' + mine + '</b>');
+    return '<p class="muted small" style="text-align:center;margin:2px 0 0">' + bits.join(' &nbsp;·&nbsp; ') + '</p>';
+  }
+
+  async function loadRecords() {
+    try {
+      var r = await CPS.cloud.call('game_state', {});
+      if (r && r.records) { records = r.records; if (page === 'highlow') render(); }
+    } catch (e) { /* records are decoration — a failed probe just hides the line */ }
+  }
+
   function renderHighLow(box) {
     // A page reload used to forfeit the run — the run lives server-side
     // (cps.game_runs), so probe once and pick it back up (migration 183).
@@ -168,6 +188,8 @@
     var tokens = ctx.S.gameTokens || 0;
     var html = headerHTML();
     html += '<div class="panel">' + backHTML() + '<h2>🔢 High / Low</h2>';
+    if (!records && !recordsTried && ctx.isCloud()) { recordsTried = true; loadRecords(); }
+    html += recordsHTML();
     if (!G) {
       // Show the game itself before a run starts — the table laid out
       // exactly as it looks mid-run, with a face-down card and the guess
@@ -265,6 +287,7 @@
   async function resumeRun() {
     try {
       var r = await CPS.cloud.call('game_state', {});
+      if (r && r.records) records = r.records;
       if (r && r.run && !G) {
         G = { run: r.run, card: r.card, streak: r.streak || 0, bank: r.bank || [], over: false };
         if (G.streak > 0 || G.bank.length) ctx.toast('Run resumed — your streak and bank are intact.', 'good');
@@ -286,6 +309,7 @@
       } else if (r.bust) {
         G.over = true; G.busted = true; G.bank = [];
         ctx.audio.error();
+        recordsTried = false; loadRecords(); // this run may have set a record
       }
       render();
     } catch (e) { ctx.cloudError(e); } finally { acting = false; }
@@ -307,6 +331,7 @@
       ctx.toast(bits.length ? 'Claimed: ' + bits.join(', ') : 'No prizes banked.', bits.length ? 'good' : '');
       ctx.audio.reveal('epic');
       G = null; resumeTried = true;
+      recordsTried = false; loadRecords(); // this run may have set a record
       render();
       ctx.renderPacksSide();
       ctx.updateWheelBadge();

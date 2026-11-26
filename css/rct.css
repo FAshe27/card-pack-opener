@@ -28,6 +28,20 @@
    pre-flip rule in style.css). Collection/modal renders are not flippable
    and keep the outline. */
 .card.flippable:not(.flipped)[data-set="rct"] { border-color: transparent; background-image: none; }
+/* Chase-specific reinforcement of the rule above (flip fix, 2026-11-26):
+   the general suppression only TIES the chase ring rule on specificity
+   (both 0-4-0), so it held just by cascade order inside this lazy sheet.
+   This selector (0-6-0) outranks the ring in any order — the same clean
+   margin the variant suppression has over .card.variant in style.css. */
+.card.flippable:not(.flipped)[data-set="rct"].r-chase:not(.variant) { background-image: none; }
+/* Reveal glide for RCT chases: the ring rule's animation shorthand
+   otherwise overrides .card.deal outright, so an RCT Chase sat still
+   while every other card glided in — and a missing glide is itself a
+   pre-flip tell. Mirrors .card.deal.variant in style.css: in the reveal
+   grid (.deal) the two animations share one list, so the spin never
+   restarts at flip time. Collection/modal chases (no .deal) are
+   untouched and never glide. */
+.card.deal[data-set="rct"].r-chase:not(.variant) { animation: deal .55s cubic-bezier(.2,1.3,.4,1) both, variant-spin 5s linear infinite; }
 
 /* The face fills the card inside the border; the flat ground behind the
    panel's corners replaces the usual rarity-gradient frame (the outline

@@ -498,7 +498,7 @@
 
   async function startOpen() {
     if ((S.opening && !S.opening.finished) || S.busy) return;
-    if (S.set.id === 'jumbled') { if (typeof CPS !== 'undefined' && CPS.jumbled) CPS.jumbled.open(); return; }
+    if (S.set.id === 'jumbled') { if (typeof CPS !== 'undefined' && CPS.jumbled) { await CPS.jumbled.open(); return true; } return; }
     if (isLocked()) { showGate({}); return; }
     var set = S.set, st = ps();
     if (st.packs <= 0) { toast('Out of packs! Win or earn more packs!', 'warn'); audio.error(); return; }
